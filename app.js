@@ -75,15 +75,18 @@ function bucketMeansByRank(results, ranges) {
   });
 }
 
-function topScoresFrom(results, n) {
-  return (results || [])
-    .filter(r => Number.isFinite(r.rank) && Number.isFinite(r.index) && r.rank >= 1 && r.rank <= n)
-    .sort((a, b) => a.rank - b.rank)
-    .map(r => r.index);
+function topScoresFrom(results, n, limitByRank = true) {
+  let valid = (results || [])
+    .filter(r => Number.isFinite(r.rank) && Number.isFinite(r.index) && r.rank >= 1)
+    .sort((a, b) => a.rank - b.rank);
+  if (limitByRank) {
+    valid = valid.filter(r => r.rank <= n);
+  }
+  return valid.slice(0, n).map(r => r.index);
 }
 
-function rciFromResults(results, n) {
-  const values = topScoresFrom(results, n);
+function rciFromResults(results, n, limitByRank = true) {
+  const values = topScoresFrom(results, n, limitByRank);
   if (!values.length) return NaN;
   return mean(values) - stdPop(values);
 }
@@ -93,6 +96,13 @@ function normalizeGenderLabel(value) {
   const lower = value.toString().trim().toLowerCase();
   if (["m", "men", "man", "male", "homme", "h"].includes(lower)) return "male";
   if (["f", "women", "woman", "female", "femme", "w"].includes(lower)) return "female";
+  return null;
+}
+
+function inferRaceGender(meta) {
+  const text = `${meta?.name || ""} ${meta?.race_id || ""}`.toLowerCase();
+  if (text.includes("(men)") || text.includes(" men") || text.includes("(homme)") || text.includes(" homme")) return "male";
+  if (text.includes("(women)") || text.includes(" women") || text.includes("(femme)") || text.includes(" femme")) return "female";
   return null;
 }
 
@@ -346,15 +356,18 @@ async function renderRciTable(gender, tableId) {
     if (!course) continue;
     const meta = course.meta || {};
     if (!matchesFilters(meta, state.rciFilters)) continue;
+    const raceGender = inferRaceGender(meta);
+    if (raceGender && raceGender !== gender) continue;
     const filtered = filterResultsByGender(course.results, gender);
     const row = {
       name: getCourseLabel(course),
       country: meta.country || "",
-      rc3: rciFromResults(filtered, 3),
-      rc5: rciFromResults(filtered, 5),
-      rc10: rciFromResults(filtered, 10),
-      rc20: rciFromResults(filtered, 20)
+      rc3: rciFromResults(filtered, 3, false),
+      rc5: rciFromResults(filtered, 5, false),
+      rc10: rciFromResults(filtered, 10, false),
+      rc20: rciFromResults(filtered, 20, false)
     };
+    if (![row.rc3, row.rc5, row.rc10, row.rc20].some(Number.isFinite)) continue;
     rows.push(row);
   }
 
