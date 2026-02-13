@@ -1,0 +1,894 @@
+{
+  "meta": {
+    "race_id": "GIIR2025",
+    "name": "Giir 2025",
+    "series": [
+      "WMRA"
+    ],
+    "country": "ITA",
+    "data_source": "UTMB_INDEX",
+    "year": 2025,
+    "distance_km": null,
+    "elevation_m": null,
+    "prize_money": null,
+    "notes": null,
+    "source_url": null
+  },
+  "results": [
+    {
+      "rank": 1,
+      "runner": "Davide MAGNINI",
+      "index": 928.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 2,
+      "runner": "Stian ANGERMUND",
+      "index": 921.0,
+      "gender": "Men",
+      "nationality": "Norway"
+    },
+    {
+      "rank": 3,
+      "runner": "Mattia TANARA",
+      "index": 907.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 4,
+      "runner": "Paul MACHOKA",
+      "index": 904.0,
+      "gender": "Men",
+      "nationality": "Kenya"
+    },
+    {
+      "rank": 5,
+      "runner": "Lorenzo ROTA MARTIR",
+      "index": 900.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 6,
+      "runner": "Kevin KIBET",
+      "index": 876.0,
+      "gender": "Men",
+      "nationality": "Kenya"
+    },
+    {
+      "rank": 7,
+      "runner": "Michael GALASSI",
+      "index": 865.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 8,
+      "runner": "Mattia GIANOLA",
+      "index": 863.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 9,
+      "runner": "Alex OBERBACHER",
+      "index": 855.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 10,
+      "runner": "Diego VERA",
+      "index": 846.0,
+      "gender": "Men",
+      "nationality": "Colombia"
+    },
+    {
+      "rank": 11,
+      "runner": "Lorenzo BELTRAMI",
+      "index": 842.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 12,
+      "runner": "Julius OTT",
+      "index": 839.0,
+      "gender": "Men",
+      "nationality": "Germany"
+    },
+    {
+      "rank": 13,
+      "runner": "Davide DELLA MINA",
+      "index": 837.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 14,
+      "runner": "Riccardo BORGIALLI",
+      "index": 831.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 15,
+      "runner": "Fabio RUGA",
+      "index": 820.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 16,
+      "runner": "Damiano PEDRETTI",
+      "index": 815.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 17,
+      "runner": "Matteo PORRO",
+      "index": 810.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 18,
+      "runner": "Dionigi GIANOLA",
+      "index": 806.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 19,
+      "runner": "Luca MERLI",
+      "index": 805.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 20,
+      "runner": "Carlo CORTESI",
+      "index": 802.0,
+      "gender": "Men",
+      "nationality": "Switzerland"
+    },
+    {
+      "rank": 21,
+      "runner": "Luca RASCHETTI",
+      "index": 798.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 22,
+      "runner": "James Thuo IRUNGU",
+      "index": 795.0,
+      "gender": "Men",
+      "nationality": "Kenya"
+    },
+    {
+      "rank": 23,
+      "runner": "Harry BOLTON",
+      "index": 787.0,
+      "gender": "Men",
+      "nationality": "United Kingdom"
+    },
+    {
+      "rank": 24,
+      "runner": "Konstantinos PARADEISOPOULOS",
+      "index": 787.0,
+      "gender": "Men",
+      "nationality": "Greece"
+    },
+    {
+      "rank": 25,
+      "runner": "Danilo BRAMBILLA",
+      "index": 786.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 26,
+      "runner": "Alessio MAINETTI",
+      "index": 786.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 27,
+      "runner": "Mattia ACHLER",
+      "index": 783.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 28,
+      "runner": "Matteo PANDIANI",
+      "index": 777.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 29,
+      "runner": "Szabolcs-Istvan GYORGY",
+      "index": 776.0,
+      "gender": "Men",
+      "nationality": "Romania"
+    },
+    {
+      "rank": 30,
+      "runner": "David ROVIRA",
+      "index": 774.0,
+      "gender": "Men",
+      "nationality": "Spain"
+    },
+    {
+      "rank": 31,
+      "runner": "Jacopo FONTANINI",
+      "index": 771.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 32,
+      "runner": "Mirko SANELLI",
+      "index": 768.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 33,
+      "runner": "Matteo ANDREOLA",
+      "index": 763.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 34,
+      "runner": "Stefano TAVOLA",
+      "index": 761.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 35,
+      "runner": "Federico PRESA",
+      "index": 760.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 36,
+      "runner": "David VIDAL",
+      "index": 760.0,
+      "gender": "Men",
+      "nationality": "Spain"
+    },
+    {
+      "rank": 37,
+      "runner": "Giovanni MALUGANI",
+      "index": 758.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 38,
+      "runner": "Valentine Jepkoech RUTTO",
+      "index": 756.0,
+      "gender": "Women",
+      "nationality": "Kenya"
+    },
+    {
+      "rank": 39,
+      "runner": "Alessandro CRIPPA",
+      "index": 746.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 40,
+      "runner": "Matteo GIANOLA",
+      "index": 744.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 41,
+      "runner": "Gabriele GAGGERO",
+      "index": 743.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 42,
+      "runner": "Germán CASTEL MALLÉN",
+      "index": 733.0,
+      "gender": "Men",
+      "nationality": "Spain"
+    },
+    {
+      "rank": 43,
+      "runner": "Roberta JACQUIN",
+      "index": 727.0,
+      "gender": "Women",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 44,
+      "runner": "Martina CUMERLATO",
+      "index": 724.0,
+      "gender": "Women",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 45,
+      "runner": "Matteo RODIGARI",
+      "index": 722.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 46,
+      "runner": "Matteo SPREAFICO",
+      "index": 721.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 47,
+      "runner": "Manuel TAGLIAFERRI",
+      "index": 720.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 48,
+      "runner": "Luca POLIDORI",
+      "index": 718.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 49,
+      "runner": "Tiziano BERTOLDINI",
+      "index": 717.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 50,
+      "runner": "Stefano VILLA",
+      "index": 716.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 51,
+      "runner": "Dario RIGONELLI",
+      "index": 716.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 52,
+      "runner": "Moreno BOLIS",
+      "index": 714.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 53,
+      "runner": "Matteo RIVA",
+      "index": 712.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 54,
+      "runner": "Rudy QUAINI",
+      "index": 711.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 55,
+      "runner": "Cecilia BASSO",
+      "index": 710.0,
+      "gender": "Women",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 56,
+      "runner": "TRUNG HIEU HOANG",
+      "index": 709.0,
+      "gender": "Men",
+      "nationality": "Vietnam"
+    },
+    {
+      "rank": 57,
+      "runner": "Andrea VIAN",
+      "index": 706.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 58,
+      "runner": "Alessandro ROSSI",
+      "index": 703.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 59,
+      "runner": "Francesco PACENZA",
+      "index": 701.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 60,
+      "runner": "Andrea PIGAZZINI",
+      "index": 698.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 61,
+      "runner": "Fausto RIZZI",
+      "index": 697.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 62,
+      "runner": "Mathilde SAGNES",
+      "index": 696.0,
+      "gender": "Women",
+      "nationality": "France"
+    },
+    {
+      "rank": 63,
+      "runner": "Alice TESTINI",
+      "index": 692.0,
+      "gender": "Women",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 64,
+      "runner": "Michele GIANOLA",
+      "index": 690.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 65,
+      "runner": "Maurizio MERLINI",
+      "index": 690.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 66,
+      "runner": "Antonio CORTI",
+      "index": 686.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 67,
+      "runner": "Giacomo LIZZOLI",
+      "index": 683.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 68,
+      "runner": "Elisa PRESA",
+      "index": 678.0,
+      "gender": "Women",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 69,
+      "runner": "Rudy COLLI",
+      "index": 675.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 70,
+      "runner": "Enzo GIANOLA",
+      "index": 670.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 71,
+      "runner": "Stefano BALDINI",
+      "index": 667.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 72,
+      "runner": "Giacomo MAINETTI",
+      "index": 667.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 73,
+      "runner": "Caterina STENTA",
+      "index": 666.0,
+      "gender": "Women",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 74,
+      "runner": "Manuel PIZZOLATO",
+      "index": 665.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 75,
+      "runner": "Mauro MANENTI",
+      "index": 665.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 76,
+      "runner": "Gabriele VALSECCHI",
+      "index": 664.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 77,
+      "runner": "Felipe MAGNI",
+      "index": 663.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 78,
+      "runner": "Matteo FARINA",
+      "index": 659.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 79,
+      "runner": "Aurora INVERNIZZI",
+      "index": 658.0,
+      "gender": "Women",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 80,
+      "runner": "Alessandro FERRARI",
+      "index": 658.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 81,
+      "runner": "Samuele FRANSCI",
+      "index": 647.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 82,
+      "runner": "Marcos LONGARES ARAQUE",
+      "index": 643.0,
+      "gender": "Men",
+      "nationality": "Spain"
+    },
+    {
+      "rank": 83,
+      "runner": "Luigi COLOMBO",
+      "index": 642.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 84,
+      "runner": "Lazzaro PIU",
+      "index": 641.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 85,
+      "runner": "Paolo BRIGATTI",
+      "index": 641.0,
+      "gender": "Women",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 86,
+      "runner": "Aurora BOSIA",
+      "index": 640.0,
+      "gender": "Women",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 87,
+      "runner": "Antonio RONDI",
+      "index": 638.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 88,
+      "runner": "Gabriele ACQUISTAPACE",
+      "index": 636.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 89,
+      "runner": "Alessandro COLOMBO",
+      "index": 628.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 90,
+      "runner": "Tiziano RIPAMONTI",
+      "index": 626.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 91,
+      "runner": "Fausto LIZZOLI",
+      "index": 624.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 92,
+      "runner": "Giacomino LIZZOLI",
+      "index": 624.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 93,
+      "runner": "Federico ZAMBELLI",
+      "index": 616.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 94,
+      "runner": "Felice BRUSADELLI",
+      "index": 616.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 95,
+      "runner": "Marcello BONETTI",
+      "index": 614.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 96,
+      "runner": "Dominic CRIPPA",
+      "index": 614.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 97,
+      "runner": "Mauro PANZERI",
+      "index": 613.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 98,
+      "runner": "Mattia CORTI",
+      "index": 613.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 99,
+      "runner": "Martina DAL BOSCO",
+      "index": 611.0,
+      "gender": "Women",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 100,
+      "runner": "Giorgia FASCENDINI",
+      "index": 610.0,
+      "gender": "Women",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 101,
+      "runner": "Ionut-Alin ZINCA",
+      "index": 609.0,
+      "gender": "Men",
+      "nationality": "Romania"
+    },
+    {
+      "rank": 102,
+      "runner": "Lotus-Gabriel BULMEZ",
+      "index": 609.0,
+      "gender": "Men",
+      "nationality": "Romania"
+    },
+    {
+      "rank": 103,
+      "runner": "Matteo MILANI",
+      "index": 608.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 104,
+      "runner": "Luca DONISELLI",
+      "index": 607.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 105,
+      "runner": "Mirko CHIESA",
+      "index": 606.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 106,
+      "runner": "Nicolò BIANCHI",
+      "index": 606.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 107,
+      "runner": "Irma CHIAVAZZA",
+      "index": 606.0,
+      "gender": "Women",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 108,
+      "runner": "Ernesto MAINETTI",
+      "index": 605.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 109,
+      "runner": "Francesco MATTION",
+      "index": 605.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 110,
+      "runner": "Emanuele BENEDETTI",
+      "index": 605.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 111,
+      "runner": "Sebastian BETTIGA",
+      "index": 603.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 112,
+      "runner": "Bruno GALIGANI",
+      "index": 602.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 113,
+      "runner": "Stefano MELESI",
+      "index": 600.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 114,
+      "runner": "Matteo LUCCHIN",
+      "index": 599.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 115,
+      "runner": "Silvano MAURI",
+      "index": 599.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 116,
+      "runner": "Diego BOLIS",
+      "index": 598.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 117,
+      "runner": "Luca BASILICO",
+      "index": 597.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 118,
+      "runner": "Simone TROXLER",
+      "index": 592.0,
+      "gender": "Women",
+      "nationality": "Switzerland"
+    },
+    {
+      "rank": 119,
+      "runner": "Stefano CALO'",
+      "index": 592.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 120,
+      "runner": "Rota GIANLUCA",
+      "index": 590.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 121,
+      "runner": "Francesco PEREGO",
+      "index": 590.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 122,
+      "runner": "Nicola VIGANI",
+      "index": 590.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 123,
+      "runner": "Lorenzo RIVOLTA",
+      "index": 588.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 124,
+      "runner": "Andrea PEREGO",
+      "index": 583.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    },
+    {
+      "rank": 125,
+      "runner": "Lorenzo MOLENA",
+      "index": 582.0,
+      "gender": "Men",
+      "nationality": "Italy"
+    }
+  ]
+}

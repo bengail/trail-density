@@ -1,16 +1,16 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Trail Race Analytics — Summary & Charts</title>
+  <title>Trail Race Analytics - Summary & Charts</title>
   <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
   <style>
     :root { --bg:#0b0f14; --panel:#121826; --muted:#9aa4b2; --text:#e5e7eb; --border:#223045; --accent:#7dd3fc; }
     * { box-sizing: border-box; }
     body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
            background: var(--bg); color: var(--text); }
-    header { padding: 14px 18px; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;}
+    header { padding: 14px 18px; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
     header h1 { font-size: 15px; margin:0; letter-spacing: .2px; }
     header .sub { color: var(--muted); font-size: 13px; }
     nav { display:flex; gap:8px; }
@@ -25,7 +25,7 @@
     .note { color: var(--muted); font-size: 12px; line-height: 1.35; }
     .pill { display:inline-block; font-size: 11px; color: #a7f3d0; border: 1px solid rgba(167,243,208,.25);
             padding: 2px 8px; border-radius: 999px; background: rgba(16,185,129,.06); }
-    input[type="search"] { width: 100%; padding: 10px 10px; border-radius: 10px; border: 1px solid var(--border); background:#0e1522; color: var(--text); }
+    input[type="search"], select { width: 100%; padding: 10px 10px; border-radius: 10px; border: 1px solid var(--border); background:#0e1522; color: var(--text); }
     input[type="range"] { width: 100%; }
     .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
     .btns { display:flex; gap:8px; flex-wrap:wrap; }
@@ -44,7 +44,7 @@
     th[data-key]::after { content: ' '; opacity:.7; }
     th.sort-asc::after { content: ' ▲'; }
     th.sort-desc::after { content: ' ▼'; }
-     font-weight: 800; background: rgba(255,255,255,.02); position: sticky; top: 0; }
+    thead th { font-weight: 800; background: rgba(255,255,255,.02); position: sticky; top: 0; }
     .tableWrap { max-height: 70vh; overflow:auto; border-radius: 12px; border:1px solid var(--border); }
     .plots { display:grid; grid-template-rows: 520px 420px 360px; gap:14px; }
     #plot { height:520px; }
@@ -75,7 +75,7 @@
   <div class="grid">
     <aside class="panel">
       <h2>Filtres</h2>
-      <div class="note">Les données viennent de <code>data/courses_index.json</code> + un JSON par course.</div>
+      <div class="note">Les donnees viennent de <code>data/courses_index.json</code> + un JSON par course.</div>
       <div style="height:10px"></div>
 
       <div>
@@ -84,8 +84,24 @@
       </div>
 
       <div style="height:10px"></div>
+      <div>
+        <div class="note"><b>Pays</b></div>
+        <select id="summaryCountryFilter">
+          <option value="">All countries</option>
+        </select>
+      </div>
+
+      <div style="height:10px"></div>
+      <div>
+        <div class="note"><b>Serie</b></div>
+        <select id="summarySeriesFilter">
+          <option value="">All series</option>
+        </select>
+      </div>
+
+      <div style="height:10px"></div>
       <div class="row">
-        <div class="note"><b>Sélection</b></div>
+        <div class="note"><b>Selection</b></div>
         <span class="pill" id="summaryCount">0</span>
       </div>
       <div class="btns" style="margin-top:8px;">
@@ -103,20 +119,21 @@
       <div style="height:12px"></div>
       <div class="note">
         <b>RCI (Realized Competition Index)</b><br/>
-        RCI<sub>N</sub> = moyenne(top N) − écart-type(top N).<br/>
-        Plus c’est élevé, plus le top N est <i>fort</i> et <i>homogène</i>.
+        RCI<sub>N</sub> = moyenne(top N) - ecart-type(top N).<br/>
+        Plus c'est eleve, plus le top N est <i>fort</i> et <i>homogene</i>.
       </div>
     </aside>
 
     <section class="panel">
-      <h2>Comparaison (courses sélectionnées)</h2>
+      <h2>Comparaison (courses selectionnees)</h2>
       <div class="tableWrap">
         <table id="summaryTable">
           <thead>
-                        <tr>
+            <tr>
               <th data-key="id">Race ID</th>
-              <th data-key="year">Année</th>
-              <th data-key="series">Série</th>
+              <th data-key="year">Annee</th>
+              <th data-key="series">Serie</th>
+              <th data-key="country">Pays</th>
               <th data-key="src">Source</th>
               <th data-key="top3">Top3 moy</th>
               <th data-key="top5">Top5 moy</th>
@@ -124,7 +141,7 @@
               <th data-key="rci10">RCI10</th>
               <th data-key="rci20">RCI20</th>
               <th data-key="rci30">RCI30</th>
-              <th data-key="top10Std">Top10 σ</th>
+              <th data-key="top10Std">Top10 sigma</th>
               <th data-key="aucNorm">Top100 AUC norm</th>
               <th data-key="gini">Gini (Top100)</th>
             </tr>
@@ -133,7 +150,7 @@
         </table>
       </div>
       <div class="note" style="margin-top:10px;">
-        Colonnes bonus : <b>AUC norm</b> (aire sous la courbe rank→index, normalisée par N×1000) et <b>Gini</b> (inégalité du top 100).
+        Colonnes bonus : <b>AUC norm</b> (aire sous la courbe rank->index, normalisee par N x 1000) et <b>Gini</b> (inegalite du top 100).
       </div>
     </section>
   </div>
@@ -142,8 +159,8 @@
 <main id="pageCharts">
   <div class="grid">
     <aside class="panel">
-      <h2>Sélection (graphes)</h2>
-      <div class="note">Tu peux afficher plusieurs courses en même temps.</div>
+      <h2>Selection (graphes)</h2>
+      <div class="note">Tu peux afficher plusieurs courses en meme temps.</div>
       <div style="height:10px"></div>
 
       <div>
@@ -173,8 +190,8 @@
       <div style="height:12px"></div>
       <div class="note">
         <b>Lorenz & Gini</b><br/>
-        X = % cumulée d’athlètes (du plus faible au plus fort), Y = % cumulée d’index.<br/>
-        Gini proche de 0 = champ homogène ; plus haut = “top-heavy”.
+        X = % cumulee d'athletes (du plus faible au plus fort), Y = % cumulee d'index.<br/>
+        Gini proche de 0 = champ homogene ; plus haut = "top-heavy".
       </div>
     </aside>
 
