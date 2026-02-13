@@ -1,892 +1,892 @@
 {
   "meta": {
     "race_id": "VAUBAN_2025_CLASSIC",
-    "name": "Vauban 2025 (Classic)",
-    "series": "WMRA",
-    "country": "France",
-    "data_source": "ITRA",
+    "name": "Vauban 2025 - Classic",
+    "series": ["WMRA"],
+    "country": null,
+    "data_source": "UTMB_INDEX",
     "year": 2025,
     "distance_km": null,
     "elevation_m": null,
     "prize_money": null,
-    "notes": null,
+    "notes": "Imported from UTMB-format CSV (French headers: Clt/Nom/Score).",
     "source_url": null
   },
   "results": [
     {
       "rank": 1,
-      "runner": null,
+      "runner": "Michael Selelo SAOLI",
       "index": 893.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Kenya"
     },
     {
       "rank": 2,
-      "runner": null,
+      "runner": "Philemon KIRIAGO",
       "index": 887.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Kenya"
     },
     {
       "rank": 3,
-      "runner": null,
+      "runner": "Ephantus Mwangi NJERI",
       "index": 885.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Kenya"
     },
     {
       "rank": 4,
-      "runner": null,
+      "runner": "Omaya ATUYA RICHARD",
       "index": 878.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Kenya"
     },
     {
       "rank": 5,
-      "runner": null,
+      "runner": "Theodore KLEIN",
       "index": 870.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 6,
-      "runner": null,
+      "runner": "Paul MACHOKA",
       "index": 865.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Kenya"
     },
     {
       "rank": 7,
-      "runner": null,
+      "runner": "Josphat KIPROTICH",
       "index": 854.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Kenya"
     },
     {
       "rank": 8,
-      "runner": null,
+      "runner": "Jacob ADKIN",
       "index": 849.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 9,
-      "runner": null,
+      "runner": "Maximilien DRION",
       "index": 846.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Belgique"
     },
     {
       "rank": 10,
-      "runner": null,
+      "runner": "Maël HENRIC",
       "index": 841.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 11,
-      "runner": null,
+      "runner": "Tom SPENCER",
       "index": 832.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 12,
-      "runner": null,
+      "runner": "Quentin MEYLEU",
       "index": 830.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 13,
-      "runner": null,
+      "runner": "Maël ALLAIRE",
       "index": 828.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 14,
-      "runner": null,
+      "runner": "Klemen ŠPANRING (Klemen SPANRING)",
       "index": 816.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Slovénie"
     },
     {
       "rank": 15,
-      "runner": null,
+      "runner": "Jerome BLANC",
       "index": 809.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 16,
-      "runner": null,
+      "runner": "Louis RÉGENNASS",
       "index": 806.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 17,
-      "runner": null,
+      "runner": "Jules DELABELLE",
       "index": 796.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 18,
-      "runner": null,
+      "runner": "Marcelo GONÇALVES",
       "index": 794.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Portugal"
     },
     {
       "rank": 19,
-      "runner": null,
+      "runner": "Michael SUTTON",
       "index": 790.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Nouvelle-Zélande"
     },
     {
       "rank": 20,
-      "runner": null,
+      "runner": "Wendelin MÖRTENDORFER",
       "index": 789.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Autriche"
     },
     {
       "rank": 21,
-      "runner": null,
+      "runner": "Julien RANCON",
       "index": 787.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 22,
-      "runner": null,
+      "runner": "Thomas HILTON",
       "index": 786.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 23,
-      "runner": null,
+      "runner": "Fi GRANT",
       "index": 783.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 24,
-      "runner": null,
+      "runner": "Ross GOLLAN",
       "index": 783.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 25,
-      "runner": null,
+      "runner": "Rory ABERNETHY",
       "index": 782.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 26,
-      "runner": null,
+      "runner": "Kevin KIBET",
       "index": 777.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Kenya"
     },
     {
       "rank": 27,
-      "runner": null,
+      "runner": "Cyrian SILHOL",
       "index": 769.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 28,
-      "runner": null,
+      "runner": "Benjamin PELAPRAT",
       "index": 768.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 29,
-      "runner": null,
+      "runner": "Emiliano LIBERATORI",
       "index": 768.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 30,
-      "runner": null,
+      "runner": "Nelie CLEMENT",
       "index": 763.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "France"
     },
     {
       "rank": 31,
-      "runner": null,
+      "runner": "Quentin GONZALES-CAMOIN",
       "index": 760.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 32,
-      "runner": null,
+      "runner": "Nicholas BOUCHARD",
       "index": 752.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 33,
-      "runner": null,
+      "runner": "JOYCE MUTHONI NJERU",
       "index": 751.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Kenya"
     },
     {
       "rank": 34,
-      "runner": null,
+      "runner": "Valentine Jepkoech RUTTO",
       "index": 749.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Kenya"
     },
     {
       "rank": 35,
-      "runner": null,
+      "runner": "Gloria CHEBET",
       "index": 747.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Kenya"
     },
     {
       "rank": 36,
-      "runner": null,
+      "runner": "Pierre BERRI",
       "index": 733.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 37,
-      "runner": null,
+      "runner": "Vincent MAZIMANN",
       "index": 729.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 38,
-      "runner": null,
+      "runner": "Scout ADKIN",
       "index": 728.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 39,
-      "runner": null,
+      "runner": "Jules PEYTAVI",
       "index": 724.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 40,
-      "runner": null,
+      "runner": "William AVOUAC",
       "index": 721.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 41,
-      "runner": null,
+      "runner": "Mathieu GOALABRE",
       "index": 718.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 42,
-      "runner": null,
+      "runner": "Paul MOREL",
       "index": 716.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 43,
-      "runner": null,
+      "runner": "Gregor MALCOLM",
       "index": 704.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 44,
-      "runner": null,
+      "runner": "Jade RODRIGUEZ",
       "index": 690.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "France"
     },
     {
       "rank": 45,
-      "runner": null,
+      "runner": "Eliott BARIOULET",
       "index": 689.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 46,
-      "runner": null,
+      "runner": "Mathilde SAGNES",
       "index": 688.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "France"
     },
     {
       "rank": 47,
-      "runner": null,
+      "runner": "Alice GAGGI",
       "index": 686.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Italie"
     },
     {
       "rank": 48,
-      "runner": null,
+      "runner": "Noemi BOUCHARD",
       "index": 686.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Italie"
     },
     {
       "rank": 49,
-      "runner": null,
+      "runner": "Benedetta BROGGI",
       "index": 680.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Italie"
     },
     {
       "rank": 50,
-      "runner": null,
+      "runner": "Lara HAMILTON",
       "index": 676.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Australie"
     },
     {
       "rank": 51,
-      "runner": null,
+      "runner": "Jessie SPEEDY",
       "index": 670.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Nouvelle-Zélande"
     },
     {
       "rank": 52,
-      "runner": null,
+      "runner": "Axelle BOUVIER",
       "index": 659.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "France"
     },
     {
       "rank": 53,
-      "runner": null,
+      "runner": "Thomas ARSAC",
       "index": 652.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 54,
-      "runner": null,
+      "runner": "Laurel MOYER",
       "index": 644.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Etats-Unis"
     },
     {
       "rank": 55,
-      "runner": null,
+      "runner": "Evan PRIVAT",
       "index": 643.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 56,
-      "runner": null,
+      "runner": "Louison JAUME",
       "index": 635.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 57,
-      "runner": null,
+      "runner": "Renaud PONS",
       "index": 633.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 58,
-      "runner": null,
+      "runner": "Thomas MADELEINE",
       "index": 629.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 59,
-      "runner": null,
+      "runner": "Giuliano Franco Enzo CARESIO",
       "index": 627.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 60,
-      "runner": null,
+      "runner": "Theo LHUILLIER",
       "index": 625.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 61,
-      "runner": null,
+      "runner": "Irma CHIAVAZZA",
       "index": 620.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Italie"
     },
     {
       "rank": 62,
-      "runner": null,
+      "runner": "Xavier LANGON",
       "index": 617.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 63,
-      "runner": null,
+      "runner": "Manolo IBORRA",
       "index": 596.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 64,
-      "runner": null,
+      "runner": "Guilhem JOUVE",
       "index": 595.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 65,
-      "runner": null,
+      "runner": "Alexandre DECHEL",
       "index": 592.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 66,
-      "runner": null,
+      "runner": "Stephane ROUBERTY",
       "index": 592.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 67,
-      "runner": null,
+      "runner": "Mathis ADAMEC",
       "index": 591.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 68,
-      "runner": null,
+      "runner": "Tom LAMASSE",
       "index": 590.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 69,
-      "runner": null,
+      "runner": "Caroline HARNEY AYTON",
       "index": 588.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Irlande"
     },
     {
       "rank": 70,
-      "runner": null,
+      "runner": "David CHABANAL",
       "index": 584.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 71,
-      "runner": null,
+      "runner": "Tom ARBOR",
       "index": 582.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 72,
-      "runner": null,
+      "runner": "Sebastien COLLOMP",
       "index": 578.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 73,
-      "runner": null,
+      "runner": "Laurent SERRE",
       "index": 578.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 74,
-      "runner": null,
+      "runner": "Marius ALLIER",
       "index": 574.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 75,
-      "runner": null,
+      "runner": "Kevin JOSSELIN",
       "index": 572.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 76,
-      "runner": null,
+      "runner": "Brendan RICHARD",
       "index": 571.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 77,
-      "runner": null,
+      "runner": "Antoine LOUF",
       "index": 570.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 78,
-      "runner": null,
+      "runner": "Thomas AUTRAN",
       "index": 570.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 79,
-      "runner": null,
+      "runner": "Alan VONLANTHEN",
       "index": 567.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Suisse"
     },
     {
       "rank": 80,
-      "runner": null,
+      "runner": "Carole MADIOU",
       "index": 566.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "France"
     },
     {
       "rank": 81,
-      "runner": null,
+      "runner": "Raphaël SOMPAYRAC",
       "index": 566.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 82,
-      "runner": null,
+      "runner": "Jose QUINTILLA-LOPEZ",
       "index": 561.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 83,
-      "runner": null,
+      "runner": "Stephane DAVOINE",
       "index": 561.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 84,
-      "runner": null,
+      "runner": "Kevin PLANTE",
       "index": 550.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 85,
-      "runner": null,
+      "runner": "Johann LE ROUX",
       "index": 548.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 86,
-      "runner": null,
+      "runner": "Daniel PERRONE",
       "index": 545.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 87,
-      "runner": null,
+      "runner": "Massimo MARCUZZO",
       "index": 544.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 88,
-      "runner": null,
+      "runner": "Olivier COUSIN",
       "index": 542.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 89,
-      "runner": null,
+      "runner": "Maximilien CRUC",
       "index": 538.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 90,
-      "runner": null,
+      "runner": "Laure TARNOWKA",
       "index": 537.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "France"
     },
     {
       "rank": 91,
-      "runner": null,
+      "runner": "Benjamin QUITTET",
       "index": 537.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 92,
-      "runner": null,
+      "runner": "Adrien DAURELLE",
       "index": 531.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 93,
-      "runner": null,
+      "runner": "Edouard GIBERT",
       "index": 531.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 94,
-      "runner": null,
+      "runner": "Amélie DURAND",
       "index": 530.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "France"
     },
     {
       "rank": 95,
-      "runner": null,
+      "runner": "Yoann LAGIER",
       "index": 528.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 96,
-      "runner": null,
+      "runner": "Augustin COLLE",
       "index": 527.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 97,
-      "runner": null,
+      "runner": "Hugo BROCHET",
       "index": 526.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 98,
-      "runner": null,
+      "runner": "Joanny GROSPERRIN",
       "index": 526.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 99,
-      "runner": null,
+      "runner": "Emmanuel ERNULT",
       "index": 522.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 100,
-      "runner": null,
+      "runner": "Maël RAUCAZ",
       "index": 521.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 101,
-      "runner": null,
+      "runner": "Ludovic MALFRAY",
       "index": 520.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 102,
-      "runner": null,
+      "runner": "Mathieu GINESY",
       "index": 515.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 103,
-      "runner": null,
+      "runner": "James BARREA",
       "index": 514.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Belgique"
     },
     {
       "rank": 104,
-      "runner": null,
+      "runner": "Roberto CHIAVAZZA",
       "index": 513.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 105,
-      "runner": null,
+      "runner": "Jean-Francois MICHEL",
       "index": 507.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 106,
-      "runner": null,
+      "runner": "Anthony DELRIEU",
       "index": 491.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 107,
-      "runner": null,
+      "runner": "Aude DIET",
       "index": 488.0,
-      "gender": null,
-      "nationality": null
+      "gender": "",
+      "nationality": "France"
     },
     {
       "rank": 108,
-      "runner": null,
+      "runner": "Nicolas CHASTANIER",
       "index": 488.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 109,
-      "runner": null,
+      "runner": "Cedric VATIER",
       "index": 487.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 110,
-      "runner": null,
+      "runner": "Andre PAPELEBE",
       "index": 486.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 111,
-      "runner": null,
+      "runner": "Nicolas DIDIERE",
       "index": 486.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 112,
-      "runner": null,
+      "runner": "Mathieu FRACHON",
       "index": 484.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 113,
-      "runner": null,
+      "runner": "Benjamin HOUSSARD",
       "index": 484.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 114,
-      "runner": null,
+      "runner": "Adrien BASSOT",
       "index": 481.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 115,
-      "runner": null,
+      "runner": "Julien VAUBOURG",
       "index": 481.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 116,
-      "runner": null,
+      "runner": "Stephane LEGORRE",
       "index": 481.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 117,
-      "runner": null,
+      "runner": "Jack ERNE",
       "index": 478.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Etats-Unis"
     },
     {
       "rank": 118,
-      "runner": null,
+      "runner": "Aimé BARET",
       "index": 477.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 119,
-      "runner": null,
+      "runner": "Teun VAN UFFELEN",
       "index": 477.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Pays-Bas"
     },
     {
       "rank": 120,
-      "runner": null,
+      "runner": "Eva CHARBONNIER",
       "index": 474.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "France"
     },
     {
       "rank": 121,
-      "runner": null,
+      "runner": "Simon BERARD",
       "index": 474.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 122,
-      "runner": null,
+      "runner": "Nathalie PERRONE",
       "index": 470.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "France"
     },
     {
       "rank": 123,
-      "runner": null,
+      "runner": "Justin LACAILLE",
       "index": 469.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 124,
-      "runner": null,
+      "runner": "Jean PINSON",
       "index": 468.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 125,
-      "runner": null,
+      "runner": "Thomas LAUGIER",
       "index": 467.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     }
   ]
 }

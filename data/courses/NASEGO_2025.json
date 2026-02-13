@@ -1,717 +1,717 @@
 {
   "meta": {
     "race_id": "NASEGO_2025",
-    "name": "Trofeo Nasego 2025",
-    "series": "GTWS",
-    "country": "Italy",
-    "data_source": "ITRA",
+    "name": "NASEGO 2025",
+    "series": ["WMRA"],
+    "country": "Italia",
+    "data_source": "UTMB",
     "year": 2025,
     "distance_km": null,
     "elevation_m": null,
     "prize_money": null,
-    "notes": null,
+    "notes": "Imported from UTMB-format CSV (French headers: Clt/Nom/Score).",
     "source_url": null
   },
   "results": [
     {
       "rank": 1,
-      "runner": null,
+      "runner": "Philemon KIRIAGO",
       "index": 916.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Kenya"
     },
     {
       "rank": 2,
-      "runner": null,
+      "runner": "Paul MACHOKA",
       "index": 892.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Kenya"
     },
     {
       "rank": 3,
-      "runner": null,
+      "runner": "Michael Selelo SAOLI",
       "index": 887.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Kenya"
     },
     {
       "rank": 4,
-      "runner": null,
+      "runner": "Omaya ATUYA RICHARD",
       "index": 887.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Kenya"
     },
     {
       "rank": 5,
-      "runner": null,
+      "runner": "Luciano ROTA",
       "index": 878.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 6,
-      "runner": null,
+      "runner": "Theodore KLEIN",
       "index": 875.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 7,
-      "runner": null,
+      "runner": "Alberto VENDER",
       "index": 869.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 8,
-      "runner": null,
+      "runner": "Robbie SIMPSON",
       "index": 868.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 9,
-      "runner": null,
+      "runner": "Quentin MEYLEU",
       "index": 864.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 10,
-      "runner": null,
+      "runner": "Michael GALASSI",
       "index": 862.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 11,
-      "runner": null,
+      "runner": "Roberto GIACOMOTTI",
       "index": 860.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 12,
-      "runner": null,
+      "runner": "Andrea ROSTAN",
       "index": 859.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 13,
-      "runner": null,
+      "runner": "Ross GOLLAN",
       "index": 846.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 14,
-      "runner": null,
+      "runner": "Baptiste MASSOT",
       "index": 840.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 15,
-      "runner": null,
+      "runner": "Ben ROTHERY",
       "index": 837.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 16,
-      "runner": null,
+      "runner": "Kevin KIBET",
       "index": 834.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Kenya"
     },
     {
       "rank": 17,
-      "runner": null,
+      "runner": "Tiziano MOIA",
       "index": 833.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 18,
-      "runner": null,
+      "runner": "Luca MERLI",
       "index": 833.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 19,
-      "runner": null,
+      "runner": "Grant CUNLIFFE",
       "index": 827.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 20,
-      "runner": null,
+      "runner": "Simone GIOLITTI",
       "index": 824.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 21,
-      "runner": null,
+      "runner": "Alric PETIT",
       "index": 821.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 22,
-      "runner": null,
+      "runner": "Oscar SUBUH-SYMONS",
       "index": 820.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 23,
-      "runner": null,
+      "runner": "Elia MATTIO",
       "index": 815.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 24,
-      "runner": null,
+      "runner": "Andrea ELIA",
       "index": 812.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 25,
-      "runner": null,
+      "runner": "Killian MOONEY",
       "index": 808.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Irlande"
     },
     {
       "rank": 26,
-      "runner": null,
+      "runner": "Francesco BONGIO",
       "index": 804.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 27,
-      "runner": null,
+      "runner": "Ewan BROWN",
       "index": 802.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 28,
-      "runner": null,
+      "runner": "Nicholas BOUCHARD",
       "index": 800.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 29,
-      "runner": null,
+      "runner": "George FOSTER",
       "index": 799.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 30,
-      "runner": null,
+      "runner": "Matthew MCCONNELL",
       "index": 798.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Irlande"
     },
     {
       "rank": 31,
-      "runner": null,
+      "runner": "Davide BOTTARELLI",
       "index": 797.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 32,
-      "runner": null,
+      "runner": "Lari TAKANEN",
       "index": 792.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Finlande"
     },
     {
       "rank": 33,
-      "runner": null,
+      "runner": "Jared MARTIN",
       "index": 792.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Irlande"
     },
     {
       "rank": 34,
-      "runner": null,
+      "runner": "Philaries-Jeruto KISANG",
       "index": 791.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Kenya"
     },
     {
       "rank": 35,
-      "runner": null,
+      "runner": "Scout ADKIN",
       "index": 790.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 36,
-      "runner": null,
+      "runner": "Davide DELLA MINA",
       "index": 777.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 37,
-      "runner": null,
+      "runner": "Alessandro BIANCHI",
       "index": 777.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 38,
-      "runner": null,
+      "runner": "Alexandre FINE",
       "index": 773.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 39,
-      "runner": null,
+      "runner": "Andrea DELLAVALLE",
       "index": 771.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 40,
-      "runner": null,
+      "runner": "Michele MASSETTI",
       "index": 770.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 41,
-      "runner": null,
+      "runner": "Gabriele BARILE",
       "index": 767.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 42,
-      "runner": null,
+      "runner": "Tommy MAURIN",
       "index": 766.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 43,
-      "runner": null,
+      "runner": "Tom WOOD",
       "index": 765.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 44,
-      "runner": null,
+      "runner": "Joshua GRIFFITH",
       "index": 763.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 45,
-      "runner": null,
+      "runner": "Cyrian SILHOL",
       "index": 761.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "France"
     },
     {
       "rank": 46,
-      "runner": null,
+      "runner": "Gavin ROBERTS",
       "index": 758.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 47,
-      "runner": null,
+      "runner": "Martin DEMATTEIS",
       "index": 756.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 48,
-      "runner": null,
+      "runner": "JOYCE MUTHONI NJERU",
       "index": 754.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Kenya"
     },
     {
       "rank": 49,
-      "runner": null,
+      "runner": "Valentine Jepkoech RUTTO",
       "index": 747.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Kenya"
     },
     {
       "rank": 50,
-      "runner": null,
+      "runner": "Federico AGOSTINI",
       "index": 747.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 51,
-      "runner": null,
+      "runner": "Andrea MAYR",
       "index": 744.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Autriche"
     },
     {
       "rank": 52,
-      "runner": null,
+      "runner": "Arnaud GEROMBOUX",
       "index": 740.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Belgique"
     },
     {
       "rank": 53,
-      "runner": null,
+      "runner": "Adam CUNNINGHAM",
       "index": 733.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Irlande"
     },
     {
       "rank": 54,
-      "runner": null,
+      "runner": "Alice GAGGI",
       "index": 727.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Italie"
     },
     {
       "rank": 55,
-      "runner": null,
+      "runner": "Andrea TORCHIO",
       "index": 725.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 56,
-      "runner": null,
+      "runner": "Luca RASCHETTI",
       "index": 723.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 57,
-      "runner": null,
+      "runner": "Alexandru FOCSA",
       "index": 722.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Roumanie"
     },
     {
       "rank": 58,
-      "runner": null,
+      "runner": "Anonymous",
       "index": 721.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Irlande"
     },
     {
       "rank": 59,
-      "runner": null,
+      "runner": "Luna GIOVANETTI",
       "index": 716.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Italie"
     },
     {
       "rank": 60,
-      "runner": null,
+      "runner": "Alberto GIOLITTI",
       "index": 716.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 61,
-      "runner": null,
+      "runner": "Sara WILLHOIT",
       "index": 711.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 62,
-      "runner": null,
+      "runner": "Elle TWENTYMAN",
       "index": 708.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 63,
-      "runner": null,
+      "runner": "Andrea CAINI",
       "index": 706.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 64,
-      "runner": null,
+      "runner": "Damiano GABUSI",
       "index": 706.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 65,
-      "runner": null,
+      "runner": "Martina FALCHETTI",
       "index": 705.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Italie"
     },
     {
       "rank": 66,
-      "runner": null,
+      "runner": "Anna HOFER",
       "index": 702.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Italie"
     },
     {
       "rank": 67,
-      "runner": null,
+      "runner": "Mathilde SAGNES",
       "index": 694.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "France"
     },
     {
       "rank": 68,
-      "runner": null,
+      "runner": "Dionigi GIANOLA",
       "index": 693.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 69,
-      "runner": null,
+      "runner": "Benedetta BROGGI",
       "index": 691.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Italie"
     },
     {
       "rank": 70,
-      "runner": null,
+      "runner": "Beatrice BIANCHI",
       "index": 686.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Italie"
     },
     {
       "rank": 71,
-      "runner": null,
+      "runner": "Nichola JACKSON",
       "index": 685.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 72,
-      "runner": null,
+      "runner": "Francesco PACENZA",
       "index": 684.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 73,
-      "runner": null,
+      "runner": "Eli Anne DVERGSDAL",
       "index": 683.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Norvège"
     },
     {
       "rank": 74,
-      "runner": null,
+      "runner": "Corinna GHIRARDI",
       "index": 681.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Italie"
     },
     {
       "rank": 75,
-      "runner": null,
+      "runner": "Luca GIACONELLI",
       "index": 677.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 76,
-      "runner": null,
+      "runner": "Ciaran GOSS",
       "index": 677.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Irlande"
     },
     {
       "rank": 77,
-      "runner": null,
+      "runner": "Manuel CARRARA",
       "index": 676.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 78,
-      "runner": null,
+      "runner": "Paolo GAMBERINI",
       "index": 675.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 79,
-      "runner": null,
+      "runner": "Cartriona MACDONALD",
       "index": 674.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 80,
-      "runner": null,
+      "runner": "Stefano LIGASACCHI",
       "index": 671.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 81,
-      "runner": null,
+      "runner": "Eve PANNONE",
       "index": 670.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 82,
-      "runner": null,
+      "runner": "Martina CHIALVO",
       "index": 667.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Italie"
     },
     {
       "rank": 83,
-      "runner": null,
+      "runner": "Florence BAIRROS",
       "index": 664.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "France"
     },
     {
       "rank": 84,
-      "runner": null,
+      "runner": "Emanuele FAZZINI",
       "index": 661.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 85,
-      "runner": null,
+      "runner": "Alessandro MOR",
       "index": 658.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 86,
-      "runner": null,
+      "runner": "Giacomo GIOLITTI",
       "index": 655.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 87,
-      "runner": null,
+      "runner": "Christian BACCHETTI",
       "index": 654.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 88,
-      "runner": null,
+      "runner": "Eden O'DEA",
       "index": 653.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 89,
-      "runner": null,
+      "runner": "Noemi BOUCHARD",
       "index": 651.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Italie"
     },
     {
       "rank": 90,
-      "runner": null,
+      "runner": "Diego BIASINI",
       "index": 650.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 91,
-      "runner": null,
+      "runner": "Barbara BANI",
       "index": 650.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Italie"
     },
     {
       "rank": 92,
-      "runner": null,
+      "runner": "Julie BORGIA",
       "index": 649.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "France"
     },
     {
       "rank": 93,
-      "runner": null,
+      "runner": "Kirsty Skye DICKSON",
       "index": 647.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Royaume-Uni"
     },
     {
       "rank": 94,
-      "runner": null,
+      "runner": "Pino Arianna DEL",
       "index": 645.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Italie"
     },
     {
       "rank": 95,
-      "runner": null,
+      "runner": "Andreas STITZ",
       "index": 645.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Autriche"
     },
     {
       "rank": 96,
-      "runner": null,
+      "runner": "Ianez ZECCHINI",
       "index": 643.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 97,
-      "runner": null,
+      "runner": "Alberto FOLCHINI",
       "index": 642.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 98,
-      "runner": null,
+      "runner": "Matteo LUCCHIN",
       "index": 640.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 99,
-      "runner": null,
+      "runner": "Filippo COGO",
       "index": 632.0,
-      "gender": null,
-      "nationality": null
+      "gender": "M",
+      "nationality": "Italie"
     },
     {
       "rank": 100,
-      "runner": null,
+      "runner": "Adele BLAISE-SOHNIUS",
       "index": 630.0,
-      "gender": null,
-      "nationality": null
+      "gender": "F",
+      "nationality": "Canada"
     }
   ]
 }
