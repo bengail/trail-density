@@ -55,21 +55,24 @@ function lorenzPoints(values) {
   return { x, y };
 }
 
-function decileMeansByRank(results, topN) {
-  // returns 10 buckets for 1-10..91-100; buckets beyond topN become null
-  const out = [];
-  for (let start = 1; start <= 100; start += 10) {
-    const end = start + 9;
-    if (start > topN) {
-      out.push(null);
-      continue;
-    }
-    const bucket = results
-      .filter(r => r.rank >= start && r.rank <= Math.min(end, topN))
-      .map(r => r.index);
-    out.push(bucket.length ? mean(bucket) : null);
+function bucketRanges(topN, bucketCount) {
+  const size = Math.max(1, Math.ceil(topN / bucketCount));
+  const ranges = [];
+  for (let i = 0; i < bucketCount; i++) {
+    const start = i * size + 1;
+    if (start > topN) break;
+    ranges.push({ start, end: Math.min(topN, (i + 1) * size) });
   }
-  return out;
+  return ranges;
+}
+
+function bucketMeansByRank(results, ranges) {
+  return ranges.map(({ start, end }) => {
+    const bucket = results
+      .filter(r => r.rank >= start && r.rank <= end)
+      .map(r => r.index);
+    return bucket.length ? mean(bucket) : null;
+  });
 }
 
 function fmt(n, digits = 1) {
@@ -350,6 +353,10 @@ async function updateSummaryTable() {
 }
 
 // ---- Charts ----
+function getCourseLabel(course) {
+  return course.meta?.name || course.meta?.race_id || course.race_id;
+}
+
 function groupForCharts(courses, topN) {
   const grouped = new Map();
   for (const c of courses) {
@@ -357,7 +364,7 @@ function groupForCharts(courses, topN) {
     const arr = (c.results || [])
       .filter(r => r.rank >= 1 && r.rank <= topN)
       .sort((a, b) => a.rank - b.rank);
-    grouped.set(id, arr);
+    grouped.set(id, { label: getCourseLabel(c), arr });
   }
   return grouped;
 }
@@ -365,13 +372,15 @@ function groupForCharts(courses, topN) {
 function updateRankPlot(grouped, topN) {
   const ids = Array.from(grouped.keys()).sort();
   const traces = ids.map(id => {
-    const arr = grouped.get(id) || [];
+    const entry = grouped.get(id);
+    const arr = entry?.arr || [];
+    const label = entry?.label || id;
     return {
       x: arr.map(r => r.rank),
       y: arr.map(r => r.index),
       mode: "lines+markers",
-      name: id,
-      hovertemplate: `${id}<br>rank=%{x}<br>index=%{y:.1f}<extra></extra>`,
+      name: label,
+      hovertemplate: `${label}<br>rank=%{x}<br>index=%{y:.1f}<extra></extra>`,
       fill: "tozeroy",
       fillopacity: 0.12,
       line: { width: 2 },
@@ -386,9 +395,10 @@ function updateRankPlot(grouped, topN) {
       paper_bgcolor: "rgba(0,0,0,0)",
       plot_bgcolor: "rgba(0,0,0,0)",
       margin: { l: 55, r: 20, t: 10, b: 50 },
-      xaxis: { title: "Rank (Top N)", range: [1, topN], gridcolor: "rgba(255,255,255,.06)", zeroline: false },
-      yaxis: { title: "Index (Race Score)", gridcolor: "rgba(255,255,255,.06)", zeroline: false },
-      legend: { orientation: "h", y: 1.12, x: 0, font: { size: 11 } },
+      font: { family: "Inter, system-ui, sans-serif", size: 11 },
+      xaxis: { title: "Rank (Top N)", range: [1, topN], gridcolor: "#e2e8f0", zeroline: false, tickfont: { size: 10 } },
+      yaxis: { title: "Index (Race Score)", gridcolor: "#e2e8f0", zeroline: false, tickfont: { size: 10 } },
+      legend: { orientation: "h", y: 1.12, x: 0, font: { size: 10 } },
       hovermode: "x unified"
     },
     { responsive: true, displayModeBar: false }
@@ -409,7 +419,9 @@ function updateLorenzPlot(grouped) {
 
   const ids = Array.from(grouped.keys()).sort();
   for (const id of ids) {
-    const arr = grouped.get(id) || [];
+    const entry = grouped.get(id);
+    const arr = entry?.arr || [];
+    const label = entry?.label || id;
     const values = arr.map(r => r.index);
     const G = gini(values);
     const L = lorenzPoints(values);
@@ -417,8 +429,8 @@ function updateLorenzPlot(grouped) {
       x: L.x,
       y: L.y,
       mode: "lines",
-      name: `${id} (Gini=${fmt(G, 4)})`,
-      hovertemplate: `${id}<br>% athletes=%{x:.2f}<br>% index=%{y:.2f}<extra></extra>`,
+      name: `${label} (Gini=${fmt(G, 4)})`,
+      hovertemplate: `${label}<br>% athletes=%{x:.2f}<br>% index=%{y:.2f}<extra></extra>`,
       line: { width: 2 }
     });
   }
@@ -430,9 +442,10 @@ function updateLorenzPlot(grouped) {
       paper_bgcolor: "rgba(0,0,0,0)",
       plot_bgcolor: "rgba(0,0,0,0)",
       margin: { l: 55, r: 20, t: 10, b: 50 },
-      xaxis: { title: "% cumulative athletes (low to high)", range: [0, 1], gridcolor: "rgba(255,255,255,.06)", zeroline: false },
-      yaxis: { title: "% cumulative index", range: [0, 1], gridcolor: "rgba(255,255,255,.06)", zeroline: false },
-      legend: { orientation: "h", y: 1.12, x: 0, font: { size: 11 } },
+    font: { family: "Inter, system-ui, sans-serif", size: 11 },
+    xaxis: { title: "% cumulative athletes (low to high)", range: [0, 1], gridcolor: "#e2e8f0", zeroline: false, tickfont: { size: 10 } },
+    yaxis: { title: "% cumulative index", range: [0, 1], gridcolor: "#e2e8f0", zeroline: false, tickfont: { size: 10 } },
+    legend: { orientation: "h", y: 1.12, x: 0, font: { size: 10 } },
       hovermode: "closest"
     },
     { responsive: true, displayModeBar: false }
@@ -441,12 +454,14 @@ function updateLorenzPlot(grouped) {
 
 function updateHeatmap(grouped, topN) {
   const ids = Array.from(grouped.keys()).sort();
-  const xLabels = ["1-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80", "81-90", "91-100"];
+  const bucketCount = Math.min(10, Math.max(3, Math.ceil(topN / 10)));
+  const ranges = bucketRanges(topN, bucketCount);
+  const xLabels = ranges.map(r => `${r.start}-${r.end}`);
   const z = [];
   const y = [];
   for (const id of ids) {
     const arr = grouped.get(id) || [];
-    const dec = decileMeansByRank(arr, topN);
+    const dec = bucketMeansByRank(arr, ranges);
     z.push(dec.map(v => (Number.isFinite(v) ? v : null)));
     y.push(id);
   }
