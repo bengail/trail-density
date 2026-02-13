@@ -453,6 +453,7 @@ function updateLorenzPlot(grouped) {
 }
 
 function updateHeatmap(grouped, topN) {
+
   const ids = Array.from(grouped.keys()).sort();
   const bucketCount = Math.min(10, Math.max(3, Math.ceil(topN / 10)));
   const ranges = bucketRanges(topN, bucketCount);
@@ -460,10 +461,12 @@ function updateHeatmap(grouped, topN) {
   const z = [];
   const y = [];
   for (const id of ids) {
-    const arr = grouped.get(id) || [];
+    const entry = grouped.get(id) || {};
+    const arr = entry.arr || [];
+    const label = entry.label || id;
     const dec = bucketMeansByRank(arr, ranges);
     z.push(dec.map(v => (Number.isFinite(v) ? v : null)));
-    y.push(id);
+    y.push(label);
   }
   Plotly.react(
     "heatmapPlot",
@@ -473,14 +476,14 @@ function updateHeatmap(grouped, topN) {
         x: xLabels,
         y: y,
         z: z,
-        hovertemplate: "Course=%{y}<br>Decile=%{x}<br>Mean=%{z:.1f}<extra></extra>"
+        hovertemplate: "Course=%{y}<br>Bucket=%{x}<br>Mean=%{z:.1f}<extra></extra>"
       }
     ],
     {
       paper_bgcolor: "rgba(0,0,0,0)",
       plot_bgcolor: "rgba(0,0,0,0)",
       margin: { l: 95, r: 20, t: 10, b: 55 },
-      xaxis: { title: "Rank deciles (means)" },
+      xaxis: { title: `Rank buckets (1-${topN})` },
       yaxis: { title: "Course" }
     },
     { responsive: true, displayModeBar: false }
