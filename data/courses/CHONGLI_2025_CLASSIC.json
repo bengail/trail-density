@@ -1,0 +1,1760 @@
+{
+  "meta": {
+    "race_id": "CHONGLI_2025_CLASSIC",
+    "name": "CHONGLI_2025_CLASSIC",
+    "series": "CHONGLI_2025_CLASSIC",
+    "country": null,
+    "data_source": "ITRA",
+    "year": null,
+    "distance_km": null,
+    "elevation_m": null,
+    "prize_money": null,
+    "notes": null,
+    "source_url": null
+  },
+  "results": [
+    {
+      "rank": 1,
+      "runner": "SAOLI Michael Selelo",
+      "index": 918.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 2,
+      "runner": "MACHOKA Paul",
+      "index": 906.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 3,
+      "runner": "EHRLE Lukas",
+      "index": 900.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 4,
+      "runner": "ROSTAN ANDREA",
+      "index": 878.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 5,
+      "runner": "VENDER ALBERTO",
+      "index": 855.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 6,
+      "runner": "MOIA Tiziano",
+      "index": 850.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 7,
+      "runner": "DOUGLAS Andrew",
+      "index": 845.0,
+      "gender": "M",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 8,
+      "runner": "MERLI Luca",
+      "index": 843.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 9,
+      "runner": "NATSAGDORJ Luvsansharav",
+      "index": 835.0,
+      "gender": "M",
+      "nationality": "MGL"
+    },
+    {
+      "rank": 10,
+      "runner": "SHI Ai'ai",
+      "index": 811.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 11,
+      "runner": "SHI Yeyuedu",
+      "index": 804.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 12,
+      "runner": "ZHANG sheng",
+      "index": 802.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 13,
+      "runner": "DOS SANTOS MALMETO Marcelo",
+      "index": 798.0,
+      "gender": "M",
+      "nationality": "BRA"
+    },
+    {
+      "rank": 14,
+      "runner": "SHI Kaiijn",
+      "index": 797.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 15,
+      "runner": "ELIA Andrea",
+      "index": 793.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 16,
+      "runner": "MENGKAI  BATE",
+      "index": 792.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 17,
+      "runner": "CHAOYANG  YE",
+      "index": 790.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 18,
+      "runner": "RUTTO Valentine Jepkoech",
+      "index": 780.0,
+      "gender": "F",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 19,
+      "runner": "YANG Tao",
+      "index": 776.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 20,
+      "runner": "WANG Wei",
+      "index": 769.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 21,
+      "runner": "YOU Peiquan",
+      "index": 769.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 22,
+      "runner": "JAMES Thomas Dickson",
+      "index": 755.0,
+      "gender": "M",
+      "nationality": "MAS"
+    },
+    {
+      "rank": 23,
+      "runner": "WU Hao",
+      "index": 755.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 24,
+      "runner": "SUTTON Michael",
+      "index": 750.0,
+      "gender": "M",
+      "nationality": "NZL"
+    },
+    {
+      "rank": 25,
+      "runner": "ADKIN Scout",
+      "index": 746.0,
+      "gender": "F",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 26,
+      "runner": "YONG Yang",
+      "index": 732.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 27,
+      "runner": "LIU Chao",
+      "index": 730.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 28,
+      "runner": "CHEBET Gloria",
+      "index": 723.0,
+      "gender": "F",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 29,
+      "runner": "TWENTYMAN Elle",
+      "index": 719.0,
+      "gender": "F",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 30,
+      "runner": "田 鹏",
+      "index": 718.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 31,
+      "runner": "BU Luo",
+      "index": 716.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 32,
+      "runner": "CHEN Hualing",
+      "index": 696.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 33,
+      "runner": "TROXLER Simone",
+      "index": 692.0,
+      "gender": "F",
+      "nationality": "SUI"
+    },
+    {
+      "rank": 34,
+      "runner": "SUYONG KIM",
+      "index": 692.0,
+      "gender": "M",
+      "nationality": "KOR"
+    },
+    {
+      "rank": 35,
+      "runner": "HE dong",
+      "index": 691.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 36,
+      "runner": "FAZHENG Cai",
+      "index": 683.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 37,
+      "runner": "WANG Guolong",
+      "index": 683.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 38,
+      "runner": "DEL PINO Arianna",
+      "index": 680.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 39,
+      "runner": "LUO Cihua",
+      "index": 676.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 40,
+      "runner": "MA Ziqiang",
+      "index": 676.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 41,
+      "runner": "KIM JONGYOUL",
+      "index": 674.0,
+      "gender": "M",
+      "nationality": "KOR"
+    },
+    {
+      "rank": 42,
+      "runner": "ZENG Qingwu",
+      "index": 670.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 43,
+      "runner": "SPEEDY Jessie",
+      "index": 667.0,
+      "gender": "F",
+      "nationality": "NZL"
+    },
+    {
+      "rank": 44,
+      "runner": "DENTIS Arianna",
+      "index": 666.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 45,
+      "runner": "WEI Yipang",
+      "index": 663.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 46,
+      "runner": "Zhang WEIQIANG",
+      "index": 658.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 47,
+      "runner": "YANG Yan",
+      "index": 657.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 48,
+      "runner": "MELNYK Oleksii",
+      "index": 656.0,
+      "gender": "M",
+      "nationality": "UKR"
+    },
+    {
+      "rank": 49,
+      "runner": "Anonymous 4157662",
+      "index": 645.0,
+      "gender": "-",
+      "nationality": "MGL"
+    },
+    {
+      "rank": 50,
+      "runner": "DVERGSDAL Eli Anne",
+      "index": 644.0,
+      "gender": "F",
+      "nationality": "NOR"
+    },
+    {
+      "rank": 51,
+      "runner": "MO Xingwang",
+      "index": 640.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 52,
+      "runner": "VU Duc Huy",
+      "index": 637.0,
+      "gender": "M",
+      "nationality": "VIE"
+    },
+    {
+      "rank": 53,
+      "runner": "BAI Shuobo",
+      "index": 631.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 54,
+      "runner": "MYAGMAR DULAMSUREN",
+      "index": 631.0,
+      "gender": "F",
+      "nationality": "MGL"
+    },
+    {
+      "rank": 55,
+      "runner": "FU Huarong",
+      "index": 623.0,
+      "gender": null,
+      "nationality": "CHN"
+    },
+    {
+      "rank": 56,
+      "runner": "GUAN Yousheng",
+      "index": 623.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 57,
+      "runner": "WU JI",
+      "index": 620.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 58,
+      "runner": "HE Juncheng",
+      "index": 619.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 59,
+      "runner": "ZANG Yunhai",
+      "index": 619.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 60,
+      "runner": "JIANG Wenli",
+      "index": 616.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 61,
+      "runner": "MIYACHI Fujio",
+      "index": 615.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 62,
+      "runner": "ZHANG Xu",
+      "index": 610.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 63,
+      "runner": "LIU Guocheng",
+      "index": 610.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 64,
+      "runner": "KANG Yuanwei",
+      "index": 603.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 65,
+      "runner": "LI JIAN",
+      "index": 599.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 66,
+      "runner": "ZHENG Bingling",
+      "index": 597.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 67,
+      "runner": "TIAN Li",
+      "index": 597.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 68,
+      "runner": "KIM Seonyeong",
+      "index": 592.0,
+      "gender": "F",
+      "nationality": "KOR"
+    },
+    {
+      "rank": 69,
+      "runner": "MILANESI Blanco Maria Florencia",
+      "index": 591.0,
+      "gender": "F",
+      "nationality": "ARG"
+    },
+    {
+      "rank": 70,
+      "runner": "WANG Tian",
+      "index": 591.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 71,
+      "runner": "JIA Weihua",
+      "index": 590.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 72,
+      "runner": "YANG Xiaoxia",
+      "index": 589.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 73,
+      "runner": "CHEN Binghong",
+      "index": 587.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 74,
+      "runner": "LIU Jianhua",
+      "index": 583.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 75,
+      "runner": "CAO yang",
+      "index": 576.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 76,
+      "runner": "WANG Liping",
+      "index": 575.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 77,
+      "runner": "WANG xunan",
+      "index": 573.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 78,
+      "runner": "JUNG Seola",
+      "index": 570.0,
+      "gender": "F",
+      "nationality": "KOR"
+    },
+    {
+      "rank": 79,
+      "runner": "LONG Tianyan",
+      "index": 568.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 80,
+      "runner": "ZHANG bo",
+      "index": 568.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 81,
+      "runner": "YOU Fuxing",
+      "index": 568.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 82,
+      "runner": "LI Yamei",
+      "index": 567.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 83,
+      "runner": "CHEN Jingjing",
+      "index": 566.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 84,
+      "runner": "WANG Dayu",
+      "index": 562.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 85,
+      "runner": "LEE Sunyeon",
+      "index": 560.0,
+      "gender": "F",
+      "nationality": "KOR"
+    },
+    {
+      "rank": 86,
+      "runner": "WEI jiafu",
+      "index": 558.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 87,
+      "runner": "LIU Bowen",
+      "index": 557.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 88,
+      "runner": "LI Rusong",
+      "index": 557.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 89,
+      "runner": "ZHOU Xiaoxiao",
+      "index": 556.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 90,
+      "runner": "LI li",
+      "index": 556.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 91,
+      "runner": "QI  Yulei",
+      "index": 555.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 92,
+      "runner": "GUO Shaobin",
+      "index": 546.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 93,
+      "runner": "BAI Jie",
+      "index": 546.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 94,
+      "runner": "CHEN Xiaolan",
+      "index": 544.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 94,
+      "runner": "ZHAO Guoping",
+      "index": 544.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 96,
+      "runner": "LI Anna",
+      "index": 532.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 97,
+      "runner": "ZHOU Yixing",
+      "index": 529.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 98,
+      "runner": "BEGLIARDO Maria Constanza",
+      "index": 529.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 99,
+      "runner": "FAN Xinlei",
+      "index": 528.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 99,
+      "runner": "PENG ZHAO",
+      "index": 528.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 101,
+      "runner": "MENG Yu",
+      "index": 526.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 102,
+      "runner": "Anonymous 5714037",
+      "index": 524.0,
+      "gender": "-",
+      "nationality": "MGL"
+    },
+    {
+      "rank": 103,
+      "runner": "YU Zhe",
+      "index": 521.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 104,
+      "runner": "GUAN Zhong",
+      "index": 520.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 105,
+      "runner": "LIU Mingyv",
+      "index": 519.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 106,
+      "runner": "YANG Junqing",
+      "index": 518.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 107,
+      "runner": "ZI Juwei",
+      "index": 518.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 108,
+      "runner": "SHEN Yanbin",
+      "index": 517.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 109,
+      "runner": "WANG Suzhen",
+      "index": 517.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 110,
+      "runner": "XIA Peng",
+      "index": 514.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 111,
+      "runner": "HUANG Dabin",
+      "index": 513.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 112,
+      "runner": "LI CHUNFU",
+      "index": 511.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 113,
+      "runner": "ALTANTUYA Sainbileg",
+      "index": 509.0,
+      "gender": "F",
+      "nationality": "MGL"
+    },
+    {
+      "rank": 114,
+      "runner": "ZHANG bo",
+      "index": 503.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 115,
+      "runner": "YE HAIPENG",
+      "index": 503.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 116,
+      "runner": "PONSR Nitichai",
+      "index": 494.0,
+      "gender": "M",
+      "nationality": "THA"
+    },
+    {
+      "rank": 117,
+      "runner": "DONG Tao",
+      "index": 494.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 118,
+      "runner": "Zhang Xiaomeng",
+      "index": 493.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 119,
+      "runner": "DENG ronghua",
+      "index": 492.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 120,
+      "runner": "ZHANG wei",
+      "index": 492.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 121,
+      "runner": "YU Yichao",
+      "index": 491.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 122,
+      "runner": "REN Kaizeng",
+      "index": 491.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 123,
+      "runner": "ZHANG Lihong",
+      "index": 490.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 124,
+      "runner": "JIANG Honghong",
+      "index": 489.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 125,
+      "runner": "SUDE Bilige",
+      "index": 488.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 126,
+      "runner": "LAPPOONTAVEE Apiwat",
+      "index": 487.0,
+      "gender": "M",
+      "nationality": "THA"
+    },
+    {
+      "rank": 127,
+      "runner": "ZHAO Chuanbo",
+      "index": 487.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 128,
+      "runner": "WANG Chenwei",
+      "index": 485.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 129,
+      "runner": "TAN Jianghua",
+      "index": 478.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 130,
+      "runner": "YAO Feng",
+      "index": 477.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 131,
+      "runner": "LIN Bohan",
+      "index": 477.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 132,
+      "runner": "HUANG Jingru",
+      "index": 476.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 133,
+      "runner": "LAPPOONTAVEE Nubngern",
+      "index": 471.0,
+      "gender": "M",
+      "nationality": "THA"
+    },
+    {
+      "rank": 134,
+      "runner": "ZHAO bingchun",
+      "index": 470.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 135,
+      "runner": "JIA Bao",
+      "index": 469.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 136,
+      "runner": "LIU Honglong",
+      "index": 467.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 137,
+      "runner": "ZHANG Hongyun",
+      "index": 460.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 138,
+      "runner": "ZHOU Guobin",
+      "index": 457.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 139,
+      "runner": "HE Xiaorong",
+      "index": 456.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 140,
+      "runner": "PANG Wenyun",
+      "index": 454.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 141,
+      "runner": "ZHOU Xingfu",
+      "index": 452.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 142,
+      "runner": "ZHIJIE HUANG",
+      "index": 452.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 143,
+      "runner": "CHEN Yichuan",
+      "index": 449.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 144,
+      "runner": "JU Junting",
+      "index": 448.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 145,
+      "runner": "CHU xinjie",
+      "index": 447.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 146,
+      "runner": "SHI Qi",
+      "index": 445.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 147,
+      "runner": "SUN xiuyan",
+      "index": 444.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 148,
+      "runner": "HAO Jingwen",
+      "index": 443.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 149,
+      "runner": "Zhang BO",
+      "index": 440.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 150,
+      "runner": "CHEN YueWen",
+      "index": 440.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 151,
+      "runner": "LIU Yanda",
+      "index": 437.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 152,
+      "runner": "ZHIHAO Fu",
+      "index": 436.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 153,
+      "runner": "LIU Bo",
+      "index": 435.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 154,
+      "runner": "ZHANG Yujia",
+      "index": 434.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 155,
+      "runner": "LU wenjing",
+      "index": 433.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 156,
+      "runner": "YUAN Huizhong",
+      "index": 432.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 157,
+      "runner": "ZHOU Wenting",
+      "index": 431.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 158,
+      "runner": "REN Yi",
+      "index": 431.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 159,
+      "runner": "WANG Yunhui",
+      "index": 430.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 160,
+      "runner": "XUEMEI Ye",
+      "index": 430.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 161,
+      "runner": "PARK Gill soo",
+      "index": 429.0,
+      "gender": "M",
+      "nationality": "KOR"
+    },
+    {
+      "rank": 162,
+      "runner": "WU Yunhao",
+      "index": 429.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 163,
+      "runner": "Anonymous 5280582",
+      "index": 428.0,
+      "gender": "-",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 164,
+      "runner": "ZHANG Jing",
+      "index": 425.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 165,
+      "runner": "ZHANG Junwei",
+      "index": 425.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 166,
+      "runner": "CAO Hui",
+      "index": 422.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 167,
+      "runner": "LI Jingzhe",
+      "index": 421.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 168,
+      "runner": "TONG XIN",
+      "index": 421.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 169,
+      "runner": "WANG Pan",
+      "index": 420.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 170,
+      "runner": "DU Jianfeng",
+      "index": 418.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 171,
+      "runner": "CAO shuyang",
+      "index": 416.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 172,
+      "runner": "KOU Dongxu",
+      "index": 416.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 173,
+      "runner": "LI Fulin",
+      "index": 414.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 174,
+      "runner": "GAO Ronghan",
+      "index": 414.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 175,
+      "runner": "TAO MA",
+      "index": 413.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 176,
+      "runner": "MO CHEN",
+      "index": 413.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 177,
+      "runner": "ZHANG Lihong",
+      "index": 411.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 178,
+      "runner": "Zhang Yabin",
+      "index": 410.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 179,
+      "runner": "XUAN zhang",
+      "index": 408.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 180,
+      "runner": "LI Xueliang",
+      "index": 408.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 181,
+      "runner": "ZHANG Zhesheng",
+      "index": 408.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 182,
+      "runner": "LIU Lishan",
+      "index": 406.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 183,
+      "runner": "CUI Yinghua",
+      "index": 405.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 184,
+      "runner": "LIU Yanbin",
+      "index": 404.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 185,
+      "runner": "SHI Guoan",
+      "index": 404.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 186,
+      "runner": "DONG Bin",
+      "index": 403.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 187,
+      "runner": "LI JINGHUA",
+      "index": 403.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 188,
+      "runner": "LIU Weiyu",
+      "index": 402.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 189,
+      "runner": "DENG jia",
+      "index": 401.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 190,
+      "runner": "ZHOU Jingxia",
+      "index": 401.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 191,
+      "runner": "CHENG Jianyu",
+      "index": 398.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 192,
+      "runner": "PAN LULU",
+      "index": 398.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 193,
+      "runner": "SUN Xianghong",
+      "index": 398.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 194,
+      "runner": "JIANG Liping",
+      "index": 397.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 195,
+      "runner": "LIN Zicheng",
+      "index": 394.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 196,
+      "runner": "GONG Bihai",
+      "index": 394.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 197,
+      "runner": "CHEN Jianyu",
+      "index": 394.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 198,
+      "runner": "TIAN Lei",
+      "index": 393.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 199,
+      "runner": "HUANG Xiaoyun",
+      "index": 392.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 200,
+      "runner": "LIU Aimin",
+      "index": 387.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 201,
+      "runner": "MA Jianfeng",
+      "index": 386.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 202,
+      "runner": "LIU Jie",
+      "index": 386.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 203,
+      "runner": "WANG PEIWEN",
+      "index": 383.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 204,
+      "runner": "ZHAI Luya",
+      "index": 382.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 205,
+      "runner": "LV XiHong",
+      "index": 379.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 206,
+      "runner": "LIU Jianmin",
+      "index": 378.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 207,
+      "runner": "WANG Ning",
+      "index": 375.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 207,
+      "runner": "WANG Ying",
+      "index": 375.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 209,
+      "runner": "XU Jihang",
+      "index": 375.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 210,
+      "runner": "PENG Xuefeng",
+      "index": 374.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 211,
+      "runner": "WANG Chongyu",
+      "index": 374.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 212,
+      "runner": "LIU Yuxuan",
+      "index": 372.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 212,
+      "runner": "YANG HUAQIU",
+      "index": 372.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 214,
+      "runner": "CHEN Wencan",
+      "index": 368.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 215,
+      "runner": "Zhan Penghui",
+      "index": 367.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 216,
+      "runner": "LI Xiaoyu",
+      "index": 363.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 217,
+      "runner": "ZHUANG Sunan",
+      "index": 361.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 218,
+      "runner": "WANG Xin",
+      "index": 361.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 219,
+      "runner": "JIA Lili",
+      "index": 360.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 220,
+      "runner": "DING Xin",
+      "index": 360.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 221,
+      "runner": "HUANG Jia",
+      "index": 360.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 222,
+      "runner": "WANG Jing",
+      "index": 359.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 222,
+      "runner": "ZHENG Ran",
+      "index": 359.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 224,
+      "runner": "YIN Min",
+      "index": 359.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 225,
+      "runner": "ZHANG Siwei",
+      "index": 358.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 226,
+      "runner": "XIANGLI jia",
+      "index": 357.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 227,
+      "runner": "MI Le",
+      "index": 355.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 228,
+      "runner": "FU Jianguang",
+      "index": 354.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 229,
+      "runner": "ZHANG zhongyuan",
+      "index": 353.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 230,
+      "runner": "XU Chunguang",
+      "index": 351.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 231,
+      "runner": "DONG Jie",
+      "index": 349.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 232,
+      "runner": "LI Haisong",
+      "index": 349.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 233,
+      "runner": "SHI Ruibing",
+      "index": 349.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 234,
+      "runner": "BAI Yufei",
+      "index": 348.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 235,
+      "runner": "ZHANG xuan",
+      "index": 347.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 236,
+      "runner": "ZHOU Xiaoyan",
+      "index": 346.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 237,
+      "runner": "GAO Zixuan",
+      "index": 341.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 238,
+      "runner": "LIU Bei Bei",
+      "index": 339.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 239,
+      "runner": "WANG sanxia",
+      "index": 338.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 240,
+      "runner": "ZHANG Zhiguo",
+      "index": 338.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 241,
+      "runner": "CHEN Guanglong",
+      "index": 336.0,
+      "gender": "M",
+      "nationality": null
+    },
+    {
+      "rank": 242,
+      "runner": "JIANG Ruyuan",
+      "index": 334.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 243,
+      "runner": "XU Hu",
+      "index": 334.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 244,
+      "runner": "BAI Mingze",
+      "index": 334.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 245,
+      "runner": "YANG xinyue",
+      "index": 334.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 246,
+      "runner": "ZHAO Yu",
+      "index": 333.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 247,
+      "runner": "ZHANG Xun",
+      "index": 333.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 248,
+      "runner": "ZHANG Junjie",
+      "index": 331.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 249,
+      "runner": "SONG Wei",
+      "index": 330.0,
+      "gender": "F",
+      "nationality": "CHN"
+    }
+  ]
+}

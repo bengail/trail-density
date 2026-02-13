@@ -1,0 +1,892 @@
+{
+  "meta": {
+    "race_id": "VAUBAN_2025_CLASSIC",
+    "name": "VAUBAN_2025_CLASSIC",
+    "series": "VAUBAN_2025_CLASSIC",
+    "country": null,
+    "data_source": "ITRA",
+    "year": null,
+    "distance_km": null,
+    "elevation_m": null,
+    "prize_money": null,
+    "notes": null,
+    "source_url": null
+  },
+  "results": [
+    {
+      "rank": 1,
+      "runner": null,
+      "index": 893.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 2,
+      "runner": null,
+      "index": 887.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 3,
+      "runner": null,
+      "index": 885.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 4,
+      "runner": null,
+      "index": 878.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 5,
+      "runner": null,
+      "index": 870.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 6,
+      "runner": null,
+      "index": 865.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 7,
+      "runner": null,
+      "index": 854.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 8,
+      "runner": null,
+      "index": 849.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 9,
+      "runner": null,
+      "index": 846.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 10,
+      "runner": null,
+      "index": 841.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 11,
+      "runner": null,
+      "index": 832.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 12,
+      "runner": null,
+      "index": 830.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 13,
+      "runner": null,
+      "index": 828.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 14,
+      "runner": null,
+      "index": 816.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 15,
+      "runner": null,
+      "index": 809.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 16,
+      "runner": null,
+      "index": 806.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 17,
+      "runner": null,
+      "index": 796.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 18,
+      "runner": null,
+      "index": 794.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 19,
+      "runner": null,
+      "index": 790.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 20,
+      "runner": null,
+      "index": 789.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 21,
+      "runner": null,
+      "index": 787.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 22,
+      "runner": null,
+      "index": 786.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 23,
+      "runner": null,
+      "index": 783.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 24,
+      "runner": null,
+      "index": 783.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 25,
+      "runner": null,
+      "index": 782.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 26,
+      "runner": null,
+      "index": 777.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 27,
+      "runner": null,
+      "index": 769.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 28,
+      "runner": null,
+      "index": 768.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 29,
+      "runner": null,
+      "index": 768.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 30,
+      "runner": null,
+      "index": 763.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 31,
+      "runner": null,
+      "index": 760.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 32,
+      "runner": null,
+      "index": 752.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 33,
+      "runner": null,
+      "index": 751.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 34,
+      "runner": null,
+      "index": 749.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 35,
+      "runner": null,
+      "index": 747.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 36,
+      "runner": null,
+      "index": 733.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 37,
+      "runner": null,
+      "index": 729.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 38,
+      "runner": null,
+      "index": 728.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 39,
+      "runner": null,
+      "index": 724.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 40,
+      "runner": null,
+      "index": 721.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 41,
+      "runner": null,
+      "index": 718.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 42,
+      "runner": null,
+      "index": 716.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 43,
+      "runner": null,
+      "index": 704.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 44,
+      "runner": null,
+      "index": 690.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 45,
+      "runner": null,
+      "index": 689.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 46,
+      "runner": null,
+      "index": 688.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 47,
+      "runner": null,
+      "index": 686.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 48,
+      "runner": null,
+      "index": 686.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 49,
+      "runner": null,
+      "index": 680.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 50,
+      "runner": null,
+      "index": 676.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 51,
+      "runner": null,
+      "index": 670.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 52,
+      "runner": null,
+      "index": 659.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 53,
+      "runner": null,
+      "index": 652.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 54,
+      "runner": null,
+      "index": 644.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 55,
+      "runner": null,
+      "index": 643.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 56,
+      "runner": null,
+      "index": 635.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 57,
+      "runner": null,
+      "index": 633.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 58,
+      "runner": null,
+      "index": 629.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 59,
+      "runner": null,
+      "index": 627.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 60,
+      "runner": null,
+      "index": 625.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 61,
+      "runner": null,
+      "index": 620.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 62,
+      "runner": null,
+      "index": 617.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 63,
+      "runner": null,
+      "index": 596.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 64,
+      "runner": null,
+      "index": 595.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 65,
+      "runner": null,
+      "index": 592.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 66,
+      "runner": null,
+      "index": 592.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 67,
+      "runner": null,
+      "index": 591.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 68,
+      "runner": null,
+      "index": 590.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 69,
+      "runner": null,
+      "index": 588.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 70,
+      "runner": null,
+      "index": 584.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 71,
+      "runner": null,
+      "index": 582.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 72,
+      "runner": null,
+      "index": 578.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 73,
+      "runner": null,
+      "index": 578.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 74,
+      "runner": null,
+      "index": 574.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 75,
+      "runner": null,
+      "index": 572.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 76,
+      "runner": null,
+      "index": 571.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 77,
+      "runner": null,
+      "index": 570.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 78,
+      "runner": null,
+      "index": 570.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 79,
+      "runner": null,
+      "index": 567.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 80,
+      "runner": null,
+      "index": 566.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 81,
+      "runner": null,
+      "index": 566.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 82,
+      "runner": null,
+      "index": 561.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 83,
+      "runner": null,
+      "index": 561.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 84,
+      "runner": null,
+      "index": 550.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 85,
+      "runner": null,
+      "index": 548.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 86,
+      "runner": null,
+      "index": 545.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 87,
+      "runner": null,
+      "index": 544.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 88,
+      "runner": null,
+      "index": 542.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 89,
+      "runner": null,
+      "index": 538.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 90,
+      "runner": null,
+      "index": 537.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 91,
+      "runner": null,
+      "index": 537.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 92,
+      "runner": null,
+      "index": 531.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 93,
+      "runner": null,
+      "index": 531.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 94,
+      "runner": null,
+      "index": 530.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 95,
+      "runner": null,
+      "index": 528.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 96,
+      "runner": null,
+      "index": 527.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 97,
+      "runner": null,
+      "index": 526.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 98,
+      "runner": null,
+      "index": 526.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 99,
+      "runner": null,
+      "index": 522.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 100,
+      "runner": null,
+      "index": 521.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 101,
+      "runner": null,
+      "index": 520.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 102,
+      "runner": null,
+      "index": 515.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 103,
+      "runner": null,
+      "index": 514.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 104,
+      "runner": null,
+      "index": 513.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 105,
+      "runner": null,
+      "index": 507.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 106,
+      "runner": null,
+      "index": 491.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 107,
+      "runner": null,
+      "index": 488.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 108,
+      "runner": null,
+      "index": 488.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 109,
+      "runner": null,
+      "index": 487.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 110,
+      "runner": null,
+      "index": 486.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 111,
+      "runner": null,
+      "index": 486.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 112,
+      "runner": null,
+      "index": 484.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 113,
+      "runner": null,
+      "index": 484.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 114,
+      "runner": null,
+      "index": 481.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 115,
+      "runner": null,
+      "index": 481.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 116,
+      "runner": null,
+      "index": 481.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 117,
+      "runner": null,
+      "index": 478.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 118,
+      "runner": null,
+      "index": 477.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 119,
+      "runner": null,
+      "index": 477.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 120,
+      "runner": null,
+      "index": 474.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 121,
+      "runner": null,
+      "index": 474.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 122,
+      "runner": null,
+      "index": 470.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 123,
+      "runner": null,
+      "index": 469.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 124,
+      "runner": null,
+      "index": 468.0,
+      "gender": null,
+      "nationality": null
+    },
+    {
+      "rank": 125,
+      "runner": null,
+      "index": 467.0,
+      "gender": null,
+      "nationality": null
+    }
+  ]
+}

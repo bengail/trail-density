@@ -1,0 +1,1760 @@
+{
+  "meta": {
+    "race_id": "ZEGAMA2025",
+    "name": "ZEGAMA2025",
+    "series": "ZEGAMA",
+    "country": null,
+    "data_source": "ITRA",
+    "year": 2025,
+    "distance_km": null,
+    "elevation_m": null,
+    "prize_money": null,
+    "notes": null,
+    "source_url": null
+  },
+  "results": [
+    {
+      "rank": 1,
+      "runner": "ELAZZAOUI Elhousine",
+      "index": 936.0,
+      "gender": "M",
+      "nationality": "MAR"
+    },
+    {
+      "rank": 2,
+      "runner": "BLANES REIG Andreu",
+      "index": 906.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 3,
+      "runner": "PATTIS Daniel",
+      "index": 903.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 4,
+      "runner": "DEL PERO Luca",
+      "index": 892.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 5,
+      "runner": "BELTRAMI lorenzo",
+      "index": 890.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 6,
+      "runner": "CARDIN Thomas",
+      "index": 888.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 7,
+      "runner": "MARTINEZ PEREZ Antonio",
+      "index": 883.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 8,
+      "runner": "MOLINA Nicolas",
+      "index": 875.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 9,
+      "runner": "ANGERMUND Stian",
+      "index": 872.0,
+      "gender": "M",
+      "nationality": "NOR"
+    },
+    {
+      "rank": 10,
+      "runner": "KUBICA Marcin",
+      "index": 872.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 11,
+      "runner": "ROTA MARTIR Lorenzo",
+      "index": 863.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 12,
+      "runner": "MITRICA Leonard",
+      "index": 856.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 13,
+      "runner": "ORMAETXEA BILBAO Paul",
+      "index": 855.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 14,
+      "runner": "BOURGEOIS Theo",
+      "index": 855.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 15,
+      "runner": "SIMON AYMERICH Andreu",
+      "index": 851.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 16,
+      "runner": "IZQUIERDO ALONSO Daniel",
+      "index": 850.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 17,
+      "runner": "KJÆREVIK Anders",
+      "index": 848.0,
+      "gender": "M",
+      "nationality": "NOR"
+    },
+    {
+      "rank": 18,
+      "runner": "GUIGNARD Simon",
+      "index": 846.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 19,
+      "runner": "MERILLAS Manuel",
+      "index": 844.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 20,
+      "runner": "YLINEN Juho",
+      "index": 841.0,
+      "gender": "M",
+      "nationality": "FIN"
+    },
+    {
+      "rank": 21,
+      "runner": "RZESZOTKO Marcin",
+      "index": 839.0,
+      "gender": "M",
+      "nationality": "SVK"
+    },
+    {
+      "rank": 22,
+      "runner": "TANARA Mattia",
+      "index": 838.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 23,
+      "runner": "DAMIAN Bogdan",
+      "index": 835.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 24,
+      "runner": "TABOR Dominik",
+      "index": 835.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 25,
+      "runner": "MAGUET Nadir",
+      "index": 835.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 26,
+      "runner": "ZUBELDIA ALBENIZ Oier",
+      "index": 833.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 27,
+      "runner": "AZKARATE MORENO Asier",
+      "index": 832.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 28,
+      "runner": "MACIAS CIPRIAIN Iñigo",
+      "index": 821.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 29,
+      "runner": "ZAMAKONA URIGOITIA Markel",
+      "index": 820.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 30,
+      "runner": "CARRETERO Abel",
+      "index": 818.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 31,
+      "runner": "DE CASTRO SANZ Oliver",
+      "index": 814.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 32,
+      "runner": "SILVA Bruno",
+      "index": 811.0,
+      "gender": "M",
+      "nationality": "POR"
+    },
+    {
+      "rank": 33,
+      "runner": "BARRET Clement",
+      "index": 811.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 34,
+      "runner": "BERRIZBEITIA APELLANIZ Pello",
+      "index": 808.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 35,
+      "runner": "BUTACI Raul",
+      "index": 806.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 36,
+      "runner": "MIRABEL ALVIZ Mario",
+      "index": 806.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 37,
+      "runner": "DIEZ VIRTO Martin",
+      "index": 804.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 38,
+      "runner": "ESCUELA PERDOMO Álvaro",
+      "index": 802.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 39,
+      "runner": "LEGORBURU ISASTI Iraitz",
+      "index": 802.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 40,
+      "runner": "AJURIA ELKOROBARRUTIA Aitor",
+      "index": 800.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 40,
+      "runner": "PEREIRA OBAYA DIMAS",
+      "index": 800.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 42,
+      "runner": "ANGUITA FRAN",
+      "index": 795.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 43,
+      "runner": "SALAZAR Julio",
+      "index": 790.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 44,
+      "runner": "RAMOS GONZALEZ Marcos",
+      "index": 790.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 45,
+      "runner": "ANGUITA BAYO MANUEL",
+      "index": 789.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 46,
+      "runner": "MACIAS CIPRIAIN Xabier",
+      "index": 789.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 47,
+      "runner": "EGEA Aritz",
+      "index": 788.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 48,
+      "runner": "ARIZETA LEGARRA Urko",
+      "index": 784.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 49,
+      "runner": "LOPETEGUI NIETO Goar",
+      "index": 783.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 50,
+      "runner": "ALONSO Sara",
+      "index": 782.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 51,
+      "runner": "AUZMENDI AIERBE Mikel",
+      "index": 780.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 52,
+      "runner": "ALONSO ALVAREZ Francisco",
+      "index": 778.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 53,
+      "runner": "LETE BIAIN Xabier",
+      "index": 777.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 54,
+      "runner": "WYDER Judith",
+      "index": 775.0,
+      "gender": "F",
+      "nationality": "SUI"
+    },
+    {
+      "rank": 55,
+      "runner": "RAJADO BARBERENA Asier",
+      "index": 775.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 56,
+      "runner": "OLANO Inaki",
+      "index": 775.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 57,
+      "runner": "PAULUZAK Ezequiel",
+      "index": 774.0,
+      "gender": "M",
+      "nationality": "ARG"
+    },
+    {
+      "rank": 58,
+      "runner": "AGIRRE ZUBELDIA Xabier",
+      "index": 772.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 59,
+      "runner": "ZIALTZETA MENDIZABAL Unai",
+      "index": 771.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 60,
+      "runner": "OSA ANSA Malen",
+      "index": 771.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 61,
+      "runner": "MAKAZAGA ARISTI Ibai",
+      "index": 771.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 62,
+      "runner": "LARA FELIU Rosa Maria",
+      "index": 769.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 63,
+      "runner": "RAMOS PENA Alvaro",
+      "index": 768.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 64,
+      "runner": "FERRER Ignasi",
+      "index": 768.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 65,
+      "runner": "AZCOITI Javi",
+      "index": 768.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 66,
+      "runner": "STANGBYE Patrick",
+      "index": 767.0,
+      "gender": "M",
+      "nationality": "NOR"
+    },
+    {
+      "rank": 67,
+      "runner": "DE OLIVEIRA GOMES  Sergio",
+      "index": 765.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 68,
+      "runner": "LEBOEUF Theres",
+      "index": 765.0,
+      "gender": "F",
+      "nationality": "SUI"
+    },
+    {
+      "rank": 69,
+      "runner": "ARANBURU Jon",
+      "index": 764.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 70,
+      "runner": "ALEGRIA MAULEON Jesus",
+      "index": 764.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 70,
+      "runner": "ARTOLA ORMAZABAL Axier",
+      "index": 764.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 72,
+      "runner": "ARANTZAMENDI ALKORTA Inigo",
+      "index": 761.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 73,
+      "runner": "ROTA COLLELL Marc",
+      "index": 759.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 74,
+      "runner": "SANCHEZ BENGOETXEA Aitor",
+      "index": 757.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 75,
+      "runner": "ZARRANZ OSINAGA Xabier",
+      "index": 754.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 76,
+      "runner": "RHARSALLA LAKTAB Ikram",
+      "index": 753.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 77,
+      "runner": "NARVAEZ Joaquin",
+      "index": 751.0,
+      "gender": "M",
+      "nationality": "ARG"
+    },
+    {
+      "rank": 78,
+      "runner": "LEJARZEGI URIZAR Ekaitz",
+      "index": 751.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 79,
+      "runner": "AITCHAOU AITCHAOU Hassan",
+      "index": 751.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 80,
+      "runner": "ROBSAHM Ida Amelie",
+      "index": 750.0,
+      "gender": "F",
+      "nationality": "NOR"
+    },
+    {
+      "rank": 81,
+      "runner": "DURANA BASOA Jon",
+      "index": 749.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 82,
+      "runner": "GONZALEZ GOTI Xabier",
+      "index": 749.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 83,
+      "runner": "PIMENTEL GIRALDEZ Ivan",
+      "index": 749.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 84,
+      "runner": "AYERZA Asier",
+      "index": 748.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 85,
+      "runner": "BAREA TORRES Francisco Javier",
+      "index": 745.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 86,
+      "runner": "ELOLA AZURMENDI Iosu",
+      "index": 744.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 87,
+      "runner": "INZA GUISASOLA Imanol",
+      "index": 741.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 88,
+      "runner": "MAYOR GUZMAN Alejandro",
+      "index": 739.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 89,
+      "runner": "OLAIZOLA IZAGUIRRE Julen",
+      "index": 739.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 90,
+      "runner": "KORTAZAR ARANZETA Oihana",
+      "index": 739.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 91,
+      "runner": "ROY Jordi",
+      "index": 739.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 92,
+      "runner": "HERNANDEZ Eduard",
+      "index": 737.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 93,
+      "runner": "ABASOLO TAMAYO Xabier",
+      "index": 736.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 94,
+      "runner": "PINEDA CORNEJO Patricia",
+      "index": 735.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 95,
+      "runner": "MARTÍNEZ ABELLÁN Marta",
+      "index": 735.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 96,
+      "runner": "GIBSON Anna",
+      "index": 732.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 97,
+      "runner": "ELORZA ABAUNZ Oier",
+      "index": 728.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 98,
+      "runner": "ISELI Rea",
+      "index": 726.0,
+      "gender": "F",
+      "nationality": "SUI"
+    },
+    {
+      "rank": 99,
+      "runner": "DOMINGUEZ LEDO Javier",
+      "index": 725.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 100,
+      "runner": "ETXABE LETURIA Benat",
+      "index": 725.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 101,
+      "runner": "SCHWAIGER Silvia",
+      "index": 725.0,
+      "gender": "F",
+      "nationality": "SVK"
+    },
+    {
+      "rank": 102,
+      "runner": "GAMITO BAUS Jordi",
+      "index": 724.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 103,
+      "runner": "MARÍN APARICIO  Miguel Ángel",
+      "index": 724.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 104,
+      "runner": "GARCIA MORAN Greta",
+      "index": 724.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 105,
+      "runner": "URRESTARAZU GARCIA Josu",
+      "index": 723.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 106,
+      "runner": "GERRIKAETXEBARRIA Ander",
+      "index": 722.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 107,
+      "runner": "IRAETA AGIRRE Arkaitz",
+      "index": 722.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 108,
+      "runner": "MUJIKA Xabier",
+      "index": 722.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 109,
+      "runner": "IBANEZ ARIZTEGI Benat",
+      "index": 721.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 110,
+      "runner": "MARTIN OLABARRIAGA Aritz",
+      "index": 721.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 111,
+      "runner": "ESCUDERO Oier",
+      "index": 720.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 112,
+      "runner": "GIJARRO IRURETAGOIENA Jokin",
+      "index": 720.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 113,
+      "runner": "LELONG Julie",
+      "index": 719.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 114,
+      "runner": "RUZAFA CUETO Ruben",
+      "index": 719.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 115,
+      "runner": "ERRASTI ARRUTI Joxe Mari",
+      "index": 716.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 116,
+      "runner": "ORANGE Theo",
+      "index": 714.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 117,
+      "runner": "NORDSKAR Sylvia",
+      "index": 714.0,
+      "gender": "F",
+      "nationality": "NOR"
+    },
+    {
+      "rank": 118,
+      "runner": "MURUA Asier",
+      "index": 713.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 119,
+      "runner": "MANCISIDOR  ARRUTI Igon",
+      "index": 713.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 120,
+      "runner": "BULLE Emilie",
+      "index": 712.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 121,
+      "runner": "URIBETXEBERRIA AGIRRE Jokin",
+      "index": 710.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 122,
+      "runner": "URKIA SEIN Ibai",
+      "index": 710.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 123,
+      "runner": "INTXAUSTI Xabi",
+      "index": 709.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 124,
+      "runner": "GALVEZ CALERO Josu",
+      "index": 705.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 125,
+      "runner": "CRIADO SANCHEZ Raul",
+      "index": 704.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 126,
+      "runner": "GANZARAIN LEUNDA Mikel",
+      "index": 703.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 127,
+      "runner": "LUJAMBIO APEZETXEA Hodei",
+      "index": 701.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 128,
+      "runner": "HERCE ORTEGA Jesus",
+      "index": 700.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 129,
+      "runner": "URIARTE ITURBE Ander",
+      "index": 699.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 130,
+      "runner": "GOMEZ GUTIERREZ Andoni",
+      "index": 699.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 131,
+      "runner": "UZKUDUN ARISTIZABAL Jokin",
+      "index": 697.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 132,
+      "runner": "GOITISOLO OTAZUA Paul",
+      "index": 697.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 133,
+      "runner": "ZUNZUNEGI TAPIA AITOR",
+      "index": 695.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 134,
+      "runner": "GARCIA MENDOZA RAUL",
+      "index": 695.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 135,
+      "runner": "BELDARRAIN HERNANDEZ Jon",
+      "index": 694.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 136,
+      "runner": "ECHEVARRIA LANDETA Hanot",
+      "index": 692.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 137,
+      "runner": "AGIRRE MUJIKA Koldo",
+      "index": 691.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 138,
+      "runner": "MARCHON Valentin",
+      "index": 690.0,
+      "gender": "M",
+      "nationality": "SUI"
+    },
+    {
+      "rank": 139,
+      "runner": "EMBID LAZARO Roger",
+      "index": 689.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 140,
+      "runner": "ALZOLA GORDOA Inigo",
+      "index": 689.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 141,
+      "runner": "QUIRANT GOMEZ Pablo",
+      "index": 687.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 142,
+      "runner": "ARROYO Diego",
+      "index": 686.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 143,
+      "runner": "MALUGANI giovanni",
+      "index": 680.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 144,
+      "runner": "GOTARDA LOPEZ Xavier",
+      "index": 678.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 145,
+      "runner": "SOTELO MARTINEZ Eduardo",
+      "index": 676.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 146,
+      "runner": "LOPEZ DOMINGUEZ Nano",
+      "index": 675.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 147,
+      "runner": "VILLARROEL June",
+      "index": 675.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 148,
+      "runner": "WITOWSKA Miroslawa",
+      "index": 673.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 149,
+      "runner": "ANORGA UNANUE Inaki",
+      "index": 673.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 150,
+      "runner": "ANTILA Johanna",
+      "index": 672.0,
+      "gender": "F",
+      "nationality": "FIN"
+    },
+    {
+      "rank": 151,
+      "runner": "VELEZ DE MENDIZABAL Irune",
+      "index": 671.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 152,
+      "runner": "ORDIERES TORRE Javier",
+      "index": 671.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 153,
+      "runner": "GUERRA AMUNDARAIN Julen",
+      "index": 666.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 154,
+      "runner": "GONZALEZ LLERA David",
+      "index": 665.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 155,
+      "runner": "ESCRIBANO ARANBARRI Unai",
+      "index": 665.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 156,
+      "runner": "CARDINAALS Renee",
+      "index": 665.0,
+      "gender": "F",
+      "nationality": "NED"
+    },
+    {
+      "rank": 157,
+      "runner": "ZUBILLAGA BLANCO Oihana",
+      "index": 664.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 158,
+      "runner": "AZPIAZU RECIO Jon Ander",
+      "index": 663.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 159,
+      "runner": "UNANUE DIEZ Asier",
+      "index": 663.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 160,
+      "runner": "LARRUZEA Asier",
+      "index": 662.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 161,
+      "runner": "LARRAZABAL Arnaitz",
+      "index": 660.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 162,
+      "runner": "UGARTE MIRANDA Sarah",
+      "index": 660.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 163,
+      "runner": "BALCELLS SERRA Celia",
+      "index": 659.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 164,
+      "runner": "AGUIRRE ARDANAZ Dani",
+      "index": 659.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 165,
+      "runner": "SAYAR GARCIA Oihan",
+      "index": 658.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 166,
+      "runner": "ASTRAIN MORENO Ines",
+      "index": 657.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 167,
+      "runner": "MUJIKA Mayi",
+      "index": 656.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 168,
+      "runner": "COMBARIEU Maud",
+      "index": 654.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 169,
+      "runner": "TURINI GIUDITTA",
+      "index": 654.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 170,
+      "runner": "CREAK Chelsea",
+      "index": 653.0,
+      "gender": "F",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 171,
+      "runner": "ATXA ELORZA Inigo",
+      "index": 651.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 172,
+      "runner": "PASCUAL SAINZ Marcos",
+      "index": 651.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 173,
+      "runner": "HERRERO CASAS Albert",
+      "index": 650.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 174,
+      "runner": "ETXEBESTE LIZASO Larraitz",
+      "index": 649.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 175,
+      "runner": "MURUA ETXEBERRIA Jon",
+      "index": 649.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 176,
+      "runner": "EGIA ETXEARTE Imanol",
+      "index": 648.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 177,
+      "runner": "ESTEBANEZ VIVAR Lara",
+      "index": 647.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 178,
+      "runner": "INTXAUSTI BERASATEGI Ainhoa",
+      "index": 646.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 179,
+      "runner": "FURUNDARENA ABALOS Ander",
+      "index": 643.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 180,
+      "runner": "ACIEN GOMEZ Jose Francisco",
+      "index": 643.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 181,
+      "runner": "LEGARRETA ASTIASARAN Mikel",
+      "index": 642.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 182,
+      "runner": "MAIORA Maite",
+      "index": 642.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 183,
+      "runner": "LARRANAGA Eneko",
+      "index": 641.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 184,
+      "runner": null,
+      "index": 641.0,
+      "gender": null,
+      "nationality": "ESP"
+    },
+    {
+      "rank": 185,
+      "runner": "JIMENEZ ANDRES Maddalen",
+      "index": 641.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 186,
+      "runner": "GUERENU ZUDAIRE Borja",
+      "index": 640.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 187,
+      "runner": "ERICE TORNARIA Ander",
+      "index": 640.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 188,
+      "runner": "ESNAOLA GOROSTIDI Juanjo",
+      "index": 640.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 189,
+      "runner": "SARASOLA AGUIRRE Julen",
+      "index": 638.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 190,
+      "runner": "SOLE VILELLA Eduard",
+      "index": 637.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 191,
+      "runner": "SAN SEBASTIAN ELOLA Julen",
+      "index": 637.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 192,
+      "runner": "MARROIG HERNANDEZ Rajiv",
+      "index": 634.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 193,
+      "runner": "CASTANYER BENAVENT Pau",
+      "index": 632.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 194,
+      "runner": "CASTRO Yasmina",
+      "index": 632.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 195,
+      "runner": "FUENTES GONZALEZ Ivan",
+      "index": 632.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 196,
+      "runner": "ALBA VILCHEZ Ibai",
+      "index": 629.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 196,
+      "runner": "DAVILA DAVILA Samuel david",
+      "index": 629.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 196,
+      "runner": "SOLE Jan Margarit",
+      "index": 629.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 199,
+      "runner": "CESTER FARRE Marta",
+      "index": 629.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 200,
+      "runner": "BALERDI GOIBURU Luken",
+      "index": 627.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 201,
+      "runner": "PINYOL CIVIT Edgar",
+      "index": 626.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 202,
+      "runner": "SAGASTIBELTZA MARINELARENA Oinatz",
+      "index": 625.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 203,
+      "runner": "PEREZ AGREDA Borja",
+      "index": 625.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 204,
+      "runner": "ARANGUREN SANTAMARTA Javier",
+      "index": 624.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 204,
+      "runner": "SOLA TORRALBA Ion",
+      "index": 624.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 206,
+      "runner": "GARCIA LUIS Helios",
+      "index": 624.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 207,
+      "runner": "SAMPEDRO ARANDO Garazi",
+      "index": 624.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 208,
+      "runner": "TRAPEZIOTIS Christos",
+      "index": 623.0,
+      "gender": "M",
+      "nationality": "GRE"
+    },
+    {
+      "rank": 209,
+      "runner": "PETRERA SANTIAGO",
+      "index": 621.0,
+      "gender": "M",
+      "nationality": "ARG"
+    },
+    {
+      "rank": 210,
+      "runner": "ARROSPIDE GARMENDIA Laiane",
+      "index": 620.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 211,
+      "runner": "LOMBARDERO ANDRES Ignacio",
+      "index": 620.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 212,
+      "runner": "BRICOLLE SANCHO Jordi",
+      "index": 619.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 213,
+      "runner": "JIMÉNEZ MARTÍN  jose Antonio",
+      "index": 618.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 214,
+      "runner": "FRAILE AZPEITIA Uxue",
+      "index": 617.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 215,
+      "runner": "ABASOLO MUJIKA Garazi",
+      "index": 617.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 216,
+      "runner": "OLIVEIRA RODRIGUEZ David",
+      "index": 611.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 217,
+      "runner": "AROSTEGUI OLALDE Xabier",
+      "index": 611.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 218,
+      "runner": "YANCI IRIGOIEN Adur",
+      "index": 611.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 219,
+      "runner": "GOMEZ CUBERO Fernando",
+      "index": 611.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 220,
+      "runner": "BARANDIARAN MUJIKA Xabi",
+      "index": 608.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 221,
+      "runner": "BARCELO GARCIA Miquel Angel",
+      "index": 607.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 222,
+      "runner": "FONTENAY Clement",
+      "index": 606.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 223,
+      "runner": "ELOLA EZEIZA Mikel",
+      "index": 604.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 224,
+      "runner": "ALCOVER AMOR Antonio",
+      "index": 603.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 225,
+      "runner": "ARBINA LOPEZ DE LETONA Alejandro",
+      "index": 601.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 226,
+      "runner": "GOROMARA Guillaume",
+      "index": 601.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 227,
+      "runner": "PICCARDI Marco",
+      "index": 601.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 228,
+      "runner": "ZALDUENDO ARREGUI Javier",
+      "index": 600.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 229,
+      "runner": "MARTINEZ PEREZ David",
+      "index": 600.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 230,
+      "runner": "ALDANONDO ITURBE Patxi",
+      "index": 598.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 231,
+      "runner": "FIDALGO Damian",
+      "index": 597.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 232,
+      "runner": "CASTAGNOS Nicolas",
+      "index": 597.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 233,
+      "runner": "ROBLA IGLESIAS Oscar",
+      "index": 597.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 234,
+      "runner": "HERNANDEZ FARINA Aaron",
+      "index": 597.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 235,
+      "runner": "RODRIGUEZ ALDANONDO Lartaun",
+      "index": 595.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 236,
+      "runner": "GONZALEZ PENA Dani",
+      "index": 595.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 237,
+      "runner": "GÓMEZ FERNÁNDEZ  Borja",
+      "index": 594.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 238,
+      "runner": "MARTINEZ GARCIA Javi",
+      "index": 594.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 239,
+      "runner": "BRITO CURBELO Ruth",
+      "index": 593.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 240,
+      "runner": "PISCU Andreea Alina",
+      "index": 593.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 241,
+      "runner": "ALONSO JUAN Josep Maria",
+      "index": 592.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 242,
+      "runner": "SAEZ BENITEZ Jon",
+      "index": 592.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 243,
+      "runner": "ESTEVEZ GONZALEZ Aritz",
+      "index": 591.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 244,
+      "runner": "OLIDEN OLASAGASTI Unai",
+      "index": 590.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 245,
+      "runner": "COLLADO Jose Luis",
+      "index": 589.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 246,
+      "runner": "MENENDEZ ALVAREZ Alvaro",
+      "index": 589.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 247,
+      "runner": "LEMUS HERREZUELO Victor Manuel",
+      "index": 589.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 248,
+      "runner": "AGIRRE ARANBURU Janire",
+      "index": 589.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 249,
+      "runner": "GARCIA LOPEZ Jose M",
+      "index": 588.0,
+      "gender": "M",
+      "nationality": "ESP"
+    }
+  ]
+}

@@ -1,0 +1,481 @@
+{
+  "courses": [
+    {
+      "race_id": "KOBETRAIL2025",
+      "name": "KOBETRAIL2025",
+      "year": 2025,
+      "series": "KOBETRAIL",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/KOBETRAIL2025.json"
+    },
+    {
+      "race_id": "JINSHANLING2025",
+      "name": "JINSHANLING2025",
+      "year": 2025,
+      "series": "JINSHANLING",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/JINSHANLING2025.json"
+    },
+    {
+      "race_id": "ILGOLFO2025",
+      "name": "ILGOLFO2025",
+      "year": 2025,
+      "series": "ILGOLFO",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/ILGOLFO2025.json"
+    },
+    {
+      "race_id": "ZEGAMA2025",
+      "name": "ZEGAMA2025",
+      "year": 2025,
+      "series": "ZEGAMA",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/ZEGAMA2025.json"
+    },
+    {
+      "race_id": "BROKENARROW2025",
+      "name": "BROKENARROW2025",
+      "year": 2025,
+      "series": "BROKENARROW",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/BROKENARROW2025.json"
+    },
+    {
+      "race_id": "TEPEC2025",
+      "name": "TEPEC2025",
+      "year": 2025,
+      "series": "TEPEC",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/TEPEC2025.json"
+    },
+    {
+      "race_id": "PITZALPINE2025",
+      "name": "PITZALPINE2025",
+      "year": 2025,
+      "series": "PITZALPINE",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/PITZALPINE2025.json"
+    },
+    {
+      "race_id": "LEDROM2025",
+      "name": "LEDROM2025",
+      "year": 2025,
+      "series": "LEDROM",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/LEDROM2025.json"
+    },
+    {
+      "race_id": "LEDROF2025",
+      "name": "LEDROF2025",
+      "year": 2025,
+      "series": "LEDROF",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/LEDROF2025.json"
+    },
+    {
+      "race_id": "ZMEUCLASSIC2025",
+      "name": "ZMEUCLASSIC2025",
+      "year": 2025,
+      "series": "ZMEUCLASSIC",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/ZMEUCLASSIC2025.json"
+    },
+    {
+      "race_id": "WS2025",
+      "name": "WS2025",
+      "year": 2025,
+      "series": "WS",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/WS2025.json"
+    },
+    {
+      "race_id": "WS2024",
+      "name": "WS2024",
+      "year": 2024,
+      "series": "WS",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/WS2024.json"
+    },
+    {
+      "race_id": "WS2023",
+      "name": "WS2023",
+      "year": 2023,
+      "series": "WS",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/WS2023.json"
+    },
+    {
+      "race_id": "CCC2025",
+      "name": "CCC2025",
+      "year": 2025,
+      "series": "CCC",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/CCC2025.json"
+    },
+    {
+      "race_id": "UTMB2025",
+      "name": "UTMB2025",
+      "year": 2025,
+      "series": "UTMB",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/UTMB2025.json"
+    },
+    {
+      "race_id": "CCC2024",
+      "name": "CCC2024",
+      "year": 2024,
+      "series": "CCC",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/CCC2024.json"
+    },
+    {
+      "race_id": "UTMB2024",
+      "name": "UTMB2024",
+      "year": 2024,
+      "series": "UTMB",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/UTMB2024.json"
+    },
+    {
+      "race_id": "CCC2023",
+      "name": "CCC2023",
+      "year": 2023,
+      "series": "CCC",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/CCC2023.json"
+    },
+    {
+      "race_id": "UTMB2023",
+      "name": "UTMB2023",
+      "year": 2023,
+      "series": "UTMB",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/UTMB2023.json"
+    },
+    {
+      "race_id": "SZ2025",
+      "name": "SZ2025",
+      "year": 2025,
+      "series": "SZ",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/SZ2025.json"
+    },
+    {
+      "race_id": "SZ2024",
+      "name": "SZ2024",
+      "year": 2024,
+      "series": "SZ",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/SZ2024.json"
+    },
+    {
+      "race_id": "SZ2023",
+      "name": "SZ2023",
+      "year": 2023,
+      "series": "SZ",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/SZ2023.json"
+    },
+    {
+      "race_id": "LEADVILLE2025",
+      "name": "LEADVILLE2025",
+      "year": 2025,
+      "series": "LEADVILLE",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/LEADVILLE2025.json"
+    },
+    {
+      "race_id": "LEADVILLE2024",
+      "name": "LEADVILLE2024",
+      "year": 2024,
+      "series": "LEADVILLE",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/LEADVILLE2024.json"
+    },
+    {
+      "race_id": "QMT_2025_135",
+      "name": "QMT_2025_135",
+      "year": null,
+      "series": "QMT_2025_135",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/QMT_2025_135.json"
+    },
+    {
+      "race_id": "QMT_2025_80",
+      "name": "QMT_2025_80",
+      "year": null,
+      "series": "QMT_2025_80",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/QMT_2025_80.json"
+    },
+    {
+      "race_id": "QMT_2025_50",
+      "name": "QMT_2025_50",
+      "year": null,
+      "series": "QMT_2025_50",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/QMT_2025_50.json"
+    },
+    {
+      "race_id": "QMT_2025_32",
+      "name": "QMT_2025_32",
+      "year": null,
+      "series": "QMT_2025_32",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/QMT_2025_32.json"
+    },
+    {
+      "race_id": "QMT_2025_25",
+      "name": "QMT_2025_25",
+      "year": null,
+      "series": "QMT_2025_25",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/QMT_2025_25.json"
+    },
+    {
+      "race_id": "UTHC_2025_125",
+      "name": "UTHC_2025_125",
+      "year": null,
+      "series": "UTHC_2025_125",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/UTHC_2025_125.json"
+    },
+    {
+      "race_id": "UTHC_2025_80",
+      "name": "UTHC_2025_80",
+      "year": null,
+      "series": "UTHC_2025_80",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/UTHC_2025_80.json"
+    },
+    {
+      "race_id": "UTHC_2025_65",
+      "name": "UTHC_2025_65",
+      "year": null,
+      "series": "UTHC_2025_65",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/UTHC_2025_65.json"
+    },
+    {
+      "race_id": "UTHC_2025_42C",
+      "name": "UTHC_2025_42C",
+      "year": null,
+      "series": "UTHC_2025_42C",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/UTHC_2025_42C.json"
+    },
+    {
+      "race_id": "UTHC_2025_42S",
+      "name": "UTHC_2025_42S",
+      "year": null,
+      "series": "UTHC_2025_42S",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/UTHC_2025_42S.json"
+    },
+    {
+      "race_id": "UTHC_2025_28",
+      "name": "UTHC_2025_28",
+      "year": null,
+      "series": "UTHC_2025_28",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/UTHC_2025_28.json"
+    },
+    {
+      "race_id": "UTHC_2025_20",
+      "name": "UTHC_2025_20",
+      "year": null,
+      "series": "UTHC_2025_20",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/UTHC_2025_20.json"
+    },
+    {
+      "race_id": "DDC_2025_42",
+      "name": "DDC_2025_42",
+      "year": null,
+      "series": "DDC_2025_42",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/DDC_2025_42.json"
+    },
+    {
+      "race_id": "DDC_2025_32",
+      "name": "DDC_2025_32",
+      "year": null,
+      "series": "DDC_2025_32",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/DDC_2025_32.json"
+    },
+    {
+      "race_id": "DDC_2025_26",
+      "name": "DDC_2025_26",
+      "year": null,
+      "series": "DDC_2025_26",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/DDC_2025_26.json"
+    },
+    {
+      "race_id": "DDC_2025_UPDOWN",
+      "name": "DDC_2025_UPDOWN",
+      "year": null,
+      "series": "DDC_2025_UPDOWN",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/DDC_2025_UPDOWN.json"
+    },
+    {
+      "race_id": "DDC_2025_CLASSIC",
+      "name": "DDC_2025_CLASSIC",
+      "year": null,
+      "series": "DDC_2025_CLASSIC",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/DDC_2025_CLASSIC.json"
+    },
+    {
+      "race_id": "TATRA2025",
+      "name": "TATRA2025",
+      "year": 2025,
+      "series": "TATRA",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/TATRA2025.json"
+    },
+    {
+      "race_id": "TDLC2025_50",
+      "name": "TDLC2025_50",
+      "year": 2025,
+      "series": "TDLC",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/TDLC2025_50.json"
+    },
+    {
+      "race_id": "SQUAMISH_2025_50M",
+      "name": "SQUAMISH_2025_50M",
+      "year": null,
+      "series": "SQUAMISH_2025_50M",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/SQUAMISH_2025_50M.json"
+    },
+    {
+      "race_id": "SQUAMISH_2025_50K",
+      "name": "SQUAMISH_2025_50K",
+      "year": null,
+      "series": "SQUAMISH_2025_50K",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/SQUAMISH_2025_50K.json"
+    },
+    {
+      "race_id": "WHISTLER_2025_100",
+      "name": "WHISTLER_2025_100",
+      "year": null,
+      "series": "WHISTLER_2025_100",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/WHISTLER_2025_100.json"
+    },
+    {
+      "race_id": "WHISTLER_2025_50",
+      "name": "WHISTLER_2025_50",
+      "year": null,
+      "series": "WHISTLER_2025_50",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/WHISTLER_2025_50.json"
+    },
+    {
+      "race_id": "WHISTLER_2025_25",
+      "name": "WHISTLER_2025_25",
+      "year": null,
+      "series": "WHISTLER_2025_25",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/WHISTLER_2025_25.json"
+    },
+    {
+      "race_id": "CLASSIQUETREMBLANT_2025_30",
+      "name": "CLASSIQUETREMBLANT_2025_30",
+      "year": null,
+      "series": "CLASSIQUETREMBLANT_2025_30",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/CLASSIQUETREMBLANT_2025_30.json"
+    },
+    {
+      "race_id": "CHONGLI_2025_UPHILL",
+      "name": "CHONGLI_2025_UPHILL",
+      "year": null,
+      "series": "CHONGLI_2025_UPHILL",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/CHONGLI_2025_UPHILL.json"
+    },
+    {
+      "race_id": "CHONGLI_2025_CLASSIC",
+      "name": "CHONGLI_2025_CLASSIC",
+      "year": null,
+      "series": "CHONGLI_2025_CLASSIC",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/CHONGLI_2025_CLASSIC.json"
+    },
+    {
+      "race_id": "NASEGO_2025",
+      "name": "NASEGO_2025",
+      "year": null,
+      "series": "NASEGO_2025",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/NASEGO_2025.json"
+    },
+    {
+      "race_id": "VAUBAN_2025_CLASSIC",
+      "name": "VAUBAN_2025_CLASSIC",
+      "year": null,
+      "series": "VAUBAN_2025_CLASSIC",
+      "country": null,
+      "data_source": "ITRA",
+      "path": "data/courses/VAUBAN_2025_CLASSIC.json"
+    }
+  ]
+}

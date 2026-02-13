@@ -1,0 +1,276 @@
+{
+  "meta": {
+    "race_id": "JINSHANLING2025",
+    "name": "JINSHANLING2025",
+    "series": "JINSHANLING",
+    "country": null,
+    "data_source": "ITRA",
+    "year": 2025,
+    "distance_km": null,
+    "elevation_m": null,
+    "prize_money": null,
+    "notes": null,
+    "source_url": null
+  },
+  "results": [
+    {
+      "rank": 1,
+      "runner": "KIPNGENO Patrick",
+      "index": 940.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 2,
+      "runner": "KIRIAGO Philemon Ombogo",
+      "index": 935.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 3,
+      "runner": "HADORN Joey",
+      "index": 933.0,
+      "gender": "M",
+      "nationality": "SUI"
+    },
+    {
+      "rank": 4,
+      "runner": "KIBETT Timothy",
+      "index": 909.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 5,
+      "runner": "MAESTRI Cesare",
+      "index": 889.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 6,
+      "runner": "KIPROTICH Samwel",
+      "index": 885.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 7,
+      "runner": "PATTIS Daniel",
+      "index": 872.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 8,
+      "runner": "GALBOURDIN Pierre",
+      "index": 867.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 8,
+      "runner": "RUTTO Ezekiel",
+      "index": 867.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 10,
+      "runner": "DAMIAN Bogdan",
+      "index": 860.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 11,
+      "runner": "CACHARD Sylvain",
+      "index": 849.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 12,
+      "runner": "YLINEN Juho",
+      "index": 847.0,
+      "gender": "M",
+      "nationality": "FIN"
+    },
+    {
+      "rank": 13,
+      "runner": "RIBEIRO Dylan",
+      "index": 838.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 14,
+      "runner": "OMI Ryunosuke",
+      "index": 833.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 15,
+      "runner": "YANG Jianjian",
+      "index": 820.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 16,
+      "runner": "BLANCO Aitor",
+      "index": 803.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 17,
+      "runner": "VENERO JIMENEZ Fabian",
+      "index": 790.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 18,
+      "runner": "KIMUTAI Caroline",
+      "index": 785.0,
+      "gender": "F",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 19,
+      "runner": "BOURGEOIS Theo",
+      "index": 780.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 20,
+      "runner": "CHEPNGENO Joyline",
+      "index": 775.0,
+      "gender": "F",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 21,
+      "runner": "FLOREA Monica Madalina",
+      "index": 766.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 22,
+      "runner": "GUIDOU Qin",
+      "index": 765.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 23,
+      "runner": "YONG Yang",
+      "index": 762.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 24,
+      "runner": "ALONSO Sara",
+      "index": 761.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 25,
+      "runner": "KJÆREVIK Anders",
+      "index": 746.0,
+      "gender": "M",
+      "nationality": "NOR"
+    },
+    {
+      "rank": 26,
+      "runner": "YAO Miao",
+      "index": 734.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 27,
+      "runner": "LIU Davide",
+      "index": 722.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 28,
+      "runner": "TAKAMURA TAKAKO",
+      "index": 717.0,
+      "gender": "F",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 29,
+      "runner": "NIVET Marie",
+      "index": 700.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 30,
+      "runner": "CHI Lingjie",
+      "index": 683.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 31,
+      "runner": "COPPINGER Courtney",
+      "index": 676.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 32,
+      "runner": "QI Chaohai",
+      "index": 675.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 33,
+      "runner": "TOMAJCZYK Rachel",
+      "index": 672.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 34,
+      "runner": "TANG Jingyan",
+      "index": 641.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 35,
+      "runner": "YANG Yan",
+      "index": 620.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 36,
+      "runner": "MINETTI Alice",
+      "index": 612.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 37,
+      "runner": "ZHANG KUI",
+      "index": 579.0,
+      "gender": "M",
+      "nationality": "CHN"
+    }
+  ]
+}

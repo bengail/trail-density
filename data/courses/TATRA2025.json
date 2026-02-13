@@ -1,0 +1,1760 @@
+{
+  "meta": {
+    "race_id": "TATRA2025",
+    "name": "TATRA2025",
+    "series": "TATRA",
+    "country": null,
+    "data_source": "ITRA",
+    "year": 2025,
+    "distance_km": null,
+    "elevation_m": null,
+    "prize_money": null,
+    "notes": null,
+    "source_url": null
+  },
+  "results": [
+    {
+      "rank": 1,
+      "runner": "MACHOKA Paul",
+      "index": 934.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 2,
+      "runner": "KIBET Kevin",
+      "index": 909.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 3,
+      "runner": "FABIAN Marcel",
+      "index": 864.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 4,
+      "runner": "CIESLAR Adam",
+      "index": 850.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 5,
+      "runner": "MATUSZCZAK Rafal",
+      "index": 847.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 6,
+      "runner": "BODURKA Krzysztof",
+      "index": 816.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 7,
+      "runner": "LEŚNIAK Dawid",
+      "index": 799.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 8,
+      "runner": "HARATYK Mateusz",
+      "index": 788.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 9,
+      "runner": "ADKIN Scout",
+      "index": 779.0,
+      "gender": "F",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 10,
+      "runner": "MATUSZCZAK Weronika",
+      "index": 754.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 11,
+      "runner": "WOLFE Hamish William Drysdale",
+      "index": 744.0,
+      "gender": "M",
+      "nationality": "NOR"
+    },
+    {
+      "rank": 12,
+      "runner": "JANUSZYK Iwona",
+      "index": 727.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 13,
+      "runner": "FOCSA Alexandru",
+      "index": 711.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 14,
+      "runner": "CHLANDA Sebastian",
+      "index": 708.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 15,
+      "runner": "KMIEC Pawel",
+      "index": 693.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 16,
+      "runner": "GUBALA Arkadiusz",
+      "index": 690.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 17,
+      "runner": "DYGACZ Agnieszka",
+      "index": 670.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 18,
+      "runner": "TRAMPCZYNSKI Jakub",
+      "index": 665.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 19,
+      "runner": "TRYVASHKEVICH Yauhen",
+      "index": 658.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 20,
+      "runner": "WRÓBEL Przemysław",
+      "index": 657.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 21,
+      "runner": "PALKA Joanna",
+      "index": 656.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 22,
+      "runner": "LYJAK Blazej",
+      "index": 637.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 23,
+      "runner": "MAZGAJSKI Michal",
+      "index": 636.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 24,
+      "runner": "WANIOWSKI Jan Jakub",
+      "index": 634.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 25,
+      "runner": "BLUMENFELD Jacek",
+      "index": 633.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 26,
+      "runner": "SMICHURSKI  Krzysztof",
+      "index": 631.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 27,
+      "runner": "LASAK Wojciech",
+      "index": 630.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 28,
+      "runner": "GAIK Natalia",
+      "index": 629.0,
+      "gender": "F",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 29,
+      "runner": "SIERZEGA Agnieszka",
+      "index": 629.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 30,
+      "runner": "SAJEWSKI Przemek",
+      "index": 627.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 31,
+      "runner": "SZKOLA PAWEL",
+      "index": 624.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 32,
+      "runner": "WILK Sebastian",
+      "index": 622.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 33,
+      "runner": "CROITORU Vasile",
+      "index": 620.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 34,
+      "runner": "MILANESI BLANCO Maria Florencia",
+      "index": 620.0,
+      "gender": "F",
+      "nationality": "ARG"
+    },
+    {
+      "rank": 35,
+      "runner": "YEUSIUCHENIA Aliaksandr",
+      "index": 618.0,
+      "gender": "M",
+      "nationality": "BLR"
+    },
+    {
+      "rank": 36,
+      "runner": "WALKOWIAK Pawel",
+      "index": 614.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 37,
+      "runner": "KEDZIORA Bogumil",
+      "index": 613.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 38,
+      "runner": "SZUKALA Michal",
+      "index": 612.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 39,
+      "runner": "PIATEK Joanna",
+      "index": 611.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 40,
+      "runner": "SUCHWALKO ADAM",
+      "index": 608.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 41,
+      "runner": "BLAISE SOHNIUS Adele",
+      "index": 608.0,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 42,
+      "runner": "Zając Marcin",
+      "index": 602.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 43,
+      "runner": "LANTOS Borbala",
+      "index": 602.0,
+      "gender": "F",
+      "nationality": "HUN"
+    },
+    {
+      "rank": 44,
+      "runner": "KACZMAREK Tomasz",
+      "index": 599.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 45,
+      "runner": "LAGA Monika",
+      "index": 592.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 46,
+      "runner": "KUPKA Dawid",
+      "index": 592.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 47,
+      "runner": "RYSULA Konrad",
+      "index": 589.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 48,
+      "runner": "BUGNO Marcelina",
+      "index": 585.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 49,
+      "runner": "CEPIELIK Wojciech",
+      "index": 585.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 50,
+      "runner": "MATCZAK Mateusz",
+      "index": 584.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 51,
+      "runner": "MACZUŁAJTYS Łukasz",
+      "index": 578.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 52,
+      "runner": "RAFAŁ Sadowski",
+      "index": 576.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 53,
+      "runner": "BEGLIARDO Maria Constanza",
+      "index": 576.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 54,
+      "runner": "WINDAK Agnieszka",
+      "index": 575.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 55,
+      "runner": "REIMA Jani",
+      "index": 572.0,
+      "gender": "M",
+      "nationality": "FIN"
+    },
+    {
+      "rank": 56,
+      "runner": "ROZWOD Marcin",
+      "index": 572.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 57,
+      "runner": "DONDZIAK Marcin",
+      "index": 567.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 58,
+      "runner": "STOPA Piotr",
+      "index": 566.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 59,
+      "runner": "ZAWADZKI Karol",
+      "index": 565.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 60,
+      "runner": "GLUCHOWSKI Jedrzej",
+      "index": 565.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 61,
+      "runner": "OSMÓLSKI Robert",
+      "index": 564.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 62,
+      "runner": "WALOWSKA Justyna",
+      "index": 563.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 63,
+      "runner": "FLOROAIA Georgiana",
+      "index": 563.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 64,
+      "runner": "BRZÓSKA Rafal",
+      "index": 563.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 65,
+      "runner": "GALEWSKI Adrian",
+      "index": 562.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 66,
+      "runner": "TOPOLSKI Marcin",
+      "index": 562.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 67,
+      "runner": "PACA Mateusz",
+      "index": 561.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 68,
+      "runner": "CZUBIN  Kamil",
+      "index": 560.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 69,
+      "runner": "SZYBILSKI Daniel",
+      "index": 560.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 70,
+      "runner": "JACHIMOWSKI Jaroslaw",
+      "index": 558.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 71,
+      "runner": "BIALOMYZY Urszula",
+      "index": 558.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 72,
+      "runner": "MANSFELD Jaroslaw",
+      "index": 558.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 73,
+      "runner": "SKOMOROWSKI  Dominik",
+      "index": 557.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 74,
+      "runner": "KOPCEWICZ Tomasz",
+      "index": 556.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 75,
+      "runner": "SOWA Pamela",
+      "index": 556.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 76,
+      "runner": "TWORZYDŁO Piotr",
+      "index": 556.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 77,
+      "runner": "PEKALA Kamila",
+      "index": 555.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 77,
+      "runner": "PIWOWARCZYK Grzegorz",
+      "index": 555.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 79,
+      "runner": "MAKOWSKI Jaroslaw",
+      "index": 553.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 80,
+      "runner": "FUDRO Piotr",
+      "index": 551.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 81,
+      "runner": "KSIAZEK Ignacy",
+      "index": 550.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 82,
+      "runner": "KOPEC Pawel",
+      "index": 543.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 83,
+      "runner": "KRUPA Roman",
+      "index": 543.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 84,
+      "runner": "LESKO Konrad",
+      "index": 541.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 85,
+      "runner": "ŚWIERKOWSKI Krzysztof",
+      "index": 539.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 86,
+      "runner": "KACZYKOWSKI  Leon",
+      "index": 538.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 87,
+      "runner": "ZALEWSKI BARTLOMIEJ",
+      "index": 533.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 88,
+      "runner": "ROSPOND Piotr",
+      "index": 532.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 89,
+      "runner": "FRACHOWICZ Mateusz",
+      "index": 529.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 90,
+      "runner": "ORAWIEC Ewelina",
+      "index": 528.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 91,
+      "runner": "Zubkowicz Paweł",
+      "index": 527.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 92,
+      "runner": "JANKOWSKI Dawid",
+      "index": 525.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 93,
+      "runner": "URBASEK Łukasz",
+      "index": 525.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 94,
+      "runner": "WLODARCZYK Michal",
+      "index": 523.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 95,
+      "runner": "ZALEWSKA Anna",
+      "index": 522.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 96,
+      "runner": "NELC Rupert",
+      "index": 519.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 97,
+      "runner": "KRUPA Jan",
+      "index": 519.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 98,
+      "runner": "ZARNOWSKI Grzegorz",
+      "index": 517.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 99,
+      "runner": "KOLASZEWSKA Dagna",
+      "index": 516.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 100,
+      "runner": "ATAMAN Amadeusz",
+      "index": 515.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 101,
+      "runner": "SZPILA Janusz",
+      "index": 515.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 102,
+      "runner": "SZCZEPANIAK Joanna",
+      "index": 514.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 103,
+      "runner": "BARANOW Kamil",
+      "index": 514.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 104,
+      "runner": "SZCZEPANSKI Wojciech",
+      "index": 513.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 105,
+      "runner": "URYGA Jakub",
+      "index": 511.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 106,
+      "runner": "KRUPA Krzysztof",
+      "index": 511.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 107,
+      "runner": "KLEIMONOV Oleksii",
+      "index": 510.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 108,
+      "runner": "KNAPIK Przemyslaw",
+      "index": 510.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 109,
+      "runner": "BOROWCZYK jacek",
+      "index": 510.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 110,
+      "runner": "RYBKOWSKI Hubert",
+      "index": 507.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 111,
+      "runner": "SOWA-LEWANDOWSKA Katarzyna",
+      "index": 505.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 112,
+      "runner": "TOPA Mateusz",
+      "index": 502.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 113,
+      "runner": "NIZIOŁ Przemyslaw",
+      "index": 502.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 113,
+      "runner": "SKOCZEK Przemyslaw",
+      "index": 502.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 115,
+      "runner": "KUR Marcin",
+      "index": 502.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 116,
+      "runner": "HARNOUSKAYA Antanina",
+      "index": 501.0,
+      "gender": "F",
+      "nationality": "BLR"
+    },
+    {
+      "rank": 117,
+      "runner": "MARKIEWICZ Agnieszka",
+      "index": 500.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 118,
+      "runner": "JANOWSKI Jacek",
+      "index": 499.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 119,
+      "runner": "STODOLAK Aleksandra",
+      "index": 498.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 120,
+      "runner": "SZCZUKA Krzysztof",
+      "index": 493.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 121,
+      "runner": "KALFAS Tomasz",
+      "index": 493.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 122,
+      "runner": "KRÓL Przemyslaw",
+      "index": 491.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 123,
+      "runner": "STYLSKA Anna",
+      "index": 490.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 124,
+      "runner": "BELNIAK Kamil",
+      "index": 490.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 125,
+      "runner": "BURLIDIS Elefterios",
+      "index": 490.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 126,
+      "runner": "Zieliński Dariusz",
+      "index": 489.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 127,
+      "runner": "WOJDA Krzysiek",
+      "index": 489.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 128,
+      "runner": "GAJDECKI Tomek",
+      "index": 485.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 129,
+      "runner": "SZCZUTKOWSKI Michal",
+      "index": 483.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 130,
+      "runner": "JURECZKO Szymon",
+      "index": 482.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 131,
+      "runner": "KOŁODZIEJCZYK Maciej",
+      "index": 482.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 132,
+      "runner": "Zajder Paweł",
+      "index": 480.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 133,
+      "runner": "KUŹMA Sylwia",
+      "index": 479.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 134,
+      "runner": "BARTOSZEK Tomasz",
+      "index": 477.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 135,
+      "runner": "KARPIEL Grzegorz",
+      "index": 477.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 136,
+      "runner": "KURASZKIEWICZ Robert",
+      "index": 476.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 137,
+      "runner": "KWINTA Slawomir",
+      "index": 475.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 138,
+      "runner": "JAKUBASZEK Grzegorz",
+      "index": 475.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 139,
+      "runner": "STYRCZULA MASNIAK Marcin",
+      "index": 475.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 140,
+      "runner": "DZIEDZIC Grzegorz",
+      "index": 472.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 141,
+      "runner": "GUTAN Damian",
+      "index": 472.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 142,
+      "runner": "SZKÓDLINSKI Bartosz",
+      "index": 471.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 143,
+      "runner": "CIRILLO Saverio",
+      "index": 470.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 144,
+      "runner": "GOLAB Marcin",
+      "index": 468.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 145,
+      "runner": "MOSZCZYNSKA Agata",
+      "index": 467.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 146,
+      "runner": "KASPRZAK Tomasz",
+      "index": 466.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 147,
+      "runner": "PODCZERWINSKI Lukasz",
+      "index": 466.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 148,
+      "runner": "NOWAK Grzegorz",
+      "index": 465.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 149,
+      "runner": "RZESZUTEK Wiktoria",
+      "index": 465.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 150,
+      "runner": "NOWACKI Krzysztof",
+      "index": 463.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 151,
+      "runner": "TORON Maciej",
+      "index": 462.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 152,
+      "runner": "REMBAK Piotr",
+      "index": 462.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 153,
+      "runner": "BARANOW Tomasz",
+      "index": 461.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 154,
+      "runner": "MROWIEC Bernard",
+      "index": 461.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 155,
+      "runner": "SZWUNG Marian",
+      "index": 459.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 156,
+      "runner": "OKUPNIK Przemyslaw",
+      "index": 459.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 157,
+      "runner": "ZAKRZEWSKI Jakub",
+      "index": 459.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 158,
+      "runner": "KARWOWSKI Maciej",
+      "index": 457.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 159,
+      "runner": "MACHNICKI Artur",
+      "index": 457.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 160,
+      "runner": "BANIEWSKI Jakub",
+      "index": 457.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 161,
+      "runner": "PALINSKI Marcin",
+      "index": 456.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 162,
+      "runner": "BONDAR Krzysztof",
+      "index": 453.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 163,
+      "runner": "SMIALKOWSKA Jolanta",
+      "index": 452.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 164,
+      "runner": "KLOC Dariusz",
+      "index": 452.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 165,
+      "runner": "FRANKIEWICZ Marcin",
+      "index": 452.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 166,
+      "runner": "LAK Tomasz",
+      "index": 451.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 167,
+      "runner": "SLABY Jerzy",
+      "index": 450.0,
+      "gender": "M",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 168,
+      "runner": "SOSZYNSKI Piotr",
+      "index": 447.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 169,
+      "runner": "KURKOWSKI Slawomir",
+      "index": 445.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 170,
+      "runner": "NAPIERALA Marcin",
+      "index": 444.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 171,
+      "runner": "CHLASCIAK Bartlomiej",
+      "index": 444.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 172,
+      "runner": "SLAWINSKI Patryk",
+      "index": 444.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 173,
+      "runner": "TOMELA Maciej",
+      "index": 443.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 174,
+      "runner": "WOJCIECH Filip",
+      "index": 442.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 175,
+      "runner": "POLEC Tomasz",
+      "index": 442.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 176,
+      "runner": "PULCHNY Piotr",
+      "index": 441.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 177,
+      "runner": "PACH Pawel",
+      "index": 440.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 178,
+      "runner": "KUKLINSKI Michal",
+      "index": 440.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 179,
+      "runner": "RZESZUTKO Rafal",
+      "index": 439.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 180,
+      "runner": "SZMIDT Julia",
+      "index": 439.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 181,
+      "runner": "DARGACZ Dominik",
+      "index": 439.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 182,
+      "runner": "PIECZKO Konrad",
+      "index": 438.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 183,
+      "runner": "JAROŃ Magdalena",
+      "index": 437.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 184,
+      "runner": "PACIA Sebastian",
+      "index": 435.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 184,
+      "runner": "ZADORA Krzysztof",
+      "index": 435.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 186,
+      "runner": "GIERADA Mateusz",
+      "index": 434.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 187,
+      "runner": "SMIGIELSKA Agnieszka",
+      "index": 431.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 188,
+      "runner": "MICHALCZYK Natan",
+      "index": 430.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 189,
+      "runner": "WESOLOWSKI Marcin",
+      "index": 430.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 190,
+      "runner": "POPCZYK Ewelina",
+      "index": 428.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 191,
+      "runner": "BOJUR Renata",
+      "index": 428.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 192,
+      "runner": "REWILAK Anna",
+      "index": 428.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 193,
+      "runner": "JASIŃSKI Maciej",
+      "index": 426.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 194,
+      "runner": "WISNIEWSKA Agnieszka",
+      "index": 426.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 195,
+      "runner": "BARTOSIEWICZ Adam",
+      "index": 426.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 196,
+      "runner": "WIDLAK Krzysztof",
+      "index": 425.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 197,
+      "runner": "BARYCKA Katarzyna",
+      "index": 424.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 198,
+      "runner": "Anonymous 4480908",
+      "index": 423.0,
+      "gender": "-",
+      "nationality": "POL"
+    },
+    {
+      "rank": 199,
+      "runner": "SELEGRAT Norbert",
+      "index": 422.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 200,
+      "runner": "ZAJACZKOWSKA Karolina",
+      "index": 422.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 201,
+      "runner": "HABDAS Damian",
+      "index": 422.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 202,
+      "runner": "LISOCKI Sebastian",
+      "index": 419.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 203,
+      "runner": "SKIBINSKA Aldona",
+      "index": 419.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 204,
+      "runner": "STEPKOWSKA Berta",
+      "index": 419.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 205,
+      "runner": "JANUSZ Grzegorz",
+      "index": 419.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 206,
+      "runner": "WOLWOWICZ Zbigniew",
+      "index": 416.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 207,
+      "runner": "MARSZALEK Jan",
+      "index": 415.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 208,
+      "runner": "BLASIAK Henryk",
+      "index": 414.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 209,
+      "runner": "RZENTALA Mateusz",
+      "index": 414.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 210,
+      "runner": "CIESIELSKA Malgorzata",
+      "index": 414.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 211,
+      "runner": "GROMEK Edyta",
+      "index": 413.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 212,
+      "runner": "LESKO Marcin",
+      "index": 413.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 213,
+      "runner": "OKON Bartosz",
+      "index": 413.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 214,
+      "runner": "RYBKOWSKA Ewa",
+      "index": 412.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 215,
+      "runner": "NERKA Krystian",
+      "index": 406.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 216,
+      "runner": "YARMALOVICH Aliaksandr",
+      "index": 406.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 217,
+      "runner": "CZADER Karolina",
+      "index": 405.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 218,
+      "runner": "LENARCIK Patryk",
+      "index": 403.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 219,
+      "runner": "WALENCIK Karol",
+      "index": 402.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 220,
+      "runner": "JANKOWSKI Marek",
+      "index": 402.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 221,
+      "runner": "HAVRYLIUK Vladyslav",
+      "index": 401.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 222,
+      "runner": "KURZAWA Krzysztof",
+      "index": 400.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 223,
+      "runner": "KIERENKO Pawel",
+      "index": 400.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 223,
+      "runner": "ZYGMUNT Marcin",
+      "index": 400.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 225,
+      "runner": "PELC Grzegorz",
+      "index": 399.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 226,
+      "runner": "JURKOWSKA-TULEJ JANINA",
+      "index": 398.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 227,
+      "runner": "POCHWALA Justyna",
+      "index": 396.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 228,
+      "runner": "WŁOCH Sławomir",
+      "index": 396.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 229,
+      "runner": "CHMIELNIAK Krzysztof",
+      "index": 395.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 230,
+      "runner": "GRZEGORZEWSKA Marlena",
+      "index": 395.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 230,
+      "runner": "KASINSKI Wojciech",
+      "index": 395.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 232,
+      "runner": "PRZYBYLIK Piotr",
+      "index": 392.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 233,
+      "runner": "PASIERBEK Dominik",
+      "index": 392.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 234,
+      "runner": "BRZEZINSKI Mateusz",
+      "index": 392.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 235,
+      "runner": "SITARZ Magdalena",
+      "index": 392.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 236,
+      "runner": "BĄKOWSKA Agnieszka",
+      "index": 390.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 237,
+      "runner": "CZEKALSKI Wojciech",
+      "index": 390.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 238,
+      "runner": "STUDNIK Agnieszka",
+      "index": 389.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 239,
+      "runner": "GDULEWICZ Lukasz",
+      "index": 388.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 240,
+      "runner": "TAJAK Aleksandra",
+      "index": 386.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 241,
+      "runner": "WOJCIK Michal",
+      "index": 386.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 242,
+      "runner": "SZYMCZAK Anna",
+      "index": 386.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 243,
+      "runner": "MACIAZEK Tomasz",
+      "index": 386.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 244,
+      "runner": "DROZD Milosz",
+      "index": 385.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 245,
+      "runner": "ZACHWIEJA Katarzyna",
+      "index": 383.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 246,
+      "runner": "KOCYBA Marcin",
+      "index": 383.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 247,
+      "runner": "MOZDZONEK Bartosz",
+      "index": 383.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 248,
+      "runner": "BAKOWSKI Jakub",
+      "index": 382.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 249,
+      "runner": "CISZAK Wojciech",
+      "index": 382.0,
+      "gender": "M",
+      "nationality": "POL"
+    }
+  ]
+}

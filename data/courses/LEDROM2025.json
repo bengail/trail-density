@@ -1,0 +1,717 @@
+{
+  "meta": {
+    "race_id": "LEDROM2025",
+    "name": "LEDROM2025",
+    "series": "LEDROM",
+    "country": null,
+    "data_source": "ITRA",
+    "year": 2025,
+    "distance_km": null,
+    "elevation_m": null,
+    "prize_money": null,
+    "notes": null,
+    "source_url": null
+  },
+  "results": [
+    {
+      "rank": 1,
+      "runner": "KIBETT Timothy",
+      "index": 924.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 2,
+      "runner": "KIPROTICH Samwel",
+      "index": 923.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 3,
+      "runner": "STACK Taylor",
+      "index": 914.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 4,
+      "runner": "SAOLI Michael Selelo",
+      "index": 914.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 5,
+      "runner": "KIPLIMO Nashon",
+      "index": 902.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 6,
+      "runner": "GALBOURDIN Pierre",
+      "index": 900.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 7,
+      "runner": "ROLLI Dominik",
+      "index": 897.0,
+      "gender": "M",
+      "nationality": "SUI"
+    },
+    {
+      "rank": 8,
+      "runner": "ROACH Thomas",
+      "index": 891.0,
+      "gender": "M",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 9,
+      "runner": "NJERI Ephantus mwangi",
+      "index": 890.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 10,
+      "runner": "SOLDINI Jonas",
+      "index": 882.0,
+      "gender": "M",
+      "nationality": "SUI"
+    },
+    {
+      "rank": 11,
+      "runner": "DELORENZI Roberto",
+      "index": 877.0,
+      "gender": "M",
+      "nationality": "SUI"
+    },
+    {
+      "rank": 12,
+      "runner": "HENRIC Mael",
+      "index": 874.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 13,
+      "runner": "COSTA Isacco",
+      "index": 873.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 14,
+      "runner": "CURTS Dan",
+      "index": 870.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 15,
+      "runner": "ALLEN Christian",
+      "index": 864.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 16,
+      "runner": "ATUYA Richard Omaya",
+      "index": 862.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 17,
+      "runner": "MAESTRI Cesare",
+      "index": 861.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 18,
+      "runner": "ALLAIRE Mael",
+      "index": 859.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 19,
+      "runner": "DÜRR Marc",
+      "index": 854.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 20,
+      "runner": "MOUSSAOUI Adil",
+      "index": 854.0,
+      "gender": "M",
+      "nationality": "MAR"
+    },
+    {
+      "rank": 21,
+      "runner": "YLINEN Juho",
+      "index": 848.0,
+      "gender": "M",
+      "nationality": "FIN"
+    },
+    {
+      "rank": 22,
+      "runner": "YANZICK Max",
+      "index": 845.0,
+      "gender": "M",
+      "nationality": "NZL"
+    },
+    {
+      "rank": 23,
+      "runner": "DAMIAN Bogdan",
+      "index": 843.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 24,
+      "runner": "TANARA Mattia",
+      "index": 839.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 25,
+      "runner": "GIOLITTI Simone",
+      "index": 834.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 26,
+      "runner": "PEREZ ANGLES Albert",
+      "index": 831.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 27,
+      "runner": "LEROUX Remi",
+      "index": 830.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 28,
+      "runner": "FALKENSTEINER Sebastian",
+      "index": 827.0,
+      "gender": "M",
+      "nationality": "AUT"
+    },
+    {
+      "rank": 29,
+      "runner": "ŠPANRING Klemen",
+      "index": 825.0,
+      "gender": "M",
+      "nationality": "SLO"
+    },
+    {
+      "rank": 30,
+      "runner": "MURGOITIO Gontzal",
+      "index": 822.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 31,
+      "runner": "PÉREZ ALVARADO  Miguel Ángel",
+      "index": 821.0,
+      "gender": "M",
+      "nationality": "MEX"
+    },
+    {
+      "rank": 32,
+      "runner": "HOHENLEITNER Dominik",
+      "index": 820.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 33,
+      "runner": "FRANCHI Noam",
+      "index": 819.0,
+      "gender": "M",
+      "nationality": "BRA"
+    },
+    {
+      "rank": 34,
+      "runner": "MEŠTRIC Josip",
+      "index": 816.0,
+      "gender": "M",
+      "nationality": "CRO"
+    },
+    {
+      "rank": 35,
+      "runner": "PAPILLON Ali",
+      "index": 811.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 36,
+      "runner": "TURCO Nicholas",
+      "index": 809.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 37,
+      "runner": "MITRICA Leonard",
+      "index": 803.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 38,
+      "runner": "CIESLAR Adam",
+      "index": 803.0,
+      "gender": "M",
+      "nationality": "POL"
+    },
+    {
+      "rank": 39,
+      "runner": "HOCHENWARTER Christof",
+      "index": 801.0,
+      "gender": "M",
+      "nationality": "AUT"
+    },
+    {
+      "rank": 40,
+      "runner": "COLLIGAN Grant",
+      "index": 796.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 41,
+      "runner": "WOOD Jack",
+      "index": 795.0,
+      "gender": "M",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 42,
+      "runner": "BLEIER Felix",
+      "index": 787.0,
+      "gender": "M",
+      "nationality": "AUT"
+    },
+    {
+      "rank": 43,
+      "runner": "GOETHER Max",
+      "index": 781.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 44,
+      "runner": "LANG Naomi",
+      "index": 780.0,
+      "gender": "F",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 45,
+      "runner": "OSA ANSA Malen",
+      "index": 776.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 46,
+      "runner": "CALL Hawk",
+      "index": 770.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 47,
+      "runner": "STENZEL Jakob",
+      "index": 767.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 48,
+      "runner": "NOUGUIER Michel",
+      "index": 767.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 49,
+      "runner": "MUSCHINSKI Lennard",
+      "index": 766.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 50,
+      "runner": "MATTLE Martin",
+      "index": 762.0,
+      "gender": "M",
+      "nationality": "AUT"
+    },
+    {
+      "rank": 51,
+      "runner": "BENJAMINSEN Andrine",
+      "index": 761.0,
+      "gender": "F",
+      "nationality": "NOR"
+    },
+    {
+      "rank": 52,
+      "runner": "FISCHER Falk",
+      "index": 760.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 53,
+      "runner": "FUENTES OLCINA Maria",
+      "index": 754.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 54,
+      "runner": "PERMANN Stephan",
+      "index": 753.0,
+      "gender": "M",
+      "nationality": "AUT"
+    },
+    {
+      "rank": 55,
+      "runner": "KIPLAGAT Faith",
+      "index": 752.0,
+      "gender": "F",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 56,
+      "runner": "SCHWELLA Lukas",
+      "index": 748.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 57,
+      "runner": "KISANG Philaries Jeruto",
+      "index": 735.0,
+      "gender": "F",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 58,
+      "runner": "KIMUTAI Caroline",
+      "index": 732.0,
+      "gender": "F",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 59,
+      "runner": "MATUSZCZAK Weronika",
+      "index": 725.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 60,
+      "runner": "GLEESON Brode",
+      "index": 725.0,
+      "gender": "M",
+      "nationality": "RSA"
+    },
+    {
+      "rank": 61,
+      "runner": "CARTER Sarah",
+      "index": 724.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 61,
+      "runner": "WILLHOIT  Sara",
+      "index": 724.0,
+      "gender": "F",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 63,
+      "runner": "TOMAJCZYK Rachel",
+      "index": 723.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 64,
+      "runner": "FELCH Florian",
+      "index": 720.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 65,
+      "runner": "GRÜNERBEL Lorenz",
+      "index": 718.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 66,
+      "runner": "HOLLAND MORITZ Denny",
+      "index": 718.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 67,
+      "runner": "DETSCH Benedikt",
+      "index": 717.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 68,
+      "runner": "LARA FELIU Rosa Maria",
+      "index": 716.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 69,
+      "runner": "BERGMANN Nils",
+      "index": 716.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 70,
+      "runner": "FRANCHI ANTELME Péma",
+      "index": 712.0,
+      "gender": "F",
+      "nationality": "ECU"
+    },
+    {
+      "rank": 71,
+      "runner": "PFAUCH Paul",
+      "index": 711.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 72,
+      "runner": "AEBI Céline",
+      "index": 711.0,
+      "gender": "F",
+      "nationality": "SUI"
+    },
+    {
+      "rank": 73,
+      "runner": "KISTNER Sarah",
+      "index": 707.0,
+      "gender": "F",
+      "nationality": "GER"
+    },
+    {
+      "rank": 74,
+      "runner": "CABAN Timo",
+      "index": 704.0,
+      "gender": "M",
+      "nationality": "SVK"
+    },
+    {
+      "rank": 75,
+      "runner": "BUSCH Aaron",
+      "index": 700.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 76,
+      "runner": "PETERSEN Sydney",
+      "index": 696.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 77,
+      "runner": "CHRISTOPHER-MOODY Kyla",
+      "index": 696.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 78,
+      "runner": "SCHWAIGER Silvia",
+      "index": 693.0,
+      "gender": "F",
+      "nationality": "SVK"
+    },
+    {
+      "rank": 79,
+      "runner": "URIARTE ITURBE Ander",
+      "index": 692.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 80,
+      "runner": "MINETTI Alice",
+      "index": 684.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 81,
+      "runner": "DE NICOLA Stefano",
+      "index": 682.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 82,
+      "runner": "GONZALEZ CUELLAR LUIS Javier",
+      "index": 681.0,
+      "gender": "M",
+      "nationality": "SUI"
+    },
+    {
+      "rank": 83,
+      "runner": "TARRAGÓ CLOP Núria",
+      "index": 671.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 84,
+      "runner": "ECKER Josef",
+      "index": 669.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 85,
+      "runner": "MEUSBURGER Anna-Sophie",
+      "index": 664.0,
+      "gender": "F",
+      "nationality": "AUT"
+    },
+    {
+      "rank": 86,
+      "runner": "HELMBOLDT Oliver",
+      "index": 658.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 87,
+      "runner": "ANDERSEN Karina",
+      "index": 657.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 88,
+      "runner": "CARDINAALS Renee",
+      "index": 657.0,
+      "gender": "F",
+      "nationality": "NED"
+    },
+    {
+      "rank": 89,
+      "runner": "WEINGÄRTNER Michael",
+      "index": 655.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 90,
+      "runner": "URIBARRI MARTINEZ Ainara",
+      "index": 653.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 91,
+      "runner": "LEIBIG FABIO",
+      "index": 652.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 92,
+      "runner": "HAASTRUP Simone",
+      "index": 649.0,
+      "gender": "F",
+      "nationality": "DEN"
+    },
+    {
+      "rank": 93,
+      "runner": "MUNDT Enrik",
+      "index": 646.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 94,
+      "runner": "HIGLSPERGER Manfred",
+      "index": 634.0,
+      "gender": "M",
+      "nationality": "AUT"
+    },
+    {
+      "rank": 95,
+      "runner": "LOVRANTOVA Katarina",
+      "index": 629.0,
+      "gender": "F",
+      "nationality": "SVK"
+    },
+    {
+      "rank": 96,
+      "runner": "TAKAMURA TAKAKO",
+      "index": 625.0,
+      "gender": "F",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 97,
+      "runner": "LEGELLI Maria Elisa",
+      "index": 621.0,
+      "gender": "F",
+      "nationality": "GER"
+    },
+    {
+      "rank": 98,
+      "runner": "RÖHNERT Anne",
+      "index": 616.0,
+      "gender": "F",
+      "nationality": "GER"
+    },
+    {
+      "rank": 99,
+      "runner": "PRESA Elisa",
+      "index": 615.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 100,
+      "runner": "HAVLINOVA Nora",
+      "index": 592.0,
+      "gender": "F",
+      "nationality": "AUT"
+    }
+  ]
+}

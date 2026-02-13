@@ -1,0 +1,493 @@
+{
+  "meta": {
+    "race_id": "LEDROF2025",
+    "name": "LEDROF2025",
+    "series": "LEDROF",
+    "country": null,
+    "data_source": "ITRA",
+    "year": 2025,
+    "distance_km": null,
+    "elevation_m": null,
+    "prize_money": null,
+    "notes": null,
+    "source_url": null
+  },
+  "results": [
+    {
+      "rank": 1,
+      "runner": "GREGORY Lauren",
+      "index": 788.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 2,
+      "runner": "FLOREA Monica Madalina",
+      "index": 774.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 3,
+      "runner": "ALONSO Sara",
+      "index": 772.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 4,
+      "runner": "KRKOC Lucija",
+      "index": 766.0,
+      "gender": "F",
+      "nationality": "SLO"
+    },
+    {
+      "rank": 5,
+      "runner": "OSA ANSA Malen",
+      "index": 762.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 6,
+      "runner": "BUKOVJAN Barbora",
+      "index": 762.0,
+      "gender": "F",
+      "nationality": "CZE"
+    },
+    {
+      "rank": 7,
+      "runner": "LARA FELIU Rosa Maria",
+      "index": 758.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 8,
+      "runner": "NJERU Joyce",
+      "index": 754.0,
+      "gender": "F",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 9,
+      "runner": "NIVET Marie",
+      "index": 731.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 10,
+      "runner": "GIBSON Anna",
+      "index": 723.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 11,
+      "runner": "GAGGI Alice",
+      "index": 719.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 12,
+      "runner": "MINETTI Alice",
+      "index": 713.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 13,
+      "runner": "CARTER Sarah",
+      "index": 704.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 14,
+      "runner": "RUTTO Valentine Jepkoech",
+      "index": 700.0,
+      "gender": "F",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 15,
+      "runner": "AEBI Céline",
+      "index": 696.0,
+      "gender": "F",
+      "nationality": "SUI"
+    },
+    {
+      "rank": 16,
+      "runner": "CARDINAALS Renee",
+      "index": 690.0,
+      "gender": "F",
+      "nationality": "NED"
+    },
+    {
+      "rank": 17,
+      "runner": "COPPINGER Courtney",
+      "index": 688.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 18,
+      "runner": "LASALLE Gabriela",
+      "index": 676.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 19,
+      "runner": "NOH Hyunjin",
+      "index": 675.0,
+      "gender": "F",
+      "nationality": "KOR"
+    },
+    {
+      "rank": 20,
+      "runner": "SCHWAIGER Silvia",
+      "index": 674.0,
+      "gender": "F",
+      "nationality": "SVK"
+    },
+    {
+      "rank": 21,
+      "runner": "MATUSZCZAK Weronika",
+      "index": 671.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 22,
+      "runner": "RICO GONZALEZ Andrea",
+      "index": 665.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 23,
+      "runner": "TAKAMURA TAKAKO",
+      "index": 665.0,
+      "gender": "F",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 24,
+      "runner": "BERMUDEZ DE CASTRO Natalia",
+      "index": 664.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 25,
+      "runner": "PAPROCKA Urszula",
+      "index": 659.0,
+      "gender": "F",
+      "nationality": "POL"
+    },
+    {
+      "rank": 26,
+      "runner": "SASOVA Katrin",
+      "index": 658.0,
+      "gender": "F",
+      "nationality": "CZE"
+    },
+    {
+      "rank": 27,
+      "runner": "TESTINI Alice",
+      "index": 657.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 28,
+      "runner": "PRESA Elisa",
+      "index": 648.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 29,
+      "runner": "SCAINI Alessia",
+      "index": 645.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 30,
+      "runner": "RAMIRO ALLENDE Carmen Trinidad",
+      "index": 642.0,
+      "gender": "F",
+      "nationality": "MEX"
+    },
+    {
+      "rank": 31,
+      "runner": "SCHERLING Sina",
+      "index": 637.0,
+      "gender": "F",
+      "nationality": "SUI"
+    },
+    {
+      "rank": 32,
+      "runner": "DEL PINO Arianna",
+      "index": 625.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 33,
+      "runner": "KOTANI Naho",
+      "index": 604.0,
+      "gender": "F",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 34,
+      "runner": "PARK Soo ji",
+      "index": 601.0,
+      "gender": "F",
+      "nationality": "KOR"
+    },
+    {
+      "rank": 35,
+      "runner": "IRATZOQUY Marie Charlotte",
+      "index": 598.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 36,
+      "runner": "PADMANABHAN Mia",
+      "index": 596.0,
+      "gender": "F",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 37,
+      "runner": "TERADA Mina",
+      "index": 594.0,
+      "gender": "F",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 38,
+      "runner": "LLANSÓ BORDES Núria",
+      "index": 586.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 39,
+      "runner": "OTA Mikiko",
+      "index": 582.0,
+      "gender": "F",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 40,
+      "runner": "TOMAJCZYK Rachel",
+      "index": 575.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 41,
+      "runner": "JUHÁSZ Nóra",
+      "index": 575.0,
+      "gender": "F",
+      "nationality": "HUN"
+    },
+    {
+      "rank": 42,
+      "runner": "KISANG Philaries Jeruto",
+      "index": 568.0,
+      "gender": "F",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 43,
+      "runner": "BOTTU Oceane",
+      "index": 562.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 44,
+      "runner": "ZANELLA Celeste",
+      "index": 562.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 45,
+      "runner": "DESQUERRE Armelle",
+      "index": 562.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 46,
+      "runner": "LHUISSIER Julie",
+      "index": 539.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 47,
+      "runner": "VON ELSNER WELLSTEED Katinka",
+      "index": 538.0,
+      "gender": "F",
+      "nationality": "AUS"
+    },
+    {
+      "rank": 48,
+      "runner": "LUMSDON Chloe",
+      "index": 525.0,
+      "gender": "F",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 49,
+      "runner": "FINZI Chiara",
+      "index": 524.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 50,
+      "runner": "GOGELE Brigitte",
+      "index": 517.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 51,
+      "runner": "ARNAUD Salome",
+      "index": 496.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 52,
+      "runner": "KIM Daseul",
+      "index": 478.0,
+      "gender": "F",
+      "nationality": "KOR"
+    },
+    {
+      "rank": 53,
+      "runner": "MARTINEAU Clemence",
+      "index": 473.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 54,
+      "runner": "MORO Giulia",
+      "index": 469.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 55,
+      "runner": "LACROIX Lucie",
+      "index": 468.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 56,
+      "runner": "LALUET Chloe",
+      "index": 466.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 56,
+      "runner": "PEAN Anaelle",
+      "index": 466.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 58,
+      "runner": "VOGELER ELISA",
+      "index": 447.0,
+      "gender": "F",
+      "nationality": "GER"
+    },
+    {
+      "rank": 59,
+      "runner": "GRANJON Lorrie",
+      "index": 441.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 60,
+      "runner": "LAM Stephanie",
+      "index": 436.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 61,
+      "runner": "CARME Cloe",
+      "index": 433.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 62,
+      "runner": "TAURISSON Claire",
+      "index": 422.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 63,
+      "runner": "CRNOMARKOVIC Dunja",
+      "index": 419.0,
+      "gender": "F",
+      "nationality": "SRB"
+    },
+    {
+      "rank": 64,
+      "runner": "IONESCU Bianca",
+      "index": 406.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 65,
+      "runner": "LEFORT Diane",
+      "index": 399.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 66,
+      "runner": "LATTA Elodie",
+      "index": 399.0,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 67,
+      "runner": "IORI Laura",
+      "index": 394.0,
+      "gender": "F",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 68,
+      "runner": "VUILLERMOZ Margaux",
+      "index": 376.0,
+      "gender": "F",
+      "nationality": "FRA"
+    }
+  ]
+}

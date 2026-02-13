@@ -1,0 +1,528 @@
+{
+  "meta": {
+    "race_id": "ZMEUCLASSIC2025",
+    "name": "ZMEUCLASSIC2025",
+    "series": "ZMEUCLASSIC",
+    "country": null,
+    "data_source": "ITRA",
+    "year": 2025,
+    "distance_km": null,
+    "elevation_m": null,
+    "prize_money": null,
+    "notes": null,
+    "source_url": null
+  },
+  "results": [
+    {
+      "rank": 1,
+      "runner": "MACHOKA Paul",
+      "index": 913.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 2,
+      "runner": "KIBET Kevin",
+      "index": 910.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 3,
+      "runner": "AYMONOD Henri",
+      "index": 909.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 4,
+      "runner": "ROSTAN ANDREA",
+      "index": 900.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 5,
+      "runner": "VENDER ALBERTO",
+      "index": 881.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 6,
+      "runner": "MERLI Luca",
+      "index": 850.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 7,
+      "runner": "PETIT Alric",
+      "index": 843.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 8,
+      "runner": "ADKIN Scout",
+      "index": 806.0,
+      "gender": "F",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 9,
+      "runner": "MIKLOS Rares",
+      "index": 792.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 10,
+      "runner": "DALOS Máté",
+      "index": 786.0,
+      "gender": "M",
+      "nationality": "HUN"
+    },
+    {
+      "rank": 11,
+      "runner": "GONCALVES Marcelo",
+      "index": 759.0,
+      "gender": "M",
+      "nationality": "POR"
+    },
+    {
+      "rank": 12,
+      "runner": "FOCSA Alexandru",
+      "index": 751.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 13,
+      "runner": "HUSARIU Ionut Alexandru",
+      "index": 733.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 14,
+      "runner": "AMARIEI Madalina Ioana",
+      "index": 715.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 14,
+      "runner": "RUTTO Valentine Jepkoech",
+      "index": 715.0,
+      "gender": "F",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 16,
+      "runner": "CRISTIAN HAN",
+      "index": 714.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 17,
+      "runner": "GYORGY Szabolcs Istvan",
+      "index": 681.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 18,
+      "runner": "CIORESCU Octavian Andrei",
+      "index": 674.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 19,
+      "runner": "SOVERESAN Andrei Gratian",
+      "index": 658.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 20,
+      "runner": "BADALE Florin",
+      "index": 656.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 20,
+      "runner": "TURCU Marius Sorin",
+      "index": 656.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 22,
+      "runner": "MUTTER Ingrid",
+      "index": 649.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 23,
+      "runner": "GHIZILA Dacian",
+      "index": 639.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 24,
+      "runner": "MIHAITA Ana Maria",
+      "index": 629.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 25,
+      "runner": "POP Iulian",
+      "index": 607.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 26,
+      "runner": "PILOTE FORTIN Gabrielle",
+      "index": 599.0,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 27,
+      "runner": "TANASA Vasile",
+      "index": 592.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 28,
+      "runner": "CROITORU Vasile",
+      "index": 580.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 29,
+      "runner": "CUCIUREAN Stefan",
+      "index": 567.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 30,
+      "runner": "MACIUCA Adrian",
+      "index": 567.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 31,
+      "runner": "MIHAITA Lupan",
+      "index": 561.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 32,
+      "runner": "REGUS Albert",
+      "index": 557.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 33,
+      "runner": "RUSU Octavian Marius",
+      "index": 552.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 34,
+      "runner": "TANASA TUDOR",
+      "index": 546.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 35,
+      "runner": "BRIZA Matej",
+      "index": 542.0,
+      "gender": "M",
+      "nationality": "CZE"
+    },
+    {
+      "rank": 36,
+      "runner": "BOICU Bogdan",
+      "index": 522.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 37,
+      "runner": "ALEXOAE Ramona Iuliana",
+      "index": 520.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 38,
+      "runner": "VAUM Waldemar",
+      "index": 518.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 39,
+      "runner": "HAMZA Marinela Cristina",
+      "index": 514.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 40,
+      "runner": "APAFAIAN Adrian",
+      "index": 503.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 41,
+      "runner": "BORS Paraschiva",
+      "index": 503.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 42,
+      "runner": "FLOROAIA Georgiana",
+      "index": 474.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 43,
+      "runner": "ANDRISAN Catalin",
+      "index": 457.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 44,
+      "runner": "TIMPAU Alexandru",
+      "index": 452.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 45,
+      "runner": "PARLAGHI Robert",
+      "index": 449.0,
+      "gender": null,
+      "nationality": "ROU"
+    },
+    {
+      "rank": 46,
+      "runner": "TOFAN Alex",
+      "index": 448.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 47,
+      "runner": "ANDRIESEI Cristian Andrei",
+      "index": 446.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 48,
+      "runner": "IFRIM Sergiu",
+      "index": 443.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 49,
+      "runner": "FOGARASI Hajnalka",
+      "index": 443.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 50,
+      "runner": "CARAMFIL  Mihail",
+      "index": 426.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 51,
+      "runner": "BALAN Ionut",
+      "index": 426.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 52,
+      "runner": "RADU ALEXANDRU",
+      "index": 420.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 53,
+      "runner": "GALEANU Teodor",
+      "index": 415.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 54,
+      "runner": "RUSU Catalin",
+      "index": 390.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 55,
+      "runner": "CAPITANU Ionut",
+      "index": 386.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 56,
+      "runner": "TCACI Maria",
+      "index": 379.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 57,
+      "runner": "TOFAN Iulian",
+      "index": 379.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 58,
+      "runner": "MOLDOVEANU  Sergiu",
+      "index": 375.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 59,
+      "runner": "OPROIU Matei",
+      "index": 368.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 59,
+      "runner": "POPOVICI Mihai",
+      "index": 368.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 61,
+      "runner": "OLARU Anda",
+      "index": 363.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 62,
+      "runner": "COVASA Bianca",
+      "index": 362.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 63,
+      "runner": "SAVUT Teodora",
+      "index": 359.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 64,
+      "runner": "TONU Diana",
+      "index": 347.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 65,
+      "runner": "BUSUIOC Adriana",
+      "index": 347.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 66,
+      "runner": "POPA RAZVAN",
+      "index": 338.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 67,
+      "runner": "MLEșNIțA Cristina Maria",
+      "index": 334.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 68,
+      "runner": "CARDEI Valentin",
+      "index": 332.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 69,
+      "runner": "CARDEI Daniel",
+      "index": 332.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 70,
+      "runner": "FURCULITA Alexandru",
+      "index": 328.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 71,
+      "runner": "MOROSANU Daniela",
+      "index": 323.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 72,
+      "runner": "BEREA Bogdan",
+      "index": 318.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 73,
+      "runner": "APOSTOL Antonina",
+      "index": 289.0,
+      "gender": "F",
+      "nationality": "ROU"
+    }
+  ]
+}

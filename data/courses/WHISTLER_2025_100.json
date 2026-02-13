@@ -1,0 +1,1011 @@
+{
+  "meta": {
+    "race_id": "WHISTLER_2025_100",
+    "name": "WHISTLER_2025_100",
+    "series": "WHISTLER_2025_100",
+    "country": null,
+    "data_source": "ITRA",
+    "year": null,
+    "distance_km": null,
+    "elevation_m": null,
+    "prize_money": null,
+    "notes": null,
+    "source_url": null
+  },
+  "results": [
+    {
+      "rank": 1,
+      "runner": "KING Alexander",
+      "index": 804.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 2,
+      "runner": "GOUIN Samir",
+      "index": 761.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 3,
+      "runner": "LAGOS Cristhian",
+      "index": 757.0,
+      "gender": "M",
+      "nationality": "COL"
+    },
+    {
+      "rank": 4,
+      "runner": "GAGNON Cedrik",
+      "index": 754.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 5,
+      "runner": "ST-CYR Xavier",
+      "index": 703.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 6,
+      "runner": "ALLABEN Sarah",
+      "index": 698.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 7,
+      "runner": "WILKIE Callum",
+      "index": 688.0,
+      "gender": "M",
+      "nationality": "NZL"
+    },
+    {
+      "rank": 8,
+      "runner": "PELLETANT Jérémy",
+      "index": 672.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 9,
+      "runner": "WOODWARD Forest",
+      "index": 666.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 10,
+      "runner": "DULKO Anna",
+      "index": 662.0,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 11,
+      "runner": "QUINN Taylor",
+      "index": 662.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 12,
+      "runner": "ABEGG Jenny",
+      "index": 661.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 13,
+      "runner": "PERROT MINOT CHARLES",
+      "index": 654.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 14,
+      "runner": "KURCHAK Brennan",
+      "index": 638.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 15,
+      "runner": "CHABAT Sylvain",
+      "index": 631.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 16,
+      "runner": "TAYLOR Nathan",
+      "index": 627.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 17,
+      "runner": "DUMONT Nolan",
+      "index": 625.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 18,
+      "runner": "SIEGLE-GAITHER Mercedes",
+      "index": 622.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 19,
+      "runner": "SALI Harrison",
+      "index": 621.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 20,
+      "runner": "BRANDHAM Bailey",
+      "index": 618.0,
+      "gender": "M",
+      "nationality": "NZL"
+    },
+    {
+      "rank": 21,
+      "runner": "VAAST YOHANN",
+      "index": 615.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 22,
+      "runner": "PIETERS Julien",
+      "index": 609.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 23,
+      "runner": "BOYLE Benjamin",
+      "index": 607.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 24,
+      "runner": "BALESTIER Thilo",
+      "index": 606.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 25,
+      "runner": "DESJARDINS Kevin",
+      "index": 606.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 26,
+      "runner": "BRUNEL Guillaume",
+      "index": 606.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 27,
+      "runner": "PERZ Linden",
+      "index": 603.0,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 28,
+      "runner": "SARRES Mathieu",
+      "index": 602.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 29,
+      "runner": "JEAN PASCAL BELANGER Unknown",
+      "index": 601.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 30,
+      "runner": "ROZADOS LOPEZ Daniel",
+      "index": 601.0,
+      "gender": "M",
+      "nationality": "AND"
+    },
+    {
+      "rank": 31,
+      "runner": "CLOVER Dylan",
+      "index": 578.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 32,
+      "runner": "MORINE Ken",
+      "index": 577.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 33,
+      "runner": "BATES Elliott",
+      "index": 574.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 34,
+      "runner": "STACK Jon",
+      "index": 568.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 35,
+      "runner": "SCHAFER Tyler",
+      "index": 568.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 36,
+      "runner": "UNKNOWN Anonymous",
+      "index": 568.0,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 37,
+      "runner": "PEARSON Kit",
+      "index": 565.0,
+      "gender": "M",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 38,
+      "runner": "SCHAUB Jennifer",
+      "index": 559.0,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 39,
+      "runner": "NICHOLS Ashley",
+      "index": 557.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 40,
+      "runner": "ALLEN Jeremiah",
+      "index": 556.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 41,
+      "runner": "HUCHET François",
+      "index": 554.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 42,
+      "runner": "HUANG Shaojie",
+      "index": 554.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 43,
+      "runner": "AUH Jason",
+      "index": 549.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 44,
+      "runner": "GRODNA-PANTERA Angelika",
+      "index": 549.0,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 45,
+      "runner": "ARMELLINI Fabian",
+      "index": 547.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 46,
+      "runner": "UNGERER Thomas",
+      "index": 543.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 47,
+      "runner": "MCNALLY Kealan",
+      "index": 535.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 48,
+      "runner": "DZIOBA Brendan",
+      "index": 529.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 49,
+      "runner": "COX Riley",
+      "index": 525.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 50,
+      "runner": "BANDRIVSKYI Ihor",
+      "index": 524.0,
+      "gender": "M",
+      "nationality": "UKR"
+    },
+    {
+      "rank": 51,
+      "runner": "KAANEN Benoit",
+      "index": 523.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 52,
+      "runner": "HOARE Jonathon",
+      "index": 523.0,
+      "gender": "M",
+      "nationality": "AUS"
+    },
+    {
+      "rank": 53,
+      "runner": "BUCKLEY Eoin",
+      "index": 522.0,
+      "gender": "M",
+      "nationality": "IRL"
+    },
+    {
+      "rank": 54,
+      "runner": "CESKOVA Monika",
+      "index": 516.0,
+      "gender": "F",
+      "nationality": "CZE"
+    },
+    {
+      "rank": 55,
+      "runner": "VAN SOEST Sebastiaan",
+      "index": 516.0,
+      "gender": "M",
+      "nationality": "NED"
+    },
+    {
+      "rank": 56,
+      "runner": "ZARGHAMI Mohammad",
+      "index": 516.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 57,
+      "runner": "LENDICK Mathieu",
+      "index": 516.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 58,
+      "runner": "GELINAS Jacques Jr",
+      "index": 514.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 59,
+      "runner": "GEARING Nick",
+      "index": 513.0,
+      "gender": "M",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 60,
+      "runner": "JABLONSKI John",
+      "index": 510.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 61,
+      "runner": "BROWN Isaiah",
+      "index": 510.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 62,
+      "runner": "HAGIYA Ken",
+      "index": 502.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 63,
+      "runner": "DUNHAM Reid",
+      "index": 500.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 64,
+      "runner": "SEELEY Max",
+      "index": 497.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 65,
+      "runner": "GARCIA BENITO Miguel",
+      "index": 496.0,
+      "gender": "M",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 66,
+      "runner": "FRASER Christina",
+      "index": 494.0,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 67,
+      "runner": "MCINERNEY Troy",
+      "index": 494.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 68,
+      "runner": "GASPAR CASTILLO Carlos eduardo",
+      "index": 494.0,
+      "gender": "M",
+      "nationality": "MEX"
+    },
+    {
+      "rank": 69,
+      "runner": "BONALDI Jacopo",
+      "index": 492.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 70,
+      "runner": "SONG Chansu",
+      "index": 489.0,
+      "gender": "M",
+      "nationality": "KOR"
+    },
+    {
+      "rank": 71,
+      "runner": "GOULD Amos",
+      "index": 487.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 72,
+      "runner": "FELDMAN Katie",
+      "index": 486.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 73,
+      "runner": "WICKETT Jordan",
+      "index": 480.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 74,
+      "runner": "CHOI Gwangsoon",
+      "index": 480.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 75,
+      "runner": "RAYNER Ashley",
+      "index": 480.0,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 76,
+      "runner": "DUSSAULT GOMEZ Manuel",
+      "index": 479.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 77,
+      "runner": "HAYDEN Richard",
+      "index": 478.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 78,
+      "runner": "HAYDUK James",
+      "index": 478.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 79,
+      "runner": "PERETIATKO Ihor",
+      "index": 474.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 80,
+      "runner": "MA Shun",
+      "index": 473.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 81,
+      "runner": "SUAZO Jeffrey",
+      "index": 471.0,
+      "gender": "M",
+      "nationality": "PHI"
+    },
+    {
+      "rank": 82,
+      "runner": "DE WAELE Jordy",
+      "index": 471.0,
+      "gender": "M",
+      "nationality": "BEL"
+    },
+    {
+      "rank": 83,
+      "runner": "CHZHAN Tsen Tsz",
+      "index": 468.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 84,
+      "runner": "HILL Trevor",
+      "index": 467.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 85,
+      "runner": "CRAWFORD Riley",
+      "index": 460.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 86,
+      "runner": "WANG Zeshen",
+      "index": 459.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 87,
+      "runner": "WHITE Chris",
+      "index": 458.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 88,
+      "runner": "BODNAR Kevin",
+      "index": 457.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 89,
+      "runner": "MERCER Adam",
+      "index": 454.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 90,
+      "runner": "FLECK Chris",
+      "index": 454.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 91,
+      "runner": "ZARAGOZA Esteban",
+      "index": 453.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 92,
+      "runner": "SAWAN Katrina",
+      "index": 452.0,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 93,
+      "runner": "FELKER Lydia",
+      "index": 451.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 94,
+      "runner": "SCHUETT Duncan",
+      "index": 450.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 95,
+      "runner": "LINFOOT Robert",
+      "index": 450.0,
+      "gender": "M",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 96,
+      "runner": "MEIER Bruno",
+      "index": 449.0,
+      "gender": "M",
+      "nationality": "MEX"
+    },
+    {
+      "rank": 97,
+      "runner": "WINFIELD Nicholas",
+      "index": 449.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 98,
+      "runner": "PARK Joon",
+      "index": 444.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 99,
+      "runner": "CUNDIFF Don",
+      "index": 442.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 100,
+      "runner": "KAMOTA Tetsuaki",
+      "index": 440.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 101,
+      "runner": "LOENEN Asher",
+      "index": 440.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 102,
+      "runner": "RYAN Oscar",
+      "index": 439.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 103,
+      "runner": "MEIDELL Katelyn",
+      "index": 439.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 104,
+      "runner": "YANG Mei",
+      "index": 435.0,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 105,
+      "runner": "WALDNER Charlene",
+      "index": 432.0,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 106,
+      "runner": "LIN Kirill",
+      "index": 432.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 107,
+      "runner": "BROOKS Tony",
+      "index": 432.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 108,
+      "runner": "ANDERSSON Pal",
+      "index": 431.0,
+      "gender": "M",
+      "nationality": "SWE"
+    },
+    {
+      "rank": 109,
+      "runner": "ANDERSSON Anna",
+      "index": 431.0,
+      "gender": "F",
+      "nationality": "SWE"
+    },
+    {
+      "rank": 110,
+      "runner": "PARKE Walter",
+      "index": 430.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 111,
+      "runner": "LIU AI DONG",
+      "index": 429.0,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 112,
+      "runner": "SUMMERS Nick",
+      "index": 428.0,
+      "gender": "M",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 113,
+      "runner": "KELLY Adam",
+      "index": 427.0,
+      "gender": "M",
+      "nationality": "IRL"
+    },
+    {
+      "rank": 114,
+      "runner": "NDALA MUDIRA  Noah",
+      "index": 427.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 115,
+      "runner": "WALSH Andrew",
+      "index": 427.0,
+      "gender": "M",
+      "nationality": "IRL"
+    },
+    {
+      "rank": 116,
+      "runner": "FESTER Nathan",
+      "index": 427.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 117,
+      "runner": "ROMERO OROZCO Hector fabian",
+      "index": 427.0,
+      "gender": "M",
+      "nationality": "MEX"
+    },
+    {
+      "rank": 118,
+      "runner": "SAFFOLD Joshua",
+      "index": 421.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 119,
+      "runner": "GREEN Gabriel",
+      "index": 420.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 120,
+      "runner": "GAIDE Matt",
+      "index": 419.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 121,
+      "runner": "HANSON Dylan",
+      "index": 418.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 122,
+      "runner": "FURTADO David",
+      "index": 418.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 123,
+      "runner": "ESTRELLA Michael",
+      "index": 417.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 124,
+      "runner": "HOWIE Cameron",
+      "index": 413.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 125,
+      "runner": "DVORAK Adam",
+      "index": 413.0,
+      "gender": "M",
+      "nationality": "CZE"
+    },
+    {
+      "rank": 126,
+      "runner": "DVORAK Levi",
+      "index": 413.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 127,
+      "runner": "LUCHINI Umberto",
+      "index": 412.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 128,
+      "runner": "CHAHL Tara",
+      "index": 410.0,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 129,
+      "runner": "SMITH Jackson",
+      "index": 410.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 130,
+      "runner": "SELLS Robert",
+      "index": 410.0,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 130,
+      "runner": "WIGNACOURT Antoine",
+      "index": 410.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 132,
+      "runner": "JENKINS Gregory",
+      "index": 404.0,
+      "gender": "M",
+      "nationality": "AUS"
+    },
+    {
+      "rank": 133,
+      "runner": "XIANGJUN Li",
+      "index": 404.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 134,
+      "runner": "MYLASHKO Maksym",
+      "index": 403.0,
+      "gender": "M",
+      "nationality": "UKR"
+    },
+    {
+      "rank": 135,
+      "runner": "VAN DE KERKHOF Jari",
+      "index": 401.0,
+      "gender": "M",
+      "nationality": null
+    },
+    {
+      "rank": 136,
+      "runner": "SILVA Francis",
+      "index": 400.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 137,
+      "runner": "RASSAT Kevin",
+      "index": 396.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 138,
+      "runner": "LIU Xiao",
+      "index": 395.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 139,
+      "runner": "BRILL Francois",
+      "index": 388.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 140,
+      "runner": "ERGOTIC Davor",
+      "index": 388.0,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 141,
+      "runner": "BERGLAND Valerie",
+      "index": 387.0,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 142,
+      "runner": "YANG Tao",
+      "index": 384.0,
+      "gender": "M",
+      "nationality": "USA"
+    }
+  ]
+}

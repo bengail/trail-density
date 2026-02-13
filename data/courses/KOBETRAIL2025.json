@@ -1,0 +1,941 @@
+{
+  "meta": {
+    "race_id": "KOBETRAIL2025",
+    "name": "KOBETRAIL2025",
+    "series": "KOBETRAIL",
+    "country": null,
+    "data_source": "ITRA",
+    "year": 2025,
+    "distance_km": null,
+    "elevation_m": null,
+    "prize_money": null,
+    "notes": null,
+    "source_url": null
+  },
+  "results": [
+    {
+      "rank": 1,
+      "runner": "KIPNGENO Patrick",
+      "index": 934.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 2,
+      "runner": "KIRIAGO Philemon Ombogo",
+      "index": 921.0,
+      "gender": "M",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 3,
+      "runner": "DAMIAN Bogdan",
+      "index": 921.0,
+      "gender": "M",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 4,
+      "runner": "HADORN Joey",
+      "index": 910.0,
+      "gender": "M",
+      "nationality": "SUI"
+    },
+    {
+      "rank": 5,
+      "runner": "OMI Ryunosuke",
+      "index": 898.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 6,
+      "runner": "PATTIS Daniel",
+      "index": 889.0,
+      "gender": "M",
+      "nationality": "ITA"
+    },
+    {
+      "rank": 7,
+      "runner": "BOURGEOIS Theo",
+      "index": 876.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 8,
+      "runner": "OGASAWARA Koken",
+      "index": 875.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 9,
+      "runner": "UEDA Ruy",
+      "index": 839.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 10,
+      "runner": "YLINEN Juho",
+      "index": 827.0,
+      "gender": "M",
+      "nationality": "FIN"
+    },
+    {
+      "rank": 11,
+      "runner": "YOSHINO Yamato",
+      "index": 817.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 12,
+      "runner": "FUJI Tsubasa",
+      "index": 805.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 13,
+      "runner": "ALONSO Sara",
+      "index": 804.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 14,
+      "runner": "ONIFA John Ray Galutera",
+      "index": 795.0,
+      "gender": "M",
+      "nationality": "PHI"
+    },
+    {
+      "rank": 15,
+      "runner": "FLOREA Monica Madalina",
+      "index": 778.0,
+      "gender": "F",
+      "nationality": "ROU"
+    },
+    {
+      "rank": 16,
+      "runner": "MIYAGAWA Tomofumi",
+      "index": 770.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 17,
+      "runner": "OSA ANSA Malen",
+      "index": 768.0,
+      "gender": "F",
+      "nationality": "ESP"
+    },
+    {
+      "rank": 18,
+      "runner": "TAKAMURA TAKAKO",
+      "index": 765.0,
+      "gender": "F",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 19,
+      "runner": "KESETE Habtetsion",
+      "index": 749.0,
+      "gender": "M",
+      "nationality": "ERI"
+    },
+    {
+      "rank": 20,
+      "runner": "YAMAGUCHI  Taiga",
+      "index": 748.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 21,
+      "runner": "KJÆREVIK Anders",
+      "index": 731.0,
+      "gender": "M",
+      "nationality": "NOR"
+    },
+    {
+      "rank": 22,
+      "runner": "KASAGI Hajime",
+      "index": 731.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 23,
+      "runner": "USHIDA Miki",
+      "index": 727.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 24,
+      "runner": "WILL HOIT Sara",
+      "index": 709.0,
+      "gender": "F",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 25,
+      "runner": "MORITA Kei",
+      "index": 706.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 26,
+      "runner": "GEYA SATORU",
+      "index": 700.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 27,
+      "runner": "LINDERMAYR Matthias",
+      "index": 697.0,
+      "gender": "M",
+      "nationality": "GER"
+    },
+    {
+      "rank": 28,
+      "runner": "MUTHONI Joyce",
+      "index": 695.0,
+      "gender": "F",
+      "nationality": "KEN"
+    },
+    {
+      "rank": 29,
+      "runner": "MARUYAMA Shoma",
+      "index": 693.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 30,
+      "runner": "AKIYAMA Honoka",
+      "index": 693.0,
+      "gender": "F",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 31,
+      "runner": "TANAKA Yoshimi",
+      "index": 684.0,
+      "gender": "F",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 32,
+      "runner": "CAUSSE Guillaume",
+      "index": 681.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 33,
+      "runner": "BERGSTRAND Betty",
+      "index": 678.0,
+      "gender": "F",
+      "nationality": "GBR"
+    },
+    {
+      "rank": 34,
+      "runner": "COPPINGER Courtney",
+      "index": 673.0,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 35,
+      "runner": "OHNUMA Shinya",
+      "index": 666.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 36,
+      "runner": "NISHIYAMA Shinichi",
+      "index": 662.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 37,
+      "runner": "ITAMOTO AKIHIRO",
+      "index": 661.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 38,
+      "runner": "MAKOTO Tannji",
+      "index": 660.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 39,
+      "runner": "YAMAGISHI Taishi",
+      "index": 656.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 40,
+      "runner": "GONZALEZ CUELLAR LUIS Javier",
+      "index": 652.0,
+      "gender": "M",
+      "nationality": "SUI"
+    },
+    {
+      "rank": 41,
+      "runner": "NISHIOKA Kenichi",
+      "index": 644.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 42,
+      "runner": "ISHIKAWA Ryo",
+      "index": 639.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 43,
+      "runner": "OKA Kakeru",
+      "index": 634.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 44,
+      "runner": "HAGIWARA Masato",
+      "index": 633.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 45,
+      "runner": "OMI Tadahito",
+      "index": 630.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 46,
+      "runner": "NISHIDA Yasutaka",
+      "index": 628.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 47,
+      "runner": "HISANORI Tone",
+      "index": 621.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 48,
+      "runner": "AIGOIN Vincent",
+      "index": 621.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 48,
+      "runner": "KAWAI Kentaro",
+      "index": 621.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 50,
+      "runner": "NITTA Kazuki",
+      "index": 615.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 51,
+      "runner": "ISHIHARA Nami",
+      "index": 612.0,
+      "gender": "F",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 52,
+      "runner": "TAKAHAMA Keita",
+      "index": 611.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 53,
+      "runner": "MAEKAWA Hiroshi",
+      "index": 610.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 54,
+      "runner": "CORDON Juan Fernando Camey",
+      "index": 602.0,
+      "gender": "M",
+      "nationality": "BRA"
+    },
+    {
+      "rank": 55,
+      "runner": "TSUKAMOTO Hiroaki",
+      "index": 597.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 56,
+      "runner": "WATANABE Taizo",
+      "index": 591.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 57,
+      "runner": "YAMAMOTO Megumi",
+      "index": 588.0,
+      "gender": "F",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 58,
+      "runner": "IMADA Naoki",
+      "index": 584.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 59,
+      "runner": "FUNAOKA Hiroshi",
+      "index": 579.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 60,
+      "runner": "NISHIYAMA Muneyuki",
+      "index": 572.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 61,
+      "runner": "HAN CHOONGYONG",
+      "index": 572.0,
+      "gender": "M",
+      "nationality": "KOR"
+    },
+    {
+      "rank": 62,
+      "runner": "KARIO Chisato",
+      "index": 569.0,
+      "gender": "F",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 63,
+      "runner": "KOGA Yosihiro",
+      "index": 564.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 64,
+      "runner": "IWANAGA Daisuke",
+      "index": 557.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 65,
+      "runner": "AIBARA Chihiro",
+      "index": 555.0,
+      "gender": "F",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 66,
+      "runner": "HISANO Yuya",
+      "index": 554.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 67,
+      "runner": "ONISHI YOSHIKAZU",
+      "index": 549.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 68,
+      "runner": "NAKAGAWA Kensuke",
+      "index": 547.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 69,
+      "runner": "ISHITANI Hiroyuki",
+      "index": 546.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 70,
+      "runner": "KIMURA Tsurayuki",
+      "index": 543.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 71,
+      "runner": "SUMITANI Ryota",
+      "index": 542.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 72,
+      "runner": "INAOKA Hirotaka",
+      "index": 542.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 73,
+      "runner": "SUGIYAMA Kinya",
+      "index": 541.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 74,
+      "runner": "NUMATA Tetsuomi",
+      "index": 540.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 75,
+      "runner": "KAJIMURA Kohei",
+      "index": 539.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 76,
+      "runner": "HAYASHI KAEDE",
+      "index": 536.0,
+      "gender": "F",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 76,
+      "runner": "WAKABAYASHI Aya",
+      "index": 536.0,
+      "gender": "F",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 78,
+      "runner": "SASAKURA Kai",
+      "index": 534.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 79,
+      "runner": "NAOE Jotaro",
+      "index": 534.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 80,
+      "runner": "MATSUO Ken",
+      "index": 531.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 81,
+      "runner": "MIYASAKA Yasuko",
+      "index": 530.0,
+      "gender": "F",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 82,
+      "runner": "UMEZAWA Takashi",
+      "index": 528.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 83,
+      "runner": "KONO Yoshiki",
+      "index": 527.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 84,
+      "runner": "MUTSCHKE Nina",
+      "index": 522.0,
+      "gender": "F",
+      "nationality": "GER"
+    },
+    {
+      "rank": 85,
+      "runner": "KUSHIHASHI Teruyuki",
+      "index": 520.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 86,
+      "runner": "NAKANO shinsuke",
+      "index": 518.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 87,
+      "runner": "YAMAMOTO Kazuhiro",
+      "index": 518.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 88,
+      "runner": "SUZUKI Shota",
+      "index": 517.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 89,
+      "runner": "TAKAHASHI Kyosuke",
+      "index": 516.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 90,
+      "runner": "TASAKI Hiroki",
+      "index": 511.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 91,
+      "runner": "ATSUMI Yoshihiko",
+      "index": 509.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 92,
+      "runner": "IWANAGA SHINSUKE",
+      "index": 507.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 93,
+      "runner": "YAMAMOTO Doshin",
+      "index": 506.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 94,
+      "runner": "KOH Takahiro",
+      "index": 504.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 95,
+      "runner": "ANCELIN Goujault",
+      "index": 504.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 96,
+      "runner": "HOSODA Takeshi",
+      "index": 503.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 97,
+      "runner": "UTANI Mitsuyoshi",
+      "index": 499.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 98,
+      "runner": "TAKAHARA Yuki",
+      "index": 494.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 99,
+      "runner": "ONO Tomojiro",
+      "index": 492.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 100,
+      "runner": "TATSUMI Ka",
+      "index": 492.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 101,
+      "runner": "MATSUMURA HIROSHI",
+      "index": 491.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 102,
+      "runner": "ORIBAYASHI Sho",
+      "index": 491.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 103,
+      "runner": "CAI Yu",
+      "index": 490.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 104,
+      "runner": "ENOMOTO Takuya",
+      "index": 489.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 105,
+      "runner": "SUZUKI ATSUSHI",
+      "index": 487.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 106,
+      "runner": "INOUE NAOKI",
+      "index": 486.0,
+      "gender": null,
+      "nationality": "JPN"
+    },
+    {
+      "rank": 107,
+      "runner": "FUJIWARA TAKAMITSU",
+      "index": 484.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 107,
+      "runner": "KISHI yuya",
+      "index": 484.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 107,
+      "runner": "MIZUTANI Youichi",
+      "index": 484.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 107,
+      "runner": "YOKOYAMA Kohei",
+      "index": 484.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 111,
+      "runner": "FUKUTE Eishi",
+      "index": 483.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 112,
+      "runner": "MATSUSHIMA Yuta",
+      "index": 479.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 113,
+      "runner": "MUNE Kazuki",
+      "index": 479.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 114,
+      "runner": "OTSUKA Masamichi",
+      "index": 477.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 115,
+      "runner": "NAOYUKI Sekido",
+      "index": 476.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 116,
+      "runner": "KOMATSU Naoto",
+      "index": 475.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 117,
+      "runner": "YOSHIDA Takuma",
+      "index": 475.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 118,
+      "runner": "TAM Ming Yan",
+      "index": 474.0,
+      "gender": "F",
+      "nationality": "HKG"
+    },
+    {
+      "rank": 119,
+      "runner": "SAKATA Seiji",
+      "index": 474.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 120,
+      "runner": "WANG ZHEN",
+      "index": 474.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 121,
+      "runner": "KARAMATSU Tsubasa",
+      "index": 473.0,
+      "gender": "M",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 122,
+      "runner": "LIM Anqi",
+      "index": 473.0,
+      "gender": "F",
+      "nationality": "SGP"
+    },
+    {
+      "rank": 123,
+      "runner": "FUKUSHIMA Ricky",
+      "index": 470.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 124,
+      "runner": "NAGAO Soiti",
+      "index": 469.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 125,
+      "runner": "LECALLONNEC Arnauld",
+      "index": 468.0,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 126,
+      "runner": "溝口 修央",
+      "index": 468.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 127,
+      "runner": "ITO TOMOHIKO",
+      "index": 467.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 128,
+      "runner": "ONISHI Takahide",
+      "index": 467.0,
+      "gender": "M",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 129,
+      "runner": "WATANABE Masami",
+      "index": 462.0,
+      "gender": "F",
+      "nationality": "JPN"
+    },
+    {
+      "rank": 130,
+      "runner": "YANG Ruiyi",
+      "index": 440.0,
+      "gender": "F",
+      "nationality": "CHN"
+    },
+    {
+      "rank": 131,
+      "runner": "Anonymous 1829921",
+      "index": 427.0,
+      "gender": "-",
+      "nationality": "HKG"
+    },
+    {
+      "rank": 132,
+      "runner": "HIROTA Kazuko",
+      "index": 425.0,
+      "gender": "F",
+      "nationality": "JPN"
+    }
+  ]
+}
