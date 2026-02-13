@@ -1,9 +1,9 @@
 {
   "meta": {
     "race_id": "WS2023",
-    "name": "WS2023",
-    "series": "WS",
-    "country": null,
+    "name": "Western States 2023",
+    "series": "UTMB",
+    "country": "USA",
     "data_source": "ITRA",
     "year": 2023,
     "distance_km": null,

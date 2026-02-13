@@ -1,9 +1,9 @@
 {
   "meta": {
     "race_id": "UTMB2023",
-    "name": "UTMB2023",
+    "name": "UTMB 2023",
     "series": "UTMB",
-    "country": null,
+    "country": "France",
     "data_source": "ITRA",
     "year": 2023,
     "distance_km": null,

@@ -1,9 +1,9 @@
 {
   "meta": {
     "race_id": "CCC2024",
-    "name": "CCC2024",
-    "series": "CCC",
-    "country": null,
+    "name": "CCC 2024",
+    "series": "UTMB",
+    "country": "Italia",
     "data_source": "ITRA",
     "year": 2024,
     "distance_km": null,

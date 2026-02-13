@@ -1,13 +1,13 @@
 {
   "meta": {
     "race_id": "QMT_2025_25",
-    "name": "QMT_2025_25",
-    "series": "QMT_2025_25",
-    "country": null,
+    "name": "Québec Mega Trail 2025 (25km)",
+    "series": "none",
+    "country": "Canada",
     "data_source": "ITRA",
-    "year": null,
-    "distance_km": null,
-    "elevation_m": null,
+    "year": 2025,
+    "distance_km": 25.0,
+    "elevation_m": 1000.0,
     "prize_money": null,
     "notes": null,
     "source_url": null

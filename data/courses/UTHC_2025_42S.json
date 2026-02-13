@@ -1,12 +1,12 @@
 {
   "meta": {
     "race_id": "UTHC_2025_42S",
-    "name": "UTHC_2025_42S",
-    "series": "UTHC_2025_42S",
-    "country": null,
+    "name": "UTHC 2025 (42km Saint-Siméon)",
+    "series": "none",
+    "country": "Canada",
     "data_source": "ITRA",
-    "year": null,
-    "distance_km": null,
+    "year": 2025,
+    "distance_km": 42.0,
     "elevation_m": null,
     "prize_money": null,
     "notes": null,

@@ -1,11 +1,11 @@
 {
   "meta": {
     "race_id": "NASEGO_2025",
-    "name": "NASEGO_2025",
-    "series": "NASEGO_2025",
-    "country": null,
+    "name": "Trofeo Nasego 2025",
+    "series": "GTWS",
+    "country": "Italy",
     "data_source": "ITRA",
-    "year": null,
+    "year": 2025,
     "distance_km": null,
     "elevation_m": null,
     "prize_money": null,

@@ -1,9 +1,9 @@
 {
   "meta": {
     "race_id": "TEPEC2025",
-    "name": "TEPEC2025",
-    "series": "TEPEC",
-    "country": null,
+    "name": "Tepec 2025",
+    "series": "GTWS",
+    "country": "Mexico",
     "data_source": "ITRA",
     "year": 2025,
     "distance_km": null,

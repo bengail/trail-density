@@ -1,11 +1,11 @@
 {
   "meta": {
     "race_id": "CHONGLI_2025_UPHILL",
-    "name": "CHONGLI_2025_UPHILL",
-    "series": "CHONGLI_2025_UPHILL",
+    "name": "CHONGLI 2025 UPHILL",
+    "series": "WMRA",
     "country": null,
     "data_source": "ITRA",
-    "year": null,
+    "year": 2025,
     "distance_km": null,
     "elevation_m": null,
     "prize_money": null,

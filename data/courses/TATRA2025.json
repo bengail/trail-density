@@ -1,9 +1,9 @@
 {
   "meta": {
     "race_id": "TATRA2025",
-    "name": "TATRA2025",
+    "name": "Tatra Festival 2025",
     "series": "TATRA",
-    "country": null,
+    "country": "Poland",
     "data_source": "ITRA",
     "year": 2025,
     "distance_km": null,

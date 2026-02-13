@@ -1,9 +1,9 @@
 {
   "meta": {
     "race_id": "WS2025",
-    "name": "WS2025",
-    "series": "WS",
-    "country": null,
+    "name": "Western States 2025",
+    "series": "UTMB",
+    "country": "USA",
     "data_source": "ITRA",
     "year": 2025,
     "distance_km": null,

@@ -1,9 +1,9 @@
 {
   "meta": {
     "race_id": "WS2024",
-    "name": "WS2024",
-    "series": "WS",
-    "country": null,
+    "name": "Western States 2024",
+    "series": "UTMB",
+    "country": "USA",
     "data_source": "ITRA",
     "year": 2024,
     "distance_km": null,

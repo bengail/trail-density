@@ -1,9 +1,9 @@
 {
   "meta": {
     "race_id": "ZEGAMA2025",
-    "name": "ZEGAMA2025",
-    "series": "ZEGAMA",
-    "country": null,
+    "name": "Zegama 2025",
+    "series": "GTWS",
+    "country": "Spain",
     "data_source": "ITRA",
     "year": 2025,
     "distance_km": null,

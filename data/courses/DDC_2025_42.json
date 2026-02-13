@@ -1,12 +1,12 @@
 {
   "meta": {
     "race_id": "DDC_2025_42",
-    "name": "DDC_2025_42",
-    "series": "DDC_2025_42",
-    "country": null,
+    "name": "Défi des coureurs 2025 42km",
+    "series": "none",
+    "country": "Canada",
     "data_source": "ITRA",
-    "year": null,
-    "distance_km": null,
+    "year": 2025,
+    "distance_km": 42.0,
     "elevation_m": null,
     "prize_money": null,
     "notes": null,

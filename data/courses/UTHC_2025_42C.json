@@ -1,12 +1,12 @@
 {
   "meta": {
     "race_id": "UTHC_2025_42C",
-    "name": "UTHC_2025_42C",
-    "series": "UTHC_2025_42C",
-    "country": null,
+    "name": "UTHC 2025 (42km classique)",
+    "series": "none",
+    "country": "Canada",
     "data_source": "ITRA",
-    "year": null,
-    "distance_km": null,
+    "year": 2025,
+    "distance_km": 42.0,
     "elevation_m": null,
     "prize_money": null,
     "notes": null,

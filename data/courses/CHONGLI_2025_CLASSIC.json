@@ -1,11 +1,11 @@
 {
   "meta": {
     "race_id": "CHONGLI_2025_CLASSIC",
-    "name": "CHONGLI_2025_CLASSIC",
-    "series": "CHONGLI_2025_CLASSIC",
-    "country": null,
+    "name": "CHONGLI 2025 CLASSIC",
+    "series": "WMRA",
+    "country": "China",
     "data_source": "ITRA",
-    "year": null,
+    "year": 2025,
     "distance_km": null,
     "elevation_m": null,
     "prize_money": null,

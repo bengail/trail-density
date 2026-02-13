@@ -1,9 +1,9 @@
 {
   "meta": {
     "race_id": "LEADVILLE2025",
-    "name": "LEADVILLE2025",
-    "series": "LEADVILLE",
-    "country": null,
+    "name": "Leadville 2025",
+    "series": "none",
+    "country": "USA",
     "data_source": "ITRA",
     "year": 2025,
     "distance_km": null,

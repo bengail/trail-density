@@ -1,9 +1,9 @@
 {
   "meta": {
     "race_id": "TDLC2025_50",
-    "name": "TDLC2025_50",
-    "series": "TDLC",
-    "country": null,
+    "name": "Trail de la Clinique du Coureur 2025 (50km)",
+    "series": "none",
+    "country": "Canada",
     "data_source": "ITRA",
     "year": 2025,
     "distance_km": null,

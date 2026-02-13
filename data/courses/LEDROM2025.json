@@ -1,9 +1,9 @@
 {
   "meta": {
     "race_id": "LEDROM2025",
-    "name": "LEDROM2025",
-    "series": "LEDROM",
-    "country": null,
+    "name": "Ledro Grand Final 2025 (men)",
+    "series": "GTWS",
+    "country": "Italy",
     "data_source": "ITRA",
     "year": 2025,
     "distance_km": null,

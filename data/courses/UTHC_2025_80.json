@@ -1,12 +1,12 @@
 {
   "meta": {
     "race_id": "UTHC_2025_80",
-    "name": "UTHC_2025_80",
-    "series": "UTHC_2025_80",
-    "country": null,
+    "name": "UTHC 2025 (80km)",
+    "series": "none",
+    "country": "Canada",
     "data_source": "ITRA",
-    "year": null,
-    "distance_km": null,
+    "year": 2025,
+    "distance_km": 80.0,
     "elevation_m": null,
     "prize_money": null,
     "notes": null,

@@ -1,12 +1,12 @@
 {
   "meta": {
     "race_id": "SQUAMISH_2025_50K",
-    "name": "SQUAMISH_2025_50K",
+    "name": "Squamish 50K 2025",
     "series": "SQUAMISH_2025_50K",
-    "country": null,
+    "country": "USA",
     "data_source": "ITRA",
-    "year": null,
-    "distance_km": null,
+    "year": 2025,
+    "distance_km": 50.0,
     "elevation_m": null,
     "prize_money": null,
     "notes": null,

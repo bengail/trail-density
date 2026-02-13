@@ -1,12 +1,12 @@
 {
   "meta": {
     "race_id": "WHISTLER_2025_100",
-    "name": "WHISTLER_2025_100",
-    "series": "WHISTLER_2025_100",
-    "country": null,
+    "name": "Whistler 2025 (100km)",
+    "series": "UTMB",
+    "country": "Canada",
     "data_source": "ITRA",
-    "year": null,
-    "distance_km": null,
+    "year": 2025,
+    "distance_km": 100.0,
     "elevation_m": null,
     "prize_money": null,
     "notes": null,

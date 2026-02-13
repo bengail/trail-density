@@ -1,12 +1,12 @@
 {
   "meta": {
     "race_id": "DDC_2025_UPDOWN",
-    "name": "DDC_2025_UPDOWN",
-    "series": "DDC_2025_UPDOWN",
-    "country": null,
+    "name": "Défi des coureurs 2025 - Up & Down",
+    "series": "WMRA",
+    "country": "Canada",
     "data_source": "ITRA",
-    "year": null,
-    "distance_km": null,
+    "year": 2025,
+    "distance_km": 11,
     "elevation_m": null,
     "prize_money": null,
     "notes": null,

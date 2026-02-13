@@ -1,11 +1,11 @@
 {
   "meta": {
     "race_id": "CLASSIQUETREMBLANT_2025_30",
-    "name": "CLASSIQUETREMBLANT_2025_30",
-    "series": "CLASSIQUETREMBLANT_2025_30",
-    "country": null,
+    "name": "La Classique Tremblant 2025 - 30 km",
+    "series": "none",
+    "country": "Canada",
     "data_source": "ITRA",
-    "year": null,
+    "year": 2025,
     "distance_km": null,
     "elevation_m": null,
     "prize_money": null,

@@ -1,13 +1,13 @@
 {
   "meta": {
     "race_id": "QMT_2025_32",
-    "name": "QMT_2025_32",
-    "series": "QMT_2025_32",
-    "country": null,
+    "name": "Québec",
+    "series": "none",
+    "country": "Canada",
     "data_source": "ITRA",
-    "year": null,
-    "distance_km": null,
-    "elevation_m": null,
+    "year": 2025,
+    "distance_km": 32.0,
+    "elevation_m": 1200.0,
     "prize_money": null,
     "notes": null,
     "source_url": null

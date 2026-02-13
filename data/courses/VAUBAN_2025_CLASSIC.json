@@ -1,11 +1,11 @@
 {
   "meta": {
     "race_id": "VAUBAN_2025_CLASSIC",
-    "name": "VAUBAN_2025_CLASSIC",
-    "series": "VAUBAN_2025_CLASSIC",
-    "country": null,
+    "name": "Vauban 2025 (Classic)",
+    "series": "WMRA",
+    "country": "France",
     "data_source": "ITRA",
-    "year": null,
+    "year": 2025,
     "distance_km": null,
     "elevation_m": null,
     "prize_money": null,

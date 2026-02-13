@@ -1,11 +1,11 @@
 {
   "meta": {
     "race_id": "DDC_2025_CLASSIC",
-    "name": "DDC_2025_CLASSIC",
-    "series": "DDC_2025_CLASSIC",
-    "country": null,
+    "name": "Défi des coureurs 2025 - Uphill",
+    "series": "WMRA",
+    "country": "Canada",
     "data_source": "ITRA",
-    "year": null,
+    "year": 2025,
     "distance_km": null,
     "elevation_m": null,
     "prize_money": null,

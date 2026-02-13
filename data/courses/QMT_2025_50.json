@@ -1,13 +1,13 @@
 {
   "meta": {
     "race_id": "QMT_2025_50",
-    "name": "QMT_2025_50",
-    "series": "QMT_2025_50",
-    "country": null,
+    "name": "Québec",
+    "series": "Championnat Canadien de Trail 2025",
+    "country": "Canada",
     "data_source": "ITRA",
-    "year": null,
-    "distance_km": null,
-    "elevation_m": null,
+    "year": 2025,
+    "distance_km": 50.0,
+    "elevation_m": 2500.0,
     "prize_money": null,
     "notes": null,
     "source_url": null
