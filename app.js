@@ -148,13 +148,15 @@ const state = {
   summarySort: { key: "rci10", dir: "desc" },
   summarySelected: new Set(),
   chartsSelected: new Set(),
-  topN: 100,
-  summaryFilters: { country: "", series: "" }
+  topN: 30,
+  summaryFilters: { country: "", series: "" },
+  chartsFilters: { country: "", series: "" },
+  raceSelected: null
 };
 
-function matchesSummaryFilters(meta) {
-  const countryOk = !state.summaryFilters.country || (meta?.country || "") === state.summaryFilters.country;
-  const seriesOk = !state.summaryFilters.series || normalizeSeries(meta?.series).includes(state.summaryFilters.series);
+function matchesFilters(meta, filters) {
+  const countryOk = !filters.country || (meta?.country || "") === filters.country;
+  const seriesOk = !filters.series || normalizeSeries(meta?.series).includes(filters.series);
   return countryOk && seriesOk;
 }
 
@@ -175,7 +177,7 @@ function renderCourseList(targetEl, selectedSet, searchQuery, options = {}) {
     const idText = id.toLowerCase();
 
     if (q && !idText.includes(q) && !name.includes(q)) continue;
-    if (options.applySummaryFilters && !matchesSummaryFilters(meta)) continue;
+    if (options.filters && !matchesFilters(meta, options.filters)) continue;
 
     const div = document.createElement("div");
     div.className = "item";
@@ -190,6 +192,7 @@ function renderCourseList(targetEl, selectedSet, searchQuery, options = {}) {
     });
 
     const label = document.createElement("div");
+    label.className = "item-label";
     label.textContent = meta.name || id;
 
     const pill = document.createElement("span");
@@ -203,11 +206,11 @@ function renderCourseList(targetEl, selectedSet, searchQuery, options = {}) {
   }
 }
 
-function setSelectionByYear(selectedSet, year) {
+function setSelectionByYear(selectedSet, year, filters = null) {
   selectedSet.clear();
   for (const c of getManifestEntries()) {
     const meta = getCourseMeta(c.race_id);
-    if (meta?.year === year) selectedSet.add(c.race_id);
+    if (meta?.year === year && (!filters || matchesFilters(meta, filters))) selectedSet.add(c.race_id);
   }
 }
 
@@ -220,16 +223,14 @@ function setSelectionNone(selectedSet) {
   selectedSet.clear();
 }
 
-function applySummaryFiltersToSelection() {
-  for (const id of Array.from(state.summarySelected)) {
+function applyFiltersToSelection(selectedSet, filters) {
+  for (const id of Array.from(selectedSet)) {
     const meta = getCourseMeta(id);
-    if (!matchesSummaryFilters(meta)) state.summarySelected.delete(id);
+    if (!matchesFilters(meta, filters)) selectedSet.delete(id);
   }
 }
 
-function renderSummaryFilterOptions() {
-  const countrySelect = document.getElementById("summaryCountryFilter");
-  const seriesSelect = document.getElementById("summarySeriesFilter");
+function renderFilterOptions(countrySelect, seriesSelect, filters) {
   if (!countrySelect || !seriesSelect) return;
 
   const countries = new Set();
@@ -249,8 +250,8 @@ function renderSummaryFilterOptions() {
 
   countrySelect.innerHTML = countryOptions;
   seriesSelect.innerHTML = seriesOptions;
-  countrySelect.value = state.summaryFilters.country;
-  seriesSelect.value = state.summaryFilters.series;
+  countrySelect.value = filters.country;
+  seriesSelect.value = filters.series;
 }
 
 // ---- Metrics ----
@@ -288,7 +289,7 @@ async function updateSummaryTable() {
     if (!course) continue;
 
     const meta = course.meta || {};
-    if (!matchesSummaryFilters(meta)) continue;
+    if (!matchesFilters(meta, state.summaryFilters)) continue;
 
     const top3 = mean(topScores(course, 3));
     const top5 = mean(topScores(course, 5));
@@ -485,23 +486,119 @@ async function updateCharts() {
   updateHeatmap(grouped, topN);
 }
 
+function renderRaceList(searchQuery) {
+  const list = document.getElementById("raceList");
+  const q = (searchQuery || "").trim().toLowerCase();
+  list.innerHTML = "";
+
+  for (const c of getManifestEntries()) {
+    const id = c.race_id;
+    const meta = getCourseMeta(id) || {};
+    const name = (meta.name || "").toLowerCase();
+    const idText = id.toLowerCase();
+    if (q && !idText.includes(q) && !name.includes(q)) continue;
+
+    const row = document.createElement("div");
+    row.className = "item";
+
+    const rb = document.createElement("input");
+    rb.type = "radio";
+    rb.name = "raceSelector";
+    rb.checked = state.raceSelected === id;
+    rb.addEventListener("change", () => {
+      state.raceSelected = id;
+      updateRaceDisplay();
+    });
+
+    const label = document.createElement("div");
+    label.className = "item-label";
+    label.textContent = meta.name || id;
+
+    const pill = document.createElement("span");
+    pill.className = "pill";
+    pill.textContent = getMetaLabel(meta);
+
+    row.appendChild(rb);
+    row.appendChild(label);
+    row.appendChild(pill);
+    list.appendChild(row);
+  }
+}
+
+function renderMetaCard(key, value) {
+  const safe = value === null || value === undefined || value === "" ? "-" : String(value);
+  return `<div class="metaCard"><div class="k">${key}</div><div class="v">${safe}</div></div>`;
+}
+
+async function updateRaceDisplay() {
+  if (!state.raceSelected) return;
+  const course = await loadCourse(state.raceSelected).catch(() => null);
+  if (!course) return;
+
+  const meta = course.meta || {};
+  const metaEl = document.getElementById("raceMeta");
+  const series = normalizeSeries(meta.series).join(", ");
+  const sourceLink = meta.source_url ? `<a href="${meta.source_url}" target="_blank" rel="noopener noreferrer">${meta.source_url}</a>` : "-";
+
+  metaEl.innerHTML = [
+    renderMetaCard("Name", meta.name || meta.race_id || state.raceSelected),
+    renderMetaCard("Race ID", meta.race_id || state.raceSelected),
+    renderMetaCard("Year", meta.year),
+    renderMetaCard("Series", series),
+    renderMetaCard("Country", meta.country),
+    renderMetaCard("Source", meta.data_source),
+    renderMetaCard("Distance (km)", meta.distance_km),
+    renderMetaCard("Elevation (m)", meta.elevation_m),
+    renderMetaCard("Prize money", meta.prize_money),
+    renderMetaCard("Notes", meta.notes),
+    `<div class="metaCard"><div class="k">Source URL</div><div class="v">${sourceLink}</div></div>`
+  ].join("");
+
+  const tbody = document.querySelector("#raceRankingTable tbody");
+  tbody.innerHTML = "";
+  for (const r of course.results || []) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${r.rank}</td>
+      <td>${r.runner ?? "-"}</td>
+      <td>${fmt(r.index, 1)}</td>
+      <td>${r.gender ?? "-"}</td>
+      <td>${r.nationality ?? "-"}</td>
+    `;
+    tbody.appendChild(tr);
+  }
+}
+
 // ---- Page switching ----
 function setActiveTab(tab) {
   const sum = document.getElementById("pageSummary");
   const cha = document.getElementById("pageCharts");
+  const race = document.getElementById("pageRace");
   const bSum = document.getElementById("tabSummary");
   const bCha = document.getElementById("tabCharts");
+  const bRace = document.getElementById("tabRace");
 
   if (tab === "summary") {
     sum.classList.add("active");
     cha.classList.remove("active");
+    race.classList.remove("active");
     bSum.classList.add("active");
     bCha.classList.remove("active");
-  } else {
+    bRace.classList.remove("active");
+  } else if (tab === "charts") {
     cha.classList.add("active");
     sum.classList.remove("active");
+    race.classList.remove("active");
     bCha.classList.add("active");
     bSum.classList.remove("active");
+    bRace.classList.remove("active");
+  } else {
+    race.classList.add("active");
+    sum.classList.remove("active");
+    cha.classList.remove("active");
+    bRace.classList.add("active");
+    bSum.classList.remove("active");
+    bCha.classList.remove("active");
   }
 }
 
@@ -525,16 +622,16 @@ async function updateAll() {
   const summarySeriesFilter = document.getElementById("summarySeriesFilter");
 
   function renderSummaryList() {
-    renderCourseList(sumList, state.summarySelected, sumSearch.value, { applySummaryFilters: true });
+    renderCourseList(sumList, state.summarySelected, sumSearch.value, { filters: state.summaryFilters });
   }
 
-  renderSummaryFilterOptions();
+  renderFilterOptions(summaryCountryFilter, summarySeriesFilter, state.summaryFilters);
   sumSearch.addEventListener("input", renderSummaryList);
 
   if (summaryCountryFilter) {
     summaryCountryFilter.addEventListener("change", () => {
       state.summaryFilters.country = summaryCountryFilter.value;
-      applySummaryFiltersToSelection();
+      applyFiltersToSelection(state.summarySelected, state.summaryFilters);
       renderSummaryList();
       updateSummaryTable();
     });
@@ -543,7 +640,7 @@ async function updateAll() {
   if (summarySeriesFilter) {
     summarySeriesFilter.addEventListener("change", () => {
       state.summaryFilters.series = summarySeriesFilter.value;
-      applySummaryFiltersToSelection();
+      applyFiltersToSelection(state.summarySelected, state.summaryFilters);
       renderSummaryList();
       updateSummaryTable();
     });
@@ -551,7 +648,7 @@ async function updateAll() {
 
   document.getElementById("sumAll").addEventListener("click", () => {
     setSelectionAll(state.summarySelected);
-    applySummaryFiltersToSelection();
+    applyFiltersToSelection(state.summarySelected, state.summaryFilters);
     renderSummaryList();
     updateAll();
   });
@@ -561,20 +658,17 @@ async function updateAll() {
     updateAll();
   });
   document.getElementById("sum2025").addEventListener("click", () => {
-    setSelectionByYear(state.summarySelected, 2025);
-    applySummaryFiltersToSelection();
+    setSelectionByYear(state.summarySelected, 2025, state.summaryFilters);
     renderSummaryList();
     updateAll();
   });
   document.getElementById("sum2024").addEventListener("click", () => {
-    setSelectionByYear(state.summarySelected, 2024);
-    applySummaryFiltersToSelection();
+    setSelectionByYear(state.summarySelected, 2024, state.summaryFilters);
     renderSummaryList();
     updateAll();
   });
   document.getElementById("sum2023").addEventListener("click", () => {
-    setSelectionByYear(state.summarySelected, 2023);
-    applySummaryFiltersToSelection();
+    setSelectionByYear(state.summarySelected, 2023, state.summaryFilters);
     renderSummaryList();
     updateAll();
   });
@@ -615,14 +709,36 @@ async function updateAll() {
 
   const chList = document.getElementById("chartsList");
   const chSearch = document.getElementById("searchCharts");
+  const chartsCountryFilter = document.getElementById("chartsCountryFilter");
+  const chartsSeriesFilter = document.getElementById("chartsSeriesFilter");
   function renderChartsList() {
-    renderCourseList(chList, state.chartsSelected, chSearch.value);
+    renderCourseList(chList, state.chartsSelected, chSearch.value, { filters: state.chartsFilters });
     document.getElementById("chartsCount").textContent = String(state.chartsSelected.size);
   }
+  renderFilterOptions(chartsCountryFilter, chartsSeriesFilter, state.chartsFilters);
   chSearch.addEventListener("input", renderChartsList);
+
+  if (chartsCountryFilter) {
+    chartsCountryFilter.addEventListener("change", () => {
+      state.chartsFilters.country = chartsCountryFilter.value;
+      applyFiltersToSelection(state.chartsSelected, state.chartsFilters);
+      renderChartsList();
+      updateCharts();
+    });
+  }
+
+  if (chartsSeriesFilter) {
+    chartsSeriesFilter.addEventListener("change", () => {
+      state.chartsFilters.series = chartsSeriesFilter.value;
+      applyFiltersToSelection(state.chartsSelected, state.chartsFilters);
+      renderChartsList();
+      updateCharts();
+    });
+  }
 
   document.getElementById("chartAll").addEventListener("click", () => {
     setSelectionAll(state.chartsSelected);
+    applyFiltersToSelection(state.chartsSelected, state.chartsFilters);
     renderChartsList();
     updateCharts();
   });
@@ -632,17 +748,17 @@ async function updateAll() {
     updateCharts();
   });
   document.getElementById("chart2025").addEventListener("click", () => {
-    setSelectionByYear(state.chartsSelected, 2025);
+    setSelectionByYear(state.chartsSelected, 2025, state.chartsFilters);
     renderChartsList();
     updateCharts();
   });
   document.getElementById("chart2024").addEventListener("click", () => {
-    setSelectionByYear(state.chartsSelected, 2024);
+    setSelectionByYear(state.chartsSelected, 2024, state.chartsFilters);
     renderChartsList();
     updateCharts();
   });
   document.getElementById("chart2023").addEventListener("click", () => {
-    setSelectionByYear(state.chartsSelected, 2023);
+    setSelectionByYear(state.chartsSelected, 2023, state.chartsFilters);
     renderChartsList();
     updateCharts();
   });
@@ -658,6 +774,13 @@ async function updateAll() {
 
   document.getElementById("tabSummary").addEventListener("click", () => setActiveTab("summary"));
   document.getElementById("tabCharts").addEventListener("click", () => setActiveTab("charts"));
+  document.getElementById("tabRace").addEventListener("click", () => setActiveTab("race"));
+
+  const raceSearch = document.getElementById("searchRace");
+  const firstRace = getManifestEntries()[0];
+  state.raceSelected = firstRace ? firstRace.race_id : null;
+  raceSearch.addEventListener("input", () => renderRaceList(raceSearch.value));
+  renderRaceList("");
 
   Plotly.newPlot("plot", [], { paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)" }, { responsive: true, displayModeBar: false });
   Plotly.newPlot(
@@ -669,4 +792,5 @@ async function updateAll() {
   Plotly.newPlot("heatmapPlot", [], { paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)" }, { responsive: true, displayModeBar: false });
 
   await updateAll();
+  await updateRaceDisplay();
 })();
