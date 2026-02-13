@@ -346,46 +346,12 @@ async function renderRciTable(gender, tableId) {
   const tbody = document.querySelector(`#${tableId} tbody`);
   if (!tbody) return;
   tbody.innerHTML = "";
-
-  const ids = Array.from(state.rciSelected).sort();
-  const courses = await Promise.all(ids.map(id => loadCourse(id).catch(() => null)));
-  const rows = [];
-
-  for (let i = 0; i < ids.length; i++) {
-    const course = courses[i];
-    if (!course) continue;
-    const meta = course.meta || {};
-    if (!matchesFilters(meta, state.rciFilters)) continue;
-    const raceGender = inferRaceGender(meta);
-    if (raceGender && raceGender !== gender) continue;
-    const filtered = filterResultsByGender(course.results, gender);
-    const row = {
-      name: getCourseLabel(course),
-      country: meta.country || "",
-      rc3: rciFromResults(filtered, 3, false),
-      rc5: rciFromResults(filtered, 5, false),
-      rc10: rciFromResults(filtered, 10, false),
-      rc20: rciFromResults(filtered, 20, false)
-    };
-    if (![row.rc3, row.rc5, row.rc10, row.rc20].some(Number.isFinite)) continue;
-    rows.push(row);
-  }
+  const rows = await getRciRowsForGender(gender);
 
   const metrics = rows.flatMap(r => ["rc3", "rc5", "rc10", "rc20"].map(k => r[k]).filter(Number.isFinite));
   const minValue = metrics.length ? Math.min(...metrics) : 0;
   const maxValue = metrics.length ? Math.max(...metrics) : 0;
-
   const sort = state.rciSorts[gender];
-  rows.sort((a, b) => {
-    const va = a[sort.key];
-    const vb = b[sort.key];
-    const aNum = Number.isFinite(va);
-    const bNum = Number.isFinite(vb);
-    let cmp = 0;
-    if (aNum && bNum) cmp = va - vb;
-    else cmp = String(va ?? "").localeCompare(String(vb ?? ""));
-    return sort.dir === "asc" ? cmp : -cmp;
-  });
 
   for (const r of rows) {
     const tr = document.createElement("tr");
@@ -412,12 +378,51 @@ async function renderRciTable(gender, tableId) {
   }
 }
 
+async function getRciRowsForGender(gender) {
+  const ids = Array.from(state.rciSelected).sort();
+  const courses = await Promise.all(ids.map(id => loadCourse(id).catch(() => null)));
+  const rows = [];
+
+  for (let i = 0; i < ids.length; i++) {
+    const course = courses[i];
+    if (!course) continue;
+    const meta = course.meta || {};
+    if (!matchesFilters(meta, state.rciFilters)) continue;
+    const raceGender = inferRaceGender(meta);
+    if (raceGender && raceGender !== gender) continue;
+    const filtered = filterResultsByGender(course.results, gender);
+    const row = {
+      name: getCourseLabel(course),
+      country: meta.country || "",
+      rc3: rciFromResults(filtered, 3, false),
+      rc5: rciFromResults(filtered, 5, false),
+      rc10: rciFromResults(filtered, 10, false),
+      rc20: rciFromResults(filtered, 20, false)
+    };
+    if (![row.rc3, row.rc5, row.rc10, row.rc20].some(Number.isFinite)) continue;
+    rows.push(row);
+  }
+
+  const sort = state.rciSorts[gender];
+  rows.sort((a, b) => {
+    const va = a[sort.key];
+    const vb = b[sort.key];
+    const aNum = Number.isFinite(va);
+    const bNum = Number.isFinite(vb);
+    let cmp = 0;
+    if (aNum && bNum) cmp = va - vb;
+    else cmp = String(va ?? "").localeCompare(String(vb ?? ""));
+    return sort.dir === "asc" ? cmp : -cmp;
+  });
+  return rows;
+}
+
 async function updateRciTables() {
   await renderRciTable("female", "rcifemaleTable");
   await renderRciTable("male", "rcimaleTable");
 }
 
-function wireRciSort(tableId, gender, seriesSelect, countrySelect, filters) {
+function wireRciSort(tableId, gender) {
   const thead = document.querySelector(`#${tableId} thead`);
   if (!thead) return;
   const ths = Array.from(thead.querySelectorAll("th[data-key]"));
@@ -433,33 +438,49 @@ function wireRciSort(tableId, gender, seriesSelect, countrySelect, filters) {
       updateRciTables();
     });
   });
+}
 
-  const countries = new Set();
-  const seriesValues = new Set();
-  const countryOptions = ['<option value="">All countries</option>']
-    .concat(Array.from(countries).sort().map(v => `<option value="${v}">${v}</option>`))
-    .join("");
-  const sortedSeries = Array.from(seriesValues).sort();
-  const seriesOptions =
-    seriesSelect.multiple
-      ? ['<option value="" disabled>All series</option>']
-          .concat(sortedSeries.map(v => `<option value="${v}">${v}</option>`))
-          .join("")
-      : ['<option value="">All series</option>']
-          .concat(sortedSeries.map(v => `<option value="${v}">${v}</option>`))
-          .join("");
+function csvCell(value) {
+  const s = value === null || value === undefined ? "" : String(value);
+  return `"${s.replace(/"/g, '""')}"`;
+}
 
-  countrySelect.innerHTML = countryOptions;
-  seriesSelect.innerHTML = seriesOptions;
-  countrySelect.value = filters.country;
-  if (seriesSelect.multiple) {
-    const selected = new Set(Array.isArray(filters.series) ? filters.series : []);
-    for (const option of seriesSelect.options) {
-      option.selected = option.value ? selected.has(option.value) : false;
-    }
-  } else {
-    seriesSelect.value = filters.series || "";
+function rowsToCsv(rows) {
+  const header = ["Race", "Country", "RCI3", "RCI5", "RCI10", "RCI20"];
+  const lines = [header.map(csvCell).join(",")];
+  for (const r of rows) {
+    lines.push(
+      [
+        r.name,
+        r.country || "",
+        Number.isFinite(r.rc3) ? r.rc3.toFixed(2) : "",
+        Number.isFinite(r.rc5) ? r.rc5.toFixed(2) : "",
+        Number.isFinite(r.rc10) ? r.rc10.toFixed(2) : "",
+        Number.isFinite(r.rc20) ? r.rc20.toFixed(2) : ""
+      ].map(csvCell).join(",")
+    );
   }
+  return lines.join("\n");
+}
+
+function triggerCsvDownload(filename, csvContent) {
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+async function exportRciCsv(gender) {
+  const rows = await getRciRowsForGender(gender);
+  const csv = rowsToCsv(rows);
+  const stamp = new Date().toISOString().slice(0, 10);
+  const filename = gender === "female" ? `rci_female_${stamp}.csv` : `rci_male_${stamp}.csv`;
+  triggerCsvDownload(filename, csv);
 }
 
 // ---- Metrics ----
@@ -1038,8 +1059,12 @@ async function updateAll() {
     updateCharts();
   });
 
-  wireRciSort("rcifemaleTable", "female", summarySeriesFilter, summaryCountryFilter, state.summaryFilters);
-  wireRciSort("rcimaleTable", "male", summarySeriesFilter, summaryCountryFilter, state.summaryFilters);
+  wireRciSort("rcifemaleTable", "female");
+  wireRciSort("rcimaleTable", "male");
+  const exportFemale = document.getElementById("exportRciFemaleCsv");
+  if (exportFemale) exportFemale.addEventListener("click", () => exportRciCsv("female"));
+  const exportMale = document.getElementById("exportRciMaleCsv");
+  if (exportMale) exportMale.addEventListener("click", () => exportRciCsv("male"));
 
   document.getElementById("tabSummary").addEventListener("click", () => setActiveTab("summary"));
   document.getElementById("tabCharts").addEventListener("click", () => setActiveTab("charts"));
