@@ -70,13 +70,92 @@
     <div class="sub">RCI, mean and graphical tool density analisys</div>
   </div>
   <nav>
-    <button id="tabSummary" class="active">Summary</button>
+    <button id="tabRci" class="active">RCI Charts</button>
+    <button id="tabSummary">Summary</button>
     <button id="tabCharts">Charts</button>
     <button id="tabRace">Race</button>
   </nav>
 </header>
 
-<main id="pageSummary" class="active">
+<main id="pageRci" class="active">
+  <div class="grid">
+    <aside class="panel sidebar">
+      <h2>Filters</h2>
+      <div>
+        <div class="note"><b>Search</b></div>
+        <input id="rcichartSearch" type="search" placeholder="ex: UTMB2024, ZEGAMA2025..." />
+      </div>
+
+      <div style="height:10px"></div>
+      <div>
+        <div class="note"><b>Country</b></div>
+        <select id="rcichartCountryFilter">
+          <option value="">All countries</option>
+        </select>
+      </div>
+
+      <div style="height:10px"></div>
+      <div>
+        <div class="note"><b>Series</b></div>
+        <select id="rcichartSeriesFilter" multiple size="5"></select>
+      </div>
+
+      <div style="height:10px"></div>
+      <div class="row">
+        <div class="note"><b>Selection</b></div>
+        <span class="pill" id="rcichartCount">0</span>
+      </div>
+      <div class="btns" style="margin-top:8px;">
+        <button id="rcichartAll">All</button>
+        <button id="rcichartNone">None</button>
+        <button id="rcichart2025">2025</button>
+        <button id="rcichart2024">2024</button>
+        <button id="rcichart2023">2023</button>
+      </div>
+
+      <div style="height:10px"></div>
+      <div class="note"><b>Races</b></div>
+      <div id="rcichartList" class="list"></div>
+    </aside>
+
+    <section class="panel">
+      <h2>RCI (Female)</h2>
+      <div class="tableWrap">
+        <table id="rcifemaleTable">
+          <thead>
+            <tr>
+              <th data-key="name">Race</th>
+              <th data-key="country">Country</th>
+              <th data-key="rc3">RCI3</th>
+              <th data-key="rc5">RCI5</th>
+              <th data-key="rc10">RCI10</th>
+              <th data-key="rc20">RCI20</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <h2 style="margin-top:20px;">RCI (Male)</h2>
+      <div class="tableWrap">
+        <table id="rcimaleTable">
+          <thead>
+            <tr>
+              <th data-key="name">Race</th>
+              <th data-key="country">Country</th>
+              <th data-key="rc3">RCI3</th>
+              <th data-key="rc5">RCI5</th>
+              <th data-key="rc10">RCI10</th>
+              <th data-key="rc20">RCI20</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<main id="pageSummary" class="">
   <div class="grid">
     <aside class="panel sidebar">
       <h2>Filters</h2>

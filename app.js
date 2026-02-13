@@ -75,6 +75,43 @@ function bucketMeansByRank(results, ranges) {
   });
 }
 
+function topScoresFrom(results, n) {
+  return (results || [])
+    .filter(r => Number.isFinite(r.rank) && Number.isFinite(r.index) && r.rank >= 1 && r.rank <= n)
+    .sort((a, b) => a.rank - b.rank)
+    .map(r => r.index);
+}
+
+function rciFromResults(results, n) {
+  const values = topScoresFrom(results, n);
+  if (!values.length) return NaN;
+  return mean(values) - stdPop(values);
+}
+
+function normalizeGenderLabel(value) {
+  if (!value) return null;
+  const lower = value.toString().trim().toLowerCase();
+  if (["m", "men", "man", "male", "homme", "h"].includes(lower)) return "male";
+  if (["f", "women", "woman", "female", "femme", "w"].includes(lower)) return "female";
+  return null;
+}
+
+function filterResultsByGender(results, gender) {
+  if (!gender) return results || [];
+  return (results || []).filter(r => normalizeGenderLabel(r.gender) === gender);
+}
+
+function densityColor(value, min, max) {
+  if (!Number.isFinite(value)) return "";
+  const clampedMin = Number.isFinite(min) ? min : value;
+  const clampedMax = Number.isFinite(max) ? max : value;
+  if (clampedMax <= clampedMin) return "background:rgba(79,70,229,0.1)";
+  const ratio = Math.max(0, Math.min(1, (value - clampedMin) / (clampedMax - clampedMin)));
+  const lightness = 85 - ratio * 40;
+  const color = `hsl(237, 70%, ${lightness}%)`;
+  return `background:${color}`;
+}
+
 function fmt(n, digits = 1) {
   if (!Number.isFinite(n)) return "-";
   return n.toFixed(digits);
@@ -155,11 +192,24 @@ const state = {
   summaryFilters: { country: "", series: "" },
   chartsFilters: { country: "", series: "" },
   raceSelected: null
+  ,
+  rciSelected: new Set(),
+  rciFilters: { country: "", series: [] },
+  rciSorts: {
+    female: { key: "rc10", dir: "desc" },
+    male: { key: "rc10", dir: "desc" }
+  },
+  activeTab: "rcicharts"
 };
 
 function matchesFilters(meta, filters) {
   const countryOk = !filters.country || (meta?.country || "") === filters.country;
-  const seriesOk = !filters.series || normalizeSeries(meta?.series).includes(filters.series);
+  const seriesFilter = filters.series;
+  const normalizedSeries = normalizeSeries(meta?.series);
+  const seriesList = Array.isArray(seriesFilter)
+    ? seriesFilter.filter(Boolean)
+    : seriesFilter ? [seriesFilter] : [];
+  const seriesOk = !seriesList.length || seriesList.some(s => normalizedSeries.includes(s));
   return countryOk && seriesOk;
 }
 
@@ -191,7 +241,8 @@ function renderCourseList(targetEl, selectedSet, searchQuery, options = {}) {
     cb.addEventListener("change", () => {
       if (cb.checked) selectedSet.add(id);
       else selectedSet.delete(id);
-      updateAll();
+      if (options.onSelectionChange) options.onSelectionChange();
+      else updateAll();
     });
 
     const label = document.createElement("div");
@@ -247,25 +298,164 @@ function renderFilterOptions(countrySelect, seriesSelect, filters) {
   const countryOptions = ['<option value="">All countries</option>']
     .concat(Array.from(countries).sort().map(v => `<option value="${v}">${v}</option>`))
     .join("");
-  const seriesOptions = ['<option value="">All series</option>']
-    .concat(Array.from(seriesValues).sort().map(v => `<option value="${v}">${v}</option>`))
-    .join("");
+  const sortedSeries = Array.from(seriesValues).sort();
+  const seriesOptions =
+    seriesSelect.multiple
+      ? ['<option value="" disabled>All series</option>']
+          .concat(sortedSeries.map(v => `<option value="${v}">${v}</option>`))
+          .join("")
+      : ['<option value="">All series</option>']
+          .concat(sortedSeries.map(v => `<option value="${v}">${v}</option>`))
+          .join("");
 
   countrySelect.innerHTML = countryOptions;
   seriesSelect.innerHTML = seriesOptions;
   countrySelect.value = filters.country;
-  seriesSelect.value = filters.series;
+  if (seriesSelect.multiple) {
+    const selected = new Set(Array.isArray(filters.series) ? filters.series : []);
+    for (const option of seriesSelect.options) {
+      option.selected = option.value ? selected.has(option.value) : false;
+    }
+  } else {
+    seriesSelect.value = filters.series || "";
+  }
+}
+
+function renderRciList() {
+  const list = document.getElementById("rcichartList");
+  renderCourseList(
+    list,
+    state.rciSelected,
+    document.getElementById("rcichartSearch").value,
+    { filters: state.rciFilters }
+  );
+  document.getElementById("rcichartCount").textContent = String(state.rciSelected.size);
+}
+
+async function renderRciTable(gender, tableId) {
+  const tbody = document.querySelector(`#${tableId} tbody`);
+  if (!tbody) return;
+  tbody.innerHTML = "";
+
+  const ids = Array.from(state.rciSelected).sort();
+  const courses = await Promise.all(ids.map(id => loadCourse(id).catch(() => null)));
+  const rows = [];
+
+  for (let i = 0; i < ids.length; i++) {
+    const course = courses[i];
+    if (!course) continue;
+    const meta = course.meta || {};
+    if (!matchesFilters(meta, state.rciFilters)) continue;
+    const filtered = filterResultsByGender(course.results, gender);
+    const row = {
+      name: getCourseLabel(course),
+      country: meta.country || "",
+      rc3: rciFromResults(filtered, 3),
+      rc5: rciFromResults(filtered, 5),
+      rc10: rciFromResults(filtered, 10),
+      rc20: rciFromResults(filtered, 20)
+    };
+    rows.push(row);
+  }
+
+  const metrics = rows.flatMap(r => ["rc3", "rc5", "rc10", "rc20"].map(k => r[k]).filter(Number.isFinite));
+  const minValue = metrics.length ? Math.min(...metrics) : 0;
+  const maxValue = metrics.length ? Math.max(...metrics) : 0;
+
+  const sort = state.rciSorts[gender];
+  rows.sort((a, b) => {
+    const va = a[sort.key];
+    const vb = b[sort.key];
+    const aNum = Number.isFinite(va);
+    const bNum = Number.isFinite(vb);
+    let cmp = 0;
+    if (aNum && bNum) cmp = va - vb;
+    else cmp = String(va ?? "").localeCompare(String(vb ?? ""));
+    return sort.dir === "asc" ? cmp : -cmp;
+  });
+
+  for (const r of rows) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${r.name}</td>
+      <td>${r.country || "-"}</td>
+      <td style="${densityColor(r.rc3, minValue, maxValue)}">${fmt(r.rc3, 2)}</td>
+      <td style="${densityColor(r.rc5, minValue, maxValue)}">${fmt(r.rc5, 2)}</td>
+      <td style="${densityColor(r.rc10, minValue, maxValue)}">${fmt(r.rc10, 2)}</td>
+      <td style="${densityColor(r.rc20, minValue, maxValue)}">${fmt(r.rc20, 2)}</td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  const thead = document.querySelector(`#${tableId} thead`);
+  if (thead) {
+    const ths = Array.from(thead.querySelectorAll("th[data-key]"));
+    ths.forEach(th => {
+      th.classList.remove("sort-asc", "sort-desc");
+      if (th.dataset.key === sort.key) {
+        th.classList.add(sort.dir === "asc" ? "sort-asc" : "sort-desc");
+      }
+    });
+  }
+}
+
+async function updateRciTables() {
+  await renderRciTable("female", "rcifemaleTable");
+  await renderRciTable("male", "rcimaleTable");
+}
+
+function wireRciSort(tableId, gender, seriesSelect, countrySelect, filters) {
+  const thead = document.querySelector(`#${tableId} thead`);
+  if (!thead) return;
+  const ths = Array.from(thead.querySelectorAll("th[data-key]"));
+  ths.forEach(th => {
+    th.addEventListener("click", () => {
+      const key = th.dataset.key;
+      if (state.rciSorts[gender].key === key) {
+        state.rciSorts[gender].dir = state.rciSorts[gender].dir === "asc" ? "desc" : "asc";
+      } else {
+        state.rciSorts[gender].key = key;
+        state.rciSorts[gender].dir = "desc";
+      }
+      updateRciTables();
+    });
+  });
+
+  const countries = new Set();
+  const seriesValues = new Set();
+  const countryOptions = ['<option value="">All countries</option>']
+    .concat(Array.from(countries).sort().map(v => `<option value="${v}">${v}</option>`))
+    .join("");
+  const sortedSeries = Array.from(seriesValues).sort();
+  const seriesOptions =
+    seriesSelect.multiple
+      ? ['<option value="" disabled>All series</option>']
+          .concat(sortedSeries.map(v => `<option value="${v}">${v}</option>`))
+          .join("")
+      : ['<option value="">All series</option>']
+          .concat(sortedSeries.map(v => `<option value="${v}">${v}</option>`))
+          .join("");
+
+  countrySelect.innerHTML = countryOptions;
+  seriesSelect.innerHTML = seriesOptions;
+  countrySelect.value = filters.country;
+  if (seriesSelect.multiple) {
+    const selected = new Set(Array.isArray(filters.series) ? filters.series : []);
+    for (const option of seriesSelect.options) {
+      option.selected = option.value ? selected.has(option.value) : false;
+    }
+  } else {
+    seriesSelect.value = filters.series || "";
+  }
 }
 
 // ---- Metrics ----
 function topScores(course, n) {
-  return course.results.filter(r => r.rank >= 1 && r.rank <= n).map(r => r.index);
+  return topScoresFrom(course.results, n);
 }
 
 function rci(course, n) {
-  const s = topScores(course, n);
-  if (!s.length) return NaN;
-  return mean(s) - stdPop(s);
+  return rciFromResults(course.results, n);
 }
 
 function aucNormTopN(course, topN) {
@@ -442,10 +632,10 @@ function updateLorenzPlot(grouped) {
       paper_bgcolor: "rgba(0,0,0,0)",
       plot_bgcolor: "rgba(0,0,0,0)",
       margin: { l: 55, r: 20, t: 10, b: 50 },
-    font: { family: "Inter, system-ui, sans-serif", size: 11 },
-    xaxis: { title: "% cumulative athletes (low to high)", range: [0, 1], gridcolor: "#e2e8f0", zeroline: false, tickfont: { size: 10 } },
-    yaxis: { title: "% cumulative index", range: [0, 1], gridcolor: "#e2e8f0", zeroline: false, tickfont: { size: 10 } },
-    legend: { orientation: "h", y: 1.12, x: 0, font: { size: 10 } },
+      font: { family: "Inter, system-ui, sans-serif", size: 11 },
+      xaxis: { title: "% cumulative athletes (low to high)", range: [0, 1], gridcolor: "#e2e8f0", zeroline: false, tickfont: { size: 10 } },
+      yaxis: { title: "% cumulative index", range: [0, 1], gridcolor: "#e2e8f0", zeroline: false, tickfont: { size: 10 } },
+      legend: { orientation: "h", y: 1.12, x: 0, font: { size: 10 } },
       hovermode: "closest"
     },
     { responsive: true, displayModeBar: false }
@@ -589,41 +779,34 @@ async function updateRaceDisplay() {
 
 // ---- Page switching ----
 function setActiveTab(tab) {
+  state.activeTab = tab;
+  const rci = document.getElementById("pageRci");
   const sum = document.getElementById("pageSummary");
   const cha = document.getElementById("pageCharts");
   const race = document.getElementById("pageRace");
+  const bRci = document.getElementById("tabRci");
   const bSum = document.getElementById("tabSummary");
   const bCha = document.getElementById("tabCharts");
   const bRace = document.getElementById("tabRace");
 
-  if (tab === "summary") {
-    sum.classList.add("active");
-    cha.classList.remove("active");
-    race.classList.remove("active");
-    bSum.classList.add("active");
-    bCha.classList.remove("active");
-    bRace.classList.remove("active");
-  } else if (tab === "charts") {
-    cha.classList.add("active");
-    sum.classList.remove("active");
-    race.classList.remove("active");
-    bCha.classList.add("active");
-    bSum.classList.remove("active");
-    bRace.classList.remove("active");
-  } else {
-    race.classList.add("active");
-    sum.classList.remove("active");
-    cha.classList.remove("active");
-    bRace.classList.add("active");
-    bSum.classList.remove("active");
-    bCha.classList.remove("active");
-  }
+  const activate = (el, active) => active ? el.classList.add("active") : el.classList.remove("active");
+
+  activate(rci, tab === "rcicharts");
+  activate(sum, tab === "summary");
+  activate(cha, tab === "charts");
+  activate(race, tab === "race");
+
+  activate(bRci, tab === "rcicharts");
+  activate(bSum, tab === "summary");
+  activate(bCha, tab === "charts");
+  activate(bRace, tab === "race");
 }
 
 // ---- Orchestrator ----
 async function updateAll() {
   await updateSummaryTable();
   await updateCharts();
+  await updateRciTables();
 }
 
 // ---- Boot ----
@@ -633,6 +816,7 @@ async function updateAll() {
 
   setSelectionAll(state.summarySelected);
   setSelectionAll(state.chartsSelected);
+  setSelectionAll(state.rciSelected);
 
   const sumList = document.getElementById("summaryList");
   const sumSearch = document.getElementById("searchSummary");
@@ -725,6 +909,57 @@ async function updateAll() {
   }
   wireSummarySort();
 
+  const rciList = document.getElementById("rcichartList");
+  const rciSearch = document.getElementById("rcichartSearch");
+  const rciCountryFilter = document.getElementById("rcichartCountryFilter");
+  const rciSeriesFilter = document.getElementById("rcichartSeriesFilter");
+  function renderRciSelection() {
+    renderCourseList(rciList, state.rciSelected, rciSearch.value, {
+      filters: state.rciFilters,
+      onSelectionChange: () => {
+        renderRciSelection();
+        updateRciTables();
+      }
+    });
+    document.getElementById("rcichartCount").textContent = String(state.rciSelected.size);
+  }
+  renderFilterOptions(rciCountryFilter, rciSeriesFilter, state.rciFilters);
+  rciSearch.addEventListener("input", () => {
+    renderRciSelection();
+  });
+
+  if (rciCountryFilter) {
+    rciCountryFilter.addEventListener("change", () => {
+      state.rciFilters.country = rciCountryFilter.value;
+      applyFiltersToSelection(state.rciSelected, state.rciFilters);
+      renderRciSelection();
+      updateRciTables();
+    });
+  }
+
+  if (rciSeriesFilter) {
+    rciSeriesFilter.addEventListener("change", () => {
+      const values = Array.from(rciSeriesFilter.selectedOptions).map(o => o.value).filter(Boolean);
+      state.rciFilters.series = values;
+      applyFiltersToSelection(state.rciSelected, state.rciFilters);
+      renderRciSelection();
+      updateRciTables();
+    });
+  }
+
+  const rcibuttons = [
+    ["rcichartAll", () => { setSelectionAll(state.rciSelected); applyFiltersToSelection(state.rciSelected, state.rciFilters); renderRciSelection(); updateRciTables(); }],
+    ["rcichartNone", () => { setSelectionNone(state.rciSelected); renderRciSelection(); updateRciTables(); }],
+    ["rcichart2025", () => { setSelectionByYear(state.rciSelected, 2025, state.rciFilters); renderRciSelection(); updateRciTables(); }],
+    ["rcichart2024", () => { setSelectionByYear(state.rciSelected, 2024, state.rciFilters); renderRciSelection(); updateRciTables(); }],
+    ["rcichart2023", () => { setSelectionByYear(state.rciSelected, 2023, state.rciFilters); renderRciSelection(); updateRciTables(); }]
+  ];
+  for (const [id, fn] of rcibuttons) {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("click", fn);
+  }
+
+  renderRciSelection();
   const chList = document.getElementById("chartsList");
   const chSearch = document.getElementById("searchCharts");
   const chartsCountryFilter = document.getElementById("chartsCountryFilter");
@@ -790,9 +1025,13 @@ async function updateAll() {
     updateCharts();
   });
 
+  wireRciSort("rcifemaleTable", "female", summarySeriesFilter, summaryCountryFilter, state.summaryFilters);
+  wireRciSort("rcimaleTable", "male", summarySeriesFilter, summaryCountryFilter, state.summaryFilters);
+
   document.getElementById("tabSummary").addEventListener("click", () => setActiveTab("summary"));
   document.getElementById("tabCharts").addEventListener("click", () => setActiveTab("charts"));
   document.getElementById("tabRace").addEventListener("click", () => setActiveTab("race"));
+  document.getElementById("tabRci").addEventListener("click", () => setActiveTab("rcicharts"));
 
   const raceSearch = document.getElementById("searchRace");
   const firstRace = getManifestEntries()[0];
@@ -800,6 +1039,7 @@ async function updateAll() {
   raceSearch.addEventListener("input", () => renderRaceList(raceSearch.value));
   renderRaceList("");
 
+  setActiveTab(state.activeTab);
   Plotly.newPlot("plot", [], { paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)" }, { responsive: true, displayModeBar: false });
   Plotly.newPlot(
     "lorenzPlot",
