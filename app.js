@@ -190,7 +190,7 @@ function renderCourseList(targetEl, selectedSet, searchQuery, options = {}) {
     });
 
     const label = document.createElement("div");
-    label.innerHTML = `<code>${id}</code>`;
+    label.textContent = meta.name || id;
 
     const pill = document.createElement("span");
     pill.className = "pill";
@@ -264,7 +264,7 @@ function rci(course, n) {
   return mean(s) - stdPop(s);
 }
 
-function aucNormTop100(course, topN = 100) {
+function aucNormTopN(course, topN) {
   const rs = course.results.filter(r => r.rank >= 1 && r.rank <= topN);
   if (rs.length < 2) return NaN;
   const xs = rs.map(r => r.rank);
@@ -292,13 +292,11 @@ async function updateSummaryTable() {
 
     const top3 = mean(topScores(course, 3));
     const top5 = mean(topScores(course, 5));
-    const top10Arr = topScores(course, 10);
-    const top10 = mean(top10Arr);
-    const top10Std = stdPop(top10Arr);
+    const top10 = mean(topScores(course, 10));
     const series = normalizeSeries(meta.series).join(", ");
 
     rows.push({
-      id,
+      name: meta.name || id,
       year: meta.year ?? null,
       series: series || "",
       country: meta.country || "",
@@ -306,12 +304,11 @@ async function updateSummaryTable() {
       top3,
       top5,
       top10,
+      rci5: rci(course, 5),
       rci10: rci(course, 10),
       rci20: rci(course, 20),
-      rci30: rci(course, 30),
-      top10Std,
-      aucNorm: aucNormTop100(course, 100),
-      gini: gini(course.results.filter(r => r.rank >= 1 && r.rank <= 100).map(r => r.index))
+      aucNorm: aucNormTopN(course, 30),
+      gini: gini(course.results.filter(r => r.rank >= 1 && r.rank <= 30).map(r => r.index))
     });
   }
 
@@ -331,7 +328,7 @@ async function updateSummaryTable() {
   for (const r of rows) {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td><code>${r.id}</code></td>
+      <td>${r.name}</td>
       <td>${r.year ?? "-"}</td>
       <td>${r.series || "-"}</td>
       <td>${r.country || "-"}</td>
@@ -339,10 +336,9 @@ async function updateSummaryTable() {
       <td>${fmt(r.top3, 1)}</td>
       <td>${fmt(r.top5, 1)}</td>
       <td>${fmt(r.top10, 1)}</td>
+      <td>${fmt(r.rci5, 2)}</td>
       <td>${fmt(r.rci10, 2)}</td>
       <td>${fmt(r.rci20, 2)}</td>
-      <td>${fmt(r.rci30, 2)}</td>
-      <td>${fmt(r.top10Std, 2)}</td>
       <td>${fmt(r.aucNorm, 4)}</td>
       <td>${fmt(r.gini, 4)}</td>
     `;
@@ -389,7 +385,7 @@ function updateRankPlot(grouped, topN) {
       paper_bgcolor: "rgba(0,0,0,0)",
       plot_bgcolor: "rgba(0,0,0,0)",
       margin: { l: 55, r: 20, t: 10, b: 50 },
-      xaxis: { title: "Rang (Top N)", range: [1, topN], gridcolor: "rgba(255,255,255,.06)", zeroline: false },
+      xaxis: { title: "Rank (Top N)", range: [1, topN], gridcolor: "rgba(255,255,255,.06)", zeroline: false },
       yaxis: { title: "Index (Race Score)", gridcolor: "rgba(255,255,255,.06)", zeroline: false },
       legend: { orientation: "h", y: 1.12, x: 0, font: { size: 11 } },
       hovermode: "x unified"
@@ -404,7 +400,7 @@ function updateLorenzPlot(grouped) {
       x: [0, 1],
       y: [0, 1],
       mode: "lines",
-      name: "Egalite (repartition parfaite)",
+      name: "Equality (perfect distribution)",
       line: { width: 2, dash: "dot" },
       hoverinfo: "skip"
     }
@@ -666,7 +662,7 @@ async function updateAll() {
   Plotly.newPlot("plot", [], { paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)" }, { responsive: true, displayModeBar: false });
   Plotly.newPlot(
     "lorenzPlot",
-    [{ x: [0, 1], y: [0, 1], mode: "lines", name: "Egalite", line: { width: 2, dash: "dot" }, hoverinfo: "skip" }],
+    [{ x: [0, 1], y: [0, 1], mode: "lines", name: "Equality", line: { width: 2, dash: "dot" }, hoverinfo: "skip" }],
     { paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)" },
     { responsive: true, displayModeBar: false }
   );

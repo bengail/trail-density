@@ -1,9 +1,9 @@
 ﻿<!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Trail Race Analytics - Summary & Charts</title>
+  <title>Trail and mountain races density</title>
   <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
   <style>
     :root { --bg:#0b0f14; --panel:#121826; --muted:#9aa4b2; --text:#e5e7eb; --border:#223045; --accent:#7dd3fc; }
@@ -62,30 +62,30 @@
 <body>
 <header>
   <div>
-    <h1>Trail Race Analytics</h1>
-    <div class="sub">Table de comparaison (moyennes, RCI) + graphiques (courbes, Lorenz, heatmap).</div>
+    <h1>Trail and mountain races density</h1>
+    <div class="sub">RCI, mean and graphical tool density analisys</div>
   </div>
   <nav>
-    <button id="tabSummary" class="active">Table</button>
-    <button id="tabCharts">Graphes</button>
+    <button id="tabSummary" class="active">Summary</button>
+    <button id="tabCharts">Charts</button>
   </nav>
 </header>
 
 <main id="pageSummary" class="active">
   <div class="grid">
     <aside class="panel">
-      <h2>Filtres</h2>
-      <div class="note">Les donnees viennent de <code>data/courses_index.json</code> + un JSON par course.</div>
+      <h2>Filters</h2>
+      <div class="note">Data is loaded from <code>data/courses_index.json</code> and one JSON file per race.</div>
       <div style="height:10px"></div>
 
       <div>
-        <div class="note"><b>Recherche</b></div>
+        <div class="note"><b>Search</b></div>
         <input id="searchSummary" type="search" placeholder="ex: UTMB2024, ZEGAMA2025..." />
       </div>
 
       <div style="height:10px"></div>
       <div>
-        <div class="note"><b>Pays</b></div>
+        <div class="note"><b>Country</b></div>
         <select id="summaryCountryFilter">
           <option value="">All countries</option>
         </select>
@@ -93,7 +93,7 @@
 
       <div style="height:10px"></div>
       <div>
-        <div class="note"><b>Serie</b></div>
+        <div class="note"><b>Series</b></div>
         <select id="summarySeriesFilter">
           <option value="">All series</option>
         </select>
@@ -105,52 +105,51 @@
         <span class="pill" id="summaryCount">0</span>
       </div>
       <div class="btns" style="margin-top:8px;">
-        <button id="sumAll">Tout</button>
-        <button id="sumNone">Rien</button>
+        <button id="sumAll">All</button>
+        <button id="sumNone">None</button>
         <button id="sum2025">2025</button>
         <button id="sum2024">2024</button>
         <button id="sum2023">2023</button>
       </div>
 
       <div style="height:10px"></div>
-      <div class="note"><b>Courses</b></div>
+      <div class="note"><b>Races</b></div>
       <div id="summaryList" class="list"></div>
 
       <div style="height:12px"></div>
       <div class="note">
         <b>RCI (Realized Competition Index)</b><br/>
-        RCI<sub>N</sub> = moyenne(top N) - ecart-type(top N).<br/>
-        Plus c'est eleve, plus le top N est <i>fort</i> et <i>homogene</i>.
+        RCI<sub>N</sub> = mean(top N) - std(top N).<br/>
+        Higher is better: strong and homogeneous field quality in top N.
       </div>
     </aside>
 
     <section class="panel">
-      <h2>Comparaison (courses selectionnees)</h2>
+      <h2>Comparison (selected races)</h2>
       <div class="tableWrap">
         <table id="summaryTable">
           <thead>
             <tr>
-              <th data-key="id">Race ID</th>
-              <th data-key="year">Annee</th>
-              <th data-key="series">Serie</th>
-              <th data-key="country">Pays</th>
+              <th data-key="name">Race Name</th>
+              <th data-key="year">Year</th>
+              <th data-key="series">Series</th>
+              <th data-key="country">Country</th>
               <th data-key="src">Source</th>
-              <th data-key="top3">Top3 moy</th>
-              <th data-key="top5">Top5 moy</th>
-              <th data-key="top10">Top10 moy</th>
+              <th data-key="top3">Top3 mean</th>
+              <th data-key="top5">Top5 mean</th>
+              <th data-key="top10">Top10 mean</th>
+              <th data-key="rci5">RCI5</th>
               <th data-key="rci10">RCI10</th>
               <th data-key="rci20">RCI20</th>
-              <th data-key="rci30">RCI30</th>
-              <th data-key="top10Std">Top10 sigma</th>
-              <th data-key="aucNorm">Top100 AUC norm</th>
-              <th data-key="gini">Gini (Top100)</th>
+              <th data-key="aucNorm" title="Normalized area under the rank-to-index curve for ranks 1-30. Higher means stronger depth across top-30.">AUC norm (Top30)</th>
+              <th data-key="gini" title="Inequality of index distribution in ranks 1-30. Lower means more even field depth; higher means more top-heavy.">Gini (Top30)</th>
             </tr>
           </thead>
           <tbody></tbody>
         </table>
       </div>
       <div class="note" style="margin-top:10px;">
-        Colonnes bonus : <b>AUC norm</b> (aire sous la courbe rank->index, normalisee par N x 1000) et <b>Gini</b> (inegalite du top 100).
+        Bonus metrics: <b>AUC norm</b> and <b>Gini</b> are computed on Top30.
       </div>
     </section>
   </div>
@@ -159,12 +158,12 @@
 <main id="pageCharts">
   <div class="grid">
     <aside class="panel">
-      <h2>Selection (graphes)</h2>
-      <div class="note">Tu peux afficher plusieurs courses en meme temps.</div>
+      <h2>Selection (charts)</h2>
+      <div class="note">You can display multiple races at once.</div>
       <div style="height:10px"></div>
 
       <div>
-        <div class="note"><b>Recherche</b></div>
+        <div class="note"><b>Search</b></div>
         <input id="searchCharts" type="search" placeholder="ex: UTMB2024, WS, LEADVILLE..." />
       </div>
 
@@ -176,27 +175,27 @@
       <input id="topN" type="range" min="10" max="100" step="1" value="100" />
 
       <div class="btns" style="margin-top:8px;">
-        <button id="chartAll">Tout</button>
-        <button id="chartNone">Rien</button>
+        <button id="chartAll">All</button>
+        <button id="chartNone">None</button>
         <button id="chart2025">2025</button>
         <button id="chart2024">2024</button>
         <button id="chart2023">2023</button>
       </div>
 
       <div style="height:10px"></div>
-      <div class="note"><b>Courses</b> <span class="pill" id="chartsCount">0</span></div>
+      <div class="note"><b>Races</b> <span class="pill" id="chartsCount">0</span></div>
       <div id="chartsList" class="list"></div>
 
       <div style="height:12px"></div>
       <div class="note">
         <b>Lorenz & Gini</b><br/>
-        X = % cumulee d'athletes (du plus faible au plus fort), Y = % cumulee d'index.<br/>
-        Gini proche de 0 = champ homogene ; plus haut = "top-heavy".
+        X = cumulative share of athletes (low to high), Y = cumulative share of index.<br/>
+        Gini close to 0 = homogeneous field; higher = top-heavy field.
       </div>
     </aside>
 
     <section class="panel">
-      <h2>Graphes</h2>
+      <h2>Charts</h2>
       <div class="plots">
         <div id="plot"></div>
         <div id="lorenzPlot"></div>
