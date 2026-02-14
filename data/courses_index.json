@@ -33,6 +33,14 @@
       "path": "data/courses/CLASSIQUETREMBLANT_2025_30.json"
     },
     {
+      "race_id": "DDC_2024_CLASSIC",
+      "path": "data/courses/DDC_2024_CLASSIC.json"
+    },
+    {
+      "race_id": "DDC_2024_UPHILL",
+      "path": "data/courses/DDC_2024_UPHILL.json"
+    },
+    {
       "race_id": "DDC_2025_26",
       "path": "data/courses/DDC_2025_26.json"
     },
@@ -93,6 +101,18 @@
       "path": "data/courses/PITZALPINE2025.json"
     },
     {
+      "race_id": "QMT_2024_110",
+      "path": "data/courses/QMT_2024_110.json"
+    },
+    {
+      "race_id": "QMT_2024_50",
+      "path": "data/courses/QMT_2024_50.json"
+    },
+    {
+      "race_id": "QMT_2024_80",
+      "path": "data/courses/QMT_2024_80.json"
+    },
+    {
       "race_id": "QMT_2025_135",
       "path": "data/courses/QMT_2025_135.json"
     },
@@ -115,6 +135,10 @@
     {
       "race_id": "SQUAMISH_2024_50K",
       "path": "data/courses/SQUAMISH_2024_50K.json"
+    },
+    {
+      "race_id": "SQUAMISH_2024_50M",
+      "path": "data/courses/SQUAMISH_2024_50M.json"
     },
     {
       "race_id": "SQUAMISH_2025_50K",
@@ -141,12 +165,36 @@
       "path": "data/courses/TATRA2025.json"
     },
     {
+      "race_id": "TDLC_2024_50",
+      "path": "data/courses/TDLC_2024_50.json"
+    },
+    {
       "race_id": "TDLC2025_50",
       "path": "data/courses/TDLC2025_50.json"
     },
     {
       "race_id": "TEPEC2025",
       "path": "data/courses/TEPEC2025.json"
+    },
+    {
+      "race_id": "UTHC_2024_42S",
+      "path": "data/courses/UTHC_2024_42S.json"
+    },
+    {
+      "race_id": "UTHC_2024_42C",
+      "path": "data/courses/UTHC_2024_42C.json"
+    },
+    {
+      "race_id": "UTHC_2024_65",
+      "path": "data/courses/UTHC_2024_65.json"
+    },
+    {
+      "race_id": "UTHC_2024_80",
+      "path": "data/courses/UTHC_2024_80.json"
+    },
+    {
+      "race_id": "UTHC_2024_125",
+      "path": "data/courses/UTHC_2024_125.json"
     },
     {
       "race_id": "UTHC_2025_125",
@@ -223,34 +271,6 @@
     {
       "race_id": "ZMEUCLASSIC2025",
       "path": "data/courses/ZMEUCLASSIC2025.json"
-    },    
-    {
-      "race_id": "DDC_2024_CLASSIC",
-      "path": "data/courses/DDC_2024_CLASSIC.json"
-    },    
-    {
-      "race_id": "DDC_2024_UPHILL",
-      "path": "data/courses/DDC_2024_UPHILL.json"
-    },    
-    {
-      "race_id": "QMT_2024_110",
-      "path": "data/courses/QMT_2024_110.json"
-    },    
-    {
-      "race_id": "QMT_2024_50",
-      "path": "data/courses/QMT_2024_50.json"
-    },    
-    {
-      "race_id": "QMT_2024_80",
-      "path": "data/courses/QMT_2024_80.json"
-    },    
-    {
-      "race_id": "SQUAMISH_2024_50M",
-      "path": "data/courses/SQUAMISH_2024_50M.json"
-    },    
-    {
-      "race_id": "TDLC_2024_50",
-      "path": "data/courses/TDLC_2024_50.json"
     }
   ]
 }

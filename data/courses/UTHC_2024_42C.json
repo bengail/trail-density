@@ -1,0 +1,1760 @@
+{
+  "meta": {
+    "race_id": "UTHC_2024_42C",
+    "name": "UTHC 2024 - 42 classique",
+    "series": "none",
+    "country": "Canada",
+    "data_source": "ITRA",
+    "year": 2024,
+    "distance_km": 42,
+    "elevation_m": null,
+    "prize_money": null,
+    "notes": null,
+    "source_url": null
+  },
+  "results": [
+    {
+      "rank": 1,
+      "runner": "CASTONGUAY Charles",
+      "index": 760,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 2,
+      "runner": "DESMOND Rhys",
+      "index": 744,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 3,
+      "runner": "LEFEBVRE Francis",
+      "index": 737,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 4,
+      "runner": "LEGER DIONNE Francois",
+      "index": 718,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 5,
+      "runner": "SHEA Charlie",
+      "index": 714,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 6,
+      "runner": "PARADIS Daniel",
+      "index": 709,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 7,
+      "runner": "VAUDOISEY Louis",
+      "index": 689,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 8,
+      "runner": "YANG Andrew",
+      "index": 684,
+      "gender": "M",
+      "nationality": "USA"
+    },
+    {
+      "rank": 9,
+      "runner": "FORTIN Remy",
+      "index": 681,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 10,
+      "runner": "DUCHESNE LESSARD Guillaume",
+      "index": 673,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 11,
+      "runner": "PINTER Kamilla",
+      "index": 658,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 12,
+      "runner": "GAUCHER Emmanuel",
+      "index": 648,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 13,
+      "runner": "BOUILLON Maurice Etienne",
+      "index": 646,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 14,
+      "runner": "RIOU Daniel",
+      "index": 640,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 15,
+      "runner": "SAVARD Simon",
+      "index": 629,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 16,
+      "runner": "MARCHAND JEAN FRANCOIS",
+      "index": 617,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 17,
+      "runner": "GRAND’MAISON Sara",
+      "index": 614,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 17,
+      "runner": "JODOIN Marianne",
+      "index": 614,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 19,
+      "runner": "MAZIADE Charles Hugo",
+      "index": 607,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 20,
+      "runner": "POISSONNIER Gildas",
+      "index": 601,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 21,
+      "runner": "SAINT JEAN Guillaume",
+      "index": 601,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 22,
+      "runner": "MORENO QUESADA Emiliano",
+      "index": 598,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 23,
+      "runner": "LARIVIERE Samuel",
+      "index": 597,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 24,
+      "runner": "WILSON Mackenzie",
+      "index": 593,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 25,
+      "runner": "NOEL Amelie",
+      "index": 587,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 26,
+      "runner": "LAVERDIERE Mathieu",
+      "index": 581,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 27,
+      "runner": "HARDY Magalie",
+      "index": 580,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 28,
+      "runner": "WHITE Charles Etienne",
+      "index": 577,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 29,
+      "runner": "BEAUPRE Mariane",
+      "index": 574,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 30,
+      "runner": "VIDJEN Petar",
+      "index": 570,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 31,
+      "runner": "RIOPEL Marc Olivier",
+      "index": 568,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 32,
+      "runner": "JANNIN Jessica",
+      "index": 564,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 33,
+      "runner": "ROUSSEAU Francis",
+      "index": 561,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 34,
+      "runner": "PARIZEAU Louis-Dominic",
+      "index": 560,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 35,
+      "runner": "TRINH Peter",
+      "index": 557,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 36,
+      "runner": "CARLE Cédric",
+      "index": 554,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 37,
+      "runner": "ROULEAU FOURNIER Francois",
+      "index": 554,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 38,
+      "runner": "MARTINEZ Oceane",
+      "index": 552,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 39,
+      "runner": "SOUCY Juliette",
+      "index": 552,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 40,
+      "runner": "PHILION COUTU Guillaume",
+      "index": 551,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 41,
+      "runner": "ASSELIN Frederik",
+      "index": 551,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 42,
+      "runner": "ROY Maxime",
+      "index": 550,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 43,
+      "runner": "BESSETTE Jean Francois",
+      "index": 547,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 44,
+      "runner": "VANHOVE HUGO",
+      "index": 547,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 45,
+      "runner": "DELISLE Antoine",
+      "index": 545,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 46,
+      "runner": "TREMBLAY Sebastien",
+      "index": 544,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 47,
+      "runner": "PEEL Marie-Audrey",
+      "index": 541,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 48,
+      "runner": "LANGEVIN Marc",
+      "index": 541,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 48,
+      "runner": "LOWRY Veronique",
+      "index": 541,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 50,
+      "runner": "PRONOVOST Patricia",
+      "index": 540,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 51,
+      "runner": "GRIMARD Renaud",
+      "index": 536,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 52,
+      "runner": "CABANIS Clémence",
+      "index": 534,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 53,
+      "runner": "DUCHESNE Louis",
+      "index": 533,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 54,
+      "runner": "FAVREAU Matthieu",
+      "index": 533,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 55,
+      "runner": "VAILLANCOURT Axel",
+      "index": 531,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 56,
+      "runner": "LAPOINTE Marc Antoine",
+      "index": 529,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 57,
+      "runner": "COULOMBE Vincent",
+      "index": 529,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 58,
+      "runner": "LAVOIE Jean Philippe",
+      "index": 529,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 59,
+      "runner": "LAVALLEE Eric",
+      "index": 528,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 60,
+      "runner": "WADDELL Wyatt",
+      "index": 527,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 61,
+      "runner": "KIROUAC Jean Francois",
+      "index": 527,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 62,
+      "runner": "TRUDEAU Victor",
+      "index": 527,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 63,
+      "runner": "LELIEVRE BLAIS Chloe",
+      "index": 526,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 64,
+      "runner": "GAUTHIER Béatrice",
+      "index": 526,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 65,
+      "runner": "LAROCHE Jérémy",
+      "index": 524,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 66,
+      "runner": "VINCENT Jeremie",
+      "index": 520,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 67,
+      "runner": "SCALLON Mathieu",
+      "index": 519,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 68,
+      "runner": "RICHARD Gregoire",
+      "index": 519,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 69,
+      "runner": "BOULAIS Maxime",
+      "index": 519,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 70,
+      "runner": "BERNARD Marianne",
+      "index": 519,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 71,
+      "runner": "DEWILDE Florian",
+      "index": 518,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 71,
+      "runner": "MCNICOLL Yannic",
+      "index": 518,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 73,
+      "runner": "BERNIER Charlotte",
+      "index": 518,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 74,
+      "runner": "GOBEIL Cindy",
+      "index": 516,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 75,
+      "runner": "GAUDREAULT Carl",
+      "index": 515,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 76,
+      "runner": "TROTTIER Alex",
+      "index": 515,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 77,
+      "runner": "LAROCHELLE Louis Philippe",
+      "index": 513,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 78,
+      "runner": "FLEURY Guillaume",
+      "index": 513,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 79,
+      "runner": "CÔTÉ Isabelle",
+      "index": 511,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 80,
+      "runner": "BESSETTE Simon-Pierre",
+      "index": 508,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 81,
+      "runner": "ROY Melanie",
+      "index": 507,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 82,
+      "runner": "PAMBIANCHI Eric",
+      "index": 505,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 83,
+      "runner": "GOUIN Olivier",
+      "index": 504,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 84,
+      "runner": "DUCHESNE Guy",
+      "index": 503,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 85,
+      "runner": "BONETTI Emile",
+      "index": 502,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 86,
+      "runner": "VANASSE Chloe",
+      "index": 500,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 87,
+      "runner": "LANDRY David",
+      "index": 500,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 88,
+      "runner": "RENAUT Sebastien",
+      "index": 500,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 89,
+      "runner": "VINCENT Francois",
+      "index": 498,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 90,
+      "runner": "LEVESQUE Jonathan",
+      "index": 498,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 91,
+      "runner": "POL Mat",
+      "index": 497,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 92,
+      "runner": "BLIN Kévin",
+      "index": 497,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 93,
+      "runner": "DELISLE VEZINA Laurie",
+      "index": 495,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 94,
+      "runner": "RENAULD Genevie`ve",
+      "index": 495,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 95,
+      "runner": "DELISLE Marie Michele",
+      "index": 494,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 96,
+      "runner": "PERUSSE LACHANCE Emilie",
+      "index": 493,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 97,
+      "runner": "GARCEAU E´milie",
+      "index": 491,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 98,
+      "runner": "LEMOINE Emile",
+      "index": 490,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 99,
+      "runner": "PROVENCHER Amelie",
+      "index": 490,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 100,
+      "runner": "JOYAL Eric",
+      "index": 489,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 101,
+      "runner": "LALANCETTE Jean Simon",
+      "index": 489,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 102,
+      "runner": "DUFOUR Laurie Anne",
+      "index": 488,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 103,
+      "runner": "DUFORT Samuel",
+      "index": 488,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 104,
+      "runner": "GOULET Marc Antoine",
+      "index": 488,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 105,
+      "runner": "MAX Max",
+      "index": 486,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 106,
+      "runner": "ALLARD Simon",
+      "index": 485,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 106,
+      "runner": "JEAN Nicolas",
+      "index": 485,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 108,
+      "runner": "BOUFFARD Martin",
+      "index": 485,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 109,
+      "runner": "GIRARD Marc Olivier",
+      "index": 485,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 110,
+      "runner": "FERLAND Olivier",
+      "index": 485,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 110,
+      "runner": "GRISON Alexis",
+      "index": 485,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 112,
+      "runner": "BRETON Marianick",
+      "index": 481,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 113,
+      "runner": "LAFERRIERE Stephanie",
+      "index": 479,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 114,
+      "runner": "GRAVEL Valérie",
+      "index": 477,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 115,
+      "runner": "GARON BISSONNETTE Frederique",
+      "index": 476,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 116,
+      "runner": "MEZA MALDONADO Edmundo",
+      "index": 475,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 117,
+      "runner": "VEILLEUX Marjorie",
+      "index": 475,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 118,
+      "runner": "LARRIVEE Dominic",
+      "index": 475,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 119,
+      "runner": "CHARTIER Marc",
+      "index": 475,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 119,
+      "runner": "LAMOUREUX Alexandra",
+      "index": 475,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 121,
+      "runner": "ANDRIEU Helene",
+      "index": 475,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 122,
+      "runner": "TREMBLAY Jerome",
+      "index": 474,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 123,
+      "runner": "VEZINA Julien",
+      "index": 474,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 124,
+      "runner": "NADON ROGER Maxime",
+      "index": 473,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 125,
+      "runner": "GAMONDES Federico",
+      "index": 473,
+      "gender": "M",
+      "nationality": "ARG"
+    },
+    {
+      "rank": 126,
+      "runner": "DAOUST Alexandre",
+      "index": 471,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 127,
+      "runner": "AUGER Martin",
+      "index": 470,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 128,
+      "runner": "BAKER Erik",
+      "index": 470,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 129,
+      "runner": "MALENFANT Fre´de´rick",
+      "index": 470,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 130,
+      "runner": "MARQUIS Marie Claude",
+      "index": 467,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 131,
+      "runner": "BRIAND Etienne",
+      "index": 466,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 132,
+      "runner": "JACQUES Annie",
+      "index": 466,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 133,
+      "runner": "LEDUC Olivier",
+      "index": 466,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 134,
+      "runner": "LABRECQUE Eric",
+      "index": 466,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 135,
+      "runner": "GARANT Francois",
+      "index": 466,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 136,
+      "runner": "CHANAY Alexandre",
+      "index": 464,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 137,
+      "runner": "PERRON Jade",
+      "index": 464,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 138,
+      "runner": "BERNIER Francesca",
+      "index": 464,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 139,
+      "runner": "RUEL Alexia",
+      "index": 463,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 140,
+      "runner": "CHARTRAND Francis",
+      "index": 463,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 141,
+      "runner": "CYR Michel",
+      "index": 463,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 142,
+      "runner": "TOFFOLETTO Gabriella",
+      "index": 462,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 143,
+      "runner": "GANDHI Abdallah",
+      "index": 461,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 143,
+      "runner": "HAMAD Raphael",
+      "index": 461,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 145,
+      "runner": "FREGEAU Audrey",
+      "index": 459,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 146,
+      "runner": "BRISSETTE Felix",
+      "index": 459,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 146,
+      "runner": "BRUNTON Victor",
+      "index": 459,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 146,
+      "runner": "DESJARDINS Victor",
+      "index": 459,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 146,
+      "runner": "GELINAS Yanick",
+      "index": 459,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 150,
+      "runner": "SICOTTE Maude",
+      "index": 459,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 151,
+      "runner": "BERNIER Vicky",
+      "index": 456,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 152,
+      "runner": "FRISBIE Danika",
+      "index": 456,
+      "gender": "F",
+      "nationality": "USA"
+    },
+    {
+      "rank": 153,
+      "runner": "VERREAULT Joe",
+      "index": 452,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 154,
+      "runner": "TORRESAN Elsie",
+      "index": 451,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 155,
+      "runner": "CARON Melanie",
+      "index": 451,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 156,
+      "runner": "BOURBEAU Mia Claude",
+      "index": 449,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 157,
+      "runner": "LAPOINTE Marie Josee",
+      "index": 449,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 158,
+      "runner": "LANCTOT MAILHIOT Fre´de´rik",
+      "index": 448,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 159,
+      "runner": "GUAY Juliette",
+      "index": 448,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 160,
+      "runner": "HAMELIN Jacob",
+      "index": 448,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 161,
+      "runner": "LEMAIRE CASTONGUAY Antoine",
+      "index": 447,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 162,
+      "runner": "GENDRON-DE VETTE Eugène",
+      "index": 447,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 163,
+      "runner": "DUPONT Pierre",
+      "index": 447,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 163,
+      "runner": "ROY Pierre Olivier",
+      "index": 447,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 165,
+      "runner": "GENDROT DARBONVILLE Carine",
+      "index": 447,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 166,
+      "runner": "BRESSE Julia",
+      "index": 446,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 166,
+      "runner": "CARON D’ANJOU Sullivan",
+      "index": 446,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 168,
+      "runner": "GASSE Anaïs",
+      "index": 445,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 169,
+      "runner": "ARCAND Jean Philippe",
+      "index": 445,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 170,
+      "runner": "ST ONGE Dominique",
+      "index": 444,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 171,
+      "runner": "VIDAL Wilfried",
+      "index": 443,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 172,
+      "runner": "TAILLY COURNOYER Laura Emmanuelle",
+      "index": 443,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 173,
+      "runner": "TURNER Emilie",
+      "index": 443,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 174,
+      "runner": "DESJARDINS Philippe",
+      "index": 443,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 174,
+      "runner": "POULIN Marie Helene",
+      "index": 443,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 176,
+      "runner": "ST PIERRE Emilie",
+      "index": 443,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 177,
+      "runner": "DESHAIES Eric",
+      "index": 439,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 178,
+      "runner": "BOUCHER Marie-Joleil",
+      "index": 438,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 179,
+      "runner": "GAGNE TRUDEL Sandrine",
+      "index": 438,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 180,
+      "runner": "PAQUETTE Anne Renee",
+      "index": 435,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 181,
+      "runner": "OUELLET Diane",
+      "index": 435,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 182,
+      "runner": "LAPOINTE Isabelle",
+      "index": 435,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 183,
+      "runner": "BRAZEAU Valerie",
+      "index": 435,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 184,
+      "runner": "WACHTER William",
+      "index": 435,
+      "gender": "M",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 185,
+      "runner": "TARDIF Isabelle",
+      "index": 435,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 186,
+      "runner": "RICHARD Cedrik",
+      "index": 435,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 187,
+      "runner": "DOUCET Andree Anne",
+      "index": 434,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 188,
+      "runner": "PREVOST Tania",
+      "index": 434,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 189,
+      "runner": "BERNIER Eve",
+      "index": 433,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 190,
+      "runner": "BATOZ Helene",
+      "index": 431,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 191,
+      "runner": "LAVOIE Franc¸ois",
+      "index": 431,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 192,
+      "runner": "BROSSEAU Yannick",
+      "index": 430,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 193,
+      "runner": "LETENDRE Jean Philippe",
+      "index": 429,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 194,
+      "runner": "ROUGE Paola",
+      "index": 428,
+      "gender": "F",
+      "nationality": "SUI"
+    },
+    {
+      "rank": 195,
+      "runner": "SMITH Sarah",
+      "index": 427,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 196,
+      "runner": "DUFOUR Gabrielle",
+      "index": 427,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 197,
+      "runner": "LOBO Nuno Miguel",
+      "index": 426,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 198,
+      "runner": "LIM Peter",
+      "index": 426,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 199,
+      "runner": "DANEIROLE Pauline",
+      "index": 425,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 199,
+      "runner": "ELBERT Chloe",
+      "index": 425,
+      "gender": "F",
+      "nationality": "FRA"
+    },
+    {
+      "rank": 201,
+      "runner": "CHRETIEN Raphaelle",
+      "index": 425,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 202,
+      "runner": "SIMARD Tommy",
+      "index": 425,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 203,
+      "runner": "GONZALEZ FILGUEIRA Agustina",
+      "index": 424,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 204,
+      "runner": "TOJCIC Jelena",
+      "index": 424,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 205,
+      "runner": "GIRARDIN Melanie",
+      "index": 424,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 206,
+      "runner": "LAROUCHE Veronique",
+      "index": 424,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 207,
+      "runner": "BACON Pascal",
+      "index": 423,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 208,
+      "runner": "PAQUIN Louise",
+      "index": 423,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 209,
+      "runner": "GILER Delphine",
+      "index": 423,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 210,
+      "runner": "BOURCIER Charles",
+      "index": 422,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 211,
+      "runner": "BEAUREGARD Louis Charles",
+      "index": 421,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 212,
+      "runner": "RENAUD Sabrina",
+      "index": 420,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 213,
+      "runner": "LALIBERTE Eve",
+      "index": 420,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 214,
+      "runner": "GARON BISSONNETTE Charles Alexandre",
+      "index": 418,
+      "gender": "M",
+      "nationality": "PRK"
+    },
+    {
+      "rank": 215,
+      "runner": "LATENDRESSE Veronique",
+      "index": 416,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 216,
+      "runner": "LEMAY Fe´lix",
+      "index": 415,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 217,
+      "runner": "NASCIMENTO Henrique",
+      "index": 414,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 218,
+      "runner": "VEILLEUX Adam",
+      "index": 412,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 218,
+      "runner": "VEILLEUX Davy",
+      "index": 412,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 220,
+      "runner": "VALLERAND Luc",
+      "index": 412,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 220,
+      "runner": "VALLERAND Patrick",
+      "index": 412,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 222,
+      "runner": "BOUCHARD Sophie",
+      "index": 409,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 223,
+      "runner": "BOILY Sabrina",
+      "index": 409,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 224,
+      "runner": "LEBLANC Sandrine",
+      "index": 409,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 225,
+      "runner": "HURLEY Annie",
+      "index": 408,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 226,
+      "runner": "LETOURNEAU Virginie",
+      "index": 408,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 227,
+      "runner": "LEBLANC Valerie",
+      "index": 406,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 228,
+      "runner": "LANGLOIS MALTAIS Simon",
+      "index": 406,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 229,
+      "runner": "POULIN Geneviève",
+      "index": 405,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 230,
+      "runner": "LAROSE Valerie",
+      "index": 402,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 230,
+      "runner": "SMITH Gavin",
+      "index": 402,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 232,
+      "runner": "RANCOURT TANIA",
+      "index": 402,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 233,
+      "runner": "BLAIS Jean Philippe",
+      "index": 402,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 234,
+      "runner": "HALDE Guillaume",
+      "index": 401,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 235,
+      "runner": "LAVOIE Marie Christine",
+      "index": 401,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 236,
+      "runner": "THIBAULT COUTURE David",
+      "index": 400,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 237,
+      "runner": "COMTOIS Christine",
+      "index": 400,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 238,
+      "runner": "FILLION Mylène",
+      "index": 400,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 239,
+      "runner": "BAZINET Anne",
+      "index": 399,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 240,
+      "runner": "ROTH Carole",
+      "index": 397,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 241,
+      "runner": "LABBE Dany",
+      "index": 397,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 242,
+      "runner": "LABELLE Jacinthe",
+      "index": 393,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 243,
+      "runner": "FLIBOTTE Marie Lou",
+      "index": 393,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 244,
+      "runner": "LEMAY GELINAS Philippe",
+      "index": 391,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 245,
+      "runner": "SYLVAIN Andreanne",
+      "index": 390,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 246,
+      "runner": "LABROSSE GIRARD Paskelle",
+      "index": 390,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 247,
+      "runner": "BEAULAC Philippe",
+      "index": 390,
+      "gender": "M",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 247,
+      "runner": "BOUCHARD Julie",
+      "index": 390,
+      "gender": "F",
+      "nationality": "CAN"
+    },
+    {
+      "rank": 249,
+      "runner": "DECARY Josianne",
+      "index": 389,
+      "gender": "F",
+      "nationality": "CAN"
+    }
+  ]
+}
