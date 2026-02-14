@@ -209,7 +209,8 @@ const state = {
     female: { key: "rc10", dir: "desc" },
     male: { key: "rc10", dir: "desc" }
   },
-  activeTab: "rcicharts"
+  activeTab: "rcicharts",
+  importDraft: null
 };
 
 function matchesFilters(meta, filters) {
@@ -475,12 +476,282 @@ function triggerCsvDownload(filename, csvContent) {
   URL.revokeObjectURL(url);
 }
 
+function triggerJsonDownload(filename, value) {
+  const text = `${JSON.stringify(value, null, 2)}\n`;
+  const blob = new Blob([text], { type: "application/json;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
 async function exportRciCsv(gender) {
   const rows = await getRciRowsForGender(gender);
   const csv = rowsToCsv(rows);
   const stamp = new Date().toISOString().slice(0, 10);
   const filename = gender === "female" ? `rci_female_${stamp}.csv` : `rci_male_${stamp}.csv`;
   triggerCsvDownload(filename, csv);
+}
+
+function parseSeriesInput(value) {
+  if (!value || !String(value).trim()) return null;
+  const parts = String(value).split(",").map(s => s.trim()).filter(Boolean);
+  if (!parts.length) return null;
+  return parts.length === 1 ? parts[0] : parts;
+}
+
+function parseNullableNumber(value) {
+  const text = value === null || value === undefined ? "" : String(value).trim();
+  if (!text) return null;
+  const num = Number(text);
+  return Number.isFinite(num) ? num : null;
+}
+
+function asNullableText(value) {
+  if (value === null || value === undefined) return null;
+  const text = String(value).trim();
+  return text ? text : null;
+}
+
+function normalizeHeaderKey(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\uFEFF/g, "")
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+}
+
+function parseDelimitedRow(line, delimiter) {
+  return line.split(delimiter).map(cell => cell.trim());
+}
+
+function detectDelimiter(text) {
+  const lines = text.split(/\r?\n/).filter(line => line.trim());
+  const first = lines[0] || "";
+  const tabCount = (first.match(/\t/g) || []).length;
+  const commaCount = (first.match(/,/g) || []).length;
+  const semiCount = (first.match(/;/g) || []).length;
+  if (tabCount >= commaCount && tabCount >= semiCount && tabCount > 0) return "\t";
+  if (semiCount > commaCount && semiCount > 0) return ";";
+  return ",";
+}
+
+function readField(row, headers, aliases) {
+  for (const alias of aliases) {
+    const idx = headers.indexOf(alias);
+    if (idx >= 0) return row[idx];
+  }
+  return "";
+}
+
+function toNumberLoose(value) {
+  const text = String(value ?? "").trim();
+  if (!text) return NaN;
+  const normalized = text.replace(",", ".");
+  return Number(normalized);
+}
+
+function looksLikeHeader(cells) {
+  const h = cells.map(normalizeHeaderKey);
+  const known = new Set([
+    "rank",
+    "position",
+    "pos",
+    "place",
+    "runner",
+    "name",
+    "athlete",
+    "time",
+    "race_score",
+    "score",
+    "index",
+    "itra_score",
+    "utmb_index",
+    "gender",
+    "sex",
+    "nationality",
+    "country",
+    "nation",
+    "nat"
+  ]);
+  return h.some(v => known.has(v));
+}
+
+function findLikelyScoreCell(row) {
+  for (let i = row.length - 1; i >= 1; i--) {
+    const cell = String(row[i] ?? "").trim();
+    if (!cell || cell.includes(":")) continue;
+    const n = toNumberLoose(cell);
+    if (Number.isFinite(n)) return cell;
+  }
+  return "";
+}
+
+function parsePastedResults(rawText) {
+  const text = String(rawText || "").trim();
+  if (!text) throw new Error("Results input is empty.");
+
+  const delimiter = detectDelimiter(text);
+  const lines = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+  if (!lines.length) throw new Error("Results input is empty.");
+
+  const firstRow = parseDelimitedRow(lines[0], delimiter);
+  const hasHeader = looksLikeHeader(firstRow);
+  const headers = hasHeader ? firstRow.map(normalizeHeaderKey) : [];
+  const dataLines = hasHeader ? lines.slice(1) : lines;
+  const rows = dataLines.map(line => parseDelimitedRow(line, delimiter));
+  if (!rows.length) throw new Error("No data rows found.");
+
+  const results = [];
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i];
+    const rankText =
+      readField(row, headers, ["rank", "position", "pos", "place", "overall_rank"]) ||
+      row[0] ||
+      "";
+    const runnerText =
+      readField(row, headers, ["runner", "name", "athlete", "runner_name", "full_name"]) ||
+      row[1] ||
+      "";
+    const indexText =
+      readField(row, headers, ["race_score", "score", "index", "itra_score", "utmb_index"]) ||
+      row[3] ||
+      findLikelyScoreCell(row);
+    const genderText =
+      readField(row, headers, ["gender", "sex"]) ||
+      row[5] ||
+      "";
+    const nationalityText =
+      readField(row, headers, ["nationality", "country", "nation", "nat"]) ||
+      row[6] ||
+      "";
+
+    const rank = toNumberLoose(rankText);
+    const index = toNumberLoose(indexText);
+    if (!Number.isFinite(rank) || rank < 1) continue;
+    if (!Number.isFinite(index)) continue;
+
+    results.push({
+      rank: Math.floor(rank),
+      runner: asNullableText(runnerText),
+      index,
+      gender: asNullableText(genderText),
+      nationality: asNullableText(nationalityText)
+    });
+  }
+
+  if (!results.length) {
+    throw new Error("No valid rows found. Need numeric rank and race score/index columns.");
+  }
+
+  results.sort((a, b) => a.rank - b.rank);
+  return results;
+}
+
+function setImportStatus(message, type = "") {
+  const el = document.getElementById("importStatus");
+  if (!el) return;
+  el.className = `status${type ? ` ${type}` : ""}`;
+  el.textContent = message;
+}
+
+function renderImportPreview(results) {
+  const tbody = document.querySelector("#importPreviewTable tbody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+  for (const r of results.slice(0, 200)) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${r.rank}</td>
+      <td>${r.runner ?? "-"}</td>
+      <td>${fmt(r.index, 1)}</td>
+      <td>${r.gender ?? "-"}</td>
+      <td>${r.nationality ?? "-"}</td>
+    `;
+    tbody.appendChild(tr);
+  }
+}
+
+function readImportDraftFromForm() {
+  const raceId = (document.getElementById("importRaceId")?.value || "").trim();
+  const name = (document.getElementById("importName")?.value || "").trim();
+  if (!raceId) throw new Error("Race ID is required.");
+  if (!name) throw new Error("Race name is required.");
+
+  const resultsText = document.getElementById("importResultsInput")?.value || "";
+  const results = parsePastedResults(resultsText);
+
+  const meta = {
+    race_id: raceId,
+    name,
+    series: parseSeriesInput(document.getElementById("importSeries")?.value),
+    country: asNullableText(document.getElementById("importCountry")?.value),
+    data_source: asNullableText(document.getElementById("importDataSource")?.value),
+    year: parseNullableNumber(document.getElementById("importYear")?.value),
+    distance_km: parseNullableNumber(document.getElementById("importDistanceKm")?.value),
+    elevation_m: parseNullableNumber(document.getElementById("importElevationM")?.value),
+    prize_money: asNullableText(document.getElementById("importPrizeMoney")?.value),
+    notes: asNullableText(document.getElementById("importNotes")?.value),
+    source_url: asNullableText(document.getElementById("importSourceUrl")?.value)
+  };
+
+  return {
+    meta,
+    results
+  };
+}
+
+function buildUpdatedManifestForImport(raceId) {
+  const courses = getManifestEntries().map(c => ({ race_id: c.race_id, path: c.path }));
+  const newEntry = {
+    race_id: raceId,
+    path: `data/courses/${raceId}.json`
+  };
+  const existingIndex = courses.findIndex(c => c.race_id === raceId);
+  if (existingIndex >= 0) courses[existingIndex] = newEntry;
+  else courses.push(newEntry);
+  courses.sort((a, b) => a.race_id.localeCompare(b.race_id));
+  return { courses };
+}
+
+function buildImportJson() {
+  try {
+    const draft = readImportDraftFromForm();
+    state.importDraft = draft;
+    renderImportPreview(draft.results);
+    setImportStatus(
+      `JSON built successfully (${draft.results.length} results).`,
+      "ok"
+    );
+  } catch (err) {
+    state.importDraft = null;
+    renderImportPreview([]);
+    setImportStatus(err.message || "Unable to build JSON.", "error");
+  }
+}
+
+function downloadImportRaceJson() {
+  if (!state.importDraft) {
+    setImportStatus("Build JSON first before downloading.", "error");
+    return;
+  }
+  const raceId = state.importDraft.meta?.race_id || "race";
+  triggerJsonDownload(`${raceId}.json`, state.importDraft);
+}
+
+function downloadImportManifestJson() {
+  if (!state.importDraft) {
+    setImportStatus("Build JSON first before downloading courses_index.json.", "error");
+    return;
+  }
+  const raceId = state.importDraft.meta?.race_id || "";
+  const updatedManifest = buildUpdatedManifestForImport(raceId);
+  triggerJsonDownload("courses_index.json", updatedManifest);
 }
 
 // ---- Metrics ----
@@ -818,10 +1089,12 @@ function setActiveTab(tab) {
   const sum = document.getElementById("pageSummary");
   const cha = document.getElementById("pageCharts");
   const race = document.getElementById("pageRace");
+  const imp = document.getElementById("pageImport");
   const bRci = document.getElementById("tabRci");
   const bSum = document.getElementById("tabSummary");
   const bCha = document.getElementById("tabCharts");
   const bRace = document.getElementById("tabRace");
+  const bImp = document.getElementById("tabImport");
 
   const activate = (el, active) => active ? el.classList.add("active") : el.classList.remove("active");
 
@@ -829,11 +1102,13 @@ function setActiveTab(tab) {
   activate(sum, tab === "summary");
   activate(cha, tab === "charts");
   activate(race, tab === "race");
+  activate(imp, tab === "import");
 
   activate(bRci, tab === "rcicharts");
   activate(bSum, tab === "summary");
   activate(bCha, tab === "charts");
   activate(bRace, tab === "race");
+  activate(bImp, tab === "import");
 }
 
 // ---- Orchestrator ----
@@ -1070,6 +1345,15 @@ async function updateAll() {
   document.getElementById("tabCharts").addEventListener("click", () => setActiveTab("charts"));
   document.getElementById("tabRace").addEventListener("click", () => setActiveTab("race"));
   document.getElementById("tabRci").addEventListener("click", () => setActiveTab("rcicharts"));
+  const tabImport = document.getElementById("tabImport");
+  if (tabImport) tabImport.addEventListener("click", () => setActiveTab("import"));
+
+  const importBuild = document.getElementById("importBuildJsonBtn");
+  if (importBuild) importBuild.addEventListener("click", buildImportJson);
+  const importDownloadRace = document.getElementById("importDownloadRaceBtn");
+  if (importDownloadRace) importDownloadRace.addEventListener("click", downloadImportRaceJson);
+  const importDownloadIndex = document.getElementById("importDownloadIndexBtn");
+  if (importDownloadIndex) importDownloadIndex.addEventListener("click", downloadImportManifestJson);
 
   const raceSearch = document.getElementById("searchRace");
   const firstRace = getManifestEntries()[0];
