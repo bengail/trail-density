@@ -271,6 +271,18 @@
     {
       "race_id": "ZMEUCLASSIC2025",
       "path": "data/courses/ZMEUCLASSIC2025.json"
+    },
+    {
+      "race_id": "WHISTLER_2024_25",
+      "path": "data/courses/WHISTLER_2024_25.json"
+    },
+    {
+      "race_id": "WHISTLER_2024_50",
+      "path": "data/courses/WHISTLER_2024_50.json"
+    },
+    {
+      "race_id": "WHISTLER_2024_70",
+      "path": "data/courses/WHISTLER_2024_70.json"
     }
   ]
 }
