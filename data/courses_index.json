@@ -283,6 +283,30 @@
     {
       "race_id": "WHISTLER_2024_70",
       "path": "data/courses/WHISTLER_2024_70.json"
+    },
+    {
+      "race_id": "BLACKCANYON_2022_100",
+      "path": "data/courses/BLACKCANYON_2022_100.json"
+    },
+    {
+      "race_id": "BLACKCANYON_2023_100",
+      "path": "data/courses/BLACKCANYON_2023_100.json"
+    },
+    {
+      "race_id": "BLACKCANYON_2024_100",
+      "path": "data/courses/BLACKCANYON_2024_100.json"
+    },
+    {
+      "race_id": "BLACKCANYON_2024_50",
+      "path": "data/courses/BLACKCANYON_2024_50.json"
+    },
+    {
+      "race_id": "BLACKCANYON_2025_100",
+      "path": "data/courses/BLACKCANYON_2025_100.json"
+    },
+    {
+      "race_id": "BLACKCANYON_2025_50",
+      "path": "data/courses/BLACKCANYON_2025_50.json"
     }
   ]
 }
