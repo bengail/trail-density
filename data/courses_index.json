@@ -307,6 +307,10 @@
     {
       "race_id": "BLACKCANYON_2025_50",
       "path": "data/courses/BLACKCANYON_2025_50.json"
+    },
+    {
+      "race_id": "BLACKCANYON_2022_50",
+      "path": "data/courses/BLACKCANYON_2022_50.json"
     }
   ]
 }
