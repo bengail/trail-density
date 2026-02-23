@@ -274,16 +274,14 @@
     <aside class="panel sidebar">
       <h2>Filters</h2>
       <div>
-        <div class="note"><b>Search</b></div>
-        <input id="vizSearch" type="search" placeholder="ex: UTMB2024, ZEGAMA2025..." />
+        <div class="note"><b>Race ID search</b></div>
+        <input id="vizSearch" type="search" placeholder="substring in race_id" />
       </div>
 
       <div style="height:10px"></div>
       <div>
-        <div class="note"><b>Country</b></div>
-        <select id="vizCountryFilter">
-          <option value="">All countries</option>
-        </select>
+        <div class="note"><b>Year</b></div>
+        <select id="vizYearFilter" multiple size="5"></select>
       </div>
 
       <div style="height:10px"></div>
@@ -294,24 +292,24 @@
 
       <div style="height:10px"></div>
       <div class="row">
-        <div class="note"><b>Selection</b></div>
+        <div class="note"><b>Races in filter</b></div>
         <span class="pill" id="vizCount">0</span>
       </div>
-      <div class="btns" style="margin-top:8px;">
-        <button id="vizAll">All</button>
-        <button id="vizNone">None</button>
-        <button id="viz2025">2025</button>
-        <button id="viz2024">2024</button>
-        <button id="viz2023">2023</button>
-      </div>
-
-      <div style="height:10px"></div>
-      <div class="note"><b>Races</b></div>
-      <div id="vizList" class="list"></div>
     </aside>
 
     <section class="panel">
-      <div class="row" style="justify-content:space-between; gap:10px; margin-bottom:10px;">
+      <div class="row" style="justify-content:space-between; gap:10px; margin-bottom:10px; align-items:flex-end;">
+        <div>
+          <div class="note"><b>Visualisation menu</b></div>
+          <select id="vizType" style="width: 230px;">
+            <option value="triad">RCI Triad Comparator</option>
+            <option value="ladder">RCI Ladder</option>
+            <option value="parity">RCI Parity Map</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="vizTriadControls" class="row" style="justify-content:space-between; gap:10px; margin-bottom:10px;">
         <div class="row" style="gap:8px;">
           <span class="note"><b>Display</b></span>
           <div class="btns">
@@ -329,10 +327,40 @@
           </select>
         </div>
       </div>
-      <div class="note" style="margin-bottom:8px;">
+
+      <div id="vizLadderControls" class="row" style="display:none; gap:8px; margin-bottom:10px;">
+        <span class="note"><b>Sex panel</b></span>
+        <div class="btns">
+          <button id="vizLadderMale" class="active">Men</button>
+          <button id="vizLadderFemale">Women</button>
+        </div>
+      </div>
+
+      <div id="vizParityControls" class="row" style="display:none; gap:10px; margin-bottom:10px;">
+        <div>
+          <span class="note"><b>N set</b></span>
+          <select id="vizParityNSet" style="width: 140px;">
+            <option value="3,5,10">3/5/10</option>
+            <option value="5,10,20">5/10/20</option>
+          </select>
+        </div>
+        <label class="note" style="display:flex; align-items:center; gap:6px;">
+          <input id="vizParityConnect" type="checkbox" checked /> Connect points by race
+        </label>
+      </div>
+
+      <div id="vizTriadNote" class="note" style="margin-bottom:8px;">
         Y-axis shows RCI3/RCI5/RCI10 (normalized). Diagonal = same value as reference metric.
       </div>
       <div id="vizScatter" style="height: 620px;"></div>
+      <div id="vizLadderLayout" style="display:none; grid-template-columns: 1fr 320px; gap: 10px; align-items:start;">
+        <div id="vizLadderPlot" style="height: 620px;"></div>
+        <div class="panel" style="box-shadow:none;">
+          <h2>Closest matches</h2>
+          <div id="vizClosestMatches" class="note">Click a point to compare ΔRCI against all races / sexes / N.</div>
+        </div>
+      </div>
+      <div id="vizParityPlot" style="display:none; height: 620px;"></div>
     </section>
   </div>
 </main>
