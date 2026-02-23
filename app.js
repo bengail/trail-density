@@ -91,6 +91,11 @@ function rciFromResults(results, n, limitByRank = true) {
   return mean(values) - stdPop(values);
 }
 
+function normalizeItraFemaleIndex(score) {
+  if (!Number.isFinite(score)) return NaN;
+  return ((-0.000466 * score) + 1.532) * score;
+}
+
 function normalizeGenderLabel(value) {
   if (!value) return null;
   const lower = value.toString().trim().toLowerCase();
@@ -206,6 +211,12 @@ const state = {
   rciSelected: new Set(),
   rciFilters: { country: "", series: [] },
   rciSorts: {
+    female: { key: "rc10", dir: "desc" },
+    male: { key: "rc10", dir: "desc" }
+  },
+  rciNormSelected: new Set(),
+  rciNormFilters: { country: "", series: [] },
+  rciNormSorts: {
     female: { key: "rc10", dir: "desc" },
     male: { key: "rc10", dir: "desc" }
   },
@@ -332,27 +343,23 @@ function renderFilterOptions(countrySelect, seriesSelect, filters) {
   }
 }
 
-function renderRciList() {
-  const list = document.getElementById("rcichartList");
-  renderCourseList(
-    list,
-    state.rciSelected,
-    document.getElementById("rcichartSearch").value,
-    { filters: state.rciFilters }
-  );
-  document.getElementById("rcichartCount").textContent = String(state.rciSelected.size);
+function getRciResultsForMode(results, gender, normalizeFemale) {
+  const filtered = filterResultsByGender(results, gender);
+  if (!normalizeFemale || gender !== "female") return filtered;
+  return filtered.map(r => ({ ...r, index: normalizeItraFemaleIndex(r.index) }));
 }
 
-async function renderRciTable(gender, tableId) {
+async function renderRciTable(gender, tableId, options = {}) {
   const tbody = document.querySelector(`#${tableId} tbody`);
   if (!tbody) return;
   tbody.innerHTML = "";
-  const rows = await getRciRowsForGender(gender);
+  const rows = await getRciRowsForGender(gender, options);
 
   const metrics = rows.flatMap(r => ["rc3", "rc5", "rc10", "rc20"].map(k => r[k]).filter(Number.isFinite));
   const minValue = metrics.length ? Math.min(...metrics) : 0;
   const maxValue = metrics.length ? Math.max(...metrics) : 0;
-  const sort = state.rciSorts[gender];
+  const sorts = options.sorts || state.rciSorts;
+  const sort = sorts[gender];
 
   for (const r of rows) {
     const tr = document.createElement("tr");
@@ -379,8 +386,13 @@ async function renderRciTable(gender, tableId) {
   }
 }
 
-async function getRciRowsForGender(gender) {
-  const ids = Array.from(state.rciSelected).sort();
+async function getRciRowsForGender(gender, options = {}) {
+  const selectedSet = options.selectedSet || state.rciSelected;
+  const filters = options.filters || state.rciFilters;
+  const sorts = options.sorts || state.rciSorts;
+  const normalizeFemale = Boolean(options.normalizeFemale);
+
+  const ids = Array.from(selectedSet).sort();
   const courses = await Promise.all(ids.map(id => loadCourse(id).catch(() => null)));
   const rows = [];
 
@@ -388,10 +400,10 @@ async function getRciRowsForGender(gender) {
     const course = courses[i];
     if (!course) continue;
     const meta = course.meta || {};
-    if (!matchesFilters(meta, state.rciFilters)) continue;
+    if (!matchesFilters(meta, filters)) continue;
     const raceGender = inferRaceGender(meta);
     if (raceGender && raceGender !== gender) continue;
-    const filtered = filterResultsByGender(course.results, gender);
+    const filtered = getRciResultsForMode(course.results, gender, normalizeFemale);
     const row = {
       name: getCourseLabel(course),
       country: meta.country || "",
@@ -404,7 +416,7 @@ async function getRciRowsForGender(gender) {
     rows.push(row);
   }
 
-  const sort = state.rciSorts[gender];
+  const sort = sorts[gender];
   rows.sort((a, b) => {
     const va = a[sort.key];
     const vb = b[sort.key];
@@ -418,25 +430,47 @@ async function getRciRowsForGender(gender) {
   return rows;
 }
 
-async function updateRciTables() {
-  await renderRciTable("female", "rcifemaleTable");
-  await renderRciTable("male", "rcimaleTable");
+async function updateRciTablesForConfig(config) {
+  await renderRciTable("female", config.femaleTableId, config);
+  await renderRciTable("male", config.maleTableId, config);
 }
 
-function wireRciSort(tableId, gender) {
+async function updateRciTables() {
+  await updateRciTablesForConfig({
+    selectedSet: state.rciSelected,
+    filters: state.rciFilters,
+    sorts: state.rciSorts,
+    femaleTableId: "rcifemaleTable",
+    maleTableId: "rcimaleTable",
+    normalizeFemale: false
+  });
+}
+
+async function updateRciNormTables() {
+  await updateRciTablesForConfig({
+    selectedSet: state.rciNormSelected,
+    filters: state.rciNormFilters,
+    sorts: state.rciNormSorts,
+    femaleTableId: "rcinormfemaleTable",
+    maleTableId: "rcinormmaleTable",
+    normalizeFemale: true
+  });
+}
+
+function wireRciSort(tableId, gender, sorts, onChange) {
   const thead = document.querySelector(`#${tableId} thead`);
   if (!thead) return;
   const ths = Array.from(thead.querySelectorAll("th[data-key]"));
   ths.forEach(th => {
     th.addEventListener("click", () => {
       const key = th.dataset.key;
-      if (state.rciSorts[gender].key === key) {
-        state.rciSorts[gender].dir = state.rciSorts[gender].dir === "asc" ? "desc" : "asc";
+      if (sorts[gender].key === key) {
+        sorts[gender].dir = sorts[gender].dir === "asc" ? "desc" : "asc";
       } else {
-        state.rciSorts[gender].key = key;
-        state.rciSorts[gender].dir = "desc";
+        sorts[gender].key = key;
+        sorts[gender].dir = "desc";
       }
-      updateRciTables();
+      onChange();
     });
   });
 }
@@ -489,11 +523,14 @@ function triggerJsonDownload(filename, value) {
   URL.revokeObjectURL(url);
 }
 
-async function exportRciCsv(gender) {
-  const rows = await getRciRowsForGender(gender);
+async function exportRciCsv(gender, options = {}) {
+  const rows = await getRciRowsForGender(gender, options);
   const csv = rowsToCsv(rows);
   const stamp = new Date().toISOString().slice(0, 10);
-  const filename = gender === "female" ? `rci_female_${stamp}.csv` : `rci_male_${stamp}.csv`;
+  const suffix = options.normalizeFemale ? "normalized_" : "";
+  const filename = gender === "female"
+    ? `rci_${suffix}female_${stamp}.csv`
+    : `rci_${suffix}male_${stamp}.csv`;
   triggerCsvDownload(filename, csv);
 }
 
@@ -1086,11 +1123,13 @@ async function updateRaceDisplay() {
 function setActiveTab(tab) {
   state.activeTab = tab;
   const rci = document.getElementById("pageRci");
+  const rciNorm = document.getElementById("pageRciNorm");
   const sum = document.getElementById("pageSummary");
   const cha = document.getElementById("pageCharts");
   const race = document.getElementById("pageRace");
   const imp = document.getElementById("pageImport");
   const bRci = document.getElementById("tabRci");
+  const bRciNorm = document.getElementById("tabRciNorm");
   const bSum = document.getElementById("tabSummary");
   const bCha = document.getElementById("tabCharts");
   const bRace = document.getElementById("tabRace");
@@ -1099,12 +1138,14 @@ function setActiveTab(tab) {
   const activate = (el, active) => active ? el.classList.add("active") : el.classList.remove("active");
 
   activate(rci, tab === "rcicharts");
+  activate(rciNorm, tab === "rcinormcharts");
   activate(sum, tab === "summary");
   activate(cha, tab === "charts");
   activate(race, tab === "race");
   activate(imp, tab === "import");
 
   activate(bRci, tab === "rcicharts");
+  activate(bRciNorm, tab === "rcinormcharts");
   activate(bSum, tab === "summary");
   activate(bCha, tab === "charts");
   activate(bRace, tab === "race");
@@ -1116,6 +1157,7 @@ async function updateAll() {
   await updateSummaryTable();
   await updateCharts();
   await updateRciTables();
+  await updateRciNormTables();
 }
 
 // ---- Boot ----
@@ -1126,6 +1168,7 @@ async function updateAll() {
   setSelectionAll(state.summarySelected);
   setSelectionAll(state.chartsSelected);
   setSelectionAll(state.rciSelected);
+  setSelectionAll(state.rciNormSelected);
 
   const sumList = document.getElementById("summaryList");
   const sumSearch = document.getElementById("searchSummary");
@@ -1269,6 +1312,59 @@ async function updateAll() {
   }
 
   renderRciSelection();
+
+  const rciNormList = document.getElementById("rcinormList");
+  const rciNormSearch = document.getElementById("rcinormSearch");
+  const rciNormCountryFilter = document.getElementById("rcinormCountryFilter");
+  const rciNormSeriesFilter = document.getElementById("rcinormSeriesFilter");
+  function renderRciNormSelection() {
+    renderCourseList(rciNormList, state.rciNormSelected, rciNormSearch.value, {
+      filters: state.rciNormFilters,
+      onSelectionChange: () => {
+        renderRciNormSelection();
+        updateRciNormTables();
+      }
+    });
+    document.getElementById("rcinormCount").textContent = String(state.rciNormSelected.size);
+  }
+  renderFilterOptions(rciNormCountryFilter, rciNormSeriesFilter, state.rciNormFilters);
+  rciNormSearch.addEventListener("input", () => {
+    renderRciNormSelection();
+  });
+
+  if (rciNormCountryFilter) {
+    rciNormCountryFilter.addEventListener("change", () => {
+      state.rciNormFilters.country = rciNormCountryFilter.value;
+      applyFiltersToSelection(state.rciNormSelected, state.rciNormFilters);
+      renderRciNormSelection();
+      updateRciNormTables();
+    });
+  }
+
+  if (rciNormSeriesFilter) {
+    rciNormSeriesFilter.addEventListener("change", () => {
+      const values = Array.from(rciNormSeriesFilter.selectedOptions).map(o => o.value).filter(Boolean);
+      state.rciNormFilters.series = values;
+      applyFiltersToSelection(state.rciNormSelected, state.rciNormFilters);
+      renderRciNormSelection();
+      updateRciNormTables();
+    });
+  }
+
+  const rciNormButtons = [
+    ["rcinormAll", () => { setSelectionAll(state.rciNormSelected); applyFiltersToSelection(state.rciNormSelected, state.rciNormFilters); renderRciNormSelection(); updateRciNormTables(); }],
+    ["rcinormNone", () => { setSelectionNone(state.rciNormSelected); renderRciNormSelection(); updateRciNormTables(); }],
+    ["rcinorm2025", () => { setSelectionByYear(state.rciNormSelected, 2025, state.rciNormFilters); renderRciNormSelection(); updateRciNormTables(); }],
+    ["rcinorm2024", () => { setSelectionByYear(state.rciNormSelected, 2024, state.rciNormFilters); renderRciNormSelection(); updateRciNormTables(); }],
+    ["rcinorm2023", () => { setSelectionByYear(state.rciNormSelected, 2023, state.rciNormFilters); renderRciNormSelection(); updateRciNormTables(); }]
+  ];
+  for (const [id, fn] of rciNormButtons) {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("click", fn);
+  }
+
+  renderRciNormSelection();
+
   const chList = document.getElementById("chartsList");
   const chSearch = document.getElementById("searchCharts");
   const chartsCountryFilter = document.getElementById("chartsCountryFilter");
@@ -1334,17 +1430,45 @@ async function updateAll() {
     updateCharts();
   });
 
-  wireRciSort("rcifemaleTable", "female");
-  wireRciSort("rcimaleTable", "male");
+  wireRciSort("rcifemaleTable", "female", state.rciSorts, updateRciTables);
+  wireRciSort("rcimaleTable", "male", state.rciSorts, updateRciTables);
+  wireRciSort("rcinormfemaleTable", "female", state.rciNormSorts, updateRciNormTables);
+  wireRciSort("rcinormmaleTable", "male", state.rciNormSorts, updateRciNormTables);
   const exportFemale = document.getElementById("exportRciFemaleCsv");
-  if (exportFemale) exportFemale.addEventListener("click", () => exportRciCsv("female"));
+  if (exportFemale) exportFemale.addEventListener("click", () => exportRciCsv("female", {
+    selectedSet: state.rciSelected,
+    filters: state.rciFilters,
+    sorts: state.rciSorts,
+    normalizeFemale: false
+  }));
   const exportMale = document.getElementById("exportRciMaleCsv");
-  if (exportMale) exportMale.addEventListener("click", () => exportRciCsv("male"));
+  if (exportMale) exportMale.addEventListener("click", () => exportRciCsv("male", {
+    selectedSet: state.rciSelected,
+    filters: state.rciFilters,
+    sorts: state.rciSorts,
+    normalizeFemale: false
+  }));
+  const exportNormFemale = document.getElementById("exportRciNormFemaleCsv");
+  if (exportNormFemale) exportNormFemale.addEventListener("click", () => exportRciCsv("female", {
+    selectedSet: state.rciNormSelected,
+    filters: state.rciNormFilters,
+    sorts: state.rciNormSorts,
+    normalizeFemale: true
+  }));
+  const exportNormMale = document.getElementById("exportRciNormMaleCsv");
+  if (exportNormMale) exportNormMale.addEventListener("click", () => exportRciCsv("male", {
+    selectedSet: state.rciNormSelected,
+    filters: state.rciNormFilters,
+    sorts: state.rciNormSorts,
+    normalizeFemale: true
+  }));
 
   document.getElementById("tabSummary").addEventListener("click", () => setActiveTab("summary"));
   document.getElementById("tabCharts").addEventListener("click", () => setActiveTab("charts"));
   document.getElementById("tabRace").addEventListener("click", () => setActiveTab("race"));
   document.getElementById("tabRci").addEventListener("click", () => setActiveTab("rcicharts"));
+  const tabRciNorm = document.getElementById("tabRciNorm");
+  if (tabRciNorm) tabRciNorm.addEventListener("click", () => setActiveTab("rcinormcharts"));
   const tabImport = document.getElementById("tabImport");
   if (tabImport) tabImport.addEventListener("click", () => setActiveTab("import"));
 

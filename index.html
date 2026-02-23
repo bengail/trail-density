@@ -80,6 +80,7 @@
   </div>
   <nav>
     <button id="tabRci" class="active">RCI Charts</button>
+    <button id="tabRciNorm">RCI Normalized</button>
     <button id="tabSummary">Summary</button>
     <button id="tabCharts">Charts</button>
     <button id="tabRace">Race</button>
@@ -155,6 +156,94 @@
       <h2 style="margin-top:20px;">RCI (Male)</h2>
       <div class="tableWrap">
         <table id="rcimaleTable">
+          <thead>
+            <tr>
+              <th data-key="name">Race</th>
+              <th data-key="country">Country</th>
+              <th data-key="rc3">RCI3</th>
+              <th data-key="rc5">RCI5</th>
+              <th data-key="rc10">RCI10</th>
+              <th data-key="rc20">RCI20</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<main id="pageRciNorm" class="">
+  <div class="grid">
+    <aside class="panel sidebar">
+      <h2>Filters</h2>
+      <div>
+        <div class="note"><b>Search</b></div>
+        <input id="rcinormSearch" type="search" placeholder="ex: UTMB2024, ZEGAMA2025..." />
+      </div>
+
+      <div style="height:10px"></div>
+      <div>
+        <div class="note"><b>Country</b></div>
+        <select id="rcinormCountryFilter">
+          <option value="">All countries</option>
+        </select>
+      </div>
+
+      <div style="height:10px"></div>
+      <div>
+        <div class="note"><b>Series</b></div>
+        <select id="rcinormSeriesFilter" multiple size="5"></select>
+      </div>
+
+      <div style="height:10px"></div>
+      <div class="row">
+        <div class="note"><b>Selection</b></div>
+        <span class="pill" id="rcinormCount">0</span>
+      </div>
+      <div class="btns" style="margin-top:8px;">
+        <button id="rcinormAll">All</button>
+        <button id="rcinormNone">None</button>
+        <button id="rcinorm2025">2025</button>
+        <button id="rcinorm2024">2024</button>
+        <button id="rcinorm2023">2023</button>
+      </div>
+
+      <div style="height:10px"></div>
+      <div class="note"><b>Races</b></div>
+      <div id="rcinormList" class="list"></div>
+    </aside>
+
+    <section class="panel">
+      <div class="row" style="justify-content:space-between; gap:8px; margin-bottom:10px;">
+        <h2 style="margin:0;">Exports</h2>
+        <div class="btns">
+          <button id="exportRciNormFemaleCsv">Export Female CSV</button>
+          <button id="exportRciNormMaleCsv">Export Male CSV</button>
+        </div>
+      </div>
+      <div class="note" style="margin-bottom:10px;">
+        Female ITRA score normalization: <b>[(-0.000466 x ITRA) + 1.532] x ITRA</b>.
+      </div>
+      <h2>RCI (Female, normalized)</h2>
+      <div class="tableWrap">
+        <table id="rcinormfemaleTable">
+          <thead>
+            <tr>
+              <th data-key="name">Race</th>
+              <th data-key="country">Country</th>
+              <th data-key="rc3">RCI3</th>
+              <th data-key="rc5">RCI5</th>
+              <th data-key="rc10">RCI10</th>
+              <th data-key="rc20">RCI20</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <h2 style="margin-top:20px;">RCI (Male)</h2>
+      <div class="tableWrap">
+        <table id="rcinormmaleTable">
           <thead>
             <tr>
               <th data-key="name">Race</th>
