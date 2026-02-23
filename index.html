@@ -274,14 +274,16 @@
     <aside class="panel sidebar">
       <h2>Filters</h2>
       <div>
-        <div class="note"><b>Race ID search</b></div>
-        <input id="vizSearch" type="search" placeholder="substring in race_id" />
+        <div class="note"><b>Search</b></div>
+        <input id="vizSearch" type="search" placeholder="ex: UTMB2024, ZEGAMA2025..." />
       </div>
 
       <div style="height:10px"></div>
       <div>
-        <div class="note"><b>Year</b></div>
-        <select id="vizYearFilter" multiple size="5"></select>
+        <div class="note"><b>Country</b></div>
+        <select id="vizCountryFilter">
+          <option value="">All countries</option>
+        </select>
       </div>
 
       <div style="height:10px"></div>
@@ -292,9 +294,20 @@
 
       <div style="height:10px"></div>
       <div class="row">
-        <div class="note"><b>Races in filter</b></div>
+        <div class="note"><b>Selection</b></div>
         <span class="pill" id="vizCount">0</span>
       </div>
+      <div class="btns" style="margin-top:8px;">
+        <button id="vizAll">All</button>
+        <button id="vizNone">None</button>
+        <button id="viz2025">2025</button>
+        <button id="viz2024">2024</button>
+        <button id="viz2023">2023</button>
+      </div>
+
+      <div style="height:10px"></div>
+      <div class="note"><b>Races</b></div>
+      <div id="vizList" class="list"></div>
     </aside>
 
     <section class="panel">
