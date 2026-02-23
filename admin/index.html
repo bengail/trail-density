@@ -45,6 +45,8 @@
     th.sort-desc::after { content: ' ▼'; }
     thead th { font-weight: 700; background: rgba(15,23,42,0.03); position: sticky; top: 0; }
     .tableWrap { max-height: 70vh; overflow:auto; border-radius: 12px; border:1px solid var(--border); background:#ffffff; }
+    .rci-table tbody tr:hover td { box-shadow: inset 0 0 0 999px rgba(255,255,255,0.14); }
+    .rci-table th:nth-child(-n+3), .rci-table td:nth-child(-n+3) { text-align:left; }
     .plots { display:grid; grid-template-rows: 420px 340px 320px; gap:14px; }
     #plot { height:420px; }
     #lorenzPlot { height:340px; }
@@ -139,11 +141,12 @@
       </div>
       <h2>RCI (Female)</h2>
       <div class="tableWrap">
-        <table id="rcifemaleTable">
+        <table id="rcifemaleTable" class="rci-table">
           <thead>
             <tr>
               <th data-key="name">Race</th>
               <th data-key="country">Country</th>
+              <th data-key="series">Series</th>
               <th data-key="rc3">RCI3</th>
               <th data-key="rc5">RCI5</th>
               <th data-key="rc10">RCI10</th>
@@ -155,11 +158,12 @@
       </div>
       <h2 style="margin-top:20px;">RCI (Male)</h2>
       <div class="tableWrap">
-        <table id="rcimaleTable">
+        <table id="rcimaleTable" class="rci-table">
           <thead>
             <tr>
               <th data-key="name">Race</th>
               <th data-key="country">Country</th>
+              <th data-key="series">Series</th>
               <th data-key="rc3">RCI3</th>
               <th data-key="rc5">RCI5</th>
               <th data-key="rc10">RCI10</th>
@@ -227,11 +231,12 @@
       </div>
       <h2>RCI (Female, normalized)</h2>
       <div class="tableWrap">
-        <table id="rcinormfemaleTable">
+        <table id="rcinormfemaleTable" class="rci-table">
           <thead>
             <tr>
               <th data-key="name">Race</th>
               <th data-key="country">Country</th>
+              <th data-key="series">Series</th>
               <th data-key="rc3">RCI3</th>
               <th data-key="rc5">RCI5</th>
               <th data-key="rc10">RCI10</th>
@@ -243,11 +248,12 @@
       </div>
       <h2 style="margin-top:20px;">RCI (Male)</h2>
       <div class="tableWrap">
-        <table id="rcinormmaleTable">
+        <table id="rcinormmaleTable" class="rci-table">
           <thead>
             <tr>
               <th data-key="name">Race</th>
               <th data-key="country">Country</th>
+              <th data-key="series">Series</th>
               <th data-key="rc3">RCI3</th>
               <th data-key="rc5">RCI5</th>
               <th data-key="rc10">RCI10</th>

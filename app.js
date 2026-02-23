@@ -151,11 +151,12 @@ function densityColor(value, min, max) {
   if (!Number.isFinite(value)) return "";
   const clampedMin = Number.isFinite(min) ? min : value;
   const clampedMax = Number.isFinite(max) ? max : value;
-  if (clampedMax <= clampedMin) return "background:rgba(79,70,229,0.1)";
+  if (clampedMax <= clampedMin) return "background:hsl(224, 75%, 95%); color:#0f172a; font-weight:600;";
   const ratio = Math.max(0, Math.min(1, (value - clampedMin) / (clampedMax - clampedMin)));
-  const lightness = 85 - ratio * 40;
-  const color = `hsl(237, 70%, ${lightness}%)`;
-  return `background:${color}`;
+  const lightness = 97 - ratio * 15;
+  const bg = `hsl(224, 75%, ${lightness}%)`;
+  const borderAlpha = (0.06 + ratio * 0.12).toFixed(3);
+  return `background:${bg}; color:#0f172a; font-weight:600; box-shadow: inset 0 0 0 1px rgba(15,23,42,${borderAlpha});`;
 }
 
 function fmt(n, digits = 1) {
@@ -399,6 +400,7 @@ async function renderRciTable(gender, tableId, options = {}) {
     tr.innerHTML = `
       <td>${r.name}</td>
       <td>${r.country || "-"}</td>
+      <td>${r.series || "-"}</td>
       <td style="${densityColor(r.rc3, minValue, maxValue)}">${fmt(r.rc3, 2)}</td>
       <td style="${densityColor(r.rc5, minValue, maxValue)}">${fmt(r.rc5, 2)}</td>
       <td style="${densityColor(r.rc10, minValue, maxValue)}">${fmt(r.rc10, 2)}</td>
@@ -440,6 +442,7 @@ async function getRciRowsForGender(gender, options = {}) {
     const row = {
       name: getCourseLabel(course),
       country: meta.country || "",
+      series: normalizeSeries(meta.series).join(", "),
       rc3: rciFromResults(filtered, 3, false),
       rc5: rciFromResults(filtered, 5, false),
       rc10: rciFromResults(filtered, 10, false),
@@ -514,13 +517,14 @@ function csvCell(value) {
 }
 
 function rowsToCsv(rows) {
-  const header = ["Race", "Country", "RCI3", "RCI5", "RCI10", "RCI20"];
+  const header = ["Race", "Country", "Series", "RCI3", "RCI5", "RCI10", "RCI20"];
   const lines = [header.map(csvCell).join(",")];
   for (const r of rows) {
     lines.push(
       [
         r.name,
         r.country || "",
+        r.series || "",
         Number.isFinite(r.rc3) ? r.rc3.toFixed(2) : "",
         Number.isFinite(r.rc5) ? r.rc5.toFixed(2) : "",
         Number.isFinite(r.rc10) ? r.rc10.toFixed(2) : "",
