@@ -8,7 +8,7 @@ const TAB_ALLOWLIST = {
   admin: ["summary", "charts", "race", "import"]
 };
 const DEFAULT_TAB_BY_MODE = {
-  public: "rcicharts",
+  public: "rcinormcharts",
   admin: "summary"
 };
 const LADDER_N_LEVELS = [3, 5, 10, 20, 30];
@@ -270,7 +270,7 @@ const state = {
     male: { key: "rc10", dir: "desc" }
   },
   vizSelected: new Set(),
-  vizFilters: { years: [], series: [], search: "" },
+  vizFilters: { country: "", series: [] },
   vizType: "triad",
   vizGenderMode: "both",
   vizRefMetric: "rc5",
@@ -337,6 +337,69 @@ function renderCourseList(targetEl, selectedSet, searchQuery, options = {}) {
     div.appendChild(pill);
     targetEl.appendChild(div);
   }
+}
+
+function wireRaceFilterPanel(config) {
+  const {
+    listEl,
+    searchEl,
+    countryEl,
+    seriesEl,
+    countEl,
+    selectedSet,
+    filters,
+    onUpdate,
+    buttonConfigs
+  } = config;
+
+  function renderSelection() {
+    renderCourseList(listEl, selectedSet, searchEl?.value || "", {
+      filters,
+      onSelectionChange: () => {
+        renderSelection();
+        onUpdate();
+      }
+    });
+    if (countEl) countEl.textContent = String(selectedSet.size);
+  }
+
+  renderFilterOptions(countryEl, seriesEl, filters);
+
+  if (searchEl) {
+    searchEl.addEventListener("input", () => {
+      renderSelection();
+    });
+  }
+
+  if (countryEl) {
+    countryEl.addEventListener("change", () => {
+      filters.country = countryEl.value;
+      applyFiltersToSelection(selectedSet, filters);
+      renderSelection();
+      onUpdate();
+    });
+  }
+
+  if (seriesEl) {
+    seriesEl.addEventListener("change", () => {
+      const values = Array.from(seriesEl.selectedOptions).map(o => o.value).filter(Boolean);
+      filters.series = values;
+      applyFiltersToSelection(selectedSet, filters);
+      renderSelection();
+      onUpdate();
+    });
+  }
+
+  for (const [id, fn] of buttonConfigs || []) {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("click", () => {
+      fn();
+      renderSelection();
+      onUpdate();
+    });
+  }
+
+  renderSelection();
 }
 
 function setSelectionByYear(selectedSet, year, filters = null) {
@@ -539,20 +602,7 @@ function setVizLadderSex(sex) {
 }
 
 function getVizFilteredIds() {
-  const q = (state.vizFilters.search || "").trim().toLowerCase();
-  const years = new Set(state.vizFilters.years || []);
-  const seriesSet = new Set(state.vizFilters.series || []);
-  const ids = [];
-  for (const c of getManifestEntries()) {
-    const id = c.race_id;
-    const meta = getCourseMeta(id) || {};
-    const metaSeries = normalizeSeries(meta.series);
-    const qOk = !q || id.toLowerCase().includes(q);
-    const yearOk = !years.size || years.has(meta.year);
-    const seriesOk = !seriesSet.size || metaSeries.some(s => seriesSet.has(s));
-    if (qOk && yearOk && seriesOk) ids.push(id);
-  }
-  return ids.sort();
+  return Array.from(state.vizSelected).sort();
 }
 
 function getTopStats(results, n) {
@@ -1650,154 +1700,71 @@ async function updateAll() {
   const rciSearch = document.getElementById("rcichartSearch");
   const rciCountryFilter = document.getElementById("rcichartCountryFilter");
   const rciSeriesFilter = document.getElementById("rcichartSeriesFilter");
-  function renderRciSelection() {
-    renderCourseList(rciList, state.rciSelected, rciSearch.value, {
-      filters: state.rciFilters,
-      onSelectionChange: () => {
-        renderRciSelection();
-        updateRciTables();
-      }
-    });
-    document.getElementById("rcichartCount").textContent = String(state.rciSelected.size);
-  }
-  renderFilterOptions(rciCountryFilter, rciSeriesFilter, state.rciFilters);
-  rciSearch.addEventListener("input", () => {
-    renderRciSelection();
+  wireRaceFilterPanel({
+    listEl: rciList,
+    searchEl: rciSearch,
+    countryEl: rciCountryFilter,
+    seriesEl: rciSeriesFilter,
+    countEl: document.getElementById("rcichartCount"),
+    selectedSet: state.rciSelected,
+    filters: state.rciFilters,
+    onUpdate: updateRciTables,
+    buttonConfigs: [
+      ["rcichartAll", () => { setSelectionAll(state.rciSelected); applyFiltersToSelection(state.rciSelected, state.rciFilters); }],
+      ["rcichartNone", () => { setSelectionNone(state.rciSelected); }],
+      ["rcichart2025", () => { setSelectionByYear(state.rciSelected, 2025, state.rciFilters); }],
+      ["rcichart2024", () => { setSelectionByYear(state.rciSelected, 2024, state.rciFilters); }],
+      ["rcichart2023", () => { setSelectionByYear(state.rciSelected, 2023, state.rciFilters); }]
+    ]
   });
-
-  if (rciCountryFilter) {
-    rciCountryFilter.addEventListener("change", () => {
-      state.rciFilters.country = rciCountryFilter.value;
-      applyFiltersToSelection(state.rciSelected, state.rciFilters);
-      renderRciSelection();
-      updateRciTables();
-    });
-  }
-
-  if (rciSeriesFilter) {
-    rciSeriesFilter.addEventListener("change", () => {
-      const values = Array.from(rciSeriesFilter.selectedOptions).map(o => o.value).filter(Boolean);
-      state.rciFilters.series = values;
-      applyFiltersToSelection(state.rciSelected, state.rciFilters);
-      renderRciSelection();
-      updateRciTables();
-    });
-  }
-
-  const rcibuttons = [
-    ["rcichartAll", () => { setSelectionAll(state.rciSelected); applyFiltersToSelection(state.rciSelected, state.rciFilters); renderRciSelection(); updateRciTables(); }],
-    ["rcichartNone", () => { setSelectionNone(state.rciSelected); renderRciSelection(); updateRciTables(); }],
-    ["rcichart2025", () => { setSelectionByYear(state.rciSelected, 2025, state.rciFilters); renderRciSelection(); updateRciTables(); }],
-    ["rcichart2024", () => { setSelectionByYear(state.rciSelected, 2024, state.rciFilters); renderRciSelection(); updateRciTables(); }],
-    ["rcichart2023", () => { setSelectionByYear(state.rciSelected, 2023, state.rciFilters); renderRciSelection(); updateRciTables(); }]
-  ];
-  for (const [id, fn] of rcibuttons) {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener("click", fn);
-  }
-
-  renderRciSelection();
 
   const rciNormList = document.getElementById("rcinormList");
   const rciNormSearch = document.getElementById("rcinormSearch");
   const rciNormCountryFilter = document.getElementById("rcinormCountryFilter");
   const rciNormSeriesFilter = document.getElementById("rcinormSeriesFilter");
-  function renderRciNormSelection() {
-    renderCourseList(rciNormList, state.rciNormSelected, rciNormSearch.value, {
-      filters: state.rciNormFilters,
-      onSelectionChange: () => {
-        renderRciNormSelection();
-        updateRciNormTables();
-      }
-    });
-    document.getElementById("rcinormCount").textContent = String(state.rciNormSelected.size);
-  }
-  renderFilterOptions(rciNormCountryFilter, rciNormSeriesFilter, state.rciNormFilters);
-  rciNormSearch.addEventListener("input", () => {
-    renderRciNormSelection();
+  wireRaceFilterPanel({
+    listEl: rciNormList,
+    searchEl: rciNormSearch,
+    countryEl: rciNormCountryFilter,
+    seriesEl: rciNormSeriesFilter,
+    countEl: document.getElementById("rcinormCount"),
+    selectedSet: state.rciNormSelected,
+    filters: state.rciNormFilters,
+    onUpdate: updateRciNormTables,
+    buttonConfigs: [
+      ["rcinormAll", () => { setSelectionAll(state.rciNormSelected); applyFiltersToSelection(state.rciNormSelected, state.rciNormFilters); }],
+      ["rcinormNone", () => { setSelectionNone(state.rciNormSelected); }],
+      ["rcinorm2025", () => { setSelectionByYear(state.rciNormSelected, 2025, state.rciNormFilters); }],
+      ["rcinorm2024", () => { setSelectionByYear(state.rciNormSelected, 2024, state.rciNormFilters); }],
+      ["rcinorm2023", () => { setSelectionByYear(state.rciNormSelected, 2023, state.rciNormFilters); }]
+    ]
   });
 
-  if (rciNormCountryFilter) {
-    rciNormCountryFilter.addEventListener("change", () => {
-      state.rciNormFilters.country = rciNormCountryFilter.value;
-      applyFiltersToSelection(state.rciNormSelected, state.rciNormFilters);
-      renderRciNormSelection();
-      updateRciNormTables();
-    });
-  }
-
-  if (rciNormSeriesFilter) {
-    rciNormSeriesFilter.addEventListener("change", () => {
-      const values = Array.from(rciNormSeriesFilter.selectedOptions).map(o => o.value).filter(Boolean);
-      state.rciNormFilters.series = values;
-      applyFiltersToSelection(state.rciNormSelected, state.rciNormFilters);
-      renderRciNormSelection();
-      updateRciNormTables();
-    });
-  }
-
-  const rciNormButtons = [
-    ["rcinormAll", () => { setSelectionAll(state.rciNormSelected); applyFiltersToSelection(state.rciNormSelected, state.rciNormFilters); renderRciNormSelection(); updateRciNormTables(); }],
-    ["rcinormNone", () => { setSelectionNone(state.rciNormSelected); renderRciNormSelection(); updateRciNormTables(); }],
-    ["rcinorm2025", () => { setSelectionByYear(state.rciNormSelected, 2025, state.rciNormFilters); renderRciNormSelection(); updateRciNormTables(); }],
-    ["rcinorm2024", () => { setSelectionByYear(state.rciNormSelected, 2024, state.rciNormFilters); renderRciNormSelection(); updateRciNormTables(); }],
-    ["rcinorm2023", () => { setSelectionByYear(state.rciNormSelected, 2023, state.rciNormFilters); renderRciNormSelection(); updateRciNormTables(); }]
-  ];
-  for (const [id, fn] of rciNormButtons) {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener("click", fn);
-  }
-
-  renderRciNormSelection();
-
   const vizSearch = document.getElementById("vizSearch");
-  const vizYearFilter = document.getElementById("vizYearFilter");
+  const vizCountryFilter = document.getElementById("vizCountryFilter");
   const vizSeriesFilter = document.getElementById("vizSeriesFilter");
   const vizRefMetric = document.getElementById("vizRefMetric");
   const vizType = document.getElementById("vizType");
   const vizParityNSet = document.getElementById("vizParityNSet");
   const vizParityConnect = document.getElementById("vizParityConnect");
 
-  function renderVizFilterOptions() {
-    const years = new Set();
-    const series = new Set();
-    for (const c of getManifestEntries()) {
-      const meta = getCourseMeta(c.race_id);
-      if (Number.isFinite(meta?.year)) years.add(meta.year);
-      for (const s of normalizeSeries(meta?.series)) series.add(s);
-    }
-    if (vizYearFilter) {
-      vizYearFilter.innerHTML = Array.from(years).sort((a, b) => b - a).map(y => `<option value="${y}">${y}</option>`).join("");
-      const selectedYears = new Set(state.vizFilters.years || []);
-      for (const opt of vizYearFilter.options) opt.selected = selectedYears.has(Number(opt.value));
-    }
-    if (vizSeriesFilter) {
-      vizSeriesFilter.innerHTML = Array.from(series).sort().map(v => `<option value="${v}">${v}</option>`).join("");
-      const selectedSeries = new Set(state.vizFilters.series || []);
-      for (const opt of vizSeriesFilter.options) opt.selected = selectedSeries.has(opt.value);
-    }
-  }
-
-  renderVizFilterOptions();
-  if (vizSearch) {
-    vizSearch.value = state.vizFilters.search;
-    vizSearch.addEventListener("input", () => {
-      state.vizFilters.search = vizSearch.value;
-      updateVisualization();
-    });
-  }
-  if (vizYearFilter) {
-    vizYearFilter.addEventListener("change", () => {
-      state.vizFilters.years = Array.from(vizYearFilter.selectedOptions).map(o => Number(o.value)).filter(Number.isFinite);
-      updateVisualization();
-    });
-  }
-  if (vizSeriesFilter) {
-    vizSeriesFilter.addEventListener("change", () => {
-      state.vizFilters.series = Array.from(vizSeriesFilter.selectedOptions).map(o => o.value).filter(Boolean);
-      updateVisualization();
-    });
-  }
+  wireRaceFilterPanel({
+    listEl: document.getElementById("vizList"),
+    searchEl: vizSearch,
+    countryEl: vizCountryFilter,
+    seriesEl: vizSeriesFilter,
+    countEl: document.getElementById("vizCount"),
+    selectedSet: state.vizSelected,
+    filters: state.vizFilters,
+    onUpdate: updateVisualization,
+    buttonConfigs: [
+      ["vizAll", () => { setSelectionAll(state.vizSelected); applyFiltersToSelection(state.vizSelected, state.vizFilters); }],
+      ["vizNone", () => { setSelectionNone(state.vizSelected); }],
+      ["viz2025", () => { setSelectionByYear(state.vizSelected, 2025, state.vizFilters); }],
+      ["viz2024", () => { setSelectionByYear(state.vizSelected, 2024, state.vizFilters); }],
+      ["viz2023", () => { setSelectionByYear(state.vizSelected, 2023, state.vizFilters); }]
+    ]
+  });
 
   const vizGenderBoth = document.getElementById("vizGenderBoth");
   const vizGenderMale = document.getElementById("vizGenderMale");
