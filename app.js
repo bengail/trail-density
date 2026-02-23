@@ -4,7 +4,7 @@
 
 const MAX_INDEX_FOR_NORM = 1000; // used for AUC normalization (matches earlier convention)
 const TAB_ALLOWLIST = {
-  public: ["rcicharts", "rcinormcharts"],
+  public: ["rcicharts", "rcinormcharts", "visualization"],
   admin: ["summary", "charts", "race", "import"]
 };
 const DEFAULT_TAB_BY_MODE = {
@@ -164,6 +164,20 @@ function fmt(n, digits = 1) {
   return n.toFixed(digits);
 }
 
+function metricLabel(key) {
+  if (key === "rc3") return "RCI3";
+  if (key === "rc5") return "RCI5";
+  if (key === "rc10") return "RCI10";
+  return key;
+}
+
+function shortRaceLabel(name) {
+  const text = String(name || "").trim();
+  if (!text) return "-";
+  const token = text.split(/\s+/)[0] || text;
+  return token.slice(0, 14);
+}
+
 function normalizeSeries(value) {
   if (Array.isArray(value)) return value.filter(Boolean).map(v => String(v));
   if (typeof value === "string" && value.trim()) return [value.trim()];
@@ -254,6 +268,10 @@ const state = {
     female: { key: "rc10", dir: "desc" },
     male: { key: "rc10", dir: "desc" }
   },
+  vizSelected: new Set(),
+  vizFilters: { country: "", series: [] },
+  vizGenderMode: "both",
+  vizRefMetric: "rc5",
   activeTab: "rcicharts",
   importDraft: null
 };
@@ -491,6 +509,173 @@ async function updateRciNormTables() {
     maleTableId: "rcinormmaleTable",
     normalizeFemale: true
   });
+}
+
+function setVizGenderMode(mode) {
+  state.vizGenderMode = mode;
+  const ids = ["vizGenderBoth", "vizGenderMale", "vizGenderFemale"];
+  for (const id of ids) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    const active =
+      (id === "vizGenderBoth" && mode === "both") ||
+      (id === "vizGenderMale" && mode === "male") ||
+      (id === "vizGenderFemale" && mode === "female");
+    el.classList.toggle("active", active);
+  }
+}
+
+async function updateVisualization() {
+  const el = document.getElementById("vizScatter");
+  if (!el) return;
+
+  const genders =
+    state.vizGenderMode === "both"
+      ? ["male", "female"]
+      : [state.vizGenderMode];
+  const refKey = state.vizRefMetric;
+  const metricKeys = ["rc3", "rc5", "rc10"];
+  const metricColors = {
+    rc3: "#0ea5e9",
+    rc5: "#f59e0b",
+    rc10: "#10b981"
+  };
+  const symbolByGender = {
+    male: "circle",
+    female: "diamond"
+  };
+
+  const traces = [];
+  let allValues = [];
+
+  for (const gender of genders) {
+    const rows = await getRciRowsForGender(gender, {
+      selectedSet: state.vizSelected,
+      filters: state.vizFilters,
+      sorts: state.rciNormSorts,
+      normalizeFemale: true
+    });
+    for (const metricKey of metricKeys) {
+      const x = [];
+      const y = [];
+      const text = [];
+      const customdata = [];
+      for (const r of rows) {
+        const xv = r[refKey];
+        const yv = r[metricKey];
+        if (!Number.isFinite(xv) || !Number.isFinite(yv)) continue;
+        x.push(xv);
+        y.push(yv);
+        text.push(shortRaceLabel(r.name));
+        customdata.push([
+          r.name || "-",
+          r.country || "-",
+          r.series || "-",
+          gender === "male" ? "Male" : "Female",
+          fmt(r.rc3, 2),
+          fmt(r.rc5, 2),
+          fmt(r.rc10, 2)
+        ]);
+        allValues.push(xv, yv);
+      }
+      if (!x.length) continue;
+      traces.push({
+        type: "scattergl",
+        mode: "markers+text",
+        x,
+        y,
+        text,
+        textposition: "top center",
+        textfont: { size: 9, color: "#334155" },
+        name: `${gender === "male" ? "Male" : "Female"} · ${metricLabel(metricKey)}`,
+        marker: {
+          size: 7,
+          color: metricColors[metricKey],
+          symbol: symbolByGender[gender],
+          line: { width: 0.8, color: "rgba(15,23,42,0.25)" },
+          opacity: 0.82
+        },
+        customdata,
+        hovertemplate:
+          "<b>%{customdata[0]}</b><br>" +
+          "Country: %{customdata[1]}<br>" +
+          "Series: %{customdata[2]}<br>" +
+          "Category: %{customdata[3]}<br>" +
+          "RCI3: %{customdata[4]}<br>" +
+          "RCI5: %{customdata[5]}<br>" +
+          "RCI10: %{customdata[6]}<br>" +
+          `<extra>${metricLabel(metricKey)} vs ${metricLabel(refKey)}</extra>`
+      });
+    }
+  }
+
+  if (!allValues.length) {
+    Plotly.react(
+      "vizScatter",
+      [],
+      {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        margin: { l: 60, r: 20, t: 20, b: 55 },
+        xaxis: { title: `${metricLabel(refKey)} (reference)` },
+        yaxis: { title: "Normalized RCI" },
+        annotations: [
+          {
+            x: 0.5,
+            y: 0.5,
+            xref: "paper",
+            yref: "paper",
+            text: "No data for current filters",
+            showarrow: false,
+            font: { size: 13, color: "#64748b" }
+          }
+        ]
+      },
+      { responsive: true, displayModeBar: false }
+    );
+    return;
+  }
+
+  const minV = Math.min(...allValues);
+  const maxV = Math.max(...allValues);
+  const pad = Math.max(2, (maxV - minV) * 0.04);
+  const axisMin = minV - pad;
+  const axisMax = maxV + pad;
+
+  traces.push({
+    x: [axisMin, axisMax],
+    y: [axisMin, axisMax],
+    mode: "lines",
+    name: "Same RCI",
+    line: { color: "#64748b", width: 1.4, dash: "dash" },
+    hoverinfo: "skip"
+  });
+
+  Plotly.react(
+    "vizScatter",
+    traces,
+    {
+      paper_bgcolor: "rgba(0,0,0,0)",
+      plot_bgcolor: "rgba(0,0,0,0)",
+      margin: { l: 62, r: 20, t: 20, b: 56 },
+      font: { family: "Inter, system-ui, sans-serif", size: 11 },
+      xaxis: {
+        title: `${metricLabel(refKey)} (reference)`,
+        range: [axisMin, axisMax],
+        gridcolor: "#e2e8f0",
+        zeroline: false
+      },
+      yaxis: {
+        title: "Normalized RCI (RCI3/RCI5/RCI10)",
+        range: [axisMin, axisMax],
+        gridcolor: "#e2e8f0",
+        zeroline: false
+      },
+      legend: { orientation: "h", y: 1.12, x: 0, font: { size: 10 } },
+      hovermode: "closest"
+    },
+    { responsive: true, displayModeBar: false }
+  );
 }
 
 function wireRciSort(tableId, gender, sorts, onChange) {
@@ -1118,9 +1303,9 @@ function renderMetaCard(key, value) {
 }
 
 function applyAppModeVisibility(mode) {
-  const publicButtons = ["tabRci", "tabRciNorm"];
+  const publicButtons = ["tabRci", "tabRciNorm", "tabViz"];
   const adminButtons = ["tabSummary", "tabCharts", "tabRace", "tabImport"];
-  const publicPages = ["pageRci", "pageRciNorm"];
+  const publicPages = ["pageRci", "pageRciNorm", "pageViz"];
   const adminPages = ["pageSummary", "pageCharts", "pageRace", "pageImport"];
 
   const hide = (id, hidden) => {
@@ -1181,12 +1366,14 @@ function setActiveTab(tab) {
   state.activeTab = safeTab;
   const rci = document.getElementById("pageRci");
   const rciNorm = document.getElementById("pageRciNorm");
+  const viz = document.getElementById("pageViz");
   const sum = document.getElementById("pageSummary");
   const cha = document.getElementById("pageCharts");
   const race = document.getElementById("pageRace");
   const imp = document.getElementById("pageImport");
   const bRci = document.getElementById("tabRci");
   const bRciNorm = document.getElementById("tabRciNorm");
+  const bViz = document.getElementById("tabViz");
   const bSum = document.getElementById("tabSummary");
   const bCha = document.getElementById("tabCharts");
   const bRace = document.getElementById("tabRace");
@@ -1196,6 +1383,7 @@ function setActiveTab(tab) {
 
   activate(rci, safeTab === "rcicharts");
   activate(rciNorm, safeTab === "rcinormcharts");
+  activate(viz, safeTab === "visualization");
   activate(sum, safeTab === "summary");
   activate(cha, safeTab === "charts");
   activate(race, safeTab === "race");
@@ -1203,6 +1391,7 @@ function setActiveTab(tab) {
 
   activate(bRci, safeTab === "rcicharts");
   activate(bRciNorm, safeTab === "rcinormcharts");
+  activate(bViz, safeTab === "visualization");
   activate(bSum, safeTab === "summary");
   activate(bCha, safeTab === "charts");
   activate(bRace, safeTab === "race");
@@ -1215,6 +1404,7 @@ async function updateAll() {
   await updateCharts();
   await updateRciTables();
   await updateRciNormTables();
+  await updateVisualization();
 }
 
 // ---- Boot ----
@@ -1231,6 +1421,7 @@ async function updateAll() {
   setSelectionAll(state.chartsSelected);
   setSelectionAll(state.rciSelected);
   setSelectionAll(state.rciNormSelected);
+  setSelectionAll(state.vizSelected);
 
   const sumList = document.getElementById("summaryList");
   const sumSearch = document.getElementById("searchSummary");
@@ -1427,6 +1618,73 @@ async function updateAll() {
 
   renderRciNormSelection();
 
+  const vizList = document.getElementById("vizList");
+  const vizSearch = document.getElementById("vizSearch");
+  const vizCountryFilter = document.getElementById("vizCountryFilter");
+  const vizSeriesFilter = document.getElementById("vizSeriesFilter");
+  const vizRefMetric = document.getElementById("vizRefMetric");
+  function renderVizSelection() {
+    renderCourseList(vizList, state.vizSelected, vizSearch.value, {
+      filters: state.vizFilters,
+      onSelectionChange: () => {
+        renderVizSelection();
+        updateVisualization();
+      }
+    });
+    document.getElementById("vizCount").textContent = String(state.vizSelected.size);
+  }
+  renderFilterOptions(vizCountryFilter, vizSeriesFilter, state.vizFilters);
+  vizSearch.addEventListener("input", renderVizSelection);
+
+  if (vizCountryFilter) {
+    vizCountryFilter.addEventListener("change", () => {
+      state.vizFilters.country = vizCountryFilter.value;
+      applyFiltersToSelection(state.vizSelected, state.vizFilters);
+      renderVizSelection();
+      updateVisualization();
+    });
+  }
+
+  if (vizSeriesFilter) {
+    vizSeriesFilter.addEventListener("change", () => {
+      const values = Array.from(vizSeriesFilter.selectedOptions).map(o => o.value).filter(Boolean);
+      state.vizFilters.series = values;
+      applyFiltersToSelection(state.vizSelected, state.vizFilters);
+      renderVizSelection();
+      updateVisualization();
+    });
+  }
+
+  const vizButtons = [
+    ["vizAll", () => { setSelectionAll(state.vizSelected); applyFiltersToSelection(state.vizSelected, state.vizFilters); renderVizSelection(); updateVisualization(); }],
+    ["vizNone", () => { setSelectionNone(state.vizSelected); renderVizSelection(); updateVisualization(); }],
+    ["viz2025", () => { setSelectionByYear(state.vizSelected, 2025, state.vizFilters); renderVizSelection(); updateVisualization(); }],
+    ["viz2024", () => { setSelectionByYear(state.vizSelected, 2024, state.vizFilters); renderVizSelection(); updateVisualization(); }],
+    ["viz2023", () => { setSelectionByYear(state.vizSelected, 2023, state.vizFilters); renderVizSelection(); updateVisualization(); }]
+  ];
+  for (const [id, fn] of vizButtons) {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("click", fn);
+  }
+
+  const vizGenderBoth = document.getElementById("vizGenderBoth");
+  const vizGenderMale = document.getElementById("vizGenderMale");
+  const vizGenderFemale = document.getElementById("vizGenderFemale");
+  if (vizGenderBoth) vizGenderBoth.addEventListener("click", () => { setVizGenderMode("both"); updateVisualization(); });
+  if (vizGenderMale) vizGenderMale.addEventListener("click", () => { setVizGenderMode("male"); updateVisualization(); });
+  if (vizGenderFemale) vizGenderFemale.addEventListener("click", () => { setVizGenderMode("female"); updateVisualization(); });
+  setVizGenderMode(state.vizGenderMode);
+
+  if (vizRefMetric) {
+    vizRefMetric.value = state.vizRefMetric;
+    vizRefMetric.addEventListener("change", () => {
+      state.vizRefMetric = vizRefMetric.value;
+      updateVisualization();
+    });
+  }
+
+  renderVizSelection();
+
   const chList = document.getElementById("chartsList");
   const chSearch = document.getElementById("searchCharts");
   const chartsCountryFilter = document.getElementById("chartsCountryFilter");
@@ -1531,6 +1789,8 @@ async function updateAll() {
   document.getElementById("tabRci").addEventListener("click", () => setActiveTab("rcicharts"));
   const tabRciNorm = document.getElementById("tabRciNorm");
   if (tabRciNorm) tabRciNorm.addEventListener("click", () => setActiveTab("rcinormcharts"));
+  const tabViz = document.getElementById("tabViz");
+  if (tabViz) tabViz.addEventListener("click", () => setActiveTab("visualization"));
   const tabImport = document.getElementById("tabImport");
   if (tabImport) tabImport.addEventListener("click", () => setActiveTab("import"));
 
@@ -1557,6 +1817,7 @@ async function updateAll() {
     { responsive: true, displayModeBar: false }
   );
   Plotly.newPlot("heatmapPlot", [], { paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)" }, { responsive: true, displayModeBar: false });
+  Plotly.newPlot("vizScatter", [], { paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)" }, { responsive: true, displayModeBar: false });
 
   await updateAll();
   await updateRaceDisplay();

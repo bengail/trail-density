@@ -22,7 +22,7 @@ python3 -m http.server 8000
 ```
 
 ## Navigation
-- `/` : landing page with `RCI Charts` and `RCI Normalized`.
+- `/` : landing page with `RCI Charts`, `RCI Normalized`, and `Visualisation`.
 - `/admin/` : admin pages (`Summary`, `Charts`, `Race`, `Import`) without auth.
 
 ## Mettre à jour les données depuis un Excel
