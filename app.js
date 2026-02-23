@@ -3,6 +3,37 @@
 // Produces: summary table + rank curve + Lorenz + decile heatmap.
 
 const MAX_INDEX_FOR_NORM = 1000; // used for AUC normalization (matches earlier convention)
+const TAB_ALLOWLIST = {
+  public: ["rcicharts", "rcinormcharts"],
+  admin: ["summary", "charts", "race", "import"]
+};
+const DEFAULT_TAB_BY_MODE = {
+  public: "rcicharts",
+  admin: "summary"
+};
+
+function getAppContext() {
+  const path = window.location.pathname || "/";
+  const isAdmin =
+    path === "/admin" ||
+    path === "/admin/" ||
+    path.endsWith("/admin/index.html") ||
+    path.endsWith("/admin");
+  return {
+    mode: isAdmin ? "admin" : "public",
+    assetPrefix: isAdmin ? "../" : ""
+  };
+}
+
+function isTabAllowed(mode, tab) {
+  const allowed = TAB_ALLOWLIST[mode] || [];
+  return allowed.includes(tab);
+}
+
+function getSafeTab(mode, desiredTab) {
+  if (isTabAllowed(mode, desiredTab)) return desiredTab;
+  return DEFAULT_TAB_BY_MODE[mode] || "rcicharts";
+}
 
 // ---- Utilities ----
 function mean(arr) {
@@ -167,7 +198,7 @@ const courseCache = new Map(); // race_id -> course json
 const courseMetaCache = new Map(); // race_id -> course.meta
 
 async function loadManifest() {
-  const resp = await fetch("data/courses_index.json", { cache: "no-store" });
+  const resp = await fetch(`${state.assetPrefix}data/courses_index.json`, { cache: "no-store" });
   if (!resp.ok) throw new Error("Cannot load courses_index.json");
   manifest = await resp.json();
   return manifest.courses || [];
@@ -185,7 +216,7 @@ async function loadCourse(raceId) {
   if (courseCache.has(raceId)) return courseCache.get(raceId);
   const entry = getManifestEntries().find(c => c.race_id === raceId);
   if (!entry) throw new Error("Unknown race_id: " + raceId);
-  const resp = await fetch(entry.path, { cache: "no-store" });
+  const resp = await fetch(`${state.assetPrefix}${entry.path}`, { cache: "no-store" });
   if (!resp.ok) throw new Error("Cannot load course json: " + entry.path);
   const normalized = normalizeCourse(await resp.json(), raceId);
   courseCache.set(raceId, normalized);
@@ -200,6 +231,8 @@ async function preloadAllCourseMeta() {
 
 // ---- UI state ----
 const state = {
+  appMode: "public",
+  assetPrefix: "",
   summarySort: { key: "rci10", dir: "desc" },
   summarySelected: new Set(),
   chartsSelected: new Set(),
@@ -1080,6 +1113,25 @@ function renderMetaCard(key, value) {
   return `<div class="metaCard"><div class="k">${key}</div><div class="v">${safe}</div></div>`;
 }
 
+function applyAppModeVisibility(mode) {
+  const publicButtons = ["tabRci", "tabRciNorm"];
+  const adminButtons = ["tabSummary", "tabCharts", "tabRace", "tabImport"];
+  const publicPages = ["pageRci", "pageRciNorm"];
+  const adminPages = ["pageSummary", "pageCharts", "pageRace", "pageImport"];
+
+  const hide = (id, hidden) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.hidden = hidden;
+  };
+
+  const isAdmin = mode === "admin";
+  for (const id of publicButtons) hide(id, isAdmin);
+  for (const id of adminButtons) hide(id, !isAdmin);
+  for (const id of publicPages) hide(id, isAdmin);
+  for (const id of adminPages) hide(id, !isAdmin);
+}
+
 async function updateRaceDisplay() {
   if (!state.raceSelected) return;
   const course = await loadCourse(state.raceSelected).catch(() => null);
@@ -1121,7 +1173,8 @@ async function updateRaceDisplay() {
 
 // ---- Page switching ----
 function setActiveTab(tab) {
-  state.activeTab = tab;
+  const safeTab = getSafeTab(state.appMode, tab);
+  state.activeTab = safeTab;
   const rci = document.getElementById("pageRci");
   const rciNorm = document.getElementById("pageRciNorm");
   const sum = document.getElementById("pageSummary");
@@ -1137,19 +1190,19 @@ function setActiveTab(tab) {
 
   const activate = (el, active) => active ? el.classList.add("active") : el.classList.remove("active");
 
-  activate(rci, tab === "rcicharts");
-  activate(rciNorm, tab === "rcinormcharts");
-  activate(sum, tab === "summary");
-  activate(cha, tab === "charts");
-  activate(race, tab === "race");
-  activate(imp, tab === "import");
+  activate(rci, safeTab === "rcicharts");
+  activate(rciNorm, safeTab === "rcinormcharts");
+  activate(sum, safeTab === "summary");
+  activate(cha, safeTab === "charts");
+  activate(race, safeTab === "race");
+  activate(imp, safeTab === "import");
 
-  activate(bRci, tab === "rcicharts");
-  activate(bRciNorm, tab === "rcinormcharts");
-  activate(bSum, tab === "summary");
-  activate(bCha, tab === "charts");
-  activate(bRace, tab === "race");
-  activate(bImp, tab === "import");
+  activate(bRci, safeTab === "rcicharts");
+  activate(bRciNorm, safeTab === "rcinormcharts");
+  activate(bSum, safeTab === "summary");
+  activate(bCha, safeTab === "charts");
+  activate(bRace, safeTab === "race");
+  activate(bImp, safeTab === "import");
 }
 
 // ---- Orchestrator ----
@@ -1162,6 +1215,11 @@ async function updateAll() {
 
 // ---- Boot ----
 (async function boot() {
+  const appContext = getAppContext();
+  state.appMode = appContext.mode;
+  state.assetPrefix = appContext.assetPrefix;
+  state.activeTab = DEFAULT_TAB_BY_MODE[state.appMode];
+
   await loadManifest();
   await preloadAllCourseMeta();
 
@@ -1485,6 +1543,7 @@ async function updateAll() {
   raceSearch.addEventListener("input", () => renderRaceList(raceSearch.value));
   renderRaceList("");
 
+  applyAppModeVisibility(state.appMode);
   setActiveTab(state.activeTab);
   Plotly.newPlot("plot", [], { paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)" }, { responsive: true, displayModeBar: false });
   Plotly.newPlot(

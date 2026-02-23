@@ -21,6 +21,10 @@ python3 -m http.server 8000
 # ouvrir http://localhost:8000
 ```
 
+## Navigation
+- `/` : landing page with `RCI Charts` and `RCI Normalized`.
+- `/admin/` : admin pages (`Summary`, `Charts`, `Race`, `Import`) without auth.
+
 ## Mettre à jour les données depuis un Excel
 ```bash
 python3 scripts/build_json_from_xlsx.py itra_resultats.xlsx .
