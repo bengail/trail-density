@@ -4,7 +4,7 @@
 
 const MAX_INDEX_FOR_NORM = 1000; // used for AUC normalization (matches earlier convention)
 const TAB_ALLOWLIST = {
-  public: ["rcicharts", "rcinormcharts", "visualization"],
+  public: ["rcinormcharts", "visualization"],
   admin: ["summary", "charts", "race", "import"]
 };
 const DEFAULT_TAB_BY_MODE = {
@@ -33,7 +33,7 @@ function isTabAllowed(mode, tab) {
 
 function getSafeTab(mode, desiredTab) {
   if (isTabAllowed(mode, desiredTab)) return desiredTab;
-  return DEFAULT_TAB_BY_MODE[mode] || "rcicharts";
+  return DEFAULT_TAB_BY_MODE[mode] || "rcinormcharts";
 }
 
 // ---- Utilities ----
@@ -277,7 +277,7 @@ const state = {
   vizLadderSex: "male",
   vizParityNSet: [3, 5, 10],
   vizParityConnect: true,
-  activeTab: "rcicharts",
+  activeTab: "rcinormcharts",
   importDraft: null
 };
 
@@ -648,7 +648,6 @@ async function getVizRciPoints(options = {}) {
 function showVizContainer() {
   const triad = document.getElementById("vizScatter");
   const triadControls = document.getElementById("vizTriadControls");
-  const triadNote = document.getElementById("vizTriadNote");
   const ladderLayout = document.getElementById("vizLadderLayout");
   const ladderControls = document.getElementById("vizLadderControls");
   const parityPlot = document.getElementById("vizParityPlot");
@@ -660,11 +659,21 @@ function showVizContainer() {
 
   if (triad) triad.style.display = triadOn ? "block" : "none";
   if (triadControls) triadControls.style.display = triadOn ? "flex" : "none";
-  if (triadNote) triadNote.style.display = triadOn ? "block" : "none";
   if (ladderLayout) ladderLayout.style.display = ladderOn ? "grid" : "none";
   if (ladderControls) ladderControls.style.display = ladderOn ? "flex" : "none";
   if (parityPlot) parityPlot.style.display = parityOn ? "block" : "none";
   if (parityControls) parityControls.style.display = parityOn ? "flex" : "none";
+}
+
+function updateVizExplanation() {
+  const el = document.getElementById("vizExplainContent");
+  if (!el) return;
+  const explanations = {
+    triad: "RCI comparator: compare normalized RCI3 / RCI5 / RCI10 versus a chosen reference metric. The diagonal means equal value on both axes.",
+    ladder: "RCI ladder: each race appears as a mini-profile across N (3/5/10/20/30). Click a point to see the closest RCI matches.",
+    parity: "RCI parity map: compares men vs women RCI for each race and N. The dashed diagonal marks parity between men and women."
+  };
+  el.textContent = explanations[state.vizType] || "Choose a visualization to see details.";
 }
 
 function renderClosestMatches(clicked, points) {
@@ -855,6 +864,7 @@ async function updateVisualization() {
   const countEl = document.getElementById("vizCount");
   if (countEl) countEl.textContent = String(ids.length);
   showVizContainer();
+  updateVizExplanation();
   if (state.vizType === "triad") return renderTriadVisualization(ids);
   if (state.vizType === "ladder") return renderLadderVisualization(ids);
   return renderParityVisualization(ids);
@@ -1561,7 +1571,11 @@ function setActiveTab(tab) {
   const bRace = document.getElementById("tabRace");
   const bImp = document.getElementById("tabImport");
 
-  const activate = (el, active) => active ? el.classList.add("active") : el.classList.remove("active");
+  const activate = (el, active) => {
+    if (!el) return;
+    if (active) el.classList.add("active");
+    else el.classList.remove("active");
+  };
 
   activate(rci, safeTab === "rcicharts");
   activate(rciNorm, safeTab === "rcinormcharts");
@@ -1599,11 +1613,11 @@ async function updateAll() {
   await loadManifest();
   await preloadAllCourseMeta();
 
-  setSelectionAll(state.summarySelected);
-  setSelectionAll(state.chartsSelected);
-  setSelectionAll(state.rciSelected);
-  setSelectionAll(state.rciNormSelected);
-  setSelectionAll(state.vizSelected);
+  setSelectionByYear(state.summarySelected, 2025, state.summaryFilters);
+  setSelectionByYear(state.chartsSelected, 2025, state.chartsFilters);
+  setSelectionByYear(state.rciSelected, 2025, state.rciFilters);
+  setSelectionByYear(state.rciNormSelected, 2025, state.rciNormFilters);
+  setSelectionByYear(state.vizSelected, 2025, state.vizFilters);
 
   const sumList = document.getElementById("summaryList");
   const sumSearch = document.getElementById("searchSummary");
@@ -1911,7 +1925,8 @@ async function updateAll() {
   document.getElementById("tabSummary").addEventListener("click", () => setActiveTab("summary"));
   document.getElementById("tabCharts").addEventListener("click", () => setActiveTab("charts"));
   document.getElementById("tabRace").addEventListener("click", () => setActiveTab("race"));
-  document.getElementById("tabRci").addEventListener("click", () => setActiveTab("rcicharts"));
+  const tabRci = document.getElementById("tabRci");
+  if (tabRci) tabRci.addEventListener("click", () => setActiveTab("rcicharts"));
   const tabRciNorm = document.getElementById("tabRciNorm");
   if (tabRciNorm) tabRciNorm.addEventListener("click", () => setActiveTab("rcinormcharts"));
   const tabViz = document.getElementById("tabViz");
