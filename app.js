@@ -12,6 +12,7 @@ const DEFAULT_TAB_BY_MODE = {
   admin: "summary"
 };
 const LADDER_N_LEVELS = [3, 5, 10, 20, 30];
+const PARITY_N_LEVELS = [3, 5, 10, 20];
 
 function getAppContext() {
   const path = window.location.pathname || "/";
@@ -152,11 +153,11 @@ function densityColor(value, min, max) {
   if (!Number.isFinite(value)) return "";
   const clampedMin = Number.isFinite(min) ? min : value;
   const clampedMax = Number.isFinite(max) ? max : value;
-  if (clampedMax <= clampedMin) return "background:hsl(224, 75%, 95%); color:#0f172a; font-weight:600;";
+  if (clampedMax <= clampedMin) return "background:hsl(224, 78%, 93%); color:#0f172a; font-weight:600;";
   const ratio = Math.max(0, Math.min(1, (value - clampedMin) / (clampedMax - clampedMin)));
-  const lightness = 97 - ratio * 15;
-  const bg = `hsl(224, 75%, ${lightness}%)`;
-  const borderAlpha = (0.06 + ratio * 0.12).toFixed(3);
+  const lightness = 98 - ratio * 24;
+  const bg = `hsl(224, 82%, ${lightness}%)`;
+  const borderAlpha = (0.1 + ratio * 0.24).toFixed(3);
   return `background:${bg}; color:#0f172a; font-weight:600; box-shadow: inset 0 0 0 1px rgba(15,23,42,${borderAlpha});`;
 }
 
@@ -275,7 +276,7 @@ const state = {
   vizGenderMode: "both",
   vizRefMetric: "rc5",
   vizLadderSex: "male",
-  vizParityNSet: [3, 5, 10],
+  vizParityNSet: PARITY_N_LEVELS.slice(),
   vizParityConnect: true,
   activeTab: "rcinormcharts",
   importDraft: null
@@ -663,6 +664,19 @@ function showVizContainer() {
   if (ladderControls) ladderControls.style.display = ladderOn ? "flex" : "none";
   if (parityPlot) parityPlot.style.display = parityOn ? "block" : "none";
   if (parityControls) parityControls.style.display = parityOn ? "flex" : "none";
+
+  const vizTitle = document.getElementById("vizTitle");
+  if (vizTitle) {
+    const titleByType = {
+      triad: "Visualization · RCI Comparator",
+      ladder: "Visualization · RCI Ladder",
+      parity: "Visualization · RCI Parity Map"
+    };
+    vizTitle.innerHTML = `<b>${titleByType[state.vizType] || "Visualization"}</b>`;
+  }
+
+  const vizTopMenu = document.getElementById("vizTopMenu");
+  if (vizTopMenu) vizTopMenu.value = state.activeTab === "visualization" ? state.vizType : "";
 }
 
 function updateVizExplanation() {
@@ -738,7 +752,7 @@ async function renderTriadVisualization(ids) {
         name: `${gender === "male" ? "Male" : "Female"} · ${metricLabel(metricKey)}`,
         marker: { size: 7, color: metricColors[metricKey], symbol: symbolByGender[gender], line: { width: 0.8, color: "rgba(15,23,42,0.25)" }, opacity: 0.82 },
         customdata,
-        hovertemplate: "<b>%{customdata[0]}</b><br>Country: %{customdata[1]}<br>Series: %{customdata[2]}<br>Category: %{customdata[3]}<br>RCI3: %{customdata[4]}<br>RCI5: %{customdata[5]}<br>RCI10: %{customdata[6]}<br><extra></extra>"
+        hovertemplate: `<b>%{customdata[0]}</b><br>Country: %{customdata[1]}<br>Series: %{customdata[2]}<br>Category: %{customdata[3]}<br>${metricKey === "rc3" ? "<b>" : ""}RCI3: %{customdata[4]}${metricKey === "rc3" ? "</b>" : ""}<br>${metricKey === "rc5" ? "<b>" : ""}RCI5: %{customdata[5]}${metricKey === "rc5" ? "</b>" : ""}<br>${metricKey === "rc10" ? "<b>" : ""}RCI10: %{customdata[6]}${metricKey === "rc10" ? "</b>" : ""}<br><extra></extra>`
       });
     }
   }
@@ -1495,7 +1509,7 @@ function renderMetaCard(key, value) {
 }
 
 function applyAppModeVisibility(mode) {
-  const publicButtons = ["tabRci", "tabRciNorm", "tabViz"];
+  const publicButtons = ["tabRci", "tabRciNorm", "vizTopMenu"];
   const adminButtons = ["tabSummary", "tabCharts", "tabRace", "tabImport"];
   const publicPages = ["pageRci", "pageRciNorm", "pageViz"];
   const adminPages = ["pageSummary", "pageCharts", "pageRace", "pageImport"];
@@ -1565,7 +1579,6 @@ function setActiveTab(tab) {
   const imp = document.getElementById("pageImport");
   const bRci = document.getElementById("tabRci");
   const bRciNorm = document.getElementById("tabRciNorm");
-  const bViz = document.getElementById("tabViz");
   const bSum = document.getElementById("tabSummary");
   const bCha = document.getElementById("tabCharts");
   const bRace = document.getElementById("tabRace");
@@ -1587,11 +1600,12 @@ function setActiveTab(tab) {
 
   activate(bRci, safeTab === "rcicharts");
   activate(bRciNorm, safeTab === "rcinormcharts");
-  activate(bViz, safeTab === "visualization");
   activate(bSum, safeTab === "summary");
   activate(bCha, safeTab === "charts");
   activate(bRace, safeTab === "race");
   activate(bImp, safeTab === "import");
+  showVizContainer();
+  updateVizExplanation();
 }
 
 // ---- Orchestrator ----
@@ -1758,8 +1772,7 @@ async function updateAll() {
   const vizCountryFilter = document.getElementById("vizCountryFilter");
   const vizSeriesFilter = document.getElementById("vizSeriesFilter");
   const vizRefMetric = document.getElementById("vizRefMetric");
-  const vizType = document.getElementById("vizType");
-  const vizParityNSet = document.getElementById("vizParityNSet");
+  const vizTopMenu = document.getElementById("vizTopMenu");
   const vizParityConnect = document.getElementById("vizParityConnect");
 
   wireRaceFilterPanel({
@@ -1802,17 +1815,11 @@ async function updateAll() {
     });
   }
 
-  if (vizType) {
-    vizType.value = state.vizType;
-    vizType.addEventListener("change", () => {
-      state.vizType = vizType.value;
-      updateVisualization();
-    });
-  }
-  if (vizParityNSet) {
-    vizParityNSet.value = state.vizParityNSet.join(",");
-    vizParityNSet.addEventListener("change", () => {
-      state.vizParityNSet = vizParityNSet.value.split(",").map(n => Number(n));
+  if (vizTopMenu) {
+    vizTopMenu.addEventListener("change", () => {
+      if (!vizTopMenu.value) return;
+      state.vizType = vizTopMenu.value;
+      setActiveTab("visualization");
       updateVisualization();
     });
   }
@@ -1929,8 +1936,6 @@ async function updateAll() {
   if (tabRci) tabRci.addEventListener("click", () => setActiveTab("rcicharts"));
   const tabRciNorm = document.getElementById("tabRciNorm");
   if (tabRciNorm) tabRciNorm.addEventListener("click", () => setActiveTab("rcinormcharts"));
-  const tabViz = document.getElementById("tabViz");
-  if (tabViz) tabViz.addEventListener("click", () => setActiveTab("visualization"));
   const tabImport = document.getElementById("tabImport");
   if (tabImport) tabImport.addEventListener("click", () => setActiveTab("import"));
 
