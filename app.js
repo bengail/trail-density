@@ -272,6 +272,7 @@ const state = {
   },
   vizSelected: new Set(),
   vizFilters: { country: "", series: [] },
+  publicRaceSearch: "",
   vizType: "triad",
   vizGenderMode: "both",
   vizRefMetric: "rc5",
@@ -281,6 +282,10 @@ const state = {
   activeTab: "rcinormcharts",
   importDraft: null
 };
+
+// Public tabs should share exactly the same filtering state.
+state.vizSelected = state.rciNormSelected;
+state.vizFilters = state.rciNormFilters;
 
 function matchesFilters(meta, filters) {
   const countryOk = !filters.country || (meta?.country || "") === filters.country;
@@ -461,6 +466,14 @@ function renderFilterOptions(countrySelect, seriesSelect, filters) {
     }
   } else {
     seriesSelect.value = filters.series || "";
+  }
+}
+
+function syncMultiSelectValues(selectEl, values) {
+  if (!selectEl || !selectEl.multiple) return;
+  const selected = new Set(Array.isArray(values) ? values : []);
+  for (const option of selectEl.options) {
+    option.selected = option.value ? selected.has(option.value) : false;
   }
 }
 
@@ -1750,6 +1763,38 @@ async function updateAll() {
   const rciNormSearch = document.getElementById("rcinormSearch");
   const rciNormCountryFilter = document.getElementById("rcinormCountryFilter");
   const rciNormSeriesFilter = document.getElementById("rcinormSeriesFilter");
+
+  const vizSearch = document.getElementById("vizSearch");
+  const vizCountryFilter = document.getElementById("vizCountryFilter");
+  const vizSeriesFilter = document.getElementById("vizSeriesFilter");
+  const vizRefMetric = document.getElementById("vizRefMetric");
+  const vizTopMenu = document.getElementById("vizTopMenu");
+  const vizParityConnect = document.getElementById("vizParityConnect");
+
+  function syncPublicFilterControls() {
+    state.publicRaceSearch = rciNormSearch?.value || state.publicRaceSearch;
+    if (rciNormSearch && vizSearch) {
+      rciNormSearch.value = state.publicRaceSearch;
+      vizSearch.value = state.publicRaceSearch;
+    }
+    if (rciNormCountryFilter) rciNormCountryFilter.value = state.rciNormFilters.country || "";
+    if (vizCountryFilter) vizCountryFilter.value = state.rciNormFilters.country || "";
+    syncMultiSelectValues(rciNormSeriesFilter, state.rciNormFilters.series);
+    syncMultiSelectValues(vizSeriesFilter, state.rciNormFilters.series);
+  }
+
+  function rerenderSharedPublicLists() {
+    rciNormSearch?.dispatchEvent(new Event("input"));
+    vizSearch?.dispatchEvent(new Event("input"));
+  }
+
+  async function onSharedPublicFiltersChanged() {
+    syncPublicFilterControls();
+    rerenderSharedPublicLists();
+    await updateRciNormTables();
+    await updateVisualization();
+  }
+
   wireRaceFilterPanel({
     listEl: rciNormList,
     searchEl: rciNormSearch,
@@ -1758,7 +1803,7 @@ async function updateAll() {
     countEl: document.getElementById("rcinormCount"),
     selectedSet: state.rciNormSelected,
     filters: state.rciNormFilters,
-    onUpdate: updateRciNormTables,
+    onUpdate: onSharedPublicFiltersChanged,
     buttonConfigs: [
       ["rcinormAll", () => { setSelectionAll(state.rciNormSelected); applyFiltersToSelection(state.rciNormSelected, state.rciNormFilters); }],
       ["rcinormNone", () => { setSelectionNone(state.rciNormSelected); }],
@@ -1768,13 +1813,6 @@ async function updateAll() {
     ]
   });
 
-  const vizSearch = document.getElementById("vizSearch");
-  const vizCountryFilter = document.getElementById("vizCountryFilter");
-  const vizSeriesFilter = document.getElementById("vizSeriesFilter");
-  const vizRefMetric = document.getElementById("vizRefMetric");
-  const vizTopMenu = document.getElementById("vizTopMenu");
-  const vizParityConnect = document.getElementById("vizParityConnect");
-
   wireRaceFilterPanel({
     listEl: document.getElementById("vizList"),
     searchEl: vizSearch,
@@ -1783,7 +1821,7 @@ async function updateAll() {
     countEl: document.getElementById("vizCount"),
     selectedSet: state.vizSelected,
     filters: state.vizFilters,
-    onUpdate: updateVisualization,
+    onUpdate: onSharedPublicFiltersChanged,
     buttonConfigs: [
       ["vizAll", () => { setSelectionAll(state.vizSelected); applyFiltersToSelection(state.vizSelected, state.vizFilters); }],
       ["vizNone", () => { setSelectionNone(state.vizSelected); }],
@@ -1792,6 +1830,23 @@ async function updateAll() {
       ["viz2023", () => { setSelectionByYear(state.vizSelected, 2023, state.vizFilters); }]
     ]
   });
+
+  if (rciNormSearch && vizSearch) {
+    let syncingSearch = false;
+    const syncSearch = (source, target) => {
+      if (syncingSearch) return;
+      syncingSearch = true;
+      state.publicRaceSearch = source.value;
+      target.value = source.value;
+      target.dispatchEvent(new Event("input"));
+      syncingSearch = false;
+    };
+    rciNormSearch.addEventListener("input", () => syncSearch(rciNormSearch, vizSearch));
+    vizSearch.addEventListener("input", () => syncSearch(vizSearch, rciNormSearch));
+  }
+
+  syncPublicFilterControls();
+  rerenderSharedPublicLists();
 
   const vizGenderBoth = document.getElementById("vizGenderBoth");
   const vizGenderMale = document.getElementById("vizGenderMale");
