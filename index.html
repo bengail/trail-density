@@ -6,15 +6,16 @@
   <title>Trail and mountain races density</title>
   <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
   <style>
-    :root { --bg:#f5f7fb; --panel:#ffffff; --muted:#6b7280; --text:#0f172a; --border:#e2e8f0; --accent:#4f46e5; }
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+    :root { --bg:#f3f6fb; --panel:#ffffff; --muted:#64748b; --text:#1f2937; --border:#dbe3ef; --accent:#2233c7; --accent-soft:#47d9ab; }
     * { box-sizing: border-box; }
-    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; background: var(--bg); color: var(--text); }
+    body { margin:0; font-family: "Montserrat", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; background: var(--bg); color: var(--text); }
     header { padding: 14px 18px; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
     header h1 { font-size: 15px; margin:0; letter-spacing: .2px; }
     header .sub { color: var(--muted); font-size: 13px; }
     nav { display:flex; gap:8px; }
     nav button { cursor:pointer; border:1px solid var(--border); background:#f8fafc; color: var(--text); padding: 9px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; }
-    nav button.active { border-color: rgba(79,70,229,0.5); box-shadow: 0 0 0 1px rgba(79,70,229,0.15) inset; }
+    nav button.active { border-color: rgba(34,51,199,0.5); box-shadow: 0 0 0 1px rgba(34,51,199,0.15) inset; }
     main { padding: 14px; display:none; }
     main.active { display:block; }
     .grid { display:grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; }
@@ -28,13 +29,19 @@
     .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
     .btns { display:flex; gap:8px; flex-wrap:wrap; }
     .btns button { cursor:pointer; border:1px solid var(--border); background:#f8fafc; color: var(--text); padding: 9px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; }
-    .btns button:hover { border-color: rgba(79, 70, 229, 0.5); }
-    .btns button.active { border-color: rgba(79,70,229,0.55); box-shadow: 0 0 0 1px rgba(79,70,229,0.2) inset; background:#eef2ff; color:#312e81; }
+    .btns button:hover { border-color: rgba(34,51,199,0.5); }
+    .btns button.active { border-color: rgba(34,51,199,0.55); box-shadow: 0 0 0 1px rgba(34,51,199,0.2) inset; background:#eef2ff; color:#1e40af; }
     .list { max-height: 360px; overflow:auto; border: 1px solid var(--border); border-radius: 12px; padding: 8px; background:#f8fafc; }
     .item { display:flex; align-items:center; gap:8px; padding: 6px 6px; border-radius: 10px; font-size: 12px; background:#ffffff; }
-    .item:hover { background: rgba(79,70,229,0.08); }
+    .item:hover { background: rgba(34,51,199,0.08); }
     .item .item-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .item .pill { margin-left:auto; background: rgba(79,70,229,0.15); color:#312e81; border-color: rgba(79,70,229,0.3); }
+    .item .pill { margin-left:auto; background: rgba(71,217,171,0.18); color:#0f766e; border-color: rgba(71,217,171,0.45); }
+    .subtitle-note { margin-top: -6px; margin-bottom:10px; font-size:11px; color: var(--muted); }
+    .help-tip { position: relative; display:inline-flex; align-items:center; justify-content:center; width: 24px; height: 24px; border-radius: 999px; border:1px solid var(--border); color:#1e40af; background:#f8fafc; font-weight:700; cursor:pointer; }
+    .help-tip .help-content { display:none; position:absolute; z-index:20; width: min(340px, 80vw); top: 28px; right: 0; padding:10px; border-radius:10px; border:1px solid var(--border); background:#fff; color:#334155; font-size:12px; line-height:1.4; box-shadow: 0 10px 30px rgba(15,23,42,.12); }
+    .help-tip:hover .help-content, .help-tip:focus-within .help-content { display:block; }
+    #vizLadderLayout { display:none; grid-template-columns: minmax(0, 1fr) minmax(260px, 320px); gap: 10px; align-items:start; }
+    #vizClosestMatches { white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
     table { width:100%; border-collapse: collapse; font-size: 12px; background:#ffffff; border-radius: 12px; }
     th, td { border-bottom: 1px solid var(--border); padding: 10px 12px; text-align: right; }
     th:first-child, td:first-child { text-align:left; width: 230px; }
@@ -68,6 +75,7 @@
     @media (max-width: 980px) {
       .grid { grid-template-columns: 1fr; }
       .sidebar { width: auto; min-width: 0; max-width: none; resize: none; overflow: visible; }
+      #vizLadderLayout { grid-template-columns: 1fr; }
       .plots { grid-template-rows: 420px 360px 300px; }
       #plot { height:420px; }
       #lorenzPlot { height:360px; }
@@ -82,8 +90,7 @@
     <div class="sub">RCI, mean and graphical tool density analisys</div>
   </div>
   <nav>
-    <button id="tabRci" class="active">RCI Charts</button>
-    <button id="tabRciNorm">RCI Normalized</button>
+    <button id="tabRciNorm" class="active">RCI Normalized</button>
     <button id="tabViz">Visualisation</button>
     <button id="tabSummary">Summary</button>
     <button id="tabCharts">Charts</button>
@@ -92,7 +99,7 @@
   </nav>
 </header>
 
-<main id="pageRci" class="active">
+<main id="pageRci" class="">
   <div class="grid">
     <aside class="panel sidebar">
       <h2>Filters</h2>
@@ -228,10 +235,8 @@
           <button id="exportRciNormMaleCsv">Export Male CSV</button>
         </div>
       </div>
-      <div class="note" style="margin-bottom:10px;">
-        Female ITRA score normalization: <b>[(-0.000466 x ITRA) + 1.532] x ITRA</b>.
-      </div>
       <h2>RCI (Female, normalized)</h2>
+      <div class="subtitle-note">ITRA score normalized with Enduraw data formula: <b>[(-0.000466 × ITRA) + 1.532] × ITRA</b>.</div>
       <div class="tableWrap">
         <table id="rcinormfemaleTable" class="rci-table">
           <thead>
@@ -315,11 +320,14 @@
         <div>
           <div class="note"><b>Visualisation menu</b></div>
           <select id="vizType" style="width: 230px;">
-            <option value="triad">RCI Triad Comparator</option>
+            <option value="triad">RCI Comparator</option>
             <option value="ladder">RCI Ladder</option>
             <option value="parity">RCI Parity Map</option>
           </select>
         </div>
+        <button id="vizExplain" class="help-tip" aria-label="Explain this graph" title="Explain this graph">?
+          <span id="vizExplainContent" class="help-content"></span>
+        </button>
       </div>
 
       <div id="vizTriadControls" class="row" style="justify-content:space-between; gap:10px; margin-bottom:10px;">
@@ -362,11 +370,8 @@
         </label>
       </div>
 
-      <div id="vizTriadNote" class="note" style="margin-bottom:8px;">
-        Y-axis shows RCI3/RCI5/RCI10 (normalized). Diagonal = same value as reference metric.
-      </div>
       <div id="vizScatter" style="height: 620px;"></div>
-      <div id="vizLadderLayout" style="display:none; grid-template-columns: 1fr 320px; gap: 10px; align-items:start;">
+      <div id="vizLadderLayout">
         <div id="vizLadderPlot" style="height: 620px;"></div>
         <div class="panel" style="box-shadow:none;">
           <h2>Closest matches</h2>
