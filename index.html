@@ -13,7 +13,7 @@
     header { padding: 14px 18px; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
     header h1 { font-size: 15px; margin:0; letter-spacing: .2px; }
     header .sub { color: var(--muted); font-size: 13px; }
-    nav { display:flex; gap:8px; }
+    nav { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
     nav button { cursor:pointer; border:1px solid var(--border); background:#f8fafc; color: var(--text); padding: 9px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; }
     nav button.active { border-color: rgba(34,51,199,0.5); box-shadow: 0 0 0 1px rgba(34,51,199,0.15) inset; }
     main { padding: 14px; display:none; }
@@ -40,8 +40,13 @@
     .help-tip { position: relative; display:inline-flex; align-items:center; justify-content:center; width: 24px; height: 24px; border-radius: 999px; border:1px solid var(--border); color:#1e40af; background:#f8fafc; font-weight:700; cursor:pointer; }
     .help-tip .help-content { display:none; position:absolute; z-index:20; width: min(340px, 80vw); top: 28px; right: 0; padding:10px; border-radius:10px; border:1px solid var(--border); background:#fff; color:#334155; font-size:12px; line-height:1.4; box-shadow: 0 10px 30px rgba(15,23,42,.12); }
     .help-tip:hover .help-content, .help-tip:focus-within .help-content { display:block; }
-    #vizLadderLayout { display:none; grid-template-columns: minmax(0, 1fr) minmax(260px, 320px); gap: 10px; align-items:start; }
+    #vizLadderLayout { display:none; grid-template-columns: 1fr; gap: 8px; align-items:start; }
     #vizClosestMatches { white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
+    #vizTopMenu { min-width: 220px; max-width: 280px; font-weight: 600; }
+    #vizParityHint { color: var(--muted); font-size: 12px; }
+    #vizScatter .hoverlayer .hovertext rect,
+    #vizParityPlot .hoverlayer .hovertext rect,
+    #vizLadderPlot .hoverlayer .hovertext rect { fill: rgba(248, 250, 252, 0.96) !important; stroke: rgba(148, 163, 184, 0.5) !important; stroke-width: 1px; rx: 10; ry: 10; }
     table { width:100%; border-collapse: collapse; font-size: 12px; background:#ffffff; border-radius: 12px; }
     th, td { border-bottom: 1px solid var(--border); padding: 10px 12px; text-align: right; }
     th:first-child, td:first-child { text-align:left; width: 230px; }
@@ -91,7 +96,12 @@
   </div>
   <nav>
     <button id="tabRciNorm" class="active">RCI Normalized</button>
-    <button id="tabViz">Visualisation</button>
+    <select id="vizTopMenu">
+      <option value="">Visualisation</option>
+      <option value="triad">Visualization · RCI Comparator</option>
+      <option value="ladder">Visualization · RCI Ladder</option>
+      <option value="parity">Visualization · RCI Parity Map</option>
+    </select>
     <button id="tabSummary">Summary</button>
     <button id="tabCharts">Charts</button>
     <button id="tabRace">Race</button>
@@ -317,14 +327,7 @@
 
     <section class="panel">
       <div class="row" style="justify-content:space-between; gap:10px; margin-bottom:10px; align-items:flex-end;">
-        <div>
-          <div class="note"><b>Visualisation menu</b></div>
-          <select id="vizType" style="width: 230px;">
-            <option value="triad">RCI Comparator</option>
-            <option value="ladder">RCI Ladder</option>
-            <option value="parity">RCI Parity Map</option>
-          </select>
-        </div>
+        <div id="vizTitle" class="note"><b>Visualization · RCI Comparator</b></div>
         <button id="vizExplain" class="help-tip" aria-label="Explain this graph" title="Explain this graph">?
           <span id="vizExplainContent" class="help-content"></span>
         </button>
@@ -358,13 +361,7 @@
       </div>
 
       <div id="vizParityControls" class="row" style="display:none; gap:10px; margin-bottom:10px;">
-        <div>
-          <span class="note"><b>N set</b></span>
-          <select id="vizParityNSet" style="width: 140px;">
-            <option value="3,5,10">3/5/10</option>
-            <option value="5,10,20">5/10/20</option>
-          </select>
-        </div>
+        <span id="vizParityHint"><b>N set:</b> 3 / 5 / 10 / 20 (configurable in code)</span>
         <label class="note" style="display:flex; align-items:center; gap:6px;">
           <input id="vizParityConnect" type="checkbox" checked /> Connect points by race
         </label>
@@ -372,7 +369,7 @@
 
       <div id="vizScatter" style="height: 620px;"></div>
       <div id="vizLadderLayout">
-        <div id="vizLadderPlot" style="height: 620px;"></div>
+        <div id="vizLadderPlot" style="height: 520px;"></div>
         <div class="panel" style="box-shadow:none;">
           <h2>Closest matches</h2>
           <div id="vizClosestMatches" class="note">Click a point to compare ΔRCI against all races / sexes / N.</div>
