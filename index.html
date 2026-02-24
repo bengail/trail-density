@@ -46,7 +46,6 @@
     #vizClosestMatches { white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
     #vizTopMenu { width: auto; min-width: 220px; max-width: 280px; padding: 9px 10px; border-radius: 12px; border:1px solid var(--border); background:#f8fafc; color: var(--text); font-size: 12px; font-weight: 700; margin: 0; }
     #vizParityHint { color: var(--muted); font-size: 12px; }
-    #vizScatter .hoverlayer .hovertext rect,
     #vizParityPlot .hoverlayer .hovertext rect,
     #vizLadderPlot .hoverlayer .hovertext rect { fill: rgba(248, 250, 252, 0.96) !important; stroke: rgba(148, 163, 184, 0.5) !important; stroke-width: 1px; rx: 10; ry: 10; }
     table { width:100%; border-collapse: collapse; font-size: 12px; background:#ffffff; border-radius: 12px; }
@@ -101,7 +100,6 @@
       <button id="tabRciNorm" class="active">RCI Normalized</button>
       <select id="vizTopMenu">
         <option value="">Visualisation</option>
-        <option value="triad">Visualization · RCI Comparator</option>
         <option value="ladder">Visualization · RCI Ladder</option>
         <option value="parity">Visualization · RCI Parity Map</option>
       </select>
@@ -331,29 +329,10 @@
 
     <section class="panel">
       <div class="row" style="justify-content:space-between; gap:10px; margin-bottom:10px; align-items:flex-end;">
-        <div id="vizTitle" class="note"><b>Visualization · RCI Comparator</b></div>
+        <div id="vizTitle" class="note"><b>Visualization · RCI Ladder</b></div>
         <button id="vizExplain" class="help-tip" aria-label="Explain this graph" title="Explain this graph">?
           <span id="vizExplainContent" class="help-content"></span>
         </button>
-      </div>
-
-      <div id="vizTriadControls" class="row" style="justify-content:space-between; gap:10px; margin-bottom:10px;">
-        <div class="row" style="gap:8px;">
-          <span class="note"><b>Display</b></span>
-          <div class="btns">
-            <button id="vizGenderBoth" class="active">Both</button>
-            <button id="vizGenderMale">Male</button>
-            <button id="vizGenderFemale">Female</button>
-          </div>
-        </div>
-        <div class="row" style="gap:8px;">
-          <span class="note"><b>X reference</b></span>
-          <select id="vizRefMetric" style="width: 120px;">
-            <option value="rc3">RCI3</option>
-            <option value="rc5" selected>RCI5</option>
-            <option value="rc10">RCI10</option>
-          </select>
-        </div>
       </div>
 
       <div id="vizLadderControls" class="row" style="display:none; gap:8px; margin-bottom:10px;">
@@ -371,7 +350,6 @@
         </label>
       </div>
 
-      <div id="vizScatter" style="height: 620px;"></div>
       <div id="vizLadderLayout">
         <div id="vizLadderPlot" style="height: 520px;"></div>
         <div class="panel" style="box-shadow:none;">

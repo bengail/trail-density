@@ -166,20 +166,6 @@ function fmt(n, digits = 1) {
   return n.toFixed(digits);
 }
 
-function metricLabel(key) {
-  if (key === "rc3") return "RCI3";
-  if (key === "rc5") return "RCI5";
-  if (key === "rc10") return "RCI10";
-  return key;
-}
-
-function shortRaceLabel(name) {
-  const text = String(name || "").trim();
-  if (!text) return "-";
-  const token = text.split(/\s+/)[0] || text;
-  return token.slice(0, 14);
-}
-
 function normalizeSeries(value) {
   if (Array.isArray(value)) return value.filter(Boolean).map(v => String(v));
   if (typeof value === "string" && value.trim()) return [value.trim()];
@@ -273,9 +259,7 @@ const state = {
   vizSelected: new Set(),
   vizFilters: { country: "", series: [] },
   publicRaceSearch: "",
-  vizType: "triad",
-  vizGenderMode: "both",
-  vizRefMetric: "rc5",
+  vizType: "ladder",
   vizLadderSex: "male",
   vizParityNSet: PARITY_N_LEVELS.slice(),
   vizParityConnect: true,
@@ -593,20 +577,6 @@ async function updateRciNormTables() {
   });
 }
 
-function setVizGenderMode(mode) {
-  state.vizGenderMode = mode;
-  const ids = ["vizGenderBoth", "vizGenderMale", "vizGenderFemale"];
-  for (const id of ids) {
-    const el = document.getElementById(id);
-    if (!el) continue;
-    const active =
-      (id === "vizGenderBoth" && mode === "both") ||
-      (id === "vizGenderMale" && mode === "male") ||
-      (id === "vizGenderFemale" && mode === "female");
-    el.classList.toggle("active", active);
-  }
-}
-
 function setVizLadderSex(sex) {
   state.vizLadderSex = sex;
   const maleBtn = document.getElementById("vizLadderMale");
@@ -660,19 +630,14 @@ async function getVizRciPoints(options = {}) {
 }
 
 function showVizContainer() {
-  const triad = document.getElementById("vizScatter");
-  const triadControls = document.getElementById("vizTriadControls");
   const ladderLayout = document.getElementById("vizLadderLayout");
   const ladderControls = document.getElementById("vizLadderControls");
   const parityPlot = document.getElementById("vizParityPlot");
   const parityControls = document.getElementById("vizParityControls");
 
-  const triadOn = state.vizType === "triad";
   const ladderOn = state.vizType === "ladder";
   const parityOn = state.vizType === "parity";
 
-  if (triad) triad.style.display = triadOn ? "block" : "none";
-  if (triadControls) triadControls.style.display = triadOn ? "flex" : "none";
   if (ladderLayout) ladderLayout.style.display = ladderOn ? "grid" : "none";
   if (ladderControls) ladderControls.style.display = ladderOn ? "flex" : "none";
   if (parityPlot) parityPlot.style.display = parityOn ? "block" : "none";
@@ -681,7 +646,6 @@ function showVizContainer() {
   const vizTitle = document.getElementById("vizTitle");
   if (vizTitle) {
     const titleByType = {
-      triad: "Visualization · RCI Comparator",
       ladder: "Visualization · RCI Ladder",
       parity: "Visualization · RCI Parity Map"
     };
@@ -696,7 +660,6 @@ function updateVizExplanation() {
   const el = document.getElementById("vizExplainContent");
   if (!el) return;
   const explanations = {
-    triad: "RCI comparator: compare normalized RCI3 / RCI5 / RCI10 versus a chosen reference metric. The diagonal means equal value on both axes.",
     ladder: "RCI ladder: each race appears as a mini-profile across N (3/5/10/20/30). Click a point to see the closest RCI matches.",
     parity: "RCI parity map: compares men vs women RCI for each race and N. The dashed diagonal marks parity between men and women."
   };
@@ -726,61 +689,6 @@ function renderClosestMatches(clicked, points) {
       </tbody>
     </table>
   `;
-}
-
-async function renderTriadVisualization(ids) {
-  const el = document.getElementById("vizScatter");
-  if (!el) return;
-  const genders = state.vizGenderMode === "both" ? ["male", "female"] : [state.vizGenderMode];
-  const refKey = state.vizRefMetric;
-  const metricKeys = ["rc3", "rc5", "rc10"];
-  const metricColors = { rc3: "#0ea5e9", rc5: "#f59e0b", rc10: "#10b981" };
-  const symbolByGender = { male: "circle", female: "diamond" };
-  const traces = [];
-  const allValues = [];
-
-  for (const gender of genders) {
-    const rows = await getRciRowsForGender(gender, {
-      selectedSet: new Set(ids),
-      filters: { country: "", series: [] },
-      sorts: state.rciNormSorts,
-      normalizeFemale: true
-    });
-    for (const metricKey of metricKeys) {
-      const x = [];
-      const y = [];
-      const text = [];
-      const customdata = [];
-      for (const r of rows) {
-        if (!Number.isFinite(r[refKey]) || !Number.isFinite(r[metricKey])) continue;
-        x.push(r[refKey]);
-        y.push(r[metricKey]);
-        text.push(shortRaceLabel(r.name));
-        customdata.push([r.name || "-", r.country || "-", r.series || "-", gender === "male" ? "Male" : "Female", fmt(r.rc3, 2), fmt(r.rc5, 2), fmt(r.rc10, 2)]);
-        allValues.push(r[refKey], r[metricKey]);
-      }
-      if (!x.length) continue;
-      traces.push({
-        type: "scattergl", mode: "markers+text", x, y, text, textposition: "top center", textfont: { size: 9, color: "#334155" },
-        name: `${gender === "male" ? "Male" : "Female"} · ${metricLabel(metricKey)}`,
-        marker: { size: 7, color: metricColors[metricKey], symbol: symbolByGender[gender], line: { width: 0.8, color: "rgba(15,23,42,0.25)" }, opacity: 0.82 },
-        customdata,
-        hovertemplate: `<b>%{customdata[0]}</b><br>Country: %{customdata[1]}<br>Series: %{customdata[2]}<br>Category: %{customdata[3]}<br>${metricKey === "rc3" ? "<b>" : ""}RCI3: %{customdata[4]}${metricKey === "rc3" ? "</b>" : ""}<br>${metricKey === "rc5" ? "<b>" : ""}RCI5: %{customdata[5]}${metricKey === "rc5" ? "</b>" : ""}<br>${metricKey === "rc10" ? "<b>" : ""}RCI10: %{customdata[6]}${metricKey === "rc10" ? "</b>" : ""}<br><extra></extra>`
-      });
-    }
-  }
-
-  if (!allValues.length) {
-    Plotly.react("vizScatter", [], { annotations: [{ x: 0.5, y: 0.5, xref: "paper", yref: "paper", text: "No data for current filters", showarrow: false }] }, { responsive: true, displayModeBar: false });
-    return;
-  }
-  const minV = Math.min(...allValues);
-  const maxV = Math.max(...allValues);
-  const pad = Math.max(2, (maxV - minV) * 0.04);
-  const axisMin = minV - pad;
-  const axisMax = maxV + pad;
-  traces.push({ x: [axisMin, axisMax], y: [axisMin, axisMax], mode: "lines", name: "Same RCI", line: { color: "#64748b", width: 1.4, dash: "dash" }, hoverinfo: "skip" });
-  Plotly.react("vizScatter", traces, { margin: { l: 62, r: 20, t: 20, b: 56 }, xaxis: { title: `${metricLabel(refKey)} (reference)`, range: [axisMin, axisMax] }, yaxis: { title: "Normalized RCI (RCI3/RCI5/RCI10)", range: [axisMin, axisMax] }, legend: { orientation: "h", y: 1.12, x: 0, font: { size: 10 } }, hovermode: "closest" }, { responsive: true, displayModeBar: false });
 }
 
 async function renderLadderVisualization(ids) {
@@ -887,14 +795,14 @@ async function renderParityVisualization(ids) {
 }
 
 async function updateVisualization() {
+  if (state.vizType !== "ladder" && state.vizType !== "parity") state.vizType = "ladder";
   const ids = getVizFilteredIds();
   const countEl = document.getElementById("vizCount");
   if (countEl) countEl.textContent = String(ids.length);
   showVizContainer();
   updateVizExplanation();
-  if (state.vizType === "triad") return renderTriadVisualization(ids);
-  if (state.vizType === "ladder") return renderLadderVisualization(ids);
-  return renderParityVisualization(ids);
+  if (state.vizType === "parity") return renderParityVisualization(ids);
+  return renderLadderVisualization(ids);
 }
 
 function wireRciSort(tableId, gender, sorts, onChange) {
@@ -1767,7 +1675,6 @@ async function updateAll() {
   const vizSearch = document.getElementById("vizSearch");
   const vizCountryFilter = document.getElementById("vizCountryFilter");
   const vizSeriesFilter = document.getElementById("vizSeriesFilter");
-  const vizRefMetric = document.getElementById("vizRefMetric");
   const vizTopMenu = document.getElementById("vizTopMenu");
   const vizParityConnect = document.getElementById("vizParityConnect");
 
@@ -1848,32 +1755,16 @@ async function updateAll() {
   syncPublicFilterControls();
   rerenderSharedPublicLists();
 
-  const vizGenderBoth = document.getElementById("vizGenderBoth");
-  const vizGenderMale = document.getElementById("vizGenderMale");
-  const vizGenderFemale = document.getElementById("vizGenderFemale");
-  if (vizGenderBoth) vizGenderBoth.addEventListener("click", () => { setVizGenderMode("both"); updateVisualization(); });
-  if (vizGenderMale) vizGenderMale.addEventListener("click", () => { setVizGenderMode("male"); updateVisualization(); });
-  if (vizGenderFemale) vizGenderFemale.addEventListener("click", () => { setVizGenderMode("female"); updateVisualization(); });
-  setVizGenderMode(state.vizGenderMode);
-
   const vizLadderMale = document.getElementById("vizLadderMale");
   const vizLadderFemale = document.getElementById("vizLadderFemale");
   if (vizLadderMale) vizLadderMale.addEventListener("click", () => { setVizLadderSex("male"); updateVisualization(); });
   if (vizLadderFemale) vizLadderFemale.addEventListener("click", () => { setVizLadderSex("female"); updateVisualization(); });
   setVizLadderSex(state.vizLadderSex);
 
-  if (vizRefMetric) {
-    vizRefMetric.value = state.vizRefMetric;
-    vizRefMetric.addEventListener("change", () => {
-      state.vizRefMetric = vizRefMetric.value;
-      updateVisualization();
-    });
-  }
-
   if (vizTopMenu) {
     vizTopMenu.addEventListener("change", () => {
       if (!vizTopMenu.value) return;
-      state.vizType = vizTopMenu.value;
+      state.vizType = vizTopMenu.value === "parity" ? "parity" : "ladder";
       setActiveTab("visualization");
       updateVisualization();
     });
@@ -2017,7 +1908,6 @@ async function updateAll() {
     { responsive: true, displayModeBar: false }
   );
   Plotly.newPlot("heatmapPlot", [], { paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)" }, { responsive: true, displayModeBar: false });
-  Plotly.newPlot("vizScatter", [], { paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)" }, { responsive: true, displayModeBar: false });
   Plotly.newPlot("vizLadderPlot", [], { paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)" }, { responsive: true, displayModeBar: false });
   Plotly.newPlot("vizParityPlot", [], { paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)" }, { responsive: true, displayModeBar: false });
 
