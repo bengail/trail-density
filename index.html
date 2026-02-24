@@ -45,9 +45,9 @@
     #vizLadderLayout { display:none; grid-template-columns: 1fr; gap: 8px; align-items:start; }
     #vizClosestMatches { white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
     #vizTopMenu { width: auto; min-width: 220px; max-width: 280px; padding: 9px 10px; border-radius: 12px; border:1px solid var(--border); background:#f8fafc; color: var(--text); font-size: 12px; font-weight: 700; margin: 0; }
-    #vizParityHint { color: var(--muted); font-size: 12px; }
-    #vizParityPlot .hoverlayer .hovertext rect,
-    #vizLadderPlot .hoverlayer .hovertext rect { fill: rgba(248, 250, 252, 0.96) !important; stroke: rgba(148, 163, 184, 0.5) !important; stroke-width: 1px; rx: 10; ry: 10; }
+    #vizParityPlot .hoverlayer .hovertext rect { fill: rgba(248, 250, 252, 0.96) !important; stroke: rgba(148, 163, 184, 0.5) !important; stroke-width: 1px; rx: 10; ry: 10; }
+    #vizLadderPlot .hoverlayer .hovertext rect { fill: rgba(240, 248, 255, 0.98) !important; stroke: rgba(148, 163, 184, 0.38) !important; stroke-width: 1px; rx: 14; ry: 14; }
+    #vizLadderPlot .hoverlayer .hovertext text { fill: #1e293b !important; }
     table { width:100%; border-collapse: collapse; font-size: 12px; background:#ffffff; border-radius: 12px; }
     th, td { border-bottom: 1px solid var(--border); padding: 10px 12px; text-align: right; }
     th:first-child, td:first-child { text-align:left; width: 230px; }
@@ -344,7 +344,6 @@
       </div>
 
       <div id="vizParityControls" class="row" style="display:none; gap:10px; margin-bottom:10px;">
-        <span id="vizParityHint"><b>N set:</b> 3 / 5 / 10 / 20 (configurable in code)</span>
         <label class="note" style="display:flex; align-items:center; gap:6px;">
           <input id="vizParityConnect" type="checkbox" checked /> Connect points by race
         </label>

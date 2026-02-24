@@ -615,13 +615,12 @@ async function getVizRciPoints(options = {}) {
         if (!Number.isFinite(stats.rci)) continue;
         points.push({
           race_id: meta.race_id || ids[i],
+          race_name: meta.name || meta.race_id || ids[i],
           year: meta.year,
           series: normalizeSeries(meta.series).join(", ") || "-",
           sex,
           n,
-          rci: stats.rci,
-          topMean: stats.mean,
-          topStd: stats.std
+          rci: stats.rci
         });
       }
     }
@@ -681,11 +680,11 @@ function renderClosestMatches(clicked, points) {
   }
 
   box.innerHTML = `
-    <div style="margin-bottom:8px;"><b>${clicked.race_id}</b> · ${clicked.sex === "male" ? "Men" : "Women"} · N=${clicked.n} · RCI=${fmt(clicked.rci, 2)}</div>
+    <div style="margin-bottom:8px;"><b>${clicked.race_name}</b> · ${clicked.series} · ${clicked.year || "-"} · ${clicked.sex === "male" ? "Men" : "Women"} · RCI${clicked.n}: ${fmt(clicked.rci, 2)}</div>
     <table>
-      <thead><tr><th>Race</th><th>Sex</th><th>N</th><th>RCI</th><th>|ΔRCI|</th></tr></thead>
+      <thead><tr><th>Race</th><th>Series</th><th>Sex</th><th>Metric</th><th>RCI</th></tr></thead>
       <tbody>
-        ${matches.map(m => `<tr><td>${m.race_id}</td><td>${m.sex === "male" ? "M" : "F"}</td><td>${m.n}</td><td>${fmt(m.rci, 2)}</td><td>${fmt(m.delta, 2)}</td></tr>`).join("")}
+        ${matches.map(m => `<tr><td>${m.race_name}</td><td>${m.series}</td><td>${m.sex === "male" ? "M" : "F"}</td><td>RCI${m.n}</td><td>${fmt(m.rci, 2)}</td></tr>`).join("")}
       </tbody>
     </table>
   `;
@@ -714,8 +713,8 @@ async function renderLadderVisualization(ids) {
       y: [p.n],
       name: p.race_id,
       marker: { size: 10, color: colorByRace.get(p.race_id), symbol: symbols[p.n] || "circle", line: { width: 0.7, color: "#0f172a" } },
-      customdata: [[p.race_id, p.year || "-", p.series, p.sex === "male" ? "Men" : "Women", p.n, fmt(p.rci, 2), fmt(p.topMean, 2), fmt(p.topStd, 2)]],
-      hovertemplate: "<b>%{customdata[0]}</b><br>Year: %{customdata[1]}<br>Series: %{customdata[2]}<br>Sex: %{customdata[3]}<br>N: %{customdata[4]}<br>RCI: %{customdata[5]}<br>topN mean: %{customdata[6]}<br>topN std: %{customdata[7]}<extra></extra>",
+      customdata: [[p.race_id, p.race_name, p.year || "-", p.series, p.sex === "male" ? "Men" : "Women", `RCI${p.n}`, p.n, fmt(p.rci, 2)]],
+      hovertemplate: "<b>%{customdata[1]}</b><br>Series: %{customdata[3]}<br>Year: %{customdata[2]}<br>Sex: %{customdata[4]}<br>%{customdata[5]}: %{customdata[7]}<extra></extra>",
       showlegend: false
     });
   }
@@ -734,7 +733,7 @@ async function renderLadderVisualization(ids) {
     ladderEl.on("plotly_click", evt => {
       const cd = evt?.points?.[0]?.customdata;
       if (!cd) return;
-      const clicked = points.find(p => p.race_id === cd[0] && p.sex === (cd[3] === "Men" ? "male" : "female") && p.n === cd[4]);
+      const clicked = points.find(p => p.race_id === cd[0] && p.sex === (cd[4] === "Men" ? "male" : "female") && p.n === cd[6]);
       if (clicked) renderClosestMatches(clicked, points);
     });
     ladderEl._closestBound = true;
