@@ -14,8 +14,10 @@
     header h1 { font-size: 15px; margin:0; letter-spacing: .2px; }
     header .sub { color: var(--muted); font-size: 13px; }
     nav { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .page-menu { display:flex; gap:8px; align-items:center; flex-wrap:nowrap; }
     nav button { cursor:pointer; border:1px solid var(--border); background:#f8fafc; color: var(--text); padding: 9px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; }
     nav button.active { border-color: rgba(34,51,199,0.5); box-shadow: 0 0 0 1px rgba(34,51,199,0.15) inset; }
+    nav select { width:auto; min-width: 220px; max-width: 280px; padding: 9px 10px; border-radius: 12px; border:1px solid var(--border); background:#f8fafc; color: var(--text); font-weight: 700; font-size: 12px; }
     main { padding: 14px; display:none; }
     main.active { display:block; }
     .grid { display:grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; }
@@ -42,7 +44,7 @@
     .help-tip:hover .help-content, .help-tip:focus-within .help-content { display:block; }
     #vizLadderLayout { display:none; grid-template-columns: 1fr; gap: 8px; align-items:start; }
     #vizClosestMatches { white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
-    #vizTopMenu { min-width: 220px; max-width: 280px; font-weight: 600; }
+    #vizTopMenu { width: auto; min-width: 220px; max-width: 280px; padding: 9px 10px; border-radius: 12px; border:1px solid var(--border); background:#f8fafc; color: var(--text); font-size: 12px; font-weight: 700; margin: 0; }
     #vizParityHint { color: var(--muted); font-size: 12px; }
     #vizScatter .hoverlayer .hovertext rect,
     #vizParityPlot .hoverlayer .hovertext rect,
@@ -95,13 +97,15 @@
     <div class="sub">RCI, mean and graphical tool density analisys</div>
   </div>
   <nav>
-    <button id="tabRciNorm" class="active">RCI Normalized</button>
-    <select id="vizTopMenu">
-      <option value="">Visualisation</option>
-      <option value="triad">Visualization · RCI Comparator</option>
-      <option value="ladder">Visualization · RCI Ladder</option>
-      <option value="parity">Visualization · RCI Parity Map</option>
-    </select>
+    <div class="page-menu">
+      <button id="tabRciNorm" class="active">RCI Normalized</button>
+      <select id="vizTopMenu">
+        <option value="">Visualisation</option>
+        <option value="triad">Visualization · RCI Comparator</option>
+        <option value="ladder">Visualization · RCI Ladder</option>
+        <option value="parity">Visualization · RCI Parity Map</option>
+      </select>
+    </div>
     <button id="tabSummary">Summary</button>
     <button id="tabCharts">Charts</button>
     <button id="tabRace">Race</button>
