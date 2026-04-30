@@ -200,7 +200,19 @@ let manifest = null;
 const courseCache = new Map(); // race_id -> course json
 const courseMetaCache = new Map(); // race_id -> course.meta
 
+// Loads the list of courses.
+// Supabase: queries courses table for id + race_id.
+// Fallback: fetches data/courses_index.json.
 async function loadManifest() {
+  if (window.supabaseClient) {
+    const { data, error } = await window.supabaseClient
+      .from("courses")
+      .select("id, race_id")
+      .order("race_id");
+    if (error) throw new Error("Supabase loadManifest: " + error.message);
+    manifest = { courses: data.map(c => ({ race_id: c.race_id, id: c.id })) };
+    return manifest.courses;
+  }
   const resp = await fetch(`${state.assetPrefix}data/courses_index.json`, { cache: "no-store" });
   if (!resp.ok) throw new Error("Cannot load courses_index.json");
   manifest = await resp.json();
@@ -215,8 +227,56 @@ function getCourseMeta(raceId) {
   return courseMetaCache.get(raceId) || null;
 }
 
+// Loads a single course (meta + results).
+// Supabase: two queries — one for meta, one for results (lazy).
+// Fallback: fetches the per-course JSON file.
 async function loadCourse(raceId) {
   if (courseCache.has(raceId)) return courseCache.get(raceId);
+
+  if (window.supabaseClient) {
+    const entry = getManifestEntries().find(c => c.race_id === raceId);
+    if (!entry) throw new Error("Unknown race_id: " + raceId);
+
+    const [metaResp, resultsResp] = await Promise.all([
+      window.supabaseClient
+        .from("courses")
+        .select("id, race_id, name, series, country, year, distance_km, elevation_m, prize_money, data_source, source_url, notes")
+        .eq("id", entry.id)
+        .single(),
+      window.supabaseClient
+        .from("results")
+        .select("rank, runner, index, gender, nationality")
+        .eq("course_id", entry.id)
+        .order("rank")
+    ]);
+
+    if (metaResp.error) throw new Error("Supabase course meta: " + metaResp.error.message);
+    if (resultsResp.error) throw new Error("Supabase results: " + resultsResp.error.message);
+
+    const c = metaResp.data;
+    const normalized = normalizeCourse({
+      meta: {
+        race_id: c.race_id,
+        name: c.name,
+        series: c.series,
+        country: c.country,
+        year: c.year,
+        distance_km: c.distance_km,
+        elevation_m: c.elevation_m,
+        prize_money: c.prize_money,
+        data_source: c.data_source,
+        source_url: c.source_url,
+        notes: c.notes
+      },
+      results: resultsResp.data
+    }, raceId);
+
+    courseCache.set(raceId, normalized);
+    courseMetaCache.set(raceId, normalized.meta);
+    return normalized;
+  }
+
+  // JSON fallback
   const entry = getManifestEntries().find(c => c.race_id === raceId);
   if (!entry) throw new Error("Unknown race_id: " + raceId);
   const resp = await fetch(`${state.assetPrefix}${entry.path}`, { cache: "no-store" });
@@ -227,7 +287,33 @@ async function loadCourse(raceId) {
   return normalized;
 }
 
+// Pre-warms courseMetaCache so filter dropdowns and course lists work immediately.
+// Supabase: one efficient bulk query (no results fetched).
+// Fallback: loads each course JSON individually.
 async function preloadAllCourseMeta() {
+  if (window.supabaseClient) {
+    const { data, error } = await window.supabaseClient
+      .from("courses")
+      .select("id, race_id, name, series, country, year, distance_km, elevation_m, prize_money, data_source, source_url, notes")
+      .order("race_id");
+    if (error) throw new Error("Supabase preloadAllCourseMeta: " + error.message);
+    for (const c of data) {
+      courseMetaCache.set(c.race_id, {
+        race_id: c.race_id,
+        name: c.name,
+        series: c.series || [],
+        country: c.country,
+        year: c.year,
+        distance_km: c.distance_km,
+        elevation_m: c.elevation_m,
+        prize_money: c.prize_money,
+        data_source: c.data_source,
+        source_url: c.source_url,
+        notes: c.notes
+      });
+    }
+    return;
+  }
   const entries = getManifestEntries();
   await Promise.all(entries.map(e => loadCourse(e.race_id).catch(() => null)));
 }
@@ -1139,6 +1225,80 @@ function downloadImportManifestJson() {
   triggerJsonDownload("courses_index.json", updatedManifest);
 }
 
+async function importToSupabase() {
+  if (!window.supabaseClient) {
+    setImportStatus("Supabase not configured — check config.js.", "error");
+    return;
+  }
+  if (!state.importDraft) {
+    setImportStatus("Preview the data first before saving.", "error");
+    return;
+  }
+
+  const { meta, results } = state.importDraft;
+  const btn = document.getElementById("importSaveSupabaseBtn");
+  if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
+  setImportStatus("Saving to Supabase…");
+
+  try {
+    const seriesValue = meta.series
+      ? (Array.isArray(meta.series) ? meta.series : [meta.series])
+      : [];
+
+    const courseRow = {
+      race_id: meta.race_id,
+      name: meta.name,
+      series: seriesValue,
+      country: meta.country,
+      year: meta.year,
+      distance_km: meta.distance_km,
+      elevation_m: meta.elevation_m,
+      prize_money: meta.prize_money,
+      data_source: meta.data_source,
+      source_url: meta.source_url,
+      notes: meta.notes
+    };
+
+    const { data: courseData, error: courseError } = await window.supabaseClient
+      .from("courses")
+      .upsert(courseRow, { onConflict: "race_id" })
+      .select("id")
+      .single();
+
+    if (courseError) throw new Error("Course upsert failed: " + courseError.message);
+
+    const courseId = courseData.id;
+
+    const { error: deleteError } = await window.supabaseClient
+      .from("results")
+      .delete()
+      .eq("course_id", courseId);
+
+    if (deleteError) throw new Error("Delete old results failed: " + deleteError.message);
+
+    const resultRows = results.map(r => ({
+      course_id: courseId,
+      rank: r.rank,
+      runner: r.runner,
+      index: r.index,
+      gender: r.gender,
+      nationality: r.nationality
+    }));
+
+    const { error: insertError } = await window.supabaseClient
+      .from("results")
+      .insert(resultRows);
+
+    if (insertError) throw new Error("Insert results failed: " + insertError.message);
+
+    setImportStatus(`Saved "${meta.name}" (${results.length} results). Reloading…`, "ok");
+    setTimeout(() => location.reload(), 1200);
+  } catch (err) {
+    setImportStatus(err.message || "Save failed.", "error");
+    if (btn) { btn.disabled = false; btn.textContent = "Save to Supabase"; }
+  }
+}
+
 // ---- Metrics ----
 function topScores(course, n) {
   return topScoresFrom(course.results, n);
@@ -1886,6 +2046,8 @@ async function updateAll() {
 
   const importBuild = document.getElementById("importBuildJsonBtn");
   if (importBuild) importBuild.addEventListener("click", buildImportJson);
+  const importSaveSupabase = document.getElementById("importSaveSupabaseBtn");
+  if (importSaveSupabase) importSaveSupabase.addEventListener("click", importToSupabase);
   const importDownloadRace = document.getElementById("importDownloadRaceBtn");
   if (importDownloadRace) importDownloadRace.addEventListener("click", downloadImportRaceJson);
   const importDownloadIndex = document.getElementById("importDownloadIndexBtn");

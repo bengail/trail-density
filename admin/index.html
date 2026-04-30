@@ -89,6 +89,7 @@
     <button id="tabCharts">Charts</button>
     <button id="tabRace">Race</button>
     <button id="tabImport">Import</button>
+    <button id="signOutBtn" style="margin-left:8px; background:#fef2f2; border-color:#fecaca; color:#991b1b;">Sign out</button>
   </nav>
 </header>
 
@@ -516,7 +517,7 @@
 <main id="pageImport">
   <div class="panel">
     <h2>Race Importer</h2>
-    <div class="note">Paste tab-separated or comma-separated race results, fill metadata, then export files for the repo.</div>
+    <div class="note">Paste tab-separated or comma-separated race results, fill metadata, preview, then save directly to Supabase.</div>
     <div style="height:10px"></div>
     <div class="importLayout">
       <div class="formGrid">
@@ -573,11 +574,12 @@
       </div>
 
       <div class="btns">
-        <button id="importBuildJsonBtn">Build JSON</button>
+        <button id="importBuildJsonBtn">Preview</button>
+        <button id="importSaveSupabaseBtn" style="background:#eef2ff; border-color:rgba(79,70,229,0.5); color:#312e81;">Save to Supabase</button>
         <button id="importDownloadRaceBtn">Download Race JSON</button>
-        <button id="importDownloadIndexBtn">Download Updated courses_index.json</button>
+        <button id="importDownloadIndexBtn">Download courses_index.json</button>
       </div>
-      <div id="importStatus" class="status">Fill metadata and paste results, then click Build JSON.</div>
+      <div id="importStatus" class="status">Fill metadata and paste results, click Preview then Save to Supabase.</div>
       <div class="tableWrap">
         <table id="importPreviewTable">
           <thead>
@@ -596,6 +598,23 @@
   </div>
 </main>
 
+<script src="../config.js" onerror=""></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../supabase_client.js"></script>
+<script>
+  // Auth guard: redirect to /login if no active session.
+  // Runs before app.js so the page stays blank until auth is confirmed.
+  (async function () {
+    if (!window.supabaseClient) return; // no Supabase config → skip guard (local dev)
+    const { data: { session } } = await window.supabaseClient.auth.getSession();
+    if (!session) { location.replace("../login/"); return; }
+
+    document.getElementById("signOutBtn").addEventListener("click", async function () {
+      await window.supabaseClient.auth.signOut();
+      location.replace("../login/");
+    });
+  })();
+</script>
 <script src="../app.js"></script>
 </body>
 </html>

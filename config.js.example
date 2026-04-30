@@ -1,0 +1,5 @@
+// Copy this file to config.js and fill in your Supabase project values.
+// config.js is gitignored — never commit your keys.
+// Without config.js the app falls back to reading static JSON files.
+window.SUPABASE_URL = "https://xxxxxxxxxxxx.supabase.co";
+window.SUPABASE_ANON_KEY = "eyJ...";
