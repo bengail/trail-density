@@ -121,11 +121,8 @@
   <nav>
     <div class="page-menu">
       <button id="tabRciNorm" class="active">RCI</button>
-      <select id="vizTopMenu">
-        <option value="">Visualisation</option>
-        <option value="ladder">Visualization · RCI Ladder</option>
-        <option value="parity">Visualization · RCI Parity Map</option>
-      </select>
+      <button id="vizTabLadder">Ladder</button>
+      <button id="vizTabParity">Parity</button>
     </div>
     <button id="tabSummary">Summary</button>
     <button id="tabCharts">Charts</button>
@@ -246,6 +243,10 @@
       </div>
       <hr class="filter-divider" />
       <div class="note">Hover <b>RCI10 ⓘ</b> in the table header for details.</div>
+      <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+        <button id="exportRciNormFemaleCsv" class="chip-sm">↓ Women CSV</button>
+        <button id="exportRciNormMaleCsv" class="chip-sm">↓ Men CSV</button>
+      </div>
     </aside>
 
     <section class="panel">
@@ -254,11 +255,7 @@
           <button id="rciTabWomen" class="chip active">Women</button>
           <button id="rciTabMen" class="chip">Men</button>
         </div>
-        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-          <button id="rciToggleExtra" class="chip-sm">+ RCI3 &amp; RCI20</button>
-          <button id="exportRciNormFemaleCsv" class="chip-sm">↓ Women CSV</button>
-          <button id="exportRciNormMaleCsv" class="chip-sm">↓ Men CSV</button>
-        </div>
+        <button id="rciToggleExtra" class="chip-sm">+ RCI3 &amp; RCI20</button>
       </div>
       <div class="tableWrap">
         <table id="publicRciTable" class="rci-table">

@@ -950,8 +950,9 @@ function showVizContainer() {
     vizTitle.innerHTML = `<b>${titleByType[state.vizType] || "Visualization"}</b>`;
   }
 
-  const vizTopMenu = document.getElementById("vizTopMenu");
-  if (vizTopMenu) vizTopMenu.value = state.activeTab === "visualization" ? state.vizType : "";
+  const onViz = state.activeTab === "visualization";
+  document.getElementById("vizTabLadder")?.classList.toggle("active", onViz && state.vizType === "ladder");
+  document.getElementById("vizTabParity")?.classList.toggle("active", onViz && state.vizType === "parity");
 }
 
 function updateVizExplanation() {
@@ -1802,7 +1803,7 @@ function renderMetaCard(key, value) {
 }
 
 function applyAppModeVisibility(mode) {
-  const publicButtons = ["tabRci", "tabRciNorm", "vizTopMenu"];
+  const publicButtons = ["tabRci", "tabRciNorm", "vizTabLadder", "vizTabParity"];
   const adminButtons = ["tabSummary", "tabCharts", "tabRace", "tabImport"];
   const publicPages = ["pageRci", "pageRciNorm", "pageViz"];
   const adminPages = ["pageSummary", "pageCharts", "pageRace", "pageImport"];
@@ -1897,6 +1898,8 @@ function setActiveTab(tab) {
   activate(bCha, safeTab === "charts");
   activate(bRace, safeTab === "race");
   activate(bImp, safeTab === "import");
+  activate(document.getElementById("vizTabLadder"), safeTab === "visualization" && state.vizType === "ladder");
+  activate(document.getElementById("vizTabParity"), safeTab === "visualization" && state.vizType === "parity");
   showVizContainer();
   updateVizExplanation();
 }
@@ -2040,8 +2043,18 @@ async function updateAll() {
     ]
   });
 
-  const vizTopMenu = document.getElementById("vizTopMenu");
   const vizParityConnect = document.getElementById("vizParityConnect");
+
+  document.getElementById("vizTabLadder")?.addEventListener("click", () => {
+    state.vizType = "ladder";
+    setActiveTab("visualization");
+    updateVisualization();
+  });
+  document.getElementById("vizTabParity")?.addEventListener("click", () => {
+    state.vizType = "parity";
+    setActiveTab("visualization");
+    updateVisualization();
+  });
 
   if (state.appMode === "public") {
     wirePublicChipFilters();
@@ -2093,14 +2106,6 @@ async function updateAll() {
   if (vizLadderFemale) vizLadderFemale.addEventListener("click", () => { setVizLadderSex("female"); updateVisualization(); });
   setVizLadderSex(state.vizLadderSex);
 
-  if (vizTopMenu) {
-    vizTopMenu.addEventListener("change", () => {
-      if (!vizTopMenu.value) return;
-      state.vizType = vizTopMenu.value === "parity" ? "parity" : "ladder";
-      setActiveTab("visualization");
-      updateVisualization();
-    });
-  }
   if (vizParityConnect) {
     vizParityConnect.checked = state.vizParityConnect;
     vizParityConnect.addEventListener("change", () => {
