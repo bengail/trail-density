@@ -498,12 +498,15 @@ async function renderPublicRciTable() {
   const allMetrics = rows.flatMap(r => [r.rc3, r.rc5, r.rc20]).filter(Number.isFinite);
   const minVal = allMetrics.length ? Math.min(...allMetrics) : 0;
   const maxVal = allMetrics.length ? Math.max(...allMetrics) : 0;
-  const maxRci10 = rows.map(r => r.rc10).filter(Number.isFinite).reduce((a, b) => Math.max(a, b), 1);
+  const rci10Values = rows.map(r => r.rc10).filter(Number.isFinite);
+  const maxRci10 = rci10Values.length ? Math.max(...rci10Values) : 1;
+  const minRci10 = rci10Values.length ? Math.min(...rci10Values) : 0;
+  const rangeRci10 = (maxRci10 - minRci10) || 1;
 
   for (let i = 0; i < rows.length; i++) {
     const r = rows[i];
     const tr = document.createElement("tr");
-    const barPct = Number.isFinite(r.rc10) ? Math.max(4, (r.rc10 / maxRci10) * 100) : 0;
+    const barPct = Number.isFinite(r.rc10) ? Math.max(4, ((r.rc10 - minRci10) / rangeRci10) * 100) : 0;
     tr.innerHTML = `
       <td class="col-rank">${i + 1}</td>
       <td style="font-weight:600;">${r.name}</td>
@@ -537,7 +540,9 @@ function wirePublicChipFilters() {
   function allSeriesFromData() {
     const s = new Set();
     for (const c of getManifestEntries()) {
-      for (const v of normalizeSeries(getCourseMeta(c.race_id)?.series)) s.add(v);
+      for (const v of normalizeSeries(getCourseMeta(c.race_id)?.series)) {
+        if (v.toLowerCase() !== "none") s.add(v);
+      }
     }
     return Array.from(s).sort();
   }
