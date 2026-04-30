@@ -602,12 +602,22 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="../supabase_client.js"></script>
 <script>
-  // Auth guard: redirect to /login if no active session.
+  // Auth guard: redirect to /login if no active session or not in admins table.
   // Runs before app.js so the page stays blank until auth is confirmed.
   (async function () {
     if (!window.supabaseClient) return; // no Supabase config → skip guard (local dev)
     const { data: { session } } = await window.supabaseClient.auth.getSession();
     if (!session) { location.replace("../login/"); return; }
+
+    const { data: adminRow } = await window.supabaseClient
+      .from("admins")
+      .select("email")
+      .maybeSingle();
+    if (!adminRow) {
+      await window.supabaseClient.auth.signOut();
+      location.replace("../login/");
+      return;
+    }
 
     document.getElementById("signOutBtn").addEventListener("click", async function () {
       await window.supabaseClient.auth.signOut();

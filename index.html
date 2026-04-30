@@ -38,6 +38,29 @@
     .item:hover { background: rgba(34,51,199,0.08); }
     .item .item-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .item .pill { margin-left:auto; background: rgba(71,217,171,0.18); color:#0f766e; border-color: rgba(71,217,171,0.45); }
+    /* ── Public RCI table ── */
+    .col-rank { width:36px; text-align:center !important; color:var(--muted); font-weight:400; }
+    .rci-table td.col-rank { text-align:center; color:var(--muted); font-size:11px; font-variant-numeric:tabular-nums; }
+    .rci-table .col-extra { display:none; }
+    .rci-table.show-extra .col-extra { display:table-cell; }
+    .rci-val { display:block; font-variant-numeric:tabular-nums; }
+    .rci-bar-track { height:3px; background:rgba(34,51,199,0.1); border-radius:2px; margin-top:4px; }
+    .rci-bar-fill { height:100%; background:var(--accent); border-radius:2px; transition:width 0.25s; }
+    .rci10-cell { min-width:90px; }
+    /* ── Public chip filter panel ── */
+    .filter-section { margin-bottom: 18px; }
+    .filter-label { display:block; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .chip-group { display:flex; flex-wrap:wrap; gap: 6px; }
+    .chip { cursor:pointer; border:1px solid var(--border); background:#f8fafc; color: var(--text); padding: 5px 13px; border-radius: 999px; font-size: 12px; font-weight: 600; font-family: inherit; transition: border-color 0.1s, background 0.1s; user-select:none; }
+    .chip:hover { border-color: rgba(34,51,199,0.4); background:#f0f4ff; }
+    .chip.active { background:#eef2ff; border-color: rgba(34,51,199,0.55); color: var(--accent); box-shadow: 0 0 0 1px rgba(34,51,199,0.15) inset; }
+    .chip-sm { cursor:pointer; border:1px solid var(--border); background:#f8fafc; color: var(--muted); padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 600; font-family: inherit; }
+    .chip-sm:hover { border-color: rgba(34,51,199,0.3); color: var(--text); }
+    .count-badge { display:inline-flex; align-items:center; justify-content:center; min-width:20px; padding: 1px 6px; border-radius:999px; background: rgba(34,51,199,0.1); color: var(--accent); font-size: 11px; font-weight: 700; }
+    .collapsible-btn { background:none; border:none; cursor:pointer; padding:0; font-family:inherit; display:flex; align-items:center; gap:6px; }
+    .collapsible-btn .caret { font-size:10px; transition: transform 0.15s; }
+    .collapsible-btn[aria-expanded="true"] .caret { transform: rotate(90deg); }
+    .filter-divider { border:none; border-top: 1px solid var(--border); margin: 14px 0; }
     .subtitle-note { margin-top: -6px; margin-bottom:10px; font-size:11px; color: var(--muted); }
     .help-tip { position: relative; display:inline-flex; align-items:center; justify-content:center; width: 24px; height: 24px; border-radius: 999px; border:1px solid var(--border); color:#1e40af; background:#f8fafc; font-weight:700; cursor:pointer; }
     .help-tip .help-content { display:none; position:absolute; z-index:20; width: min(340px, 80vw); top: 28px; right: 0; padding:10px; border-radius:10px; border:1px solid var(--border); background:#fff; color:#334155; font-size:12px; line-height:1.4; box-shadow: 0 10px 30px rgba(15,23,42,.12); }
@@ -201,86 +224,63 @@
 <main id="pageRciNorm" class="">
   <div class="grid">
     <aside class="panel sidebar">
-      <h2>Filters</h2>
-      <div>
-        <div class="note"><b>Search</b></div>
-        <input id="rcinormSearch" type="search" placeholder="ex: UTMB2024, ZEGAMA2025..." />
+      <div class="filter-section">
+        <span class="filter-label">Series</span>
+        <div id="publicSeriesChips" class="chip-group"></div>
       </div>
-
-      <div style="height:10px"></div>
-      <div>
-        <div class="note"><b>Country</b></div>
-        <select id="rcinormCountryFilter">
-          <option value="">All countries</option>
-        </select>
+      <div class="filter-section">
+        <span class="filter-label">Year</span>
+        <div id="publicYearChips" class="chip-group"></div>
       </div>
-
-      <div style="height:10px"></div>
-      <div>
-        <div class="note"><b>Series</b></div>
-        <select id="rcinormSeriesFilter" multiple size="5"></select>
+      <div class="filter-section">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <button class="collapsible-btn" id="publicRacesToggleBtn" aria-expanded="false">
+            <span class="filter-label" style="margin-bottom:0;">Races</span>
+            <span id="publicRaceCount" class="count-badge">0</span>
+            <span class="caret">▸</span>
+          </button>
+          <button id="publicSelectAll" class="chip-sm">All</button>
+          <button id="publicSelectNone" class="chip-sm">None</button>
+        </div>
+        <div id="publicRaceList" class="list" hidden></div>
       </div>
-
-      <div style="height:10px"></div>
-      <div class="row">
-        <div class="note"><b>Selection</b></div>
-        <span class="pill" id="rcinormCount">0</span>
+      <hr class="filter-divider" />
+      <div class="note">
+        <b>RCI<sub>N</sub></b> = mean(top N) − std(top N). Higher = stronger, more uniform field.
       </div>
-      <div class="btns" style="margin-top:8px;">
-        <button id="rcinormAll">All</button>
-        <button id="rcinormNone">None</button>
-        <button id="rcinorm2025">2025</button>
-        <button id="rcinorm2024">2024</button>
-        <button id="rcinorm2023">2023</button>
-      </div>
-
-      <div style="height:10px"></div>
-      <div class="note"><b>Races</b></div>
-      <div id="rcinormList" class="list"></div>
     </aside>
 
     <section class="panel">
-      <div class="row" style="justify-content:space-between; gap:8px; margin-bottom:10px;">
-        <h2 style="margin:0;">Exports</h2>
-        <div class="btns">
-          <button id="exportRciNormFemaleCsv">Export Female CSV</button>
-          <button id="exportRciNormMaleCsv">Export Male CSV</button>
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+        <div class="chip-group">
+          <button id="rciTabWomen" class="chip active">Women</button>
+          <button id="rciTabMen" class="chip">Men</button>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <button id="rciToggleExtra" class="chip-sm">+ RCI3 &amp; RCI20</button>
+          <button id="exportRciNormFemaleCsv" class="chip-sm">↓ Women CSV</button>
+          <button id="exportRciNormMaleCsv" class="chip-sm">↓ Men CSV</button>
         </div>
       </div>
-      <h2>RCI (Female, normalized)</h2>
-      <div class="subtitle-note">ITRA score normalized with Enduraw data formula: <b>[(-0.000466 × ITRA) + 1.532] × ITRA</b>.</div>
       <div class="tableWrap">
-        <table id="rcinormfemaleTable" class="rci-table">
+        <table id="publicRciTable" class="rci-table">
           <thead>
             <tr>
+              <th class="col-rank">#</th>
               <th data-key="name">Race</th>
               <th data-key="country">Country</th>
               <th data-key="series">Series</th>
-              <th data-key="rc3">RCI3</th>
+              <th data-key="rc3" class="col-extra">RCI3</th>
               <th data-key="rc5">RCI5</th>
               <th data-key="rc10">RCI10</th>
-              <th data-key="rc20">RCI20</th>
+              <th data-key="rc20" class="col-extra">RCI20</th>
             </tr>
           </thead>
           <tbody></tbody>
         </table>
       </div>
-      <h2 style="margin-top:20px;">RCI (Male)</h2>
-      <div class="tableWrap">
-        <table id="rcinormmaleTable" class="rci-table">
-          <thead>
-            <tr>
-              <th data-key="name">Race</th>
-              <th data-key="country">Country</th>
-              <th data-key="series">Series</th>
-              <th data-key="rc3">RCI3</th>
-              <th data-key="rc5">RCI5</th>
-              <th data-key="rc10">RCI10</th>
-              <th data-key="rc20">RCI20</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+      <div class="note" style="margin-top:10px;">
+        Women's ITRA scores normalized: <b>[(-0.000466 × ITRA) + 1.532] × ITRA</b>.
       </div>
     </section>
   </div>
@@ -289,42 +289,23 @@
 <main id="pageViz" class="">
   <div class="grid">
     <aside class="panel sidebar">
-      <h2>Filters</h2>
-      <div>
-        <div class="note"><b>Search</b></div>
-        <input id="vizSearch" type="search" placeholder="ex: UTMB2024, ZEGAMA2025..." />
+      <div class="filter-section">
+        <span class="filter-label">Selection</span>
+        <div class="note"><span id="vizCount">0</span> races &mdash; adjust in the <b>RCI</b> tab</div>
       </div>
-
-      <div style="height:10px"></div>
-      <div>
-        <div class="note"><b>Country</b></div>
-        <select id="vizCountryFilter">
-          <option value="">All countries</option>
-        </select>
+      <hr class="filter-divider" />
+      <div id="vizLadderControls" class="filter-section" style="display:none;">
+        <span class="filter-label">Sex</span>
+        <div class="chip-group">
+          <button id="vizLadderMale" class="chip active">Men</button>
+          <button id="vizLadderFemale" class="chip">Women</button>
+        </div>
       </div>
-
-      <div style="height:10px"></div>
-      <div>
-        <div class="note"><b>Series</b></div>
-        <select id="vizSeriesFilter" multiple size="5"></select>
+      <div id="vizParityControls" class="filter-section" style="display:none;">
+        <label class="note" style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+          <input id="vizParityConnect" type="checkbox" checked /> Connect points by race
+        </label>
       </div>
-
-      <div style="height:10px"></div>
-      <div class="row">
-        <div class="note"><b>Selection</b></div>
-        <span class="pill" id="vizCount">0</span>
-      </div>
-      <div class="btns" style="margin-top:8px;">
-        <button id="vizAll">All</button>
-        <button id="vizNone">None</button>
-        <button id="viz2025">2025</button>
-        <button id="viz2024">2024</button>
-        <button id="viz2023">2023</button>
-      </div>
-
-      <div style="height:10px"></div>
-      <div class="note"><b>Races</b></div>
-      <div id="vizList" class="list"></div>
     </aside>
 
     <section class="panel">
@@ -333,20 +314,6 @@
         <button id="vizExplain" class="help-tip" aria-label="Explain this graph" title="Explain this graph">?
           <span id="vizExplainContent" class="help-content"></span>
         </button>
-      </div>
-
-      <div id="vizLadderControls" class="row" style="display:none; gap:8px; margin-bottom:10px;">
-        <span class="note"><b>Sex panel</b></span>
-        <div class="btns">
-          <button id="vizLadderMale" class="active">Men</button>
-          <button id="vizLadderFemale">Women</button>
-        </div>
-      </div>
-
-      <div id="vizParityControls" class="row" style="display:none; gap:10px; margin-bottom:10px;">
-        <label class="note" style="display:flex; align-items:center; gap:6px;">
-          <input id="vizParityConnect" type="checkbox" checked /> Connect points by race
-        </label>
       </div>
 
       <div id="vizLadderLayout">

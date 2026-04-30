@@ -330,6 +330,8 @@ const state = {
   chartsFilters: { country: "", series: "" },
   raceSelected: null
   ,
+  publicRciGender: "female",
+  publicRciShowExtra: false,
   rciSelected: new Set(),
   rciFilters: { country: "", series: [] },
   rciSorts: {
@@ -476,6 +478,212 @@ function wireRaceFilterPanel(config) {
   }
 
   renderSelection();
+}
+
+async function renderPublicRciTable() {
+  const table = document.getElementById("publicRciTable");
+  if (!table) return;
+  const tbody = table.querySelector("tbody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+
+  const gender = state.publicRciGender;
+  const rows = await getRciRowsForGender(gender, {
+    selectedSet: state.rciNormSelected,
+    filters: state.rciNormFilters,
+    sorts: state.rciNormSorts,
+    normalizeFemale: true
+  });
+
+  const allMetrics = rows.flatMap(r => [r.rc3, r.rc5, r.rc20]).filter(Number.isFinite);
+  const minVal = allMetrics.length ? Math.min(...allMetrics) : 0;
+  const maxVal = allMetrics.length ? Math.max(...allMetrics) : 0;
+  const maxRci10 = rows.map(r => r.rc10).filter(Number.isFinite).reduce((a, b) => Math.max(a, b), 1);
+
+  for (let i = 0; i < rows.length; i++) {
+    const r = rows[i];
+    const tr = document.createElement("tr");
+    const barPct = Number.isFinite(r.rc10) ? Math.max(4, (r.rc10 / maxRci10) * 100) : 0;
+    tr.innerHTML = `
+      <td class="col-rank">${i + 1}</td>
+      <td style="font-weight:600;">${r.name}</td>
+      <td style="color:var(--muted);">${r.country || "-"}</td>
+      <td style="color:var(--muted);">${r.series || "-"}</td>
+      <td class="col-extra" style="${densityColor(r.rc3, minVal, maxVal)}">${fmt(r.rc3, 2)}</td>
+      <td style="${densityColor(r.rc5, minVal, maxVal)}">${fmt(r.rc5, 2)}</td>
+      <td class="rci10-cell">
+        <span class="rci-val">${fmt(r.rc10, 2)}</span>
+        <div class="rci-bar-track"><div class="rci-bar-fill" style="width:${barPct.toFixed(1)}%"></div></div>
+      </td>
+      <td class="col-extra" style="${densityColor(r.rc20, minVal, maxVal)}">${fmt(r.rc20, 2)}</td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  const sort = state.rciNormSorts[gender];
+  for (const th of table.querySelectorAll("thead th[data-key]")) {
+    th.classList.remove("sort-asc", "sort-desc");
+    if (th.dataset.key === sort.key) th.classList.add(sort.dir === "asc" ? "sort-asc" : "sort-desc");
+  }
+}
+
+function wirePublicChipFilters() {
+  const chipState = {
+    activeSeries: new Set(),
+    activeYears: new Set([2025]),
+    isManual: false
+  };
+
+  function allSeriesFromData() {
+    const s = new Set();
+    for (const c of getManifestEntries()) {
+      for (const v of normalizeSeries(getCourseMeta(c.race_id)?.series)) s.add(v);
+    }
+    return Array.from(s).sort();
+  }
+
+  function allYearsFromData() {
+    const y = new Set();
+    for (const c of getManifestEntries()) {
+      const yr = getCourseMeta(c.race_id)?.year;
+      if (yr) y.add(yr);
+    }
+    return Array.from(y).sort((a, b) => b - a);
+  }
+
+  function applyChipSelection() {
+    state.rciNormSelected.clear();
+    for (const c of getManifestEntries()) {
+      const meta = getCourseMeta(c.race_id);
+      const raceSeries = normalizeSeries(meta?.series);
+      const raceYear = meta?.year;
+      const seriesOk = !chipState.activeSeries.size || raceSeries.some(s => chipState.activeSeries.has(s));
+      const yearOk = !chipState.activeYears.size || chipState.activeYears.has(raceYear);
+      if (seriesOk && yearOk) state.rciNormSelected.add(c.race_id);
+    }
+  }
+
+  function renderSeriesChips() {
+    const container = document.getElementById("publicSeriesChips");
+    if (!container) return;
+    container.innerHTML = "";
+    for (const s of allSeriesFromData()) {
+      const btn = document.createElement("button");
+      btn.className = "chip" + (chipState.activeSeries.has(s) ? " active" : "");
+      btn.textContent = s;
+      btn.addEventListener("click", () => {
+        if (chipState.activeSeries.has(s)) chipState.activeSeries.delete(s);
+        else chipState.activeSeries.add(s);
+        chipState.isManual = false;
+        applyChipSelection();
+        renderSeriesChips();
+        renderYearChips();
+        renderPublicRaceList();
+        triggerUpdate();
+      });
+      container.appendChild(btn);
+    }
+  }
+
+  function renderYearChips() {
+    const container = document.getElementById("publicYearChips");
+    if (!container) return;
+    container.innerHTML = "";
+    for (const y of allYearsFromData()) {
+      const btn = document.createElement("button");
+      btn.className = "chip" + (chipState.activeYears.has(y) ? " active" : "");
+      btn.textContent = String(y);
+      btn.addEventListener("click", () => {
+        if (chipState.activeYears.has(y)) chipState.activeYears.delete(y);
+        else chipState.activeYears.add(y);
+        chipState.isManual = false;
+        applyChipSelection();
+        renderSeriesChips();
+        renderYearChips();
+        renderPublicRaceList();
+        triggerUpdate();
+      });
+      container.appendChild(btn);
+    }
+  }
+
+  function renderPublicRaceList() {
+    const list = document.getElementById("publicRaceList");
+    if (!list) return;
+    list.innerHTML = "";
+    for (const c of getManifestEntries()) {
+      const id = c.race_id;
+      const meta = getCourseMeta(id) || {};
+      const item = document.createElement("div");
+      item.className = "item";
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = state.rciNormSelected.has(id);
+      cb.addEventListener("change", () => {
+        chipState.activeSeries.clear();
+        chipState.activeYears.clear();
+        chipState.isManual = true;
+        if (cb.checked) state.rciNormSelected.add(id);
+        else state.rciNormSelected.delete(id);
+        renderSeriesChips();
+        renderYearChips();
+        updateCountBadge();
+        triggerUpdate();
+      });
+      const label = document.createElement("div");
+      label.className = "item-label";
+      label.textContent = meta.name || id;
+      const pill = document.createElement("span");
+      pill.className = "pill";
+      pill.textContent = meta.year ? String(meta.year) : "-";
+      item.appendChild(cb);
+      item.appendChild(label);
+      item.appendChild(pill);
+      list.appendChild(item);
+    }
+    updateCountBadge();
+  }
+
+  function updateCountBadge() {
+    const el = document.getElementById("publicRaceCount");
+    if (el) el.textContent = String(state.rciNormSelected.size);
+    const vizEl = document.getElementById("vizCount");
+    if (vizEl) vizEl.textContent = String(state.vizSelected.size);
+  }
+
+  async function triggerUpdate() {
+    await renderPublicRciTable();
+    await updateVisualization();
+  }
+
+  const toggleBtn = document.getElementById("publicRacesToggleBtn");
+  const raceListEl = document.getElementById("publicRaceList");
+  if (toggleBtn && raceListEl) {
+    toggleBtn.addEventListener("click", () => {
+      const wasHidden = raceListEl.hidden;
+      raceListEl.hidden = !wasHidden;
+      toggleBtn.setAttribute("aria-expanded", wasHidden ? "true" : "false");
+    });
+  }
+
+  const allBtn = document.getElementById("publicSelectAll");
+  if (allBtn) allBtn.addEventListener("click", () => {
+    chipState.activeSeries.clear(); chipState.activeYears.clear(); chipState.isManual = true;
+    for (const c of getManifestEntries()) state.rciNormSelected.add(c.race_id);
+    renderSeriesChips(); renderYearChips(); renderPublicRaceList(); triggerUpdate();
+  });
+
+  const noneBtn = document.getElementById("publicSelectNone");
+  if (noneBtn) noneBtn.addEventListener("click", () => {
+    chipState.activeSeries.clear(); chipState.activeYears.clear(); chipState.isManual = true;
+    state.rciNormSelected.clear();
+    renderSeriesChips(); renderYearChips(); renderPublicRaceList(); triggerUpdate();
+  });
+
+  applyChipSelection();
+  renderSeriesChips();
+  renderYearChips();
+  renderPublicRaceList();
 }
 
 function setSelectionByYear(selectedSet, year, filters = null) {
@@ -1694,6 +1902,7 @@ async function updateAll() {
   await updateCharts();
   await updateRciTables();
   await updateRciNormTables();
+  await renderPublicRciTable();
   await updateVisualization();
 }
 
@@ -1826,93 +2035,52 @@ async function updateAll() {
     ]
   });
 
-  const rciNormList = document.getElementById("rcinormList");
-  const rciNormSearch = document.getElementById("rcinormSearch");
-  const rciNormCountryFilter = document.getElementById("rcinormCountryFilter");
-  const rciNormSeriesFilter = document.getElementById("rcinormSeriesFilter");
-
-  const vizSearch = document.getElementById("vizSearch");
-  const vizCountryFilter = document.getElementById("vizCountryFilter");
-  const vizSeriesFilter = document.getElementById("vizSeriesFilter");
   const vizTopMenu = document.getElementById("vizTopMenu");
   const vizParityConnect = document.getElementById("vizParityConnect");
 
-  function syncPublicFilterControls() {
-    state.publicRaceSearch = rciNormSearch?.value || state.publicRaceSearch;
-    if (rciNormSearch && vizSearch) {
-      rciNormSearch.value = state.publicRaceSearch;
-      vizSearch.value = state.publicRaceSearch;
+  if (state.appMode === "public") {
+    wirePublicChipFilters();
+
+    // Gender toggle
+    document.getElementById("rciTabWomen")?.addEventListener("click", () => {
+      state.publicRciGender = "female";
+      document.getElementById("rciTabWomen")?.classList.add("active");
+      document.getElementById("rciTabMen")?.classList.remove("active");
+      renderPublicRciTable();
+    });
+    document.getElementById("rciTabMen")?.addEventListener("click", () => {
+      state.publicRciGender = "male";
+      document.getElementById("rciTabMen")?.classList.add("active");
+      document.getElementById("rciTabWomen")?.classList.remove("active");
+      renderPublicRciTable();
+    });
+
+    // Extra columns toggle (CSS class only, no re-render needed)
+    document.getElementById("rciToggleExtra")?.addEventListener("click", function () {
+      state.publicRciShowExtra = !state.publicRciShowExtra;
+      document.getElementById("publicRciTable")?.classList.toggle("show-extra", state.publicRciShowExtra);
+      this.textContent = state.publicRciShowExtra ? "− RCI3 & RCI20" : "+ RCI3 & RCI20";
+      this.classList.toggle("active", state.publicRciShowExtra);
+    });
+
+    // Sortable headers
+    const publicTable = document.getElementById("publicRciTable");
+    if (publicTable) {
+      for (const th of publicTable.querySelectorAll("thead th[data-key]")) {
+        th.addEventListener("click", () => {
+          const g = state.publicRciGender;
+          const k = th.dataset.key;
+          if (state.rciNormSorts[g].key === k) {
+            state.rciNormSorts[g].dir = state.rciNormSorts[g].dir === "asc" ? "desc" : "asc";
+          } else {
+            state.rciNormSorts[g].key = k;
+            state.rciNormSorts[g].dir = "desc";
+          }
+          renderPublicRciTable();
+        });
+      }
     }
-    if (rciNormCountryFilter) rciNormCountryFilter.value = state.rciNormFilters.country || "";
-    if (vizCountryFilter) vizCountryFilter.value = state.rciNormFilters.country || "";
-    syncMultiSelectValues(rciNormSeriesFilter, state.rciNormFilters.series);
-    syncMultiSelectValues(vizSeriesFilter, state.rciNormFilters.series);
   }
-
-  function rerenderSharedPublicLists() {
-    rciNormSearch?.dispatchEvent(new Event("input"));
-    vizSearch?.dispatchEvent(new Event("input"));
-  }
-
-  async function onSharedPublicFiltersChanged() {
-    syncPublicFilterControls();
-    rerenderSharedPublicLists();
-    await updateRciNormTables();
-    await updateVisualization();
-  }
-
-  wireRaceFilterPanel({
-    listEl: rciNormList,
-    searchEl: rciNormSearch,
-    countryEl: rciNormCountryFilter,
-    seriesEl: rciNormSeriesFilter,
-    countEl: document.getElementById("rcinormCount"),
-    selectedSet: state.rciNormSelected,
-    filters: state.rciNormFilters,
-    onUpdate: onSharedPublicFiltersChanged,
-    buttonConfigs: [
-      ["rcinormAll", () => { setSelectionAll(state.rciNormSelected); applyFiltersToSelection(state.rciNormSelected, state.rciNormFilters); }],
-      ["rcinormNone", () => { setSelectionNone(state.rciNormSelected); }],
-      ["rcinorm2025", () => { setSelectionByYear(state.rciNormSelected, 2025, state.rciNormFilters); }],
-      ["rcinorm2024", () => { setSelectionByYear(state.rciNormSelected, 2024, state.rciNormFilters); }],
-      ["rcinorm2023", () => { setSelectionByYear(state.rciNormSelected, 2023, state.rciNormFilters); }]
-    ]
-  });
-
-  wireRaceFilterPanel({
-    listEl: document.getElementById("vizList"),
-    searchEl: vizSearch,
-    countryEl: vizCountryFilter,
-    seriesEl: vizSeriesFilter,
-    countEl: document.getElementById("vizCount"),
-    selectedSet: state.vizSelected,
-    filters: state.vizFilters,
-    onUpdate: onSharedPublicFiltersChanged,
-    buttonConfigs: [
-      ["vizAll", () => { setSelectionAll(state.vizSelected); applyFiltersToSelection(state.vizSelected, state.vizFilters); }],
-      ["vizNone", () => { setSelectionNone(state.vizSelected); }],
-      ["viz2025", () => { setSelectionByYear(state.vizSelected, 2025, state.vizFilters); }],
-      ["viz2024", () => { setSelectionByYear(state.vizSelected, 2024, state.vizFilters); }],
-      ["viz2023", () => { setSelectionByYear(state.vizSelected, 2023, state.vizFilters); }]
-    ]
-  });
-
-  if (rciNormSearch && vizSearch) {
-    let syncingSearch = false;
-    const syncSearch = (source, target) => {
-      if (syncingSearch) return;
-      syncingSearch = true;
-      state.publicRaceSearch = source.value;
-      target.value = source.value;
-      target.dispatchEvent(new Event("input"));
-      syncingSearch = false;
-    };
-    rciNormSearch.addEventListener("input", () => syncSearch(rciNormSearch, vizSearch));
-    vizSearch.addEventListener("input", () => syncSearch(vizSearch, rciNormSearch));
-  }
-
-  syncPublicFilterControls();
-  rerenderSharedPublicLists();
 
   const vizLadderMale = document.getElementById("vizLadderMale");
   const vizLadderFemale = document.getElementById("vizLadderFemale");
