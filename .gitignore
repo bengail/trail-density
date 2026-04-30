@@ -14,3 +14,6 @@ venv/
 
 # Local
 *.zip
+
+# Supabase credentials (copy config.js.example → config.js and fill in)
+config.js

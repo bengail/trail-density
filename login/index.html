@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Login — Trail Density</title>
+  <style>
+    :root { --bg:#f5f7fb; --panel:#ffffff; --muted:#6b7280; --text:#0f172a; --border:#e2e8f0; --accent:#4f46e5; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 32px; width: 100%; max-width: 360px; box-shadow: 0 15px 35px rgba(15,23,42,0.08); }
+    h1 { font-size: 16px; margin: 0 0 4px 0; }
+    .sub { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px; }
+    .field input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: #f8fafc; color: var(--text); font: inherit; font-size: 14px; }
+    .field input:focus { outline: 2px solid rgba(79,70,229,0.4); border-color: var(--accent); }
+    button[type="submit"] { width: 100%; padding: 11px; border-radius: 10px; border: none; background: var(--accent); color: #fff; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 4px; }
+    button[type="submit"]:hover { background: #4338ca; }
+    button[type="submit"]:disabled { opacity: 0.6; cursor: default; }
+    .status { border-radius: 10px; padding: 10px; border: 1px solid var(--border); font-size: 12px; background: #f8fafc; margin-top: 14px; display: none; }
+    .status.error { border-color: #fecaca; background: #fef2f2; color: #991b1b; display: block; }
+    .status.ok { border-color: #bbf7d0; background: #f0fdf4; color: #166534; display: block; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Trail Density — Admin</h1>
+    <div class="sub">Sign in to access the admin panel.</div>
+    <form id="loginForm">
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" required autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" required autocomplete="current-password" />
+      </div>
+      <button type="submit" id="submitBtn">Sign in</button>
+    </form>
+    <div id="status" class="status"></div>
+  </div>
+
+  <script src="../config.js" onerror=""></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../supabase_client.js"></script>
+  <script>
+    (async function () {
+      if (!window.supabaseClient) {
+        showError("Supabase not configured. Check config.js.");
+        return;
+      }
+
+      // Already logged in → go straight to admin
+      const { data: { session } } = await window.supabaseClient.auth.getSession();
+      if (session) { location.replace("../admin/"); return; }
+
+      document.getElementById("loginForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const btn = document.getElementById("submitBtn");
+        btn.disabled = true;
+        btn.textContent = "Signing in…";
+        clearStatus();
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        const { error } = await window.supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) {
+          showError(error.message);
+          btn.disabled = false;
+          btn.textContent = "Sign in";
+        } else {
+          location.replace("../admin/");
+        }
+      });
+
+      function showError(msg) {
+        const el = document.getElementById("status");
+        el.textContent = msg;
+        el.className = "status error";
+      }
+      function clearStatus() {
+        const el = document.getElementById("status");
+        el.textContent = "";
+        el.className = "status";
+      }
+    })();
+  </script>
+</body>
+</html>
