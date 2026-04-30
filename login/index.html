@@ -51,9 +51,13 @@
         return;
       }
 
-      // Already logged in → go straight to admin
+      // Already logged in → verify admin status then redirect
       const { data: { session } } = await window.supabaseClient.auth.getSession();
-      if (session) { location.replace("../admin/"); return; }
+      if (session) {
+        const isAdmin = await checkAdminAccess();
+        if (isAdmin) { location.replace("../admin/"); return; }
+        await window.supabaseClient.auth.signOut();
+      }
 
       document.getElementById("loginForm").addEventListener("submit", async function (e) {
         e.preventDefault();
@@ -70,10 +74,28 @@
           showError(error.message);
           btn.disabled = false;
           btn.textContent = "Sign in";
-        } else {
-          location.replace("../admin/");
+          return;
         }
+
+        const isAdmin = await checkAdminAccess();
+        if (!isAdmin) {
+          await window.supabaseClient.auth.signOut();
+          showError("Your account is not authorised for admin access.");
+          btn.disabled = false;
+          btn.textContent = "Sign in";
+          return;
+        }
+
+        location.replace("../admin/");
       });
+
+      async function checkAdminAccess() {
+        const { data } = await window.supabaseClient
+          .from("admins")
+          .select("email")
+          .maybeSingle();
+        return !!data;
+      }
 
       function showError(msg) {
         const el = document.getElementById("status");
