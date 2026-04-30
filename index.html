@@ -38,6 +38,15 @@
     .item:hover { background: rgba(34,51,199,0.08); }
     .item .item-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .item .pill { margin-left:auto; background: rgba(71,217,171,0.18); color:#0f766e; border-color: rgba(71,217,171,0.45); }
+    /* ── Public RCI table ── */
+    .col-rank { width:36px; text-align:center !important; color:var(--muted); font-weight:400; }
+    .rci-table td.col-rank { text-align:center; color:var(--muted); font-size:11px; font-variant-numeric:tabular-nums; }
+    .rci-table .col-extra { display:none; }
+    .rci-table.show-extra .col-extra { display:table-cell; }
+    .rci-val { display:block; font-variant-numeric:tabular-nums; }
+    .rci-bar-track { height:3px; background:rgba(34,51,199,0.1); border-radius:2px; margin-top:4px; }
+    .rci-bar-fill { height:100%; background:var(--accent); border-radius:2px; transition:width 0.25s; }
+    .rci10-cell { min-width:90px; }
     /* ── Public chip filter panel ── */
     .filter-section { margin-bottom: 18px; }
     .filter-label { display:block; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
@@ -242,47 +251,36 @@
     </aside>
 
     <section class="panel">
-      <div class="row" style="justify-content:space-between; gap:8px; margin-bottom:10px;">
-        <h2 style="margin:0;">Exports</h2>
-        <div class="btns">
-          <button id="exportRciNormFemaleCsv">Export Female CSV</button>
-          <button id="exportRciNormMaleCsv">Export Male CSV</button>
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+        <div class="chip-group">
+          <button id="rciTabWomen" class="chip active">Women</button>
+          <button id="rciTabMen" class="chip">Men</button>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <button id="rciToggleExtra" class="chip-sm">+ RCI3 &amp; RCI20</button>
+          <button id="exportRciNormFemaleCsv" class="chip-sm">↓ Women CSV</button>
+          <button id="exportRciNormMaleCsv" class="chip-sm">↓ Men CSV</button>
         </div>
       </div>
-      <h2>RCI (Female, normalized)</h2>
-      <div class="subtitle-note">ITRA score normalized with Enduraw data formula: <b>[(-0.000466 × ITRA) + 1.532] × ITRA</b>.</div>
       <div class="tableWrap">
-        <table id="rcinormfemaleTable" class="rci-table">
+        <table id="publicRciTable" class="rci-table">
           <thead>
             <tr>
+              <th class="col-rank">#</th>
               <th data-key="name">Race</th>
               <th data-key="country">Country</th>
               <th data-key="series">Series</th>
-              <th data-key="rc3">RCI3</th>
+              <th data-key="rc3" class="col-extra">RCI3</th>
               <th data-key="rc5">RCI5</th>
               <th data-key="rc10">RCI10</th>
-              <th data-key="rc20">RCI20</th>
+              <th data-key="rc20" class="col-extra">RCI20</th>
             </tr>
           </thead>
           <tbody></tbody>
         </table>
       </div>
-      <h2 style="margin-top:20px;">RCI (Male)</h2>
-      <div class="tableWrap">
-        <table id="rcinormmaleTable" class="rci-table">
-          <thead>
-            <tr>
-              <th data-key="name">Race</th>
-              <th data-key="country">Country</th>
-              <th data-key="series">Series</th>
-              <th data-key="rc3">RCI3</th>
-              <th data-key="rc5">RCI5</th>
-              <th data-key="rc10">RCI10</th>
-              <th data-key="rc20">RCI20</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+      <div class="note" style="margin-top:10px;">
+        Women's ITRA scores normalized: <b>[(-0.000466 × ITRA) + 1.532] × ITRA</b>.
       </div>
     </section>
   </div>

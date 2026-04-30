@@ -330,6 +330,8 @@ const state = {
   chartsFilters: { country: "", series: "" },
   raceSelected: null
   ,
+  publicRciGender: "female",
+  publicRciShowExtra: false,
   rciSelected: new Set(),
   rciFilters: { country: "", series: [] },
   rciSorts: {
@@ -478,6 +480,53 @@ function wireRaceFilterPanel(config) {
   renderSelection();
 }
 
+async function renderPublicRciTable() {
+  const table = document.getElementById("publicRciTable");
+  if (!table) return;
+  const tbody = table.querySelector("tbody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+
+  const gender = state.publicRciGender;
+  const rows = await getRciRowsForGender(gender, {
+    selectedSet: state.rciNormSelected,
+    filters: state.rciNormFilters,
+    sorts: state.rciNormSorts,
+    normalizeFemale: true
+  });
+
+  const allMetrics = rows.flatMap(r => [r.rc3, r.rc5, r.rc20]).filter(Number.isFinite);
+  const minVal = allMetrics.length ? Math.min(...allMetrics) : 0;
+  const maxVal = allMetrics.length ? Math.max(...allMetrics) : 0;
+  const maxRci10 = rows.map(r => r.rc10).filter(Number.isFinite).reduce((a, b) => Math.max(a, b), 1);
+
+  for (let i = 0; i < rows.length; i++) {
+    const r = rows[i];
+    const tr = document.createElement("tr");
+    const barPct = Number.isFinite(r.rc10) ? Math.max(4, (r.rc10 / maxRci10) * 100) : 0;
+    tr.innerHTML = `
+      <td class="col-rank">${i + 1}</td>
+      <td style="font-weight:600;">${r.name}</td>
+      <td style="color:var(--muted);">${r.country || "-"}</td>
+      <td style="color:var(--muted);">${r.series || "-"}</td>
+      <td class="col-extra" style="${densityColor(r.rc3, minVal, maxVal)}">${fmt(r.rc3, 2)}</td>
+      <td style="${densityColor(r.rc5, minVal, maxVal)}">${fmt(r.rc5, 2)}</td>
+      <td class="rci10-cell">
+        <span class="rci-val">${fmt(r.rc10, 2)}</span>
+        <div class="rci-bar-track"><div class="rci-bar-fill" style="width:${barPct.toFixed(1)}%"></div></div>
+      </td>
+      <td class="col-extra" style="${densityColor(r.rc20, minVal, maxVal)}">${fmt(r.rc20, 2)}</td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  const sort = state.rciNormSorts[gender];
+  for (const th of table.querySelectorAll("thead th[data-key]")) {
+    th.classList.remove("sort-asc", "sort-desc");
+    if (th.dataset.key === sort.key) th.classList.add(sort.dir === "asc" ? "sort-asc" : "sort-desc");
+  }
+}
+
 function wirePublicChipFilters() {
   const chipState = {
     activeSeries: new Set(),
@@ -603,7 +652,7 @@ function wirePublicChipFilters() {
   }
 
   async function triggerUpdate() {
-    await updateRciNormTables();
+    await renderPublicRciTable();
     await updateVisualization();
   }
 
@@ -1853,6 +1902,7 @@ async function updateAll() {
   await updateCharts();
   await updateRciTables();
   await updateRciNormTables();
+  await renderPublicRciTable();
   await updateVisualization();
 }
 
@@ -1990,6 +2040,46 @@ async function updateAll() {
 
   if (state.appMode === "public") {
     wirePublicChipFilters();
+
+    // Gender toggle
+    document.getElementById("rciTabWomen")?.addEventListener("click", () => {
+      state.publicRciGender = "female";
+      document.getElementById("rciTabWomen")?.classList.add("active");
+      document.getElementById("rciTabMen")?.classList.remove("active");
+      renderPublicRciTable();
+    });
+    document.getElementById("rciTabMen")?.addEventListener("click", () => {
+      state.publicRciGender = "male";
+      document.getElementById("rciTabMen")?.classList.add("active");
+      document.getElementById("rciTabWomen")?.classList.remove("active");
+      renderPublicRciTable();
+    });
+
+    // Extra columns toggle (CSS class only, no re-render needed)
+    document.getElementById("rciToggleExtra")?.addEventListener("click", function () {
+      state.publicRciShowExtra = !state.publicRciShowExtra;
+      document.getElementById("publicRciTable")?.classList.toggle("show-extra", state.publicRciShowExtra);
+      this.textContent = state.publicRciShowExtra ? "− RCI3 & RCI20" : "+ RCI3 & RCI20";
+      this.classList.toggle("active", state.publicRciShowExtra);
+    });
+
+    // Sortable headers
+    const publicTable = document.getElementById("publicRciTable");
+    if (publicTable) {
+      for (const th of publicTable.querySelectorAll("thead th[data-key]")) {
+        th.addEventListener("click", () => {
+          const g = state.publicRciGender;
+          const k = th.dataset.key;
+          if (state.rciNormSorts[g].key === k) {
+            state.rciNormSorts[g].dir = state.rciNormSorts[g].dir === "asc" ? "desc" : "asc";
+          } else {
+            state.rciNormSorts[g].key = k;
+            state.rciNormSorts[g].dir = "desc";
+          }
+          renderPublicRciTable();
+        });
+      }
+    }
   }
 
   const vizLadderMale = document.getElementById("vizLadderMale");
