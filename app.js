@@ -498,12 +498,15 @@ async function renderPublicRciTable() {
   const allMetrics = rows.flatMap(r => [r.rc3, r.rc5, r.rc20]).filter(Number.isFinite);
   const minVal = allMetrics.length ? Math.min(...allMetrics) : 0;
   const maxVal = allMetrics.length ? Math.max(...allMetrics) : 0;
-  const maxRci10 = rows.map(r => r.rc10).filter(Number.isFinite).reduce((a, b) => Math.max(a, b), 1);
+  const rci10Values = rows.map(r => r.rc10).filter(Number.isFinite);
+  const maxRci10 = rci10Values.length ? Math.max(...rci10Values) : 1;
+  const minRci10 = rci10Values.length ? Math.min(...rci10Values) : 0;
+  const rangeRci10 = (maxRci10 - minRci10) || 1;
 
   for (let i = 0; i < rows.length; i++) {
     const r = rows[i];
     const tr = document.createElement("tr");
-    const barPct = Number.isFinite(r.rc10) ? Math.max(4, (r.rc10 / maxRci10) * 100) : 0;
+    const barPct = Number.isFinite(r.rc10) ? Math.max(4, ((r.rc10 - minRci10) / rangeRci10) * 100) : 0;
     tr.innerHTML = `
       <td class="col-rank">${i + 1}</td>
       <td style="font-weight:600;">${r.name}</td>
@@ -537,7 +540,9 @@ function wirePublicChipFilters() {
   function allSeriesFromData() {
     const s = new Set();
     for (const c of getManifestEntries()) {
-      for (const v of normalizeSeries(getCourseMeta(c.race_id)?.series)) s.add(v);
+      for (const v of normalizeSeries(getCourseMeta(c.race_id)?.series)) {
+        if (v.toLowerCase() !== "none") s.add(v);
+      }
     }
     return Array.from(s).sort();
   }
@@ -945,8 +950,9 @@ function showVizContainer() {
     vizTitle.innerHTML = `<b>${titleByType[state.vizType] || "Visualization"}</b>`;
   }
 
-  const vizTopMenu = document.getElementById("vizTopMenu");
-  if (vizTopMenu) vizTopMenu.value = state.activeTab === "visualization" ? state.vizType : "";
+  const onViz = state.activeTab === "visualization";
+  document.getElementById("vizTabLadder")?.classList.toggle("active", onViz && state.vizType === "ladder");
+  document.getElementById("vizTabParity")?.classList.toggle("active", onViz && state.vizType === "parity");
 }
 
 function updateVizExplanation() {
@@ -1797,7 +1803,7 @@ function renderMetaCard(key, value) {
 }
 
 function applyAppModeVisibility(mode) {
-  const publicButtons = ["tabRci", "tabRciNorm", "vizTopMenu"];
+  const publicButtons = ["tabRci", "tabRciNorm", "vizTabLadder", "vizTabParity"];
   const adminButtons = ["tabSummary", "tabCharts", "tabRace", "tabImport"];
   const publicPages = ["pageRci", "pageRciNorm", "pageViz"];
   const adminPages = ["pageSummary", "pageCharts", "pageRace", "pageImport"];
@@ -1892,6 +1898,8 @@ function setActiveTab(tab) {
   activate(bCha, safeTab === "charts");
   activate(bRace, safeTab === "race");
   activate(bImp, safeTab === "import");
+  activate(document.getElementById("vizTabLadder"), safeTab === "visualization" && state.vizType === "ladder");
+  activate(document.getElementById("vizTabParity"), safeTab === "visualization" && state.vizType === "parity");
   showVizContainer();
   updateVizExplanation();
 }
@@ -2035,8 +2043,18 @@ async function updateAll() {
     ]
   });
 
-  const vizTopMenu = document.getElementById("vizTopMenu");
   const vizParityConnect = document.getElementById("vizParityConnect");
+
+  document.getElementById("vizTabLadder")?.addEventListener("click", () => {
+    state.vizType = "ladder";
+    setActiveTab("visualization");
+    updateVisualization();
+  });
+  document.getElementById("vizTabParity")?.addEventListener("click", () => {
+    state.vizType = "parity";
+    setActiveTab("visualization");
+    updateVisualization();
+  });
 
   if (state.appMode === "public") {
     wirePublicChipFilters();
@@ -2088,14 +2106,6 @@ async function updateAll() {
   if (vizLadderFemale) vizLadderFemale.addEventListener("click", () => { setVizLadderSex("female"); updateVisualization(); });
   setVizLadderSex(state.vizLadderSex);
 
-  if (vizTopMenu) {
-    vizTopMenu.addEventListener("change", () => {
-      if (!vizTopMenu.value) return;
-      state.vizType = vizTopMenu.value === "parity" ? "parity" : "ladder";
-      setActiveTab("visualization");
-      updateVisualization();
-    });
-  }
   if (vizParityConnect) {
     vizParityConnect.checked = state.vizParityConnect;
     vizParityConnect.addEventListener("change", () => {

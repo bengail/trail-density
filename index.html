@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Trail and mountain races density</title>
+  <title>Trail Race Density — RCI</title>
   <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
@@ -115,17 +115,14 @@
 <body>
 <header>
   <div>
-    <h1>Trail and mountain races density</h1>
-    <div class="sub">RCI, mean and graphical tool density analisys</div>
+    <h1>Trail Race Density</h1>
+    <div class="sub">Realized Competition Index across elite trail &amp; mountain races</div>
   </div>
   <nav>
     <div class="page-menu">
-      <button id="tabRciNorm" class="active">RCI Normalized</button>
-      <select id="vizTopMenu">
-        <option value="">Visualisation</option>
-        <option value="ladder">Visualization · RCI Ladder</option>
-        <option value="parity">Visualization · RCI Parity Map</option>
-      </select>
+      <button id="tabRciNorm" class="active">RCI</button>
+      <button id="vizTabLadder">Ladder</button>
+      <button id="vizTabParity">Parity</button>
     </div>
     <button id="tabSummary">Summary</button>
     <button id="tabCharts">Charts</button>
@@ -245,8 +242,10 @@
         <div id="publicRaceList" class="list" hidden></div>
       </div>
       <hr class="filter-divider" />
-      <div class="note">
-        <b>RCI<sub>N</sub></b> = mean(top N) − std(top N). Higher = stronger, more uniform field.
+      <div class="note">Hover <b>RCI10 ⓘ</b> in the table header for details.</div>
+      <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+        <button id="exportRciNormFemaleCsv" class="chip-sm">↓ Women CSV</button>
+        <button id="exportRciNormMaleCsv" class="chip-sm">↓ Men CSV</button>
       </div>
     </aside>
 
@@ -256,11 +255,7 @@
           <button id="rciTabWomen" class="chip active">Women</button>
           <button id="rciTabMen" class="chip">Men</button>
         </div>
-        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-          <button id="rciToggleExtra" class="chip-sm">+ RCI3 &amp; RCI20</button>
-          <button id="exportRciNormFemaleCsv" class="chip-sm">↓ Women CSV</button>
-          <button id="exportRciNormMaleCsv" class="chip-sm">↓ Men CSV</button>
-        </div>
+        <button id="rciToggleExtra" class="chip-sm">+ RCI3 &amp; RCI20</button>
       </div>
       <div class="tableWrap">
         <table id="publicRciTable" class="rci-table">
@@ -270,17 +265,14 @@
               <th data-key="name">Race</th>
               <th data-key="country">Country</th>
               <th data-key="series">Series</th>
-              <th data-key="rc3" class="col-extra">RCI3</th>
-              <th data-key="rc5">RCI5</th>
-              <th data-key="rc10">RCI10</th>
-              <th data-key="rc20" class="col-extra">RCI20</th>
+              <th data-key="rc3" class="col-extra" title="RCI3 = mean(top 3) − std(top 3)">RCI3</th>
+              <th data-key="rc5" title="RCI5 = mean(top 5) − std(top 5)">RCI5</th>
+              <th data-key="rc10" title="RCI N = mean(top N) − std(top N). Higher = stronger, more uniform field.&#10;Women's ITRA scores are normalized: [(-0.000466 × ITRA) + 1.532] × ITRA">RCI10 ⓘ</th>
+              <th data-key="rc20" class="col-extra" title="RCI20 = mean(top 20) − std(top 20)">RCI20</th>
             </tr>
           </thead>
           <tbody></tbody>
         </table>
-      </div>
-      <div class="note" style="margin-top:10px;">
-        Women's ITRA scores normalized: <b>[(-0.000466 × ITRA) + 1.532] × ITRA</b>.
       </div>
     </section>
   </div>
