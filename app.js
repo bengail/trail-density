@@ -153,12 +153,14 @@ function densityColor(value, min, max) {
   if (!Number.isFinite(value)) return "";
   const clampedMin = Number.isFinite(min) ? min : value;
   const clampedMax = Number.isFinite(max) ? max : value;
-  if (clampedMax <= clampedMin) return "background:hsl(224, 78%, 93%); color:#0f172a; font-weight:600;";
+  if (clampedMax <= clampedMin) return "background:hsl(224,70%,92%); color:#0f172a; font-weight:600;";
   const ratio = Math.max(0, Math.min(1, (value - clampedMin) / (clampedMax - clampedMin)));
-  const lightness = 98 - ratio * 24;
-  const bg = `hsl(224, 82%, ${lightness}%)`;
-  const borderAlpha = (0.1 + ratio * 0.24).toFixed(3);
-  return `background:${bg}; color:#0f172a; font-weight:600; box-shadow: inset 0 0 0 1px rgba(15,23,42,${borderAlpha});`;
+  const lightness = 92 - ratio * 47;
+  const saturation = 60 + ratio * 20;
+  const bg = `hsl(224, ${saturation.toFixed(0)}%, ${lightness.toFixed(0)}%)`;
+  const textColor = lightness < 68 ? "#ffffff" : "#0f172a";
+  const borderAlpha = (0.06 + ratio * 0.12).toFixed(3);
+  return `background:${bg}; color:${textColor}; font-weight:600; box-shadow: inset 0 0 0 1px rgba(15,23,42,${borderAlpha});`;
 }
 
 function fmt(n, digits = 1) {
@@ -495,18 +497,13 @@ async function renderPublicRciTable() {
     normalizeFemale: true
   });
 
-  const allMetrics = rows.flatMap(r => [r.rc3, r.rc5, r.rc20]).filter(Number.isFinite);
+  const allMetrics = rows.flatMap(r => [r.rc3, r.rc5, r.rc10, r.rc20]).filter(Number.isFinite);
   const minVal = allMetrics.length ? Math.min(...allMetrics) : 0;
   const maxVal = allMetrics.length ? Math.max(...allMetrics) : 0;
-  const rci10Values = rows.map(r => r.rc10).filter(Number.isFinite);
-  const maxRci10 = rci10Values.length ? Math.max(...rci10Values) : 1;
-  const minRci10 = rci10Values.length ? Math.min(...rci10Values) : 0;
-  const rangeRci10 = (maxRci10 - minRci10) || 1;
 
   for (let i = 0; i < rows.length; i++) {
     const r = rows[i];
     const tr = document.createElement("tr");
-    const barPct = Number.isFinite(r.rc10) ? Math.max(4, ((r.rc10 - minRci10) / rangeRci10) * 100) : 0;
     tr.innerHTML = `
       <td class="col-rank">${i + 1}</td>
       <td style="font-weight:600;">${r.name}</td>
@@ -514,10 +511,7 @@ async function renderPublicRciTable() {
       <td style="color:var(--muted);">${r.series || "-"}</td>
       <td class="col-extra" style="${densityColor(r.rc3, minVal, maxVal)}">${fmt(r.rc3, 2)}</td>
       <td style="${densityColor(r.rc5, minVal, maxVal)}">${fmt(r.rc5, 2)}</td>
-      <td class="rci10-cell">
-        <span class="rci-val">${fmt(r.rc10, 2)}</span>
-        <div class="rci-bar-track"><div class="rci-bar-fill" style="width:${barPct.toFixed(1)}%"></div></div>
-      </td>
+      <td style="${densityColor(r.rc10, minVal, maxVal)}">${fmt(r.rc10, 2)}</td>
       <td class="col-extra" style="${densityColor(r.rc20, minVal, maxVal)}">${fmt(r.rc20, 2)}</td>
     `;
     tbody.appendChild(tr);
