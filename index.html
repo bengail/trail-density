@@ -116,7 +116,7 @@
 <header>
   <div>
     <h1>Trail Race Density</h1>
-    <div class="sub">Realized Competition Index across elite trail &amp; mountain races</div>
+    <div class="sub" title="RCI N = mean(top N) − std(top N). Higher = stronger, more uniform field.&#10;Women's ITRA scores are normalized: [(-0.000466 × ITRA) + 1.532] × ITRA" style="cursor:help;">Realized Competition Index across elite trail &amp; mountain races</div>
   </div>
   <nav>
     <div class="page-menu">
@@ -242,8 +242,7 @@
         <div id="publicRaceList" class="list" hidden></div>
       </div>
       <hr class="filter-divider" />
-      <div class="note">Hover <b>RCI10 ⓘ</b> in the table header for details.</div>
-      <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
         <button id="exportRciNormFemaleCsv" class="chip-sm">↓ Women CSV</button>
         <button id="exportRciNormMaleCsv" class="chip-sm">↓ Men CSV</button>
       </div>
@@ -267,7 +266,7 @@
               <th data-key="series">Series</th>
               <th data-key="rc3" class="col-extra" title="RCI3 = mean(top 3) − std(top 3)">RCI3</th>
               <th data-key="rc5" title="RCI5 = mean(top 5) − std(top 5)">RCI5</th>
-              <th data-key="rc10" title="RCI N = mean(top N) − std(top N). Higher = stronger, more uniform field.&#10;Women's ITRA scores are normalized: [(-0.000466 × ITRA) + 1.532] × ITRA">RCI10 ⓘ</th>
+              <th data-key="rc10">RCI10</th>
               <th data-key="rc20" class="col-extra" title="RCI20 = mean(top 20) − std(top 20)">RCI20</th>
             </tr>
           </thead>
