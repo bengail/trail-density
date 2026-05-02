@@ -723,6 +723,139 @@ function parsePastedResults(rawText) {
   return results;
 }
 
+// ---- ITRA fetch + parse ----
+function parseItraHtml(html, url) {
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const table = doc.getElementById("RunnerRaceResults");
+  if (!table) {
+    // Likely a login redirect
+    const hasLoginHint = doc.querySelector('input[type="password"], form[action*="login"], [href*="login"]');
+    if (hasLoginHint) throw new Error("SessionToken expired or invalid — log in to itra.run and copy a fresh token.");
+    throw new Error("Results table not found. Check the URL and try again.");
+  }
+
+  const rows = table.querySelectorAll("tbody tr");
+  const results = [];
+  for (const row of rows) {
+    const cells = row.querySelectorAll("td");
+    if (cells.length < 7) continue;
+
+    const rank = parseInt(cells[0].textContent.trim(), 10);
+    if (!Number.isFinite(rank) || rank < 1) continue;
+
+    const runnerLink = cells[1].querySelector("a");
+    const runner = runnerLink
+      ? runnerLink.textContent.replace(/\s+/g, " ").trim() || null
+      : cells[1].textContent.replace(/\s+/g, " ").trim() || null;
+
+    const scoreText = cells[3].textContent.trim();
+    const index = parseInt(scoreText, 10);
+    if (!Number.isFinite(index) || index <= 0) continue; // no score = skip (required for RCI)
+
+    const gender = cells[5].textContent.trim() || null;
+    const nationality = cells[6].textContent.replace(/\s+/g, " ").trim() || null;
+
+    results.push({ rank, runner, index, gender, nationality });
+  }
+
+  if (!results.length) throw new Error("No valid results found — all rows may be missing ITRA scores.");
+  return results;
+}
+
+function itraUrlToMeta(url) {
+  // Pattern: /Races/RaceResults/{Slug}/{Year}/{NumericId}
+  const m = url.match(/RaceResults\/(.+?)\/(\d{4})\/(\d+)/);
+  if (!m) return {};
+  const slug = m[1];   // "Black.Canyon.Ultras.100K"
+  const year = parseInt(m[2], 10);
+  const name = slug.replace(/\./g, " ");  // "Black Canyon Ultras 100K"
+  const raceId = slug.toUpperCase().replace(/\./g, "_") + "_" + year; // "BLACK_CANYON_ULTRAS_100K_2026"
+  return { name, year, raceId };
+}
+
+function setItraStatus(message, type = "") {
+  const el = document.getElementById("itraStatus");
+  if (!el) return;
+  el.style.display = "block";
+  el.className = `status${type ? ` ${type}` : ""}`;
+  el.textContent = message;
+}
+
+async function fetchFromItra() {
+  const url = (document.getElementById("itraUrl")?.value || "").trim();
+  const sessionToken = (document.getElementById("itraToken")?.value || "").trim();
+  const btn = document.getElementById("itraFetchBtn");
+
+  if (!url) { setItraStatus("Paste an itra.run results URL first.", "error"); return; }
+  if (!sessionToken) { setItraStatus("Paste your SessionToken cookie value.", "error"); return; }
+
+  if (btn) { btn.disabled = true; btn.textContent = "Fetching…"; }
+  setItraStatus("Fetching from itra.run…");
+
+  try {
+    const resp = await fetch("/api/itra-proxy", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url, sessionToken })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({ error: `HTTP ${resp.status}` }));
+      throw new Error(err.error || `Proxy error ${resp.status}`);
+    }
+
+    const html = await resp.text();
+    const results = parseItraHtml(html, url);
+
+    // Pre-fill metadata fields from URL
+    const meta = itraUrlToMeta(url);
+    if (meta.raceId) {
+      const raceIdEl = document.getElementById("importRaceId");
+      if (raceIdEl && !raceIdEl.value) raceIdEl.value = meta.raceId;
+    }
+    if (meta.name) {
+      const nameEl = document.getElementById("importName");
+      if (nameEl && !nameEl.value) nameEl.value = meta.name;
+    }
+    if (meta.year) {
+      const yearEl = document.getElementById("importYear");
+      if (yearEl && !yearEl.value) yearEl.value = String(meta.year);
+    }
+
+    // Populate draft and preview (same pipeline as manual import)
+    state.importDraft = {
+      meta: {
+        race_id: document.getElementById("importRaceId")?.value || meta.raceId || "",
+        name: document.getElementById("importName")?.value || meta.name || "",
+        series: parseSeriesInput(document.getElementById("importSeries")?.value),
+        country: asNullableText(document.getElementById("importCountry")?.value),
+        data_source: "ITRA",
+        year: parseNullableNumber(document.getElementById("importYear")?.value) || meta.year || null,
+        distance_km: parseNullableNumber(document.getElementById("importDistanceKm")?.value),
+        elevation_m: parseNullableNumber(document.getElementById("importElevationM")?.value),
+        prize_money: asNullableText(document.getElementById("importPrizeMoney")?.value),
+        notes: asNullableText(document.getElementById("importNotes")?.value),
+        source_url: url
+      },
+      results
+    };
+
+    // Also set data_source field in form
+    const srcEl = document.getElementById("importDataSource");
+    if (srcEl && !srcEl.value) srcEl.value = "ITRA";
+    const srcUrlEl = document.getElementById("importSourceUrl");
+    if (srcUrlEl && !srcUrlEl.value) srcUrlEl.value = url;
+
+    renderImportPreview(results);
+    setItraStatus(`${results.length} results fetched. Review metadata below, then Save to Supabase.`, "ok");
+    setImportStatus(`${results.length} results loaded from ITRA. Fill any missing metadata, then save.`, "ok");
+  } catch (err) {
+    setItraStatus(err.message || "Fetch failed.", "error");
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = "Fetch & Preview"; }
+  }
+}
+
 function setImportStatus(message, type = "") {
   const el = document.getElementById("importStatus");
   if (!el) return;
@@ -1272,6 +1405,7 @@ async function updateAll() {
   }
 
   // Admin: import
+  document.getElementById("itraFetchBtn")?.addEventListener("click", fetchFromItra);
   document.getElementById("importBuildJsonBtn")?.addEventListener("click", buildImportJson);
   document.getElementById("importSaveSupabaseBtn")?.addEventListener("click", importToSupabase);
   document.getElementById("importDownloadRaceBtn")?.addEventListener("click", downloadImportRaceJson);

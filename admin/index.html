@@ -105,9 +105,29 @@
 </main>
 
 <main id="pageImport">
+  <div style="display:grid; gap:14px;">
+
+  <div class="panel" style="border-color:rgba(79,70,229,0.25); background:#f5f3ff;">
+    <h2 style="margin:0 0 10px;">Fetch from ITRA</h2>
+    <div class="formGrid">
+      <div class="field">
+        <label for="itraUrl">ITRA Results URL</label>
+        <input id="itraUrl" type="url" placeholder="https://itra.run/Races/RaceResults/Race.Name/2026/123456" />
+      </div>
+      <div class="field">
+        <label for="itraToken">SessionToken <span style="font-weight:400; color:var(--muted);">(cookie from itra.run — DevTools → Application → Cookies)</span></label>
+        <input id="itraToken" type="password" placeholder="paste SessionToken value" autocomplete="off" />
+      </div>
+    </div>
+    <div class="btns" style="margin-top:10px;">
+      <button id="itraFetchBtn">Fetch &amp; Preview</button>
+    </div>
+    <div id="itraStatus" class="status" style="display:none; margin-top:10px;"></div>
+  </div>
+
   <div class="panel">
     <h2>Race Importer</h2>
-    <div class="note">Paste tab-separated or comma-separated race results, fill metadata, preview, then save directly to Supabase.</div>
+    <div class="note">Or paste tab/comma-separated results manually. Metadata fields are shared with the ITRA fetch above.</div>
     <div style="height:10px"></div>
     <div class="importLayout">
       <div class="formGrid">
@@ -186,6 +206,8 @@
       </div>
     </div>
   </div>
+
+  </div><!-- end grid wrapper -->
 </main>
 
 <script src="../config.js" onerror=""></script>
