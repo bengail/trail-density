@@ -752,7 +752,10 @@ function parseItraHtml(html, url) {
     const index = parseInt(scoreText, 10);
     if (!Number.isFinite(index) || index <= 0) continue; // no score = skip (required for RCI)
 
-    const gender = cells[5].textContent.trim() || null;
+    const genderRaw = cells[5].textContent.trim().toUpperCase();
+    const gender = genderRaw === "M" || genderRaw === "H" || genderRaw === "MALE" || genderRaw === "HOMME" ? "M"
+      : genderRaw === "F" || genderRaw === "W" || genderRaw === "FEMALE" || genderRaw === "FEMME" ? "F"
+      : null;
     const nationality = cells[6].textContent.replace(/\s+/g, " ").trim() || null;
 
     results.push({ rank, runner, index, gender, nationality });
