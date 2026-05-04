@@ -874,13 +874,14 @@ function renderImportPreview(results) {
   }
 }
 
-function readImportDraftFromForm() {
+function readImportDraftFromForm(resultsOverride = null) {
   const raceId = (document.getElementById("importRaceId")?.value || "").trim();
   const name = (document.getElementById("importName")?.value || "").trim();
   if (!raceId) throw new Error("Race ID is required.");
   if (!name) throw new Error("Race name is required.");
-  const resultsText = document.getElementById("importResultsInput")?.value || "";
-  const results = parsePastedResults(resultsText);
+  const results = resultsOverride !== null
+    ? resultsOverride
+    : parsePastedResults(document.getElementById("importResultsInput")?.value || "");
   const meta = {
     race_id: raceId, name,
     series: parseSeriesInput(document.getElementById("importSeries")?.value),
@@ -907,10 +908,13 @@ function buildUpdatedManifestForImport(raceId) {
 
 function buildImportJson() {
   try {
-    const draft = readImportDraftFromForm();
+    const rawText = (document.getElementById("importResultsInput")?.value || "").trim();
+    const existingResults = (!rawText && state.importDraft?.results?.length)
+      ? state.importDraft.results : null;
+    const draft = readImportDraftFromForm(existingResults);
     state.importDraft = draft;
     renderImportPreview(draft.results);
-    setImportStatus(`JSON built successfully (${draft.results.length} results).`, "ok");
+    setImportStatus(`${draft.results.length} results ready.`, "ok");
   } catch (err) {
     state.importDraft = null;
     renderImportPreview([]);
