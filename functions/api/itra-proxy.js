@@ -8,7 +8,7 @@ export async function onRequestPost(context) {
     return Response.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { url, sessionToken } = body;
+  const { url, cookieHeader } = body;
 
   if (
     !url ||
@@ -21,15 +21,15 @@ export async function onRequestPost(context) {
     );
   }
 
-  if (!sessionToken || typeof sessionToken !== "string") {
-    return Response.json({ error: "sessionToken is required" }, { status: 400 });
+  if (!cookieHeader || typeof cookieHeader !== "string") {
+    return Response.json({ error: "cookieHeader is required" }, { status: 400 });
   }
 
   let itraResponse;
   try {
     itraResponse = await fetch(url, {
       headers: {
-        Cookie: `SessionToken=${sessionToken}`,
+        Cookie: cookieHeader,
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
         Accept: "text/html,application/xhtml+xml",

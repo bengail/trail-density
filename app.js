@@ -783,11 +783,11 @@ function setItraStatus(message, type = "") {
 
 async function fetchFromItra() {
   const url = (document.getElementById("itraUrl")?.value || "").trim();
-  const sessionToken = (document.getElementById("itraToken")?.value || "").trim();
+  const cookieHeader = (document.getElementById("itraToken")?.value || "").trim();
   const btn = document.getElementById("itraFetchBtn");
 
   if (!url) { setItraStatus("Paste an itra.run results URL first.", "error"); return; }
-  if (!sessionToken) { setItraStatus("Paste your SessionToken cookie value.", "error"); return; }
+  if (!cookieHeader) { setItraStatus("Paste your itra.run cookie header (from DevTools Network tab).", "error"); return; }
 
   if (btn) { btn.disabled = true; btn.textContent = "Fetching…"; }
   setItraStatus("Fetching from itra.run…");
@@ -796,7 +796,7 @@ async function fetchFromItra() {
     const resp = await fetch("/api/itra-proxy", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url, sessionToken })
+      body: JSON.stringify({ url, cookieHeader })
     });
 
     if (!resp.ok) {
