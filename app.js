@@ -1096,25 +1096,22 @@ function updateRankPlot(grouped, topN) {
     return {
       x: arr.map(r => r.rank),
       y: arr.map(r => r.index),
-      mode: "lines+markers",
+      mode: "lines",
       name: label,
-      hovertemplate: `${label}<br>rank=%{x}<br>index=%{y:.1f}<extra></extra>`,
-      fill: "tozeroy",
-      fillopacity: 0.12,
-      line: { width: 2 },
-      marker: { size: 4 }
+      hovertemplate: `<b>${label}</b><br>Rank %{x} — Index %{y:.0f}<extra></extra>`,
+      line: { width: 2 }
     };
   });
 
   Plotly.react("plot", traces, {
     paper_bgcolor: "rgba(0,0,0,0)",
     plot_bgcolor: "rgba(0,0,0,0)",
-    margin: { l: 55, r: 20, t: 10, b: 50 },
+    margin: { l: 55, r: 160, t: 10, b: 50 },
     font: { family: "Montserrat, ui-sans-serif, system-ui, sans-serif", size: 11 },
     xaxis: { title: "Rank", range: [1, topN], gridcolor: "#e2e8f0", zeroline: false, tickfont: { size: 10 } },
-    yaxis: { title: "Index", gridcolor: "#e2e8f0", zeroline: false, tickfont: { size: 10 } },
-    legend: { orientation: "h", y: 1.12, x: 0, font: { size: 10 } },
-    hovermode: "x unified"
+    yaxis: { title: "ITRA Index", gridcolor: "#e2e8f0", zeroline: false, tickfont: { size: 10 } },
+    legend: { orientation: "v", x: 1.02, y: 1, xanchor: "left", font: { size: 10 }, bgcolor: "rgba(255,255,255,0.85)", bordercolor: "#e2e8f0", borderwidth: 1 },
+    hovermode: "closest"
   }, { responsive: true, displayModeBar: false });
 }
 
