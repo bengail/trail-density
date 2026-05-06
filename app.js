@@ -1077,9 +1077,15 @@ function groupForCharts(courses, topN, gender = "both") {
   const grouped = new Map();
   for (const c of courses) {
     const id = c.meta?.race_id || c.race_id;
-    let results = (c.results || []).filter(r => r.rank >= 1 && r.rank <= topN);
-    if (gender !== "both") results = filterResultsByGender(results, gender);
-    results = results.sort((a, b) => a.rank - b.rank);
+    let results = (c.results || []).filter(r => r.rank >= 1);
+    if (gender !== "both") {
+      results = filterResultsByGender(results, gender)
+        .sort((a, b) => a.rank - b.rank)
+        .slice(0, topN)
+        .map((r, i) => ({ ...r, rank: i + 1 }));
+    } else {
+      results = results.filter(r => r.rank <= topN).sort((a, b) => a.rank - b.rank);
+    }
     grouped.set(id, { label: getCourseLabel(c), arr: results });
   }
   return grouped;
