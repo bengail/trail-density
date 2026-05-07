@@ -980,6 +980,11 @@ async function importToSupabase() {
 }
 
 // ---- Bulk CSV Import ----
+function makeBulkRaceId(name, km, year) {
+  const parts = [name, km ? `${Math.round(km)}KM` : null, year].filter(Boolean);
+  return parts.join("_").toUpperCase().replace(/[^A-Z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+}
+
 function parseCsvLine(line) {
   const result = [];
   let current = "";
@@ -1000,12 +1005,20 @@ function parseBulkCsv(text) {
     if (cols.length < 6) continue;
     const url = cols[cols.length - 1];
     if (!url.startsWith("http")) continue; // skip header or invalid rows
+    const name = cols[1] || null;
+    const km = parseFloat(cols[2]) || null;
+    const urlMeta = itraUrlToMeta(url);
+    const year = urlMeta.year || null;
+    const computedName = name ? (km ? `${name} ${km}km` : name) : (urlMeta.name || "");
+    const computedRaceId = makeBulkRaceId(name || urlMeta.name || "", km, year);
     rows.push({
       country: cols[0] || null,
-      name: cols[1] || null,
-      km: parseFloat(cols[2]) || null,
+      name,
+      km,
       elevation: parseFloat(cols[3]) || null,
       url,
+      computedName,
+      computedRaceId,
       status: "pending",
       error: null,
       resultCount: null
@@ -1026,7 +1039,7 @@ function renderBulkPreview() {
     const detail = row.status === "done" && row.resultCount ? ` (${row.resultCount})` : row.status === "error" ? ` ${row.error || ""}` : "";
     const urlShort = row.url.replace("https://itra.run/Races/RaceResults/", "").slice(0, 55);
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${row.country ?? "-"}</td><td>${row.name ?? "-"}</td><td>${row.km ?? "-"}</td><td>${row.elevation ?? "-"}</td><td title="${row.url}" style="font-size:11px;color:var(--muted);">${urlShort}</td><td style="white-space:nowrap;">${icon}${detail}</td>`;
+    tr.innerHTML = `<td>${row.country ?? "-"}</td><td>${row.computedName ?? row.name ?? "-"}<br><span style="font-size:10px;color:var(--muted);">${row.computedRaceId ?? ""}</span></td><td>${row.km ?? "-"}</td><td>${row.elevation ?? "-"}</td><td title="${row.url}" style="font-size:11px;color:var(--muted);">${urlShort}</td><td style="white-space:nowrap;">${icon}${detail}</td>`;
     tbody.appendChild(tr);
   }
   const countEl = document.getElementById("bulkCount");
@@ -1066,8 +1079,8 @@ async function fetchAndSaveBulkRow(row, cookieHeader) {
   const results = parseItraHtml(html, row.url);
   const urlMeta = itraUrlToMeta(row.url);
   const meta = {
-    race_id: urlMeta.raceId || "",
-    name: row.name || urlMeta.name || urlMeta.raceId || "",
+    race_id: row.computedRaceId || urlMeta.raceId || "",
+    name: row.computedName || urlMeta.name || "",
     series: [],
     country: row.country || null,
     data_source: "ITRA",
@@ -1078,7 +1091,7 @@ async function fetchAndSaveBulkRow(row, cookieHeader) {
     notes: null,
     source_url: row.url
   };
-  if (!meta.race_id) throw new Error("Could not derive race_id from URL");
+  if (!meta.race_id) throw new Error("Could not derive race_id from CSV name/km/year");
   const { count } = await saveRaceToSupabase(meta, results);
   row.resultCount = count;
 }
