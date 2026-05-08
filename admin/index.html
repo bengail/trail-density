@@ -66,6 +66,7 @@
   <nav>
     <button id="tabRace" class="active">Race</button>
     <button id="tabImport">Import</button>
+    <button id="tabDiscover">Discover</button>
     <button id="tabBulk">Bulk CSV</button>
     <button id="signOutBtn" style="margin-left:8px; background:#fef2f2; border-color:#fecaca; color:#991b1b;">Sign out</button>
   </nav>
@@ -209,6 +210,66 @@
   </div>
 
   </div><!-- end grid wrapper -->
+</main>
+
+<main id="pageDiscover">
+  <div style="display:grid; gap:14px; max-width:1100px;">
+
+    <div class="panel" style="border-color:rgba(16,185,129,0.25); background:#f0fdf4;">
+      <h2 style="margin:0 0 10px;">Discover Races</h2>
+      <p class="note" style="margin-bottom:10px;">
+        Search itra.run for trail races by country and date period. No login required — only races with published results are returned.
+        Races are then fed into the Bulk CSV importer where you paste your ITRA cookie to fetch and save them.
+      </p>
+      <div class="formGrid" style="margin-bottom:10px;">
+        <div class="field">
+          <label for="discoverCountry">Country code(s) <span style="font-weight:400;color:var(--muted);">comma-separated, e.g. FR, IT</span></label>
+          <input id="discoverCountry" type="text" placeholder="FR" maxlength="40" style="text-transform:uppercase;" />
+        </div>
+        <div class="field">
+          <label for="discoverDateStart">From</label>
+          <input id="discoverDateStart" type="date" />
+        </div>
+        <div class="field">
+          <label for="discoverDateEnd">To</label>
+          <input id="discoverDateEnd" type="date" />
+        </div>
+        <div class="field">
+          <label for="discoverMinKm">Min distance (km) <span style="font-weight:400;color:var(--muted);">optional</span></label>
+          <input id="discoverMinKm" type="number" placeholder="0" min="0" step="1" />
+        </div>
+        <div class="field">
+          <label for="discoverMaxKm">Max distance (km) <span style="font-weight:400;color:var(--muted);">optional</span></label>
+          <input id="discoverMaxKm" type="number" placeholder="" min="0" step="1" />
+        </div>
+      </div>
+      <div class="btns">
+        <button id="discoverSearchBtn">Search ITRA</button>
+        <button id="discoverFeedBtn" style="background:#eef2ff; border-color:rgba(79,70,229,0.5); color:#312e81;" disabled>→ Feed to Bulk Import</button>
+        <span id="discoverCount" style="font-size:12px; color:var(--muted); align-self:center;"></span>
+      </div>
+      <div id="discoverStatus" class="status" style="display:none; margin-top:10px;"></div>
+    </div>
+
+    <div class="panel" id="discoverResultsPanel" style="display:none;">
+      <h2>Races Found</h2>
+      <div class="tableWrap">
+        <table id="discoverTable">
+          <thead>
+            <tr>
+              <th>Country</th>
+              <th style="text-align:left;">Race Name</th>
+              <th>km</th>
+              <th>Elev (m)</th>
+              <th style="text-align:left;">ITRA URL</th>
+            </tr>
+          </thead>
+          <tbody id="discoverTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
 </main>
 
 <main id="pageBulk">
