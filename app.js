@@ -4,7 +4,7 @@
 const MAX_INDEX_FOR_NORM = 1000;
 const TAB_ALLOWLIST = {
   public: ["rcinormcharts", "visualization", "charts"],
-  admin: ["race", "import"]
+  admin: ["race", "import", "discover", "bulk"]
 };
 const DEFAULT_TAB_BY_MODE = {
   public: "rcinormcharts",
@@ -234,7 +234,10 @@ const state = {
   chartsGender: "both",
   topN: 30,
   activeTab: "rcinormcharts",
-  importDraft: null
+  importDraft: null,
+  bulkRows: [],
+  bulkRunning: false,
+  discoverRaces: []
 };
 
 // Viz tab shares selection with RCI tab
@@ -935,6 +938,31 @@ function downloadImportManifestJson() {
   triggerJsonDownload("courses_index.json", buildUpdatedManifestForImport(state.importDraft.meta?.race_id || ""));
 }
 
+async function saveRaceToSupabase(meta, results) {
+  if (!window.supabaseClient) throw new Error("Supabase not configured — check config.js.");
+  const seriesValue = meta.series ? (Array.isArray(meta.series) ? meta.series : [meta.series]) : [];
+  const courseRow = {
+    race_id: meta.race_id, name: meta.name, series: seriesValue, country: meta.country,
+    year: meta.year, distance_km: meta.distance_km, elevation_m: meta.elevation_m,
+    prize_money: meta.prize_money, data_source: meta.data_source,
+    source_url: meta.source_url, notes: meta.notes
+  };
+  const { data: courseData, error: courseError } = await window.supabaseClient
+    .from("courses").upsert(courseRow, { onConflict: "race_id" }).select("id").single();
+  if (courseError) throw new Error("Course upsert failed: " + courseError.message);
+  const courseId = courseData.id;
+  const { error: deleteError } = await window.supabaseClient
+    .from("results").delete().eq("course_id", courseId);
+  if (deleteError) throw new Error("Delete old results failed: " + deleteError.message);
+  const resultRows = results.map(r => ({
+    course_id: courseId, rank: r.rank, runner: r.runner,
+    index: r.index, gender: r.gender, nationality: r.nationality
+  }));
+  const { error: insertError } = await window.supabaseClient.from("results").insert(resultRows);
+  if (insertError) throw new Error("Insert results failed: " + insertError.message);
+  return { courseId, count: results.length };
+}
+
 async function importToSupabase() {
   if (!window.supabaseClient) { setImportStatus("Supabase not configured — check config.js.", "error"); return; }
   if (!state.importDraft) { setImportStatus("Preview the data first before saving.", "error"); return; }
@@ -943,32 +971,163 @@ async function importToSupabase() {
   if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
   setImportStatus("Saving to Supabase…");
   try {
-    const seriesValue = meta.series ? (Array.isArray(meta.series) ? meta.series : [meta.series]) : [];
-    const courseRow = {
-      race_id: meta.race_id, name: meta.name, series: seriesValue, country: meta.country,
-      year: meta.year, distance_km: meta.distance_km, elevation_m: meta.elevation_m,
-      prize_money: meta.prize_money, data_source: meta.data_source,
-      source_url: meta.source_url, notes: meta.notes
-    };
-    const { data: courseData, error: courseError } = await window.supabaseClient
-      .from("courses").upsert(courseRow, { onConflict: "race_id" }).select("id").single();
-    if (courseError) throw new Error("Course upsert failed: " + courseError.message);
-    const courseId = courseData.id;
-    const { error: deleteError } = await window.supabaseClient
-      .from("results").delete().eq("course_id", courseId);
-    if (deleteError) throw new Error("Delete old results failed: " + deleteError.message);
-    const resultRows = results.map(r => ({
-      course_id: courseId, rank: r.rank, runner: r.runner,
-      index: r.index, gender: r.gender, nationality: r.nationality
-    }));
-    const { error: insertError } = await window.supabaseClient.from("results").insert(resultRows);
-    if (insertError) throw new Error("Insert results failed: " + insertError.message);
+    await saveRaceToSupabase(meta, results);
     setImportStatus(`Saved "${meta.name}" (${results.length} results). Reloading…`, "ok");
     setTimeout(() => location.reload(), 1200);
   } catch (err) {
     setImportStatus(err.message || "Save failed.", "error");
     if (btn) { btn.disabled = false; btn.textContent = "Save to Supabase"; }
   }
+}
+
+// ---- Bulk CSV Import ----
+function makeBulkRaceId(name, km, year) {
+  const parts = [name, km ? `${Math.round(km)}KM` : null, year].filter(Boolean);
+  return parts.join("_").toUpperCase().replace(/[^A-Z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+}
+
+function parseCsvLine(line) {
+  const result = [];
+  let current = "";
+  let inQuotes = false;
+  for (const c of line) {
+    if (c === '"') { inQuotes = !inQuotes; }
+    else if ((c === "," || c === ";") && !inQuotes) { result.push(current.trim()); current = ""; }
+    else { current += c; }
+  }
+  result.push(current.trim());
+  return result;
+}
+
+function parseBulkCsv(text) {
+  const rows = [];
+  for (const line of text.split("\n").map(l => l.trim()).filter(Boolean)) {
+    const cols = parseCsvLine(line);
+    if (cols.length < 6) continue;
+    const url = cols[cols.length - 1];
+    if (!url.startsWith("http")) continue; // skip header or invalid rows
+    const name = cols[1] || null;
+    const km = parseFloat(cols[2]) || null;
+    const urlMeta = itraUrlToMeta(url);
+    const year = urlMeta.year || null;
+    const computedName = name ? (km ? `${name} ${km}km` : name) : (urlMeta.name || "");
+    const computedRaceId = makeBulkRaceId(name || urlMeta.name || "", km, year);
+    rows.push({
+      country: cols[0] || null,
+      name,
+      km,
+      elevation: parseFloat(cols[3]) || null,
+      url,
+      computedName,
+      computedRaceId,
+      status: "pending",
+      error: null,
+      resultCount: null
+    });
+  }
+  return rows;
+}
+
+function renderBulkPreview() {
+  const tbody = document.querySelector("#bulkPreviewTable tbody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+  for (const row of state.bulkRows) {
+    const icon = row.status === "pending" ? "⏳"
+      : row.status === "fetching" ? "⟳"
+      : row.status === "done" ? "✓"
+      : "✗";
+    const detail = row.status === "done" && row.resultCount ? ` (${row.resultCount})` : row.status === "error" ? ` ${row.error || ""}` : "";
+    const urlShort = row.url.replace("https://itra.run/Races/RaceResults/", "").slice(0, 55);
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${row.country ?? "-"}</td><td>${row.computedName ?? row.name ?? "-"}<br><span style="font-size:10px;color:var(--muted);">${row.computedRaceId ?? ""}</span></td><td>${row.km ?? "-"}</td><td>${row.elevation ?? "-"}</td><td title="${row.url}" style="font-size:11px;color:var(--muted);">${urlShort}</td><td style="white-space:nowrap;">${icon}${detail}</td>`;
+    tbody.appendChild(tr);
+  }
+  const countEl = document.getElementById("bulkCount");
+  if (countEl) countEl.textContent = `${state.bulkRows.length} races`;
+}
+
+function setBulkStatus(message, type = "") {
+  const el = document.getElementById("bulkStatus");
+  if (!el) return;
+  el.style.display = "block";
+  el.className = `status${type ? ` ${type}` : ""}`;
+  el.textContent = message;
+}
+
+function parseBulkCsvAction() {
+  const text = document.getElementById("bulkCsvInput")?.value || "";
+  state.bulkRows = parseBulkCsv(text);
+  renderBulkPreview();
+  if (state.bulkRows.length) {
+    setBulkStatus(`${state.bulkRows.length} races parsed — review below, then Start Import.`, "");
+  } else {
+    setBulkStatus("No valid rows found. Expected: country, name, km, elevation, top10avg, itra-url", "error");
+  }
+}
+
+async function fetchAndSaveBulkRow(row, cookieHeader) {
+  const resp = await fetch("/api/itra-proxy", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url: row.url, cookieHeader })
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({ error: `HTTP ${resp.status}` }));
+    throw new Error(err.error || `Proxy error ${resp.status}`);
+  }
+  const html = await resp.text();
+  const results = parseItraHtml(html, row.url);
+  const urlMeta = itraUrlToMeta(row.url);
+  const meta = {
+    race_id: row.computedRaceId || urlMeta.raceId || "",
+    name: row.computedName || urlMeta.name || "",
+    series: [],
+    country: row.country || null,
+    data_source: "ITRA",
+    year: urlMeta.year || null,
+    distance_km: row.km || null,
+    elevation_m: row.elevation || null,
+    prize_money: null,
+    notes: null,
+    source_url: row.url
+  };
+  if (!meta.race_id) throw new Error("Could not derive race_id from CSV name/km/year");
+  const { count } = await saveRaceToSupabase(meta, results);
+  row.resultCount = count;
+}
+
+async function startBulkImport() {
+  if (state.bulkRunning) return;
+  const cookieHeader = (document.getElementById("bulkItraToken")?.value || "").trim();
+  if (!cookieHeader) { setBulkStatus("Paste your ITRA cookie header first.", "error"); return; }
+  if (!state.bulkRows.length) { setBulkStatus("Parse a CSV first.", "error"); return; }
+
+  state.bulkRunning = true;
+  const btn = document.getElementById("bulkStartBtn");
+  if (btn) { btn.disabled = true; btn.textContent = "Importing…"; }
+
+  let ok = 0, fail = 0;
+  for (const row of state.bulkRows) {
+    if (row.status === "done") { ok++; continue; }
+    row.status = "fetching";
+    renderBulkPreview();
+    setBulkStatus(`Importing ${ok + fail + 1} / ${state.bulkRows.length}: ${row.name || row.url}…`);
+    try {
+      await fetchAndSaveBulkRow(row, cookieHeader);
+      row.status = "done";
+      ok++;
+    } catch (err) {
+      row.status = "error";
+      row.error = err.message;
+      fail++;
+    }
+    renderBulkPreview();
+  }
+
+  state.bulkRunning = false;
+  if (btn) { btn.disabled = false; btn.textContent = "Start Import"; }
+  setBulkStatus(`Done — ${ok} imported, ${fail} failed.`, fail === 0 ? "ok" : ok > 0 ? "" : "error");
 }
 
 // ---- Visualization: Parity delta bar ----
@@ -1077,9 +1236,15 @@ function groupForCharts(courses, topN, gender = "both") {
   const grouped = new Map();
   for (const c of courses) {
     const id = c.meta?.race_id || c.race_id;
-    let results = (c.results || []).filter(r => r.rank >= 1 && r.rank <= topN);
-    if (gender !== "both") results = filterResultsByGender(results, gender);
-    results = results.sort((a, b) => a.rank - b.rank);
+    let results = (c.results || []).filter(r => r.rank >= 1);
+    if (gender !== "both") {
+      results = filterResultsByGender(results, gender)
+        .sort((a, b) => a.rank - b.rank)
+        .slice(0, topN)
+        .map((r, i) => ({ ...r, rank: i + 1 }));
+    } else {
+      results = results.filter(r => r.rank <= topN).sort((a, b) => a.rank - b.rank);
+    }
     grouped.set(id, { label: getCourseLabel(c), arr: results });
   }
   return grouped;
@@ -1263,12 +1428,105 @@ async function saveRaceMeta(course) {
   }
 }
 
+// ---- Discover ----
+function setDiscoverStatus(msg, type) {
+  const el = document.getElementById("discoverStatus");
+  if (!el) return;
+  el.textContent = msg;
+  el.className = "status" + (type ? ` ${type}` : "");
+  el.style.display = msg ? "" : "none";
+}
+
+function itraDateFormat(val) {
+  // HTML date input: "2025-04-01" → ITRA: "01-04-2025"
+  const [y, m, d] = val.split("-");
+  return `${d}-${m}-${y}`;
+}
+
+async function discoverSearch() {
+  const countriesRaw = document.getElementById("discoverCountry")?.value || "";
+  const countries = countriesRaw.split(",").map(c => c.trim().toUpperCase()).filter(Boolean);
+  const dateStart = document.getElementById("discoverDateStart")?.value;
+  const dateEnd = document.getElementById("discoverDateEnd")?.value;
+  const minKm = parseFloat(document.getElementById("discoverMinKm")?.value) || 0;
+  const maxKm = parseFloat(document.getElementById("discoverMaxKm")?.value) || null;
+
+  if (!countries.length) { setDiscoverStatus("Enter at least one country code (e.g. FR).", "error"); return; }
+  if (!dateStart || !dateEnd) { setDiscoverStatus("Set both From and To dates.", "error"); return; }
+
+  setDiscoverStatus("Searching itra.run…");
+  document.getElementById("discoverSearchBtn").disabled = true;
+  document.getElementById("discoverFeedBtn").disabled = true;
+  document.getElementById("discoverResultsPanel").style.display = "none";
+
+  try {
+    const resp = await fetch("/api/discover-races", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ countries, dateStart: itraDateFormat(dateStart), dateEnd: itraDateFormat(dateEnd) }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || `HTTP ${resp.status}`);
+
+    let races = data.races;
+    if (minKm > 0) races = races.filter(r => (r.km ?? 0) >= minKm);
+    if (maxKm) races = races.filter(r => (r.km ?? Infinity) <= maxKm);
+
+    state.discoverRaces = races;
+    renderDiscoverResults();
+
+    const countEl = document.getElementById("discoverCount");
+    if (countEl) countEl.textContent = `${races.length} races`;
+
+    if (races.length) {
+      setDiscoverStatus(`Found ${races.length} races with published results.${data.total !== races.length ? ` (${data.total - races.length} filtered by km range)` : ""}`, "");
+      document.getElementById("discoverResultsPanel").style.display = "";
+      document.getElementById("discoverFeedBtn").disabled = false;
+    } else {
+      setDiscoverStatus("No races found matching your filters.", "error");
+    }
+  } catch (err) {
+    setDiscoverStatus("Error: " + err.message, "error");
+  } finally {
+    document.getElementById("discoverSearchBtn").disabled = false;
+  }
+}
+
+function renderDiscoverResults() {
+  const tbody = document.getElementById("discoverTableBody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+  for (const r of state.discoverRaces) {
+    const urlShort = r.url.replace("https://itra.run/Races/RaceResults/", "…/");
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${r.country || ""}</td>
+      <td>${r.name || ""}</td>
+      <td style="text-align:right;">${r.km ?? ""}</td>
+      <td style="text-align:right;">${r.elevation ?? ""}</td>
+      <td><a href="${r.url}" target="_blank" style="font-size:11px;">${urlShort}</a></td>
+    `;
+    tbody.appendChild(tr);
+  }
+}
+
+function feedDiscoverToBulk() {
+  if (!state.discoverRaces.length) return;
+  const csv = state.discoverRaces
+    .map(r => [r.country ?? "", r.name ?? "", r.km ?? "", r.elevation ?? "", "", r.url].join(","))
+    .join("\n");
+  const ta = document.getElementById("bulkCsvInput");
+  if (ta) ta.value = csv;
+  setActiveTab("bulk");
+  parseBulkCsvAction();
+}
+
 // ---- App-mode visibility ----
 function applyAppModeVisibility(mode) {
   const publicButtons = ["tabRciNorm", "vizTabParity", "tabCharts"];
-  const adminButtons = ["tabRace", "tabImport"];
+  const adminButtons = ["tabRace", "tabImport", "tabDiscover", "tabBulk"];
   const publicPages = ["pageRciNorm", "pageViz", "pageCharts"];
-  const adminPages = ["pageRace", "pageImport"];
+  const adminPages = ["pageRace", "pageImport", "pageDiscover", "pageBulk"];
 
   const hide = (id, hidden) => { const el = document.getElementById(id); if (el) el.hidden = hidden; };
   const isAdmin = mode === "admin";
@@ -1288,7 +1546,9 @@ function setActiveTab(tab) {
     visualization: "pageViz",
     charts: "pageCharts",
     race: "pageRace",
-    import: "pageImport"
+    import: "pageImport",
+    discover: "pageDiscover",
+    bulk: "pageBulk"
   };
   for (const [key, id] of Object.entries(pageMap)) {
     const el = document.getElementById(id);
@@ -1300,6 +1560,8 @@ function setActiveTab(tab) {
   document.getElementById("tabCharts")?.classList.toggle("active", safeTab === "charts");
   document.getElementById("tabRace")?.classList.toggle("active", safeTab === "race");
   document.getElementById("tabImport")?.classList.toggle("active", safeTab === "import");
+  document.getElementById("tabDiscover")?.classList.toggle("active", safeTab === "discover");
+  document.getElementById("tabBulk")?.classList.toggle("active", safeTab === "bulk");
 
   if (safeTab === "visualization") updateVisualization();
   if (safeTab === "charts") updateCharts();
@@ -1395,6 +1657,10 @@ async function updateAll() {
   document.getElementById("tabCharts")?.addEventListener("click", () => setActiveTab("charts"));
   document.getElementById("tabRace")?.addEventListener("click", () => setActiveTab("race"));
   document.getElementById("tabImport")?.addEventListener("click", () => setActiveTab("import"));
+  document.getElementById("tabDiscover")?.addEventListener("click", () => setActiveTab("discover"));
+  document.getElementById("tabBulk")?.addEventListener("click", () => setActiveTab("bulk"));
+  document.getElementById("discoverSearchBtn")?.addEventListener("click", discoverSearch);
+  document.getElementById("discoverFeedBtn")?.addEventListener("click", feedDiscoverToBulk);
 
   // Top N slider
   const elTopN = document.getElementById("topN");
@@ -1407,6 +1673,10 @@ async function updateAll() {
       updateCharts();
     });
   }
+
+  // Admin: bulk CSV import
+  document.getElementById("bulkParseCsvBtn")?.addEventListener("click", parseBulkCsvAction);
+  document.getElementById("bulkStartBtn")?.addEventListener("click", startBulkImport);
 
   // Admin: import
   document.getElementById("itraFetchBtn")?.addEventListener("click", fetchFromItra);

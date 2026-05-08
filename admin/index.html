@@ -66,6 +66,8 @@
   <nav>
     <button id="tabRace" class="active">Race</button>
     <button id="tabImport">Import</button>
+    <button id="tabDiscover">Discover</button>
+    <button id="tabBulk">Bulk CSV</button>
     <button id="signOutBtn" style="margin-left:8px; background:#fef2f2; border-color:#fecaca; color:#991b1b;">Sign out</button>
   </nav>
 </header>
@@ -208,6 +210,115 @@
   </div>
 
   </div><!-- end grid wrapper -->
+</main>
+
+<main id="pageDiscover">
+  <div style="display:grid; gap:14px; max-width:1100px;">
+
+    <div class="panel" style="border-color:rgba(16,185,129,0.25); background:#f0fdf4;">
+      <h2 style="margin:0 0 10px;">Discover Races</h2>
+      <p class="note" style="margin-bottom:10px;">
+        Search itra.run for trail races by country and date period. No login required — only races with published results are returned.
+        Races are then fed into the Bulk CSV importer where you paste your ITRA cookie to fetch and save them.
+      </p>
+      <div class="formGrid" style="margin-bottom:10px;">
+        <div class="field">
+          <label for="discoverCountry">Country code(s) <span style="font-weight:400;color:var(--muted);">comma-separated, e.g. FR, IT</span></label>
+          <input id="discoverCountry" type="text" placeholder="FR" maxlength="40" style="text-transform:uppercase;" />
+        </div>
+        <div class="field">
+          <label for="discoverDateStart">From</label>
+          <input id="discoverDateStart" type="date" />
+        </div>
+        <div class="field">
+          <label for="discoverDateEnd">To</label>
+          <input id="discoverDateEnd" type="date" />
+        </div>
+        <div class="field">
+          <label for="discoverMinKm">Min distance (km) <span style="font-weight:400;color:var(--muted);">optional</span></label>
+          <input id="discoverMinKm" type="number" placeholder="0" min="0" step="1" />
+        </div>
+        <div class="field">
+          <label for="discoverMaxKm">Max distance (km) <span style="font-weight:400;color:var(--muted);">optional</span></label>
+          <input id="discoverMaxKm" type="number" placeholder="" min="0" step="1" />
+        </div>
+      </div>
+      <div class="btns">
+        <button id="discoverSearchBtn">Search ITRA</button>
+        <button id="discoverFeedBtn" style="background:#eef2ff; border-color:rgba(79,70,229,0.5); color:#312e81;" disabled>→ Feed to Bulk Import</button>
+        <span id="discoverCount" style="font-size:12px; color:var(--muted); align-self:center;"></span>
+      </div>
+      <div id="discoverStatus" class="status" style="display:none; margin-top:10px;"></div>
+    </div>
+
+    <div class="panel" id="discoverResultsPanel" style="display:none;">
+      <h2>Races Found</h2>
+      <div class="tableWrap">
+        <table id="discoverTable">
+          <thead>
+            <tr>
+              <th>Country</th>
+              <th style="text-align:left;">Race Name</th>
+              <th>km</th>
+              <th>Elev (m)</th>
+              <th style="text-align:left;">ITRA URL</th>
+            </tr>
+          </thead>
+          <tbody id="discoverTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<main id="pageBulk">
+  <div style="display:grid; gap:14px; max-width:1100px;">
+
+    <div class="panel" style="border-color:rgba(79,70,229,0.25); background:#f5f3ff;">
+      <h2 style="margin:0 0 10px;">Bulk CSV Import</h2>
+      <div class="note" style="margin-bottom:10px;">
+        Expected CSV columns (with or without header): <code>country, race name, km, elevation, top10avg, itra-result-url</code><br>
+        One race per line. Comma or semicolon separated. Quoted fields supported. The ITRA URL must be a full <code>https://itra.run/Races/RaceResults/…</code> link.
+      </div>
+      <div class="formGrid" style="margin-bottom:10px;">
+        <div class="field" style="grid-column:1/-1;">
+          <label for="bulkItraToken">Cookie header <span style="font-weight:400; color:var(--muted);">— itra.run DevTools → Network → any request → Headers → <code>cookie:</code> → copy value</span></label>
+          <input id="bulkItraToken" type="password" placeholder=".AspNetCore.Identity.Application=…; Lang=fr; …" autocomplete="off" />
+        </div>
+        <div class="field" style="grid-column:1/-1;">
+          <label for="bulkCsvInput">CSV data</label>
+          <textarea id="bulkCsvInput" style="min-height:160px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px; width:100%; resize:vertical;" placeholder="France,UTMB 2025,171,10000,876,https://itra.run/Races/RaceResults/Ultra.Trail.du.Mont.Blanc/2025/12345&#10;Spain,Zegama 2025,42,2840,792,https://itra.run/Races/RaceResults/Zegama.Aizkorri/2025/67890"></textarea>
+        </div>
+      </div>
+      <div class="btns">
+        <button id="bulkParseCsvBtn">Parse CSV</button>
+        <button id="bulkStartBtn" style="background:#eef2ff; border-color:rgba(79,70,229,0.5); color:#312e81;">Start Import</button>
+        <span id="bulkCount" style="font-size:12px; color:var(--muted); align-self:center;"></span>
+      </div>
+      <div id="bulkStatus" class="status" style="display:none; margin-top:10px;"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Import Queue</h2>
+      <div class="tableWrap">
+        <table id="bulkPreviewTable">
+          <thead>
+            <tr>
+              <th style="text-align:left;">Country</th>
+              <th style="text-align:left;">Race Name</th>
+              <th>km</th>
+              <th>Elev (m)</th>
+              <th style="text-align:left;">ITRA URL</th>
+              <th style="text-align:left;">Status</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
 </main>
 
 <script src="../config.js" onerror=""></script>
