@@ -343,8 +343,14 @@ async function renderPublicRciTable() {
   }
 }
 
+function fuzzyMatch(query, text) {
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const lower = text.toLowerCase();
+  return terms.every(t => lower.includes(t));
+}
+
 function wirePublicChipFilters() {
-  const chipState = { activeSeries: new Set(), activeYears: new Set([2025]), isManual: false };
+  const chipState = { activeSeries: new Set(), activeYears: new Set([2025]), activeCountry: "", isManual: false };
 
   function allSeriesFromData() {
     const s = new Set();
@@ -363,6 +369,15 @@ function wirePublicChipFilters() {
       if (yr) y.add(yr);
     }
     return Array.from(y).sort((a, b) => b - a);
+  }
+
+  function allCountriesFromData() {
+    const s = new Set();
+    for (const c of getManifestEntries()) {
+      const country = getCourseMeta(c.race_id)?.country;
+      if (country) s.add(country);
+    }
+    return Array.from(s).sort();
   }
 
   function applyChipSelection() {
@@ -415,13 +430,39 @@ function wirePublicChipFilters() {
     }
   }
 
+  function renderCountryChips() {
+    const container = document.getElementById("publicCountryChips");
+    if (!container) return;
+    container.innerHTML = "";
+    for (const country of allCountriesFromData()) {
+      const btn = document.createElement("button");
+      btn.className = "chip" + (chipState.activeCountry === country ? " active" : "");
+      btn.textContent = country;
+      btn.addEventListener("click", () => {
+        chipState.activeCountry = chipState.activeCountry === country ? "" : country;
+        state.rciNormFilters.country = chipState.activeCountry;
+        renderCountryChips(); renderPublicRaceList(); triggerUpdate();
+      });
+      container.appendChild(btn);
+    }
+  }
+
+  function getRaceSearchQuery() {
+    const el = document.getElementById("publicRaceSearch");
+    return el ? el.value.trim() : "";
+  }
+
   function renderPublicRaceList() {
     const list = document.getElementById("publicRaceList");
     if (!list) return;
     list.innerHTML = "";
+    const q = getRaceSearchQuery();
     for (const c of getManifestEntries()) {
       const id = c.race_id;
       const meta = getCourseMeta(id) || {};
+      const name = meta.name || id;
+      if (q && !fuzzyMatch(q, name) && !fuzzyMatch(q, id)) continue;
+      if (chipState.activeCountry && meta.country !== chipState.activeCountry) continue;
       const item = document.createElement("div");
       item.className = "item";
       const cb = document.createElement("input");
@@ -435,7 +476,7 @@ function wirePublicChipFilters() {
       });
       const label = document.createElement("div");
       label.className = "item-label";
-      label.textContent = meta.name || id;
+      label.textContent = name;
       const pill = document.createElement("span");
       pill.className = "pill";
       pill.textContent = meta.year ? String(meta.year) : "-";
@@ -463,12 +504,17 @@ function wirePublicChipFilters() {
 
   const toggleBtn = document.getElementById("publicRacesToggleBtn");
   const raceListEl = document.getElementById("publicRaceList");
+  const raceSearchEl = document.getElementById("publicRaceSearch");
   if (toggleBtn && raceListEl) {
     toggleBtn.addEventListener("click", () => {
       const wasHidden = raceListEl.hidden;
       raceListEl.hidden = !wasHidden;
+      if (raceSearchEl) raceSearchEl.style.display = wasHidden ? "" : "none";
       toggleBtn.setAttribute("aria-expanded", wasHidden ? "true" : "false");
     });
+  }
+  if (raceSearchEl) {
+    raceSearchEl.addEventListener("input", () => renderPublicRaceList());
   }
 
   const allBtn = document.getElementById("publicSelectAll");
@@ -488,6 +534,7 @@ function wirePublicChipFilters() {
   applyChipSelection();
   renderSeriesChips();
   renderYearChips();
+  renderCountryChips();
   renderPublicRaceList();
 }
 
