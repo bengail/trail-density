@@ -86,6 +86,7 @@
       <button id="vizTabParity">Parity</button>
       <button id="tabCharts">Depth</button>
     </div>
+    <a href="/admin/" style="font-size:12px; font-weight:700; color:var(--muted); text-decoration:none; padding:9px 10px; border:1px solid var(--border); border-radius:12px; background:#f8fafc;">Admin</a>
   </nav>
 </header>
 
@@ -101,6 +102,10 @@
         <div id="publicYearChips" class="chip-group"></div>
       </div>
       <div class="filter-section">
+        <span class="filter-label">Country</span>
+        <div id="publicCountryChips" class="chip-group"></div>
+      </div>
+      <div class="filter-section">
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
           <button class="collapsible-btn" id="publicRacesToggleBtn" aria-expanded="false">
             <span class="filter-label" style="margin-bottom:0;">Races</span>
@@ -110,6 +115,7 @@
           <button id="publicSelectAll" class="chip-sm">All</button>
           <button id="publicSelectNone" class="chip-sm">None</button>
         </div>
+        <input id="publicRaceSearch" type="search" placeholder="Search races…" style="margin-bottom:8px; display:none;" />
         <div id="publicRaceList" class="list" hidden></div>
       </div>
       <hr class="filter-divider" />
