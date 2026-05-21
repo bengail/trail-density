@@ -55,6 +55,21 @@ def series_to_list(value) -> list:
     return []
 
 
+COUNTRY_MAP = {
+    "italia": "Italy",
+    "ita":    "Italy",
+    "suisse": "Switzerland",
+    "schweiz": "Switzerland",
+    "espana": "Spain",
+    "españa": "Spain",
+}
+
+def normalize_country(value):
+    if value is None:
+        return None
+    return COUNTRY_MAP.get(value.strip().lower(), value.strip())
+
+
 def make_race_slug(race_id: str) -> str:
     return re.sub(r"_\d{4}$", "", race_id)
 
@@ -67,7 +82,7 @@ def build_course_row(meta: dict) -> dict:
         "itra_id":     meta.get("itra_id"),
         "name":        meta.get("name"),
         "series":      series_to_list(meta.get("series")),
-        "country":     meta.get("country"),
+        "country":     normalize_country(meta.get("country")),
         "year":        meta.get("year"),
         "distance_km": meta.get("distance_km"),
         "elevation_m": meta.get("elevation_m"),

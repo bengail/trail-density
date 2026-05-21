@@ -202,17 +202,26 @@ export function wirePublicChipFilters(options = {}) {
     return el ? el.value.trim() : "";
   }
 
+  function raceMatchesQuery(c, meta, q) {
+    if (!q) return true;
+    const name = (meta.name || "").toLowerCase();
+    const id = c.race_id.toLowerCase();
+    const slug = (c.race_slug || "").toLowerCase();
+    return fuzzyMatch(q, name) || fuzzyMatch(q, id) || fuzzyMatch(q, slug);
+  }
+
   function renderPublicRaceList() {
     const list = document.getElementById("publicRaceList");
     if (!list) return;
     list.innerHTML = "";
-    const q = getRaceSearchQuery();
+    const q = getRaceSearchQuery().toLowerCase();
+
     for (const c of getManifestEntries()) {
       const id = c.race_id;
       const meta = getCourseMeta(id) || {};
-      const name = meta.name || id;
-      if (q && !fuzzyMatch(q, name) && !fuzzyMatch(q, id)) continue;
+      if (!raceMatchesQuery(c, meta, q)) continue;
       if (chipState.activeCountry && meta.country !== chipState.activeCountry) continue;
+
       const item = document.createElement("div");
       item.className = "item";
       const cb = document.createElement("input");
@@ -226,7 +235,7 @@ export function wirePublicChipFilters(options = {}) {
       });
       const label = document.createElement("div");
       label.className = "item-label";
-      label.textContent = name;
+      label.textContent = meta.name || id;
       const pill = document.createElement("span");
       pill.className = "pill";
       pill.textContent = meta.year ? String(meta.year) : "-";
@@ -271,7 +280,11 @@ export function wirePublicChipFilters(options = {}) {
   const allBtn = document.getElementById("publicSelectAll");
   if (allBtn) allBtn.addEventListener("click", () => {
     chipState.activeSeries.clear(); chipState.activeYears.clear(); chipState.isManual = true;
-    for (const c of getManifestEntries()) state.rciNormSelected.add(c.race_id);
+    const q = getRaceSearchQuery().toLowerCase();
+    for (const c of getManifestEntries()) {
+      const meta = getCourseMeta(c.race_id) || {};
+      if (raceMatchesQuery(c, meta, q)) state.rciNormSelected.add(c.race_id);
+    }
     renderSeriesChips(); renderYearChips(); renderPublicRaceList(); triggerUpdate();
   });
 

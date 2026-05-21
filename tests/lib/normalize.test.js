@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   normalizeSeries, normalizeGenderLabel, inferRaceGender,
-  filterResultsByGender, normalizeCourse, getRciResultsForMode
+  filterResultsByGender, normalizeCourse, getRciResultsForMode, normalizeCountry
 } from '../../lib/normalize.js';
 
 describe('normalizeSeries', () => {
@@ -176,4 +176,18 @@ describe('getRciResultsForMode', () => {
     const r = getRciResultsForMode(results, 'male', true);
     expect(r[0].index).toBe(900);
   });
+});
+
+describe('normalizeCountry', () => {
+  it('maps Italia to Italy', () => expect(normalizeCountry('Italia')).toBe('Italy'));
+  it('maps ITA to Italy (case-insensitive)', () => expect(normalizeCountry('ITA')).toBe('Italy'));
+  it('maps Suisse to Switzerland', () => expect(normalizeCountry('Suisse')).toBe('Switzerland'));
+  it('maps schweiz to Switzerland', () => expect(normalizeCountry('Schweiz')).toBe('Switzerland'));
+  it('passes through known-good values unchanged', () => {
+    expect(normalizeCountry('France')).toBe('France');
+    expect(normalizeCountry('Canada')).toBe('Canada');
+    expect(normalizeCountry('Spain')).toBe('Spain');
+  });
+  it('returns null for null', () => expect(normalizeCountry(null)).toBeNull());
+  it('trims whitespace', () => expect(normalizeCountry('  Italia  ')).toBe('Italy'));
 });

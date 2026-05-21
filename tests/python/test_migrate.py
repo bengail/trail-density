@@ -139,3 +139,35 @@ class TestBuildResultRows:
 
     def test_empty_results_returns_empty_list(self):
         assert build_result_rows("uuid", []) == []
+
+
+class TestNormalizeCountry:
+    def test_maps_italia_to_italy(self):
+        from migrate import normalize_country
+        assert normalize_country("Italia") == "Italy"
+
+    def test_maps_ita_to_italy(self):
+        from migrate import normalize_country
+        assert normalize_country("ITA") == "Italy"
+
+    def test_maps_suisse_to_switzerland(self):
+        from migrate import normalize_country
+        assert normalize_country("Suisse") == "Switzerland"
+
+    def test_case_insensitive(self):
+        from migrate import normalize_country
+        assert normalize_country("schweiz") == "Switzerland"
+        assert normalize_country("ITALIA") == "Italy"
+
+    def test_passes_through_known_good(self):
+        from migrate import normalize_country
+        assert normalize_country("Canada") == "Canada"
+        assert normalize_country("France") == "France"
+
+    def test_returns_none_for_none(self):
+        from migrate import normalize_country
+        assert normalize_country(None) is None
+
+    def test_trims_whitespace(self):
+        from migrate import normalize_country
+        assert normalize_country("  Italia  ") == "Italy"
