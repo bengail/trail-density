@@ -4,6 +4,7 @@
 Required env vars:
   SUPABASE_URL         https://xxxx.supabase.co
   SUPABASE_SERVICE_KEY service_role key (bypasses RLS; never expose to frontend)
+                       Find it in: Supabase dashboard → Project Settings → API → service_role
 
 Optional:
   Load from a .env file alongside this script or export before running.
@@ -11,7 +12,7 @@ Optional:
 Usage:
   pip install supabase python-dotenv
   export SUPABASE_URL=...  SUPABASE_SERVICE_KEY=...
-  python scripts/migrate.py
+  python3 scripts/migrate.py
 """
 
 import json
@@ -39,7 +40,7 @@ if not SUPABASE_URL or not SUPABASE_SERVICE_KEY:
 
 BATCH_SIZE = 500
 PROJECT_ROOT = Path(__file__).parent.parent
-INDEX_PATH = PROJECT_ROOT / "data" / "courses_index.json"
+COURSES_DIR = PROJECT_ROOT / "data" / "courses"
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -107,23 +108,16 @@ def insert_batched(client: Client, table: str, rows: list) -> int:
 def main():
     client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
-    index = json.loads(INDEX_PATH.read_text(encoding="utf-8"))
-    entries = index["courses"]
-    print(f"Found {len(entries)} courses in index.")
+    course_files = sorted(COURSES_DIR.glob("*.json"))
+    print(f"Found {len(course_files)} course files in {COURSES_DIR}.")
 
     total_courses = 0
     total_results = 0
 
-    for entry in entries:
-        race_id = entry["race_id"]
-        course_file = PROJECT_ROOT / entry["path"]
-
-        if not course_file.exists():
-            print(f"  WARN  {race_id}: file not found at {course_file}, skipping.")
-            continue
-
+    for course_file in course_files:
         data = json.loads(course_file.read_text(encoding="utf-8"))
-        meta = data["meta"]
+        meta = data.get("meta", {})
+        race_id = meta.get("race_id") or course_file.stem
         raw_results = data.get("results", [])
 
         # Upsert course (update all fields on race_id conflict)
