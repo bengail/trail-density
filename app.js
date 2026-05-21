@@ -1,6 +1,14 @@
 // Trail Race Analytics
 // RCI = mean(top N) − std_pop(top N). Female ITRA scores normalized via quadratic.
 
+import { mean, stdPop, fmt } from './lib/math.js';
+import { normalizeItraFemaleIndex, topScoresFrom, rciFromResults, getTopStats } from './lib/rci.js';
+import { normalizeSeries, normalizeGenderLabel, inferRaceGender, filterResultsByGender, normalizeCourse, getRciResultsForMode } from './lib/normalize.js';
+import { matchesFilters, fuzzyMatch, densityColor } from './lib/filters.js';
+import { csvCell, rowsToCsv } from './lib/csv.js';
+import { parseSeriesInput, parseNullableNumber, asNullableText, normalizeHeaderKey, parseDelimitedRow, detectDelimiter, readField, toNumberLoose, looksLikeHeader, findLikelyScoreCell, parsePastedResults, itraUrlToMeta, makeBulkRaceId, parseCsvLine, parseBulkCsv } from './lib/parse.js';
+import { parseItraHtml } from './lib/parse-itra.js';
+
 const MAX_INDEX_FOR_NORM = 1000;
 const TAB_ALLOWLIST = {
   public: ["rcinormcharts", "visualization", "charts"],
@@ -29,82 +37,6 @@ function getSafeTab(mode, desiredTab) {
   return DEFAULT_TAB_BY_MODE[mode] || "rcinormcharts";
 }
 
-// ---- Utilities ----
-function mean(arr) {
-  if (!arr.length) return NaN;
-  return arr.reduce((s, x) => s + x, 0) / arr.length;
-}
-
-function stdPop(arr) {
-  if (arr.length < 1) return NaN;
-  const m = mean(arr);
-  const v = arr.reduce((s, x) => s + (x - m) * (x - m), 0) / arr.length;
-  return Math.sqrt(v);
-}
-
-function fmt(n, digits = 1) {
-  if (!Number.isFinite(n)) return "-";
-  return n.toFixed(digits);
-}
-
-function normalizeSeries(value) {
-  if (Array.isArray(value)) return value.filter(Boolean).map(v => String(v));
-  if (typeof value === "string" && value.trim()) return [value.trim()];
-  return [];
-}
-
-function normalizeGenderLabel(value) {
-  if (!value) return null;
-  const lower = value.toString().trim().toLowerCase();
-  if (["m", "men", "man", "male", "homme", "h"].includes(lower)) return "male";
-  if (["f", "women", "woman", "female", "femme", "w"].includes(lower)) return "female";
-  return null;
-}
-
-function inferRaceGender(meta) {
-  const text = `${meta?.name || ""} ${meta?.race_id || ""}`.toLowerCase();
-  if (text.includes("(men)") || text.includes(" men") || text.includes("(homme)") || text.includes(" homme")) return "male";
-  if (text.includes("(women)") || text.includes(" women") || text.includes("(femme)") || text.includes(" femme")) return "female";
-  return null;
-}
-
-function filterResultsByGender(results, gender) {
-  if (!gender) return results || [];
-  return (results || []).filter(r => normalizeGenderLabel(r.gender) === gender);
-}
-
-function densityColor(value, min, max) {
-  if (!Number.isFinite(value)) return "";
-  const clampedMin = Number.isFinite(min) ? min : value;
-  const clampedMax = Number.isFinite(max) ? max : value;
-  if (clampedMax <= clampedMin) return "background:hsl(224,70%,92%); color:#0f172a; font-weight:600;";
-  const ratio = Math.max(0, Math.min(1, (value - clampedMin) / (clampedMax - clampedMin)));
-  const lightness = 92 - ratio * 47;
-  const saturation = 60 + ratio * 20;
-  const bg = `hsl(224, ${saturation.toFixed(0)}%, ${lightness.toFixed(0)}%)`;
-  const textColor = lightness < 68 ? "#ffffff" : "#0f172a";
-  const borderAlpha = (0.06 + ratio * 0.12).toFixed(3);
-  return `background:${bg}; color:${textColor}; font-weight:600; box-shadow: inset 0 0 0 1px rgba(15,23,42,${borderAlpha});`;
-}
-
-function normalizeItraFemaleIndex(score) {
-  if (!Number.isFinite(score)) return NaN;
-  return ((-0.000466 * score) + 1.532) * score;
-}
-
-function topScoresFrom(results, n, limitByRank = true) {
-  let valid = (results || [])
-    .filter(r => Number.isFinite(r.rank) && Number.isFinite(r.index) && r.rank >= 1)
-    .sort((a, b) => a.rank - b.rank);
-  if (limitByRank) valid = valid.filter(r => r.rank <= n);
-  return valid.slice(0, n).map(r => r.index);
-}
-
-function rciFromResults(results, n, limitByRank = true) {
-  const values = topScoresFrom(results, n, limitByRank);
-  if (!values.length) return NaN;
-  return mean(values) - stdPop(values);
-}
 
 // ---- Data loading ----
 let manifest = null;
@@ -133,21 +65,6 @@ function getCourseMeta(raceId) {
   return courseMetaCache.get(raceId) || null;
 }
 
-function normalizeCourse(course, fallbackRaceId) {
-  const meta = course.meta || {};
-  const raceId = meta.race_id || fallbackRaceId;
-  return {
-    ...course,
-    meta: { ...meta, race_id: raceId, series: normalizeSeries(meta.series) },
-    results: (course.results || [])
-      .map(r => ({
-        rank: Number(r.rank), index: Number(r.index),
-        runner: r.runner ?? null, gender: r.gender ?? null, nationality: r.nationality ?? null
-      }))
-      .filter(r => Number.isFinite(r.rank) && Number.isFinite(r.index))
-      .sort((a, b) => a.rank - b.rank)
-  };
-}
 
 async function loadCourse(raceId) {
   if (courseCache.has(raceId)) return courseCache.get(raceId);
@@ -244,14 +161,6 @@ const state = {
 state.vizSelected = state.rciNormSelected;
 state.vizFilters = state.rciNormFilters;
 
-function matchesFilters(meta, filters) {
-  const countryOk = !filters.country || (meta?.country || "") === filters.country;
-  const seriesFilter = filters.series;
-  const normalizedSeries = normalizeSeries(meta?.series);
-  const seriesList = Array.isArray(seriesFilter) ? seriesFilter.filter(Boolean) : seriesFilter ? [seriesFilter] : [];
-  const seriesOk = !seriesList.length || seriesList.some(s => normalizedSeries.includes(s));
-  return countryOk && seriesOk;
-}
 
 function getMetaLabel(meta) {
   if (!meta?.year) return "-";
@@ -343,11 +252,6 @@ async function renderPublicRciTable() {
   }
 }
 
-function fuzzyMatch(query, text) {
-  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
-  const lower = text.toLowerCase();
-  return terms.every(t => lower.includes(t));
-}
 
 function wirePublicChipFilters() {
   const chipState = { activeSeries: new Set(), activeYears: new Set([2025]), activeCountry: "", isManual: false };
@@ -564,12 +468,6 @@ function applyFiltersToSelection(selectedSet, filters) {
 }
 
 // ---- RCI computation ----
-function getRciResultsForMode(results, gender, normalizeFemale) {
-  const filtered = filterResultsByGender(results, gender);
-  if (!normalizeFemale || gender !== "female") return filtered;
-  return filtered.map(r => ({ ...r, index: normalizeItraFemaleIndex(r.index) }));
-}
-
 async function getRciRowsForGender(gender, options = {}) {
   const selectedSet = options.selectedSet || state.rciNormSelected;
   const filters = options.filters || state.rciNormFilters;
@@ -614,26 +512,6 @@ async function getRciRowsForGender(gender, options = {}) {
 }
 
 // ---- CSV export ----
-function csvCell(value) {
-  const s = value === null || value === undefined ? "" : String(value);
-  return `"${s.replace(/"/g, '""')}"`;
-}
-
-function rowsToCsv(rows) {
-  const header = ["Race", "Country", "Series", "RCI3", "RCI5", "RCI10", "RCI20"];
-  const lines = [header.map(csvCell).join(",")];
-  for (const r of rows) {
-    lines.push([
-      r.name, r.country || "", r.series || "",
-      Number.isFinite(r.rc3) ? r.rc3.toFixed(2) : "",
-      Number.isFinite(r.rc5) ? r.rc5.toFixed(2) : "",
-      Number.isFinite(r.rc10) ? r.rc10.toFixed(2) : "",
-      Number.isFinite(r.rc20) ? r.rc20.toFixed(2) : ""
-    ].map(csvCell).join(","));
-  }
-  return lines.join("\n");
-}
-
 function triggerCsvDownload(filename, csvContent) {
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
@@ -665,167 +543,7 @@ async function exportRciCsv(gender, options = {}) {
 }
 
 // ---- Import helpers ----
-function parseSeriesInput(value) {
-  if (!value || !String(value).trim()) return null;
-  const parts = String(value).split(",").map(s => s.trim()).filter(Boolean);
-  if (!parts.length) return null;
-  return parts.length === 1 ? parts[0] : parts;
-}
-
-function parseNullableNumber(value) {
-  const text = value === null || value === undefined ? "" : String(value).trim();
-  if (!text) return null;
-  const num = Number(text);
-  return Number.isFinite(num) ? num : null;
-}
-
-function asNullableText(value) {
-  if (value === null || value === undefined) return null;
-  const text = String(value).trim();
-  return text ? text : null;
-}
-
-function normalizeHeaderKey(value) {
-  return String(value || "").trim().toLowerCase()
-    .replace(/﻿/g, "").replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
-}
-
-function parseDelimitedRow(line, delimiter) {
-  return line.split(delimiter).map(cell => cell.trim());
-}
-
-function detectDelimiter(text) {
-  const lines = text.split(/\r?\n/).filter(line => line.trim());
-  const first = lines[0] || "";
-  const tabCount = (first.match(/\t/g) || []).length;
-  const commaCount = (first.match(/,/g) || []).length;
-  const semiCount = (first.match(/;/g) || []).length;
-  if (tabCount >= commaCount && tabCount >= semiCount && tabCount > 0) return "\t";
-  if (semiCount > commaCount && semiCount > 0) return ";";
-  return ",";
-}
-
-function readField(row, headers, aliases) {
-  for (const alias of aliases) {
-    const idx = headers.indexOf(alias);
-    if (idx >= 0) return row[idx];
-  }
-  return "";
-}
-
-function toNumberLoose(value) {
-  const text = String(value ?? "").trim();
-  if (!text) return NaN;
-  return Number(text.replace(",", "."));
-}
-
-function looksLikeHeader(cells) {
-  const h = cells.map(normalizeHeaderKey);
-  const known = new Set(["rank", "position", "pos", "place", "runner", "name", "athlete",
-    "time", "race_score", "score", "index", "itra_score", "utmb_index",
-    "gender", "sex", "nationality", "country", "nation", "nat"]);
-  return h.some(v => known.has(v));
-}
-
-function findLikelyScoreCell(row) {
-  for (let i = row.length - 1; i >= 1; i--) {
-    const cell = String(row[i] ?? "").trim();
-    if (!cell || cell.includes(":")) continue;
-    const n = toNumberLoose(cell);
-    if (Number.isFinite(n)) return cell;
-  }
-  return "";
-}
-
-function parsePastedResults(rawText) {
-  const text = String(rawText || "").trim();
-  if (!text) throw new Error("Results input is empty.");
-  const delimiter = detectDelimiter(text);
-  const lines = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
-  if (!lines.length) throw new Error("Results input is empty.");
-  const firstRow = parseDelimitedRow(lines[0], delimiter);
-  const hasHeader = looksLikeHeader(firstRow);
-  const headers = hasHeader ? firstRow.map(normalizeHeaderKey) : [];
-  const dataLines = hasHeader ? lines.slice(1) : lines;
-  const rows = dataLines.map(line => parseDelimitedRow(line, delimiter));
-  if (!rows.length) throw new Error("No data rows found.");
-  const results = [];
-  for (const row of rows) {
-    const rankText = readField(row, headers, ["rank", "position", "pos", "place", "overall_rank"]) || row[0] || "";
-    const runnerText = readField(row, headers, ["runner", "name", "athlete", "runner_name", "full_name"]) || row[1] || "";
-    const indexText = readField(row, headers, ["race_score", "score", "index", "itra_score", "utmb_index"]) || row[3] || findLikelyScoreCell(row);
-    const genderText = readField(row, headers, ["gender", "sex"]) || row[5] || "";
-    const nationalityText = readField(row, headers, ["nationality", "country", "nation", "nat"]) || row[6] || "";
-    const rank = toNumberLoose(rankText);
-    const index = toNumberLoose(indexText);
-    if (!Number.isFinite(rank) || rank < 1) continue;
-    if (!Number.isFinite(index)) continue;
-    results.push({
-      rank: Math.floor(rank),
-      runner: asNullableText(runnerText),
-      index,
-      gender: asNullableText(genderText),
-      nationality: asNullableText(nationalityText)
-    });
-  }
-  if (!results.length) throw new Error("No valid rows found. Need numeric rank and race score/index columns.");
-  results.sort((a, b) => a.rank - b.rank);
-  return results;
-}
-
 // ---- ITRA fetch + parse ----
-function parseItraHtml(html, url) {
-  const doc = new DOMParser().parseFromString(html, "text/html");
-  const table = doc.getElementById("RunnerRaceResults");
-  if (!table) {
-    // Likely a login redirect
-    const hasLoginHint = doc.querySelector('input[type="password"], form[action*="login"], [href*="login"]');
-    if (hasLoginHint) throw new Error("SessionToken expired or invalid — log in to itra.run and copy a fresh token.");
-    throw new Error("Results table not found. Check the URL and try again.");
-  }
-
-  const rows = table.querySelectorAll("tbody tr");
-  const results = [];
-  for (const row of rows) {
-    const cells = row.querySelectorAll("td");
-    if (cells.length < 7) continue;
-
-    const rank = parseInt(cells[0].textContent.trim(), 10);
-    if (!Number.isFinite(rank) || rank < 1) continue;
-
-    const runnerLink = cells[1].querySelector("a");
-    const runner = runnerLink
-      ? runnerLink.textContent.replace(/\s+/g, " ").trim() || null
-      : cells[1].textContent.replace(/\s+/g, " ").trim() || null;
-
-    const scoreText = cells[3].textContent.trim();
-    const index = parseInt(scoreText, 10);
-    if (!Number.isFinite(index) || index <= 0) continue; // no score = skip (required for RCI)
-
-    const genderRaw = cells[5].textContent.trim().toUpperCase();
-    const gender = genderRaw === "M" || genderRaw === "H" || genderRaw === "MALE" || genderRaw === "HOMME" ? "M"
-      : genderRaw === "F" || genderRaw === "W" || genderRaw === "FEMALE" || genderRaw === "FEMME" ? "F"
-      : null;
-    const nationality = cells[6].textContent.replace(/\s+/g, " ").trim() || null;
-
-    results.push({ rank, runner, index, gender, nationality });
-  }
-
-  if (!results.length) throw new Error("No valid results found — all rows may be missing ITRA scores.");
-  return results;
-}
-
-function itraUrlToMeta(url) {
-  // Pattern: /Races/RaceResults/{Slug}/{Year}/{NumericId}
-  const m = url.match(/RaceResults\/(.+?)\/(\d{4})\/(\d+)/);
-  if (!m) return {};
-  const slug = m[1];   // "Black.Canyon.Ultras.100K"
-  const year = parseInt(m[2], 10);
-  const name = slug.replace(/\./g, " ");  // "Black Canyon Ultras 100K"
-  const raceId = slug.toUpperCase().replace(/\./g, "_") + "_" + year; // "BLACK_CANYON_ULTRAS_100K_2026"
-  return { name, year, raceId };
-}
-
 function setItraStatus(message, type = "") {
   const el = document.getElementById("itraStatus");
   if (!el) return;
@@ -1028,53 +746,6 @@ async function importToSupabase() {
 }
 
 // ---- Bulk CSV Import ----
-function makeBulkRaceId(name, km, year) {
-  const parts = [name, km ? `${Math.round(km)}KM` : null, year].filter(Boolean);
-  return parts.join("_").toUpperCase().replace(/[^A-Z0-9]+/g, "_").replace(/^_+|_+$/g, "");
-}
-
-function parseCsvLine(line) {
-  const result = [];
-  let current = "";
-  let inQuotes = false;
-  for (const c of line) {
-    if (c === '"') { inQuotes = !inQuotes; }
-    else if ((c === "," || c === ";") && !inQuotes) { result.push(current.trim()); current = ""; }
-    else { current += c; }
-  }
-  result.push(current.trim());
-  return result;
-}
-
-function parseBulkCsv(text) {
-  const rows = [];
-  for (const line of text.split("\n").map(l => l.trim()).filter(Boolean)) {
-    const cols = parseCsvLine(line);
-    if (cols.length < 6) continue;
-    const url = cols[cols.length - 1];
-    if (!url.startsWith("http")) continue; // skip header or invalid rows
-    const name = cols[1] || null;
-    const km = parseFloat(cols[2]) || null;
-    const urlMeta = itraUrlToMeta(url);
-    const year = urlMeta.year || null;
-    const computedName = name ? (km ? `${name} ${km}km` : name) : (urlMeta.name || "");
-    const computedRaceId = makeBulkRaceId(name || urlMeta.name || "", km, year);
-    rows.push({
-      country: cols[0] || null,
-      name,
-      km,
-      elevation: parseFloat(cols[3]) || null,
-      url,
-      computedName,
-      computedRaceId,
-      status: "pending",
-      error: null,
-      resultCount: null
-    });
-  }
-  return rows;
-}
-
 function renderBulkPreview() {
   const tbody = document.querySelector("#bulkPreviewTable tbody");
   if (!tbody) return;
@@ -1182,13 +853,6 @@ function getVizFilteredIds() {
   return Array.from(state.vizSelected).sort();
 }
 
-function getTopStats(results, n) {
-  const values = topScoresFrom(results, n, false);
-  if (!values.length) return { mean: NaN, std: NaN, rci: NaN };
-  const m = mean(values);
-  const sd = stdPop(values);
-  return { mean: m, std: sd, rci: m - sd };
-}
 
 async function getVizRciPoints(options = {}) {
   const ids = options.ids || getVizFilteredIds();

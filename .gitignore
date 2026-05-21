@@ -17,3 +17,7 @@ venv/
 
 # Supabase credentials (copy config.js.example → config.js and fill in)
 config.js
+
+# Node
+node_modules/
+coverage/

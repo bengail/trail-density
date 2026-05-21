@@ -97,7 +97,7 @@ export async function onRequestPost(context) {
   return Response.json({ races, total: races.length });
 }
 
-function parseRaceCards(html) {
+export function parseRaceCards(html) {
   // All race data is embedded client-side in raceSearchJsonSidePopupNew.
   // We work in document order: track the current event name and country,
   // and emit one entry per distance box that has published results (green.svg).
@@ -165,12 +165,12 @@ function parseRaceCards(html) {
   return races;
 }
 
-function parseKm(str) {
+export function parseKm(str) {
   const m = str.trim().match(/^([\d.]+)/);
   return m ? parseFloat(m[1]) : null;
 }
 
-function parseElev(str) {
+export function parseElev(str) {
   // "+426 m" or "+1 800 m" — strip everything except digits
   const digits = str.replace(/[^0-9]/g, "");
   return digits ? parseInt(digits, 10) : null;
