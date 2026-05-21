@@ -7,7 +7,7 @@ export function getAppContext() {
   const isAdmin =
     path === "/admin" || path === "/admin/" ||
     path.endsWith("/admin/index.html") || path.endsWith("/admin");
-  return { mode: isAdmin ? "admin" : "public", assetPrefix: isAdmin ? "../" : "" };
+  return { mode: isAdmin ? "admin" : "public" };
 }
 
 export function isTabAllowed(mode, tab) {

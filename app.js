@@ -4,15 +4,13 @@ import { loadManifest, preloadAllCourseMeta, getManifestEntries, loadCourse } fr
 import { renderPublicRciTable, wirePublicChipFilters, exportRciCsv } from './render-public.js';
 import { updateVisualization, updateCharts } from './charts.js';
 import { getAppContext, applyAppModeVisibility, setActiveTab, getSafeTab, updateAll, readHashParams, writeHashParams } from './navigation.js';
-import { fetchFromItra, buildImportJson, importToSupabase, downloadImportRaceJson, downloadImportManifestJson } from './import-itra.js';
+import { fetchFromItra, buildImportJson, importToSupabase } from './import-itra.js';
 import { parseBulkCsvAction, startBulkImport } from './bulk-import.js';
 import { renderRaceList, renderRaceEditForm, updateRaceDisplay } from './render-admin.js';
 import { discoverSearch, feedDiscoverToBulk } from './discover.js';
 
 (async function boot() {
-  const appContext = getAppContext();
-  state.appMode = appContext.mode;
-  state.assetPrefix = appContext.assetPrefix;
+  state.appMode = getAppContext().mode;
   state.activeTab = DEFAULT_TAB_BY_MODE[state.appMode];
 
   await loadManifest();
@@ -143,8 +141,6 @@ import { discoverSearch, feedDiscoverToBulk } from './discover.js';
   document.getElementById("itraFetchBtn")?.addEventListener("click", fetchFromItra);
   document.getElementById("importBuildJsonBtn")?.addEventListener("click", buildImportJson);
   document.getElementById("importSaveSupabaseBtn")?.addEventListener("click", importToSupabase);
-  document.getElementById("importDownloadRaceBtn")?.addEventListener("click", downloadImportRaceJson);
-  document.getElementById("importDownloadIndexBtn")?.addEventListener("click", downloadImportManifestJson);
 
   // Admin: race browser + edit
   const raceSearch = document.getElementById("searchRace");

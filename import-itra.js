@@ -1,9 +1,7 @@
 import { state } from './state.js';
-import { getManifestEntries } from './data.js';
 import { parseSeriesInput, parseNullableNumber, asNullableText, parsePastedResults, itraUrlToMeta, makeRaceSlug } from './lib/parse.js';
 import { parseItraHtml } from './lib/parse-itra.js';
 import { fmt } from './lib/math.js';
-import { triggerJsonDownload } from './download.js';
 
 export function setItraStatus(message, type = "") {
   const el = document.getElementById("itraStatus");
@@ -58,15 +56,6 @@ export function readImportDraftFromForm(resultsOverride = null) {
   return { meta, results };
 }
 
-export function buildUpdatedManifestForImport(raceId) {
-  const courses = getManifestEntries().map(c => ({ race_id: c.race_id, path: c.path }));
-  const newEntry = { race_id: raceId, path: `data/courses/${raceId}.json` };
-  const existingIndex = courses.findIndex(c => c.race_id === raceId);
-  if (existingIndex >= 0) courses[existingIndex] = newEntry; else courses.push(newEntry);
-  courses.sort((a, b) => a.race_id.localeCompare(b.race_id));
-  return { courses };
-}
-
 export function buildImportJson() {
   try {
     const rawText = (document.getElementById("importResultsInput")?.value || "").trim();
@@ -81,16 +70,6 @@ export function buildImportJson() {
     renderImportPreview([]);
     setImportStatus(err.message || "Unable to build JSON.", "error");
   }
-}
-
-export function downloadImportRaceJson() {
-  if (!state.importDraft) { setImportStatus("Build JSON first before downloading.", "error"); return; }
-  triggerJsonDownload(`${state.importDraft.meta?.race_id || "race"}.json`, state.importDraft);
-}
-
-export function downloadImportManifestJson() {
-  if (!state.importDraft) { setImportStatus("Build JSON first.", "error"); return; }
-  triggerJsonDownload("courses_index.json", buildUpdatedManifestForImport(state.importDraft.meta?.race_id || ""));
 }
 
 export async function saveRaceToSupabase(meta, results) {

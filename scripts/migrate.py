@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""One-shot migration: data/courses/*.json → Supabase.
+"""Seed / re-seed Supabase from data/courses/*.json.
 
 Required env vars:
   SUPABASE_URL         https://xxxx.supabase.co
@@ -16,6 +16,7 @@ Usage:
 
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -46,13 +47,23 @@ def series_to_list(value) -> list:
     if value is None:
         return []
     if isinstance(value, list):
-        return value
-    return [value]
+        return [v for v in value if v and str(v).strip().lower() != "none"]
+    if isinstance(value, str):
+        s = value.strip()
+        return [] if not s or s.lower() == "none" else [s]
+    return []
+
+
+def make_race_slug(race_id: str) -> str:
+    return re.sub(r"_\d{4}$", "", race_id)
 
 
 def build_course_row(meta: dict) -> dict:
+    race_id = meta["race_id"]
     return {
-        "race_id":     meta["race_id"],
+        "race_id":     race_id,
+        "race_slug":   meta.get("race_slug") or make_race_slug(race_id),
+        "itra_id":     meta.get("itra_id"),
         "name":        meta.get("name"),
         "series":      series_to_list(meta.get("series")),
         "country":     meta.get("country"),

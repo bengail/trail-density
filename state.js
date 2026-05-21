@@ -12,7 +12,6 @@ export const PARITY_N_LEVELS = [5, 10, 20];
 
 export const state = {
   appMode: "public",
-  assetPrefix: "",
   raceSelected: null,
   publicRciGender: "female",
   publicRciShowExtra: false,

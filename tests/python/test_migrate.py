@@ -9,7 +9,7 @@ sys.modules.setdefault("supabase", MagicMock())
 os.environ.setdefault("SUPABASE_URL", "https://test.supabase.co")
 os.environ.setdefault("SUPABASE_SERVICE_KEY", "test-service-key")
 
-from migrate import series_to_list, build_course_row, build_result_rows
+from migrate import series_to_list, build_course_row, build_result_rows, make_race_slug
 
 
 class TestSeriesToList:
@@ -25,11 +25,28 @@ class TestSeriesToList:
     def test_empty_list_stays_empty(self):
         assert series_to_list([]) == []
 
+    def test_filters_none_string_in_list(self):
+        assert series_to_list(["UTMB", "none"]) == ["UTMB"]
+        assert series_to_list(["none"]) == []
+
+    def test_returns_empty_for_none_string(self):
+        assert series_to_list("none") == []
+        assert series_to_list("") == []
+
+
+class TestMakeRaceSlug:
+    def test_strips_year_suffix(self):
+        assert make_race_slug("CCC_2025") == "CCC"
+        assert make_race_slug("BLACKCANYON_100K_2025") == "BLACKCANYON_100K"
+
+    def test_leaves_string_without_year_unchanged(self):
+        assert make_race_slug("CCC") == "CCC"
+
 
 class TestBuildCourseRow:
     def _meta(self, **kwargs):
         defaults = {
-            "race_id": "UTMB2025",
+            "race_id": "UTMB_2025",
             "name": "UTMB 2025",
             "series": ["UTMB"],
             "country": "France",
@@ -46,10 +63,26 @@ class TestBuildCourseRow:
 
     def test_maps_all_fields(self):
         row = build_course_row(self._meta())
-        assert row["race_id"] == "UTMB2025"
+        assert row["race_id"] == "UTMB_2025"
         assert row["name"] == "UTMB 2025"
         assert row["country"] == "France"
         assert row["year"] == 2025
+
+    def test_derives_race_slug_from_race_id(self):
+        row = build_course_row(self._meta())
+        assert row["race_slug"] == "UTMB"
+
+    def test_uses_provided_race_slug(self):
+        row = build_course_row(self._meta(race_slug="UTMB"))
+        assert row["race_slug"] == "UTMB"
+
+    def test_itra_id_defaults_to_none(self):
+        row = build_course_row(self._meta())
+        assert row["itra_id"] is None
+
+    def test_preserves_itra_id(self):
+        row = build_course_row(self._meta(itra_id=12345))
+        assert row["itra_id"] == 12345
 
     def test_converts_series_string_to_list(self):
         row = build_course_row(self._meta(series="UTMB"))
@@ -58,6 +91,10 @@ class TestBuildCourseRow:
     def test_handles_none_series(self):
         row = build_course_row(self._meta(series=None))
         assert row["series"] == []
+
+    def test_filters_none_from_series(self):
+        row = build_course_row(self._meta(series=["GTWS", "none"]))
+        assert row["series"] == ["GTWS"]
 
     def test_passes_optional_none_fields(self):
         row = build_course_row(self._meta(notes=None, prize_money=None))
