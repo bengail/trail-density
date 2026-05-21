@@ -20,9 +20,9 @@ export function getSafeTab(mode, desiredTab) {
 }
 
 export function applyAppModeVisibility(mode) {
-  const publicButtons = ["tabRciNorm", "vizTabParity", "tabCharts"];
+  const publicButtons = ["tabRciNorm", "vizTabParity", "tabCharts", "tabTrends"];
   const adminButtons = ["tabRace", "tabImport", "tabDiscover", "tabBulk"];
-  const publicPages = ["pageRciNorm", "pageViz", "pageCharts"];
+  const publicPages = ["pageRciNorm", "pageViz", "pageCharts", "pageTrends"];
   const adminPages = ["pageRace", "pageImport", "pageDiscover", "pageBulk"];
 
   const hide = (id, hidden) => { const el = document.getElementById(id); if (el) el.hidden = hidden; };
@@ -41,6 +41,7 @@ export function setActiveTab(tab) {
     rcinormcharts: "pageRciNorm",
     visualization: "pageViz",
     charts: "pageCharts",
+    trends: "pageTrends",
     race: "pageRace",
     import: "pageImport",
     discover: "pageDiscover",
@@ -54,6 +55,7 @@ export function setActiveTab(tab) {
   document.getElementById("tabRciNorm")?.classList.toggle("active", safeTab === "rcinormcharts");
   document.getElementById("vizTabParity")?.classList.toggle("active", safeTab === "visualization");
   document.getElementById("tabCharts")?.classList.toggle("active", safeTab === "charts");
+  document.getElementById("tabTrends")?.classList.toggle("active", safeTab === "trends");
   document.getElementById("tabRace")?.classList.toggle("active", safeTab === "race");
   document.getElementById("tabImport")?.classList.toggle("active", safeTab === "import");
   document.getElementById("tabDiscover")?.classList.toggle("active", safeTab === "discover");

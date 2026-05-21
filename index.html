@@ -85,6 +85,7 @@
       <button id="tabRciNorm" class="active">RCI</button>
       <button id="vizTabParity">Parity</button>
       <button id="tabCharts">Depth</button>
+      <button id="tabTrends">Trends</button>
     </div>
     <a href="/admin/" style="font-size:12px; font-weight:700; color:var(--muted); text-decoration:none; padding:9px 10px; border:1px solid var(--border); border-radius:12px; background:#f8fafc;">Admin</a>
   </nav>
@@ -209,6 +210,41 @@
 
     <section class="panel">
       <div id="plot" style="height:560px;"></div>
+    </section>
+  </div>
+</main>
+
+<main id="pageTrends" class="">
+  <div class="grid">
+    <aside class="panel sidebar">
+      <div class="filter-section">
+        <span class="filter-label">Race</span>
+        <div style="display:flex; gap:6px; margin-bottom:8px;">
+          <input id="trendsSlugInput" type="search" placeholder="e.g. CCC, UTMB, SZ…" list="trendsSlugSuggest" style="flex:1;" />
+          <button id="trendsSearchBtn" class="chip">Go</button>
+        </div>
+        <datalist id="trendsSlugSuggest"></datalist>
+      </div>
+      <hr class="filter-divider" />
+      <div class="filter-section">
+        <span class="filter-label">Gender</span>
+        <div class="chip-group">
+          <button id="trendsGenderBoth" class="chip active">Both</button>
+          <button id="trendsGenderWomen" class="chip">Women</button>
+          <button id="trendsGenderMen" class="chip">Men</button>
+        </div>
+      </div>
+      <hr class="filter-divider" />
+      <div class="note" style="line-height:1.8;">
+        Solid line = RCI5 &nbsp;·&nbsp; Dotted = RCI10<br/>
+        <span style="color:#e91e8c; font-weight:700;">▮</span> Women &nbsp;
+        <span style="color:#2563eb; font-weight:700;">▮</span> Men
+      </div>
+    </aside>
+
+    <section class="panel">
+      <h2 id="trendsTitle" style="margin-bottom:14px;">Pick a race to see RCI over time</h2>
+      <div id="trendPlot" style="height:520px;"></div>
     </section>
   </div>
 </main>

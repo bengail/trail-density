@@ -1,5 +1,5 @@
 export const TAB_ALLOWLIST = {
-  public: ["rcinormcharts", "visualization", "charts"],
+  public: ["rcinormcharts", "visualization", "charts", "trends"],
   admin: ["race", "import", "discover", "bulk"]
 };
 

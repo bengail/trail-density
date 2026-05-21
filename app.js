@@ -8,6 +8,7 @@ import { fetchFromItra, buildImportJson, importToSupabase } from './import-itra.
 import { parseBulkCsvAction, startBulkImport } from './bulk-import.js';
 import { renderRaceList, renderRaceEditForm, updateRaceDisplay } from './render-admin.js';
 import { discoverSearch, feedDiscoverToBulk } from './discover.js';
+import { wireTrendsTab } from './trends.js';
 
 (async function boot() {
   state.appMode = getAppContext().mode;
@@ -110,10 +111,13 @@ import { discoverSearch, feedDiscoverToBulk } from './discover.js';
       exportRciCsv("male", { selectedSet: state.rciNormSelected, filters: state.rciNormFilters, sorts: state.rciNormSorts, normalizeFemale: true }));
   }
 
+  if (state.appMode === "public") wireTrendsTab();
+
   // Nav tabs
   document.getElementById("tabRciNorm")?.addEventListener("click", () => { setActiveTab("rcinormcharts"); syncHash(); });
   document.getElementById("vizTabParity")?.addEventListener("click", () => { setActiveTab("visualization"); syncHash(); });
   document.getElementById("tabCharts")?.addEventListener("click", () => { setActiveTab("charts"); syncHash(); });
+  document.getElementById("tabTrends")?.addEventListener("click", () => { setActiveTab("trends"); syncHash(); });
   document.getElementById("tabRace")?.addEventListener("click", () => setActiveTab("race"));
   document.getElementById("tabImport")?.addEventListener("click", () => setActiveTab("import"));
   document.getElementById("tabDiscover")?.addEventListener("click", () => setActiveTab("discover"));
