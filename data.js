@@ -103,3 +103,12 @@ export function getMetaLabel(meta) {
   if (!meta?.year) return "-";
   return String(meta.year);
 }
+
+export function maxYearFromData() {
+  let max = null;
+  for (const c of getManifestEntries()) {
+    const yr = getCourseMeta(c.race_id)?.year;
+    if (yr && (max === null || yr > max)) max = yr;
+  }
+  return max;
+}

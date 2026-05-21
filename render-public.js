@@ -1,5 +1,5 @@
 import { state } from './state.js';
-import { getManifestEntries, getCourseMeta, loadCourse, getMetaLabel } from './data.js';
+import { getManifestEntries, getCourseMeta, loadCourse, getMetaLabel, maxYearFromData } from './data.js';
 import { normalizeSeries, inferRaceGender, getRciResultsForMode } from './lib/normalize.js';
 import { rciFromResults } from './lib/rci.js';
 import { matchesFilters, fuzzyMatch, densityColor } from './lib/filters.js';
@@ -91,8 +91,16 @@ export async function renderPublicRciTable() {
   }
 }
 
-export function wirePublicChipFilters() {
-  const chipState = { activeSeries: new Set(), activeYears: new Set([2025]), activeCountry: "", isManual: false };
+export function wirePublicChipFilters(options = {}) {
+  const { initialYears = null, initialSeries = [], initialCountry = "", onChipChange = null } = options;
+  const defaultYear = maxYearFromData();
+  const chipState = {
+    activeSeries: new Set(initialSeries),
+    activeYears: new Set(initialYears != null ? initialYears : (defaultYear ? [defaultYear] : [])),
+    activeCountry: initialCountry,
+    isManual: false
+  };
+  state.rciNormFilters.country = chipState.activeCountry;
 
   function allSeriesFromData() {
     const s = new Set();
@@ -239,6 +247,7 @@ export function wirePublicChipFilters() {
   }
 
   async function triggerUpdate() {
+    onChipChange?.();
     await renderPublicRciTable();
     if (state.activeTab === "visualization") await updateVisualization();
     if (state.activeTab === "charts") await updateCharts();
@@ -278,6 +287,14 @@ export function wirePublicChipFilters() {
   renderYearChips();
   renderCountryChips();
   renderPublicRaceList();
+
+  return {
+    getChipSnapshot: () => ({
+      years: [...chipState.activeYears],
+      series: [...chipState.activeSeries],
+      country: chipState.activeCountry
+    })
+  };
 }
 
 export function setSelectionByYear(selectedSet, year, filters = null) {

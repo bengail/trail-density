@@ -66,3 +66,31 @@ export function setActiveTab(tab) {
 export async function updateAll() {
   await renderPublicRciTable();
 }
+
+export function readHashParams() {
+  try {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return {};
+    const p = new URLSearchParams(hash);
+    const yearsRaw = p.get("years");
+    const seriesRaw = p.get("series");
+    return {
+      tab: p.get("tab") || null,
+      gender: p.get("gender") || null,
+      years: yearsRaw ? yearsRaw.split(",").map(Number).filter(y => y > 0) : null,
+      series: seriesRaw ? seriesRaw.split(",").filter(Boolean) : null,
+      country: p.get("country") || null,
+    };
+  } catch { return {}; }
+}
+
+export function writeHashParams(params) {
+  const p = new URLSearchParams();
+  if (params.tab) p.set("tab", params.tab);
+  if (params.gender) p.set("gender", params.gender);
+  if (params.years?.length) p.set("years", params.years.join(","));
+  if (params.series?.length) p.set("series", params.series.join(","));
+  if (params.country) p.set("country", params.country);
+  const str = p.toString();
+  history.replaceState(null, "", str ? "#" + str : location.pathname + location.search);
+}

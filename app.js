@@ -1,9 +1,9 @@
 // Trail Race Analytics — entry point
 import { state, DEFAULT_TAB_BY_MODE } from './state.js';
 import { loadManifest, preloadAllCourseMeta, getManifestEntries, loadCourse } from './data.js';
-import { renderPublicRciTable, wirePublicChipFilters, setSelectionByYear, exportRciCsv } from './render-public.js';
+import { renderPublicRciTable, wirePublicChipFilters, exportRciCsv } from './render-public.js';
 import { updateVisualization, updateCharts } from './charts.js';
-import { getAppContext, applyAppModeVisibility, setActiveTab, updateAll } from './navigation.js';
+import { getAppContext, applyAppModeVisibility, setActiveTab, getSafeTab, updateAll, readHashParams, writeHashParams } from './navigation.js';
 import { fetchFromItra, buildImportJson, importToSupabase, downloadImportRaceJson, downloadImportManifestJson } from './import-itra.js';
 import { parseBulkCsvAction, startBulkImport } from './bulk-import.js';
 import { renderRaceList, renderRaceEditForm, updateRaceDisplay } from './render-admin.js';
@@ -18,23 +18,50 @@ import { discoverSearch, feedDiscoverToBulk } from './discover.js';
   await loadManifest();
   await preloadAllCourseMeta();
 
-  setSelectionByYear(state.rciNormSelected, 2025);
+  const hash = readHashParams();
+  if (state.appMode === "public" && hash.tab) state.activeTab = getSafeTab(state.appMode, hash.tab);
+  if (hash.gender === "male" || hash.gender === "female") state.publicRciGender = hash.gender;
+
+  let getChipSnapshot = () => ({ years: [], series: [], country: "" });
+  function syncHash() {
+    if (state.appMode !== "public") return;
+    const chip = getChipSnapshot();
+    const params = {};
+    if (state.activeTab !== DEFAULT_TAB_BY_MODE[state.appMode]) params.tab = state.activeTab;
+    if (state.publicRciGender !== "female") params.gender = state.publicRciGender;
+    if (chip.years.length) params.years = chip.years;
+    if (chip.series.length) params.series = chip.series;
+    if (chip.country) params.country = chip.country;
+    writeHashParams(params);
+  }
 
   if (state.appMode === "public") {
-    wirePublicChipFilters();
+    ({ getChipSnapshot } = wirePublicChipFilters({
+      initialYears: hash.years ?? null,
+      initialSeries: hash.series ?? [],
+      initialCountry: hash.country ?? "",
+      onChipChange: syncHash,
+    }));
 
     document.getElementById("rciTabWomen")?.addEventListener("click", () => {
       state.publicRciGender = "female";
       document.getElementById("rciTabWomen")?.classList.add("active");
       document.getElementById("rciTabMen")?.classList.remove("active");
       renderPublicRciTable();
+      syncHash();
     });
     document.getElementById("rciTabMen")?.addEventListener("click", () => {
       state.publicRciGender = "male";
       document.getElementById("rciTabMen")?.classList.add("active");
       document.getElementById("rciTabWomen")?.classList.remove("active");
       renderPublicRciTable();
+      syncHash();
     });
+    // Restore gender button active state from state (may have been set via hash)
+    if (state.publicRciGender === "male") {
+      document.getElementById("rciTabMen")?.classList.add("active");
+      document.getElementById("rciTabWomen")?.classList.remove("active");
+    }
 
     document.getElementById("rciToggleExtra")?.addEventListener("click", function () {
       state.publicRciShowExtra = !state.publicRciShowExtra;
@@ -86,9 +113,9 @@ import { discoverSearch, feedDiscoverToBulk } from './discover.js';
   }
 
   // Nav tabs
-  document.getElementById("tabRciNorm")?.addEventListener("click", () => setActiveTab("rcinormcharts"));
-  document.getElementById("vizTabParity")?.addEventListener("click", () => setActiveTab("visualization"));
-  document.getElementById("tabCharts")?.addEventListener("click", () => setActiveTab("charts"));
+  document.getElementById("tabRciNorm")?.addEventListener("click", () => { setActiveTab("rcinormcharts"); syncHash(); });
+  document.getElementById("vizTabParity")?.addEventListener("click", () => { setActiveTab("visualization"); syncHash(); });
+  document.getElementById("tabCharts")?.addEventListener("click", () => { setActiveTab("charts"); syncHash(); });
   document.getElementById("tabRace")?.addEventListener("click", () => setActiveTab("race"));
   document.getElementById("tabImport")?.addEventListener("click", () => setActiveTab("import"));
   document.getElementById("tabDiscover")?.addEventListener("click", () => setActiveTab("discover"));
@@ -145,5 +172,6 @@ import { discoverSearch, feedDiscoverToBulk } from './discover.js';
   applyAppModeVisibility(state.appMode);
   setActiveTab(state.activeTab);
   await updateAll();
+  syncHash();
   if (state.appMode === "admin") await updateRaceDisplay();
 })();
