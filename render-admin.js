@@ -1,7 +1,7 @@
 import { state } from './state.js';
 import { getManifestEntries, getCourseMeta, loadCourse, courseMetaCache, courseCache, getMetaLabel } from './data.js';
 import { normalizeSeries } from './lib/normalize.js';
-import { parseSeriesInput, parseNullableNumber, asNullableText } from './lib/parse.js';
+import { parseSeriesInput, parseNullableNumber, asNullableText, makeRaceSlug } from './lib/parse.js';
 
 export function renderRaceList(searchQuery) {
   const list = document.getElementById("raceList");
@@ -51,6 +51,8 @@ export async function updateRaceDisplay() {
   metaEl.innerHTML = [
     renderMetaCard("Name", meta.name || meta.race_id || state.raceSelected),
     renderMetaCard("Race ID", meta.race_id || state.raceSelected),
+    renderMetaCard("Race Slug", meta.race_slug || makeRaceSlug(meta.race_id || state.raceSelected)),
+    renderMetaCard("ITRA ID", meta.itra_id ?? null),
     renderMetaCard("Year", meta.year),
     renderMetaCard("Series", series),
     renderMetaCard("Country", meta.country),
@@ -87,6 +89,7 @@ export function renderRaceEditForm(course) {
       <label>Series <input id="editSeries" value="${normalizeSeries(meta.series).join(", ")}"></label>
       <label>Country <input id="editCountry" value="${meta.country || ""}"></label>
       <label>Year <input id="editYear" type="number" value="${meta.year || ""}"></label>
+      <label>ITRA ID <input id="editItraId" type="number" value="${meta.itra_id ?? ""}"></label>
       <label>Distance (km) <input id="editDistanceKm" type="number" step="0.1" value="${meta.distance_km ?? ""}"></label>
       <label>Elevation (m) <input id="editElevationM" type="number" value="${meta.elevation_m ?? ""}"></label>
       <label>Data source <input id="editDataSource" value="${meta.data_source || ""}"></label>
@@ -127,6 +130,7 @@ async function saveRaceMeta(course) {
     series: seriesValue,
     country: asNullableText(document.getElementById("editCountry")?.value),
     year: parseNullableNumber(document.getElementById("editYear")?.value),
+    itra_id: parseNullableNumber(document.getElementById("editItraId")?.value),
     distance_km: parseNullableNumber(document.getElementById("editDistanceKm")?.value),
     elevation_m: parseNullableNumber(document.getElementById("editElevationM")?.value),
     data_source: asNullableText(document.getElementById("editDataSource")?.value),

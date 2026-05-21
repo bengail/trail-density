@@ -1,6 +1,6 @@
 import { state } from './state.js';
 import { getManifestEntries } from './data.js';
-import { parseSeriesInput, parseNullableNumber, asNullableText, parsePastedResults, itraUrlToMeta } from './lib/parse.js';
+import { parseSeriesInput, parseNullableNumber, asNullableText, parsePastedResults, itraUrlToMeta, makeRaceSlug } from './lib/parse.js';
 import { parseItraHtml } from './lib/parse-itra.js';
 import { fmt } from './lib/math.js';
 import { triggerJsonDownload } from './download.js';
@@ -39,8 +39,12 @@ export function readImportDraftFromForm(resultsOverride = null) {
   const results = resultsOverride !== null
     ? resultsOverride
     : parsePastedResults(document.getElementById("importResultsInput")?.value || "");
+  const itraIdRaw = document.getElementById("importItraId")?.value;
   const meta = {
-    race_id: raceId, name,
+    race_id: raceId,
+    race_slug: makeRaceSlug(raceId),
+    itra_id: itraIdRaw ? (parseInt(itraIdRaw, 10) || null) : (state.importDraft?.meta?.itra_id ?? null),
+    name,
     series: parseSeriesInput(document.getElementById("importSeries")?.value),
     country: asNullableText(document.getElementById("importCountry")?.value),
     data_source: asNullableText(document.getElementById("importDataSource")?.value),
@@ -93,7 +97,10 @@ export async function saveRaceToSupabase(meta, results) {
   if (!window.supabaseClient) throw new Error("Supabase not configured — check config.js.");
   const seriesValue = meta.series ? (Array.isArray(meta.series) ? meta.series : [meta.series]) : [];
   const courseRow = {
-    race_id: meta.race_id, name: meta.name, series: seriesValue, country: meta.country,
+    race_id: meta.race_id,
+    race_slug: meta.race_slug || makeRaceSlug(meta.race_id),
+    itra_id: meta.itra_id ?? null,
+    name: meta.name, series: seriesValue, country: meta.country,
     year: meta.year, distance_km: meta.distance_km, elevation_m: meta.elevation_m,
     prize_money: meta.prize_money, data_source: meta.data_source,
     source_url: meta.source_url, notes: meta.notes
@@ -157,28 +164,35 @@ export async function fetchFromItra() {
     const html = await resp.text();
     const results = parseItraHtml(html, url);
 
-    const meta = itraUrlToMeta(url);
-    if (meta.raceId) {
+    const urlMeta = itraUrlToMeta(url);
+    if (urlMeta.raceId) {
       const raceIdEl = document.getElementById("importRaceId");
-      if (raceIdEl && !raceIdEl.value) raceIdEl.value = meta.raceId;
+      if (raceIdEl && !raceIdEl.value) raceIdEl.value = urlMeta.raceId;
     }
-    if (meta.name) {
+    if (urlMeta.name) {
       const nameEl = document.getElementById("importName");
-      if (nameEl && !nameEl.value) nameEl.value = meta.name;
+      if (nameEl && !nameEl.value) nameEl.value = urlMeta.name;
     }
-    if (meta.year) {
+    if (urlMeta.year) {
       const yearEl = document.getElementById("importYear");
-      if (yearEl && !yearEl.value) yearEl.value = String(meta.year);
+      if (yearEl && !yearEl.value) yearEl.value = String(urlMeta.year);
+    }
+    if (urlMeta.itraId) {
+      const itraIdEl = document.getElementById("importItraId");
+      if (itraIdEl && !itraIdEl.value) itraIdEl.value = String(urlMeta.itraId);
     }
 
+    const raceId = document.getElementById("importRaceId")?.value || urlMeta.raceId || "";
     state.importDraft = {
       meta: {
-        race_id: document.getElementById("importRaceId")?.value || meta.raceId || "",
-        name: document.getElementById("importName")?.value || meta.name || "",
+        race_id: raceId,
+        race_slug: makeRaceSlug(raceId),
+        itra_id: urlMeta.itraId || null,
+        name: document.getElementById("importName")?.value || urlMeta.name || "",
         series: parseSeriesInput(document.getElementById("importSeries")?.value),
         country: asNullableText(document.getElementById("importCountry")?.value),
         data_source: "ITRA",
-        year: parseNullableNumber(document.getElementById("importYear")?.value) || meta.year || null,
+        year: parseNullableNumber(document.getElementById("importYear")?.value) || urlMeta.year || null,
         distance_km: parseNullableNumber(document.getElementById("importDistanceKm")?.value),
         elevation_m: parseNullableNumber(document.getElementById("importElevationM")?.value),
         prize_money: asNullableText(document.getElementById("importPrizeMoney")?.value),

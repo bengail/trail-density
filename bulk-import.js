@@ -1,6 +1,6 @@
 import { state } from './state.js';
 import { parseItraHtml } from './lib/parse-itra.js';
-import { parseBulkCsv, itraUrlToMeta } from './lib/parse.js';
+import { parseBulkCsv, itraUrlToMeta, makeRaceSlug } from './lib/parse.js';
 import { saveRaceToSupabase } from './import-itra.js';
 
 export function renderBulkPreview() {
@@ -54,8 +54,11 @@ export async function fetchAndSaveBulkRow(row, cookieHeader) {
   const html = await resp.text();
   const results = parseItraHtml(html, row.url);
   const urlMeta = itraUrlToMeta(row.url);
+  const raceId = row.computedRaceId || urlMeta.raceId || "";
   const meta = {
-    race_id: row.computedRaceId || urlMeta.raceId || "",
+    race_id: raceId,
+    race_slug: makeRaceSlug(raceId),
+    itra_id: urlMeta.itraId || null,
     name: row.computedName || urlMeta.name || "",
     series: [],
     country: row.country || null,

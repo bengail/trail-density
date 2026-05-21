@@ -5,7 +5,9 @@
 
 CREATE TABLE IF NOT EXISTS courses (
   id           uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
-  race_id      text        UNIQUE NOT NULL,
+  race_id      text        UNIQUE NOT NULL,   -- edition key, e.g. "CCC_2025"
+  race_slug    text        NOT NULL,           -- cross-year key, e.g. "CCC"
+  itra_id      integer,                        -- ITRA numeric edition ID from URL
   name         text,
   series       text[],
   country      text,
@@ -34,6 +36,7 @@ CREATE TABLE IF NOT EXISTS results (
 CREATE INDEX IF NOT EXISTS results_course_id_idx        ON results (course_id);
 CREATE INDEX IF NOT EXISTS results_course_id_gender_idx ON results (course_id, gender);
 CREATE INDEX IF NOT EXISTS courses_race_id_idx          ON courses  (race_id);
+CREATE INDEX IF NOT EXISTS courses_race_slug_idx        ON courses  (race_slug);
 
 -- ── Row-Level Security ────────────────────────────────────────────────────────
 

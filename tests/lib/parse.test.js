@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   parseSeriesInput, parseNullableNumber, asNullableText,
   normalizeHeaderKey, detectDelimiter, looksLikeHeader,
-  parsePastedResults, itraUrlToMeta, makeBulkRaceId,
+  parsePastedResults, itraUrlToMeta, makeBulkRaceId, makeRaceSlug,
   parseCsvLine, parseBulkCsv, toNumberLoose, readField,
   parseDelimitedRow, findLikelyScoreCell
 } from '../../lib/parse.js';
@@ -173,12 +173,14 @@ describe('parsePastedResults', () => {
 });
 
 describe('itraUrlToMeta', () => {
-  it('extracts name, year, raceId from ITRA URL', () => {
+  it('extracts name, year, raceId, raceSlug, itraId from ITRA URL', () => {
     const url = 'https://itra.run/Races/RaceResults/Black.Canyon.Ultras.100K/2026/12345';
     const meta = itraUrlToMeta(url);
     expect(meta.name).toBe('Black Canyon Ultras 100K');
     expect(meta.year).toBe(2026);
+    expect(meta.itraId).toBe(12345);
     expect(meta.raceId).toBe('BLACK_CANYON_ULTRAS_100K_2026');
+    expect(meta.raceSlug).toBe('BLACK_CANYON_ULTRAS_100K');
   });
 
   it('returns empty object for non-matching URL', () => {
@@ -186,9 +188,22 @@ describe('itraUrlToMeta', () => {
   });
 });
 
+describe('makeRaceSlug', () => {
+  it('strips the _YEAR suffix', () => {
+    expect(makeRaceSlug('CCC_2025')).toBe('CCC');
+    expect(makeRaceSlug('BLACKCANYON_100K_2025')).toBe('BLACKCANYON_100K');
+    expect(makeRaceSlug('WS_2023')).toBe('WS');
+  });
+
+  it('leaves strings without a _YEAR suffix unchanged', () => {
+    expect(makeRaceSlug('NOCHANGE')).toBe('NOCHANGE');
+    expect(makeRaceSlug('CCC')).toBe('CCC');
+  });
+});
+
 describe('makeBulkRaceId', () => {
-  it('combines name, km and year into uppercase slug', () => {
-    expect(makeBulkRaceId('UTMB', 171, 2025)).toBe('UTMB_171KM_2025');
+  it('combines name, km and year with K suffix and year at end', () => {
+    expect(makeBulkRaceId('UTMB', 171, 2025)).toBe('UTMB_171K_2025');
   });
 
   it('omits km when null', () => {
@@ -196,7 +211,11 @@ describe('makeBulkRaceId', () => {
   });
 
   it('replaces special characters with underscores', () => {
-    expect(makeBulkRaceId('Broken Arrow 52K', 52, 2025)).toBe('BROKEN_ARROW_52K_52KM_2025');
+    expect(makeBulkRaceId('Broken Arrow 52K', 52, 2025)).toBe('BROKEN_ARROW_52K_52K_2025');
+  });
+
+  it('omits year when null', () => {
+    expect(makeBulkRaceId('CCC', 100, null)).toBe('CCC_100K');
   });
 });
 

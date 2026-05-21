@@ -125,6 +125,26 @@ describe('normalizeCourse', () => {
     expect(c.meta.race_id).toBe('FALLBACK');
   });
 
+  it('derives race_slug from race_id by stripping _YEAR suffix', () => {
+    const c = normalizeCourse({ meta: { race_id: 'CCC_2025' }, results: [] }, 'CCC_2025');
+    expect(c.meta.race_slug).toBe('CCC');
+  });
+
+  it('uses meta.race_slug when already provided', () => {
+    const c = normalizeCourse({ meta: { race_id: 'WS_2025', race_slug: 'WS' }, results: [] }, 'WS_2025');
+    expect(c.meta.race_slug).toBe('WS');
+  });
+
+  it('sets itra_id to null when not provided', () => {
+    const c = normalizeCourse({ meta: { race_id: 'X_2025' }, results: [] }, 'X_2025');
+    expect(c.meta.itra_id).toBeNull();
+  });
+
+  it('preserves itra_id from meta', () => {
+    const c = normalizeCourse({ meta: { race_id: 'X_2025', itra_id: 99999 }, results: [] }, 'X_2025');
+    expect(c.meta.itra_id).toBe(99999);
+  });
+
   it('sorts results by rank ascending', () => {
     const raw = {
       meta: { race_id: 'T' },

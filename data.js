@@ -8,9 +8,9 @@ export const courseMetaCache = new Map();
 export async function loadManifest() {
   if (window.supabaseClient) {
     const { data, error } = await window.supabaseClient
-      .from("courses").select("id, race_id").order("race_id");
+      .from("courses").select("id, race_id, race_slug").order("race_id");
     if (error) throw new Error("Supabase loadManifest: " + error.message);
-    manifest = { courses: data.map(c => ({ race_id: c.race_id, id: c.id })) };
+    manifest = { courses: data.map(c => ({ race_id: c.race_id, race_slug: c.race_slug, id: c.id })) };
     return manifest.courses;
   }
   const resp = await fetch(`${state.assetPrefix}data/courses_index.json`, { cache: "no-store" });
@@ -37,7 +37,7 @@ export async function loadCourse(raceId) {
     const [metaResp, resultsResp] = await Promise.all([
       window.supabaseClient
         .from("courses")
-        .select("id, race_id, name, series, country, year, distance_km, elevation_m, prize_money, data_source, source_url, notes")
+        .select("id, race_id, race_slug, itra_id, name, series, country, year, distance_km, elevation_m, prize_money, data_source, source_url, notes")
         .eq("id", entry.id).single(),
       window.supabaseClient
         .from("results")
@@ -51,7 +51,8 @@ export async function loadCourse(raceId) {
     const c = metaResp.data;
     const normalized = normalizeCourse({
       meta: {
-        race_id: c.race_id, name: c.name, series: c.series, country: c.country,
+        race_id: c.race_id, race_slug: c.race_slug, itra_id: c.itra_id,
+        name: c.name, series: c.series, country: c.country,
         year: c.year, distance_km: c.distance_km, elevation_m: c.elevation_m,
         prize_money: c.prize_money, data_source: c.data_source,
         source_url: c.source_url, notes: c.notes
@@ -78,12 +79,13 @@ export async function preloadAllCourseMeta() {
   if (window.supabaseClient) {
     const { data, error } = await window.supabaseClient
       .from("courses")
-      .select("id, race_id, name, series, country, year, distance_km, elevation_m, prize_money, data_source, source_url, notes")
+      .select("id, race_id, race_slug, itra_id, name, series, country, year, distance_km, elevation_m, prize_money, data_source, source_url, notes")
       .order("race_id");
     if (error) throw new Error("Supabase preloadAllCourseMeta: " + error.message);
     for (const c of data) {
       courseMetaCache.set(c.race_id, {
-        race_id: c.race_id, name: c.name, series: c.series || [],
+        race_id: c.race_id, race_slug: c.race_slug, itra_id: c.itra_id ?? null,
+        name: c.name, series: c.series || [],
         country: c.country, year: c.year, distance_km: c.distance_km,
         elevation_m: c.elevation_m, prize_money: c.prize_money,
         data_source: c.data_source, source_url: c.source_url, notes: c.notes

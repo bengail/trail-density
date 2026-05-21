@@ -2,7 +2,9 @@
   "meta": {
     "race_id": "NASEGO_2025",
     "name": "Trofeo Nasego 2025",
-    "series": ["WMRA"],
+    "series": [
+      "WMRA"
+    ],
     "country": "Italia",
     "data_source": "UTMB",
     "year": 2025,
@@ -10,7 +12,9 @@
     "elevation_m": null,
     "prize_money": null,
     "notes": "Imported from UTMB-format CSV (French headers: Clt/Nom/Score).",
-    "source_url": null
+    "source_url": null,
+    "race_slug": "NASEGO",
+    "itra_id": null
   },
   "results": [
     {
