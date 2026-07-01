@@ -1379,6 +1379,14 @@ async function importEdition(job) {
 async function saveEditionToSupabase(job, results) {
   if (!window.supabaseClient) throw new Error("Supabase not configured.");
 
+  const { data: { session } } = await window.supabaseClient.auth.getSession();
+  if (!session) throw new Error("Not authenticated — please sign in via /login/ first.");
+  console.log("[import] session user:", session.user?.email, "uid:", session.user?.id);
+
+  const { data: adminRow } = await window.supabaseClient.from("admins").select("email").maybeSingle();
+  console.log("[import] admins row visible:", adminRow);
+  if (!adminRow) throw new Error(`Authenticated as ${session.user?.email} but not found in admins table — check admins RLS or add this email.`);
+
   const { error: raceErr } = await window.supabaseClient.from("races").upsert({
     id: job.raceId,
     name: job.raceName,
