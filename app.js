@@ -533,30 +533,70 @@ function wirePublicChipFilters() {
     if (!list) return;
     list.innerHTML = "";
     const q = getRaceSearchQuery();
+
+    // Group editions by base_race_id
+    const groups = new Map();
     for (const c of getManifestEntries()) {
       const id = c.race_id;
       const meta = getCourseMeta(id) || {};
       const name = meta.name || id;
       if (q && !fuzzyMatch(q, name) && !fuzzyMatch(q, id)) continue;
       if (chipState.activeCountry && meta.country !== chipState.activeCountry) continue;
+      const baseId = meta.base_race_id || id;
+      if (!groups.has(baseId)) {
+        groups.set(baseId, { name, country: meta.country, distance_km: meta.distance_km, editions: [] });
+      }
+      groups.get(baseId).editions.push({ id, year: meta.year });
+    }
+    for (const g of groups.values()) g.editions.sort((a, b) => (b.year || 0) - (a.year || 0));
+
+    for (const [, group] of [...groups.entries()].sort((a, b) => a[1].name.localeCompare(b[1].name))) {
+      const editionIds = group.editions.map(e => e.id);
+      const selectedCount = editionIds.filter(id => state.rciNormSelected.has(id)).length;
+
       const item = document.createElement("div");
-      item.className = "item";
+      item.style.cssText = "padding:7px 8px; border-radius:10px; background:#fff; margin-bottom:4px;";
+
+      // Race header row with checkbox
+      const header = document.createElement("div");
+      header.style.cssText = "display:flex; align-items:center; gap:8px; font-size:12px;";
       const cb = document.createElement("input");
       cb.type = "checkbox";
-      cb.checked = state.rciNormSelected.has(id);
+      cb.checked = selectedCount === editionIds.length;
+      cb.indeterminate = selectedCount > 0 && selectedCount < editionIds.length;
       cb.addEventListener("change", () => {
         chipState.activeSeries.clear(); chipState.activeYears.clear(); chipState.isManual = true;
-        if (cb.checked) state.rciNormSelected.add(id);
-        else state.rciNormSelected.delete(id);
+        editionIds.forEach(id => cb.checked ? state.rciNormSelected.add(id) : state.rciNormSelected.delete(id));
         renderSeriesChips(); renderYearChips(); updateCountBadge(); triggerUpdate();
+        renderPublicRaceList();
       });
-      const label = document.createElement("div");
-      label.className = "item-label";
-      label.textContent = name;
-      const pill = document.createElement("span");
-      pill.className = "pill";
-      pill.textContent = meta.year ? String(meta.year) : "-";
-      item.appendChild(cb); item.appendChild(label); item.appendChild(pill);
+      const nameSpan = document.createElement("span");
+      nameSpan.style.cssText = "flex:1; font-weight:600; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;";
+      nameSpan.textContent = group.name;
+      const metaSpan = document.createElement("span");
+      metaSpan.style.cssText = "font-size:11px; color:var(--muted); white-space:nowrap; flex-shrink:0;";
+      metaSpan.textContent = [group.country, group.distance_km ? `${group.distance_km} km` : null].filter(Boolean).join(" · ");
+      header.appendChild(cb); header.appendChild(nameSpan); header.appendChild(metaSpan);
+
+      // Year chips row
+      const yearsRow = document.createElement("div");
+      yearsRow.style.cssText = "display:flex; flex-wrap:wrap; gap:4px; margin-top:5px; padding-left:22px;";
+      for (const ed of group.editions) {
+        const btn = document.createElement("button");
+        btn.className = "chip" + (state.rciNormSelected.has(ed.id) ? " active" : "");
+        btn.style.cssText = "padding:2px 9px; font-size:11px;";
+        btn.textContent = ed.year || ed.id;
+        btn.addEventListener("click", () => {
+          chipState.activeSeries.clear(); chipState.activeYears.clear(); chipState.isManual = true;
+          if (state.rciNormSelected.has(ed.id)) state.rciNormSelected.delete(ed.id);
+          else state.rciNormSelected.add(ed.id);
+          renderSeriesChips(); renderYearChips(); updateCountBadge(); triggerUpdate();
+          renderPublicRaceList();
+        });
+        yearsRow.appendChild(btn);
+      }
+
+      item.appendChild(header); item.appendChild(yearsRow);
       list.appendChild(item);
     }
     updateCountBadge();

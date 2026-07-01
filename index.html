@@ -66,6 +66,8 @@
     .modal-header h3 { margin:0; font-size:14px; font-weight:700; }
     @media (min-width:680px) { .modal-overlay { align-items:center; } .modal-box { border-radius:18px; max-height:80vh; } }
     @media (max-width:900px) { .grid { grid-template-columns:1fr; } }
+    /* Ensure [hidden] attribute overrides display set by CSS classes (e.g. .modal-overlay) */
+    [hidden] { display:none !important; }
   </style>
 </head>
 <body>
