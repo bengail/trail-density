@@ -3,7 +3,7 @@
 
 const MAX_INDEX_FOR_NORM = 1000;
 const TAB_ALLOWLIST = {
-  public: ["rcinormcharts", "visualization", "charts"],
+  public: ["rcinormcharts", "trends", "visualization", "charts"],
   admin: ["import", "races"]
 };
 const DEFAULT_TAB_BY_MODE = {
@@ -30,6 +30,71 @@ function getSafeTab(mode, desiredTab) {
 }
 
 // ---- Utilities ----
+// ---- Language / i18n ----
+let lang = (() => {
+  const s = localStorage.getItem("trail-lang");
+  if (s === "fr" || s === "en") return s;
+  return navigator.language?.toLowerCase().startsWith("fr") ? "fr" : "en";
+})();
+
+const T = {
+  fr: {
+    subtitle: "Indice de Compétitivité en Trail & Montagne",
+    tabRci: "RCI", tabTrends: "Tendances", tabParity: "Parité", tabDepth: "Profondeur",
+    filterLabel: "Filtrer", filterTitle: "Filtrer les éditions", filterClose: "Fermer",
+    filterReset: "Réinitialiser", filterSeries: "Séries", filterYear: "Année",
+    filterCountry: "Pays", filterRaces: "Courses", filterSearch: "Rechercher…",
+    filterAll: "Tout", filterNone: "Aucun",
+    rciWomen: "Femmes", rciMen: "Hommes", rciToggleExtra: "+ RCI3 & RCI20",
+    rciExportWomen: "↓ CSV Femmes", rciExportMen: "↓ CSV Hommes",
+    rciColRace: "Course", rciColCountry: "Pays", rciColSeries: "Séries",
+    trendsSelect: "Sélectionnez une course dans la liste.",
+    trendsSearchRaces: "Rechercher…",
+    trendsGenderBoth: "Les deux", trendsGenderWomen: "Femmes", trendsGenderMen: "Hommes",
+    parityLegendWomen: "Champ féminin plus fort", parityLegendMen: "Champ masculin plus fort",
+    depthGender: "Genre", depthBoth: "Les deux", depthMen: "Hommes", depthWomen: "Femmes",
+    admin: "Admin →",
+  },
+  en: {
+    subtitle: "Realized Competition Index across elite trail & mountain races",
+    tabRci: "RCI", tabTrends: "Trends", tabParity: "Parity", tabDepth: "Depth",
+    filterLabel: "Filter", filterTitle: "Filter editions", filterClose: "Close",
+    filterReset: "Reset", filterSeries: "Series", filterYear: "Year",
+    filterCountry: "Country", filterRaces: "Races", filterSearch: "Search…",
+    filterAll: "All", filterNone: "None",
+    rciWomen: "Women", rciMen: "Men", rciToggleExtra: "+ RCI3 & RCI20",
+    rciExportWomen: "↓ Women CSV", rciExportMen: "↓ Men CSV",
+    rciColRace: "Race", rciColCountry: "Country", rciColSeries: "Series",
+    trendsSelect: "Select a race from the list.",
+    trendsSearchRaces: "Search…",
+    trendsGenderBoth: "Both", trendsGenderWomen: "Women", trendsGenderMen: "Men",
+    parityLegendWomen: "Women's field stronger", parityLegendMen: "Men's field stronger",
+    depthGender: "Gender", depthBoth: "Both", depthMen: "Men", depthWomen: "Women",
+    admin: "Admin →",
+  }
+};
+
+function t(key) { return T[lang]?.[key] ?? T.en[key] ?? key; }
+
+function applyLang() {
+  for (const el of document.querySelectorAll("[data-t]")) {
+    const val = T[lang]?.[el.dataset.t];
+    if (val === undefined) continue;
+    if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") el.placeholder = val;
+    else el.textContent = val;
+  }
+  const btn = document.getElementById("langToggle");
+  if (btn) btn.textContent = lang === "fr" ? "EN" : "FR";
+}
+
+function setLang(l) {
+  lang = l;
+  localStorage.setItem("trail-lang", l);
+  applyLang();
+  if (state?.trendsRaceId) renderTrendsChart();
+}
+
+// ---- Math helpers ----
 function mean(arr) {
   if (!arr.length) return NaN;
   return arr.reduce((s, x) => s + x, 0) / arr.length;
@@ -225,6 +290,10 @@ const state = {
   chartsGender: "both",
   topN: 30,
   activeTab: "rcinormcharts",
+  // Trends
+  trendsRaceId: null,
+  trendsGender: "both",
+  trendsRciKey: "rc5",
   // Admin state
   itraCookie: "",
   discoverRaces: [],
@@ -232,6 +301,11 @@ const state = {
   importRunning: false,
   raceSelected: null,
 };
+
+// Filter chip state — shared between wirePublicChipFilters and filter bar
+const chipState = { activeSeries: new Set(), activeYears: new Set([2025]), activeCountry: "", isManual: false };
+// Exposed by wirePublicChipFilters so boot section can wire reset
+let _publicFilterReset = () => {};
 
 // Viz tab shares selection with RCI tab
 state.vizSelected = state.rciNormSelected;
@@ -326,6 +400,15 @@ async function renderPublicRciTable() {
       <td style="${densityColor(r.rc10, minVal, maxVal)}">${fmt(r.rc10, 2)}</td>
       <td class="col-extra" style="${densityColor(r.rc20, minVal, maxVal)}">${fmt(r.rc20, 2)}</td>
     `;
+    if (r.base_race_id) {
+      tr.title = lang === "fr" ? "Voir les tendances →" : "View trends →";
+      tr.addEventListener("click", () => {
+        state.trendsRaceId = r.base_race_id;
+        setActiveTab("trends");
+        renderTrendsRaceList();
+        renderTrendsChart();
+      });
+    }
     tbody.appendChild(tr);
   }
 
@@ -343,7 +426,7 @@ function fuzzyMatch(query, text) {
 }
 
 function wirePublicChipFilters() {
-  const chipState = { activeSeries: new Set(), activeYears: new Set([2025]), activeCountry: "", isManual: false };
+  // chipState is module-level (defined after state object)
 
   function allSeriesFromData() {
     const s = new Set();
@@ -479,33 +562,64 @@ function wirePublicChipFilters() {
     updateCountBadge();
   }
 
+  function renderFilterBar() {
+    const container = document.getElementById("filterBarChips");
+    if (!container) return;
+    container.innerHTML = "";
+
+    function makeChip(label, onRemove) {
+      const chip = document.createElement("button");
+      chip.className = "chip active";
+      chip.style.cssText = "font-size:11px; padding:4px 10px;";
+      const span = document.createElement("span");
+      span.textContent = label;
+      const x = document.createElement("span");
+      x.textContent = " ×";
+      x.style.cssText = "opacity:.55;";
+      chip.appendChild(span); chip.appendChild(x);
+      chip.addEventListener("click", onRemove);
+      return chip;
+    }
+
+    for (const s of [...chipState.activeSeries].sort()) {
+      container.appendChild(makeChip(s, () => {
+        chipState.activeSeries.delete(s); chipState.isManual = false;
+        applyChipSelection(); renderSeriesChips(); renderYearChips(); renderPublicRaceList(); renderFilterBar(); triggerUpdate();
+      }));
+    }
+    for (const y of [...chipState.activeYears].sort()) {
+      container.appendChild(makeChip(String(y), () => {
+        chipState.activeYears.delete(y); chipState.isManual = false;
+        applyChipSelection(); renderSeriesChips(); renderYearChips(); renderPublicRaceList(); renderFilterBar(); triggerUpdate();
+      }));
+    }
+    if (chipState.activeCountry) {
+      const c = chipState.activeCountry;
+      container.appendChild(makeChip(c, () => {
+        chipState.activeCountry = ""; state.rciNormFilters.country = "";
+        renderCountryChips(); renderPublicRaceList(); renderFilterBar(); triggerUpdate();
+      }));
+    }
+
+    const countEl = document.getElementById("filterBarCount");
+    if (countEl) countEl.textContent = String(state.rciNormSelected.size);
+  }
+
   function updateCountBadge() {
-    const n = state.rciNormSelected.size;
     const el = document.getElementById("publicRaceCount");
-    if (el) el.textContent = String(n);
-    const vizEl = document.getElementById("vizCount");
-    if (vizEl) vizEl.textContent = String(n);
-    const chartsEl = document.getElementById("chartsVizCount");
-    if (chartsEl) chartsEl.textContent = String(n);
+    if (el) el.textContent = String(state.rciNormSelected.size);
+    renderFilterBar();
   }
 
   async function triggerUpdate() {
+    renderFilterBar();
     await renderPublicRciTable();
     if (state.activeTab === "visualization") await updateVisualization();
     if (state.activeTab === "charts") await updateCharts();
   }
 
-  const toggleBtn = document.getElementById("publicRacesToggleBtn");
-  const raceListEl = document.getElementById("publicRaceList");
+  // publicRaceSearch is now always visible inside the picker modal — no toggle needed
   const raceSearchEl = document.getElementById("publicRaceSearch");
-  if (toggleBtn && raceListEl) {
-    toggleBtn.addEventListener("click", () => {
-      const wasHidden = raceListEl.hidden;
-      raceListEl.hidden = !wasHidden;
-      if (raceSearchEl) raceSearchEl.style.display = wasHidden ? "" : "none";
-      toggleBtn.setAttribute("aria-expanded", wasHidden ? "true" : "false");
-    });
-  }
   if (raceSearchEl) {
     raceSearchEl.addEventListener("input", () => renderPublicRaceList());
   }
@@ -529,6 +643,131 @@ function wirePublicChipFilters() {
   renderYearChips();
   renderCountryChips();
   renderPublicRaceList();
+  renderFilterBar();
+
+  _publicFilterReset = () => {
+    chipState.activeSeries.clear(); chipState.activeYears.clear();
+    chipState.activeCountry = ""; chipState.isManual = false;
+    state.rciNormFilters.country = "";
+    setSelectionByYear(state.rciNormSelected, 2025);
+    renderSeriesChips(); renderYearChips(); renderCountryChips(); renderPublicRaceList(); renderFilterBar(); triggerUpdate();
+  };
+}
+
+// ---- Picker modal ----
+function openPicker() {
+  const el = document.getElementById("pickerOverlay");
+  if (el) el.hidden = false;
+}
+function closePicker() {
+  const el = document.getElementById("pickerOverlay");
+  if (el) el.hidden = true;
+}
+
+// ---- Trends tab ----
+function renderTrendsRaceList() {
+  const list = document.getElementById("trendsRaceList");
+  if (!list) return;
+  const q = (document.getElementById("trendsRaceSearch")?.value || "").trim().toLowerCase();
+  const races = new Map();
+  for (const [, meta] of courseMetaCache) {
+    if (!meta.base_race_id) continue;
+    const name = meta.name || meta.base_race_id;
+    if (q && !name.toLowerCase().includes(q) && !meta.base_race_id.toLowerCase().includes(q)) continue;
+    if (!races.has(meta.base_race_id)) races.set(meta.base_race_id, { name, count: 0 });
+    races.get(meta.base_race_id).count++;
+  }
+  list.innerHTML = "";
+  for (const [raceId, info] of [...races.entries()].sort((a, b) => a[1].name.localeCompare(b[1].name))) {
+    const item = document.createElement("div");
+    item.className = "item" + (state.trendsRaceId === raceId ? " selected" : "");
+    const label = document.createElement("div");
+    label.className = "item-label";
+    label.textContent = info.name;
+    const pill = document.createElement("span");
+    pill.className = "pill";
+    pill.textContent = info.count;
+    item.appendChild(label); item.appendChild(pill);
+    item.addEventListener("click", () => {
+      state.trendsRaceId = raceId;
+      renderTrendsRaceList();
+      renderTrendsChart();
+    });
+    list.appendChild(item);
+  }
+}
+
+async function renderTrendsChart() {
+  const raceId = state.trendsRaceId;
+  const emptyEl = document.getElementById("trendsEmpty");
+  const detailEl = document.getElementById("trendsDetail");
+  if (!raceId) {
+    if (emptyEl) emptyEl.style.display = "";
+    if (detailEl) detailEl.style.display = "none";
+    return;
+  }
+  if (emptyEl) emptyEl.style.display = "none";
+  if (detailEl) detailEl.style.display = "";
+
+  const editionIds = [];
+  for (const [edId, meta] of courseMetaCache) {
+    if (meta.base_race_id === raceId) editionIds.push(edId);
+  }
+  editionIds.sort();
+
+  const courses = await Promise.all(editionIds.map(id => loadCourse(id).catch(() => null)));
+  const editionData = [];
+  for (const course of courses) {
+    if (!course) continue;
+    const rf = filterResultsByGender(course.results, "female").map(r => ({ ...r, index: normalizeItraFemaleIndex(r.index) }));
+    const rm = filterResultsByGender(course.results, "male");
+    editionData.push({
+      year: course.meta.year,
+      rc5f: rciFromResults(rf, 5, false), rc10f: rciFromResults(rf, 10, false),
+      rc5m: rciFromResults(rm, 5, false), rc10m: rciFromResults(rm, 10, false),
+    });
+  }
+  editionData.sort((a, b) => a.year - b.year);
+
+  const n = state.trendsRciKey === "rc10" ? 10 : 5;
+  const years = editionData.map(d => d.year);
+  const yF = editionData.map(d => n === 5 ? d.rc5f : d.rc10f);
+  const yM = editionData.map(d => n === 5 ? d.rc5m : d.rc10m);
+  const showF = state.trendsGender !== "male";
+  const showM = state.trendsGender !== "female";
+
+  const traces = [];
+  if (showF) traces.push({ x: years, y: yF, name: t("trendsGenderWomen"), mode: "lines+markers", line: { color: "#10b981", width: 2 }, marker: { size: 7 }, connectgaps: false });
+  if (showM) traces.push({ x: years, y: yM, name: t("trendsGenderMen"), mode: "lines+markers", line: { color: "#3b82f6", width: 2 }, marker: { size: 7 }, connectgaps: false });
+
+  const layout = {
+    margin: { l: 50, r: 20, t: 10, b: 40 },
+    xaxis: { tickmode: "linear", dtick: 1, fixedrange: true, showgrid: true, gridcolor: "#dbe3ef" },
+    yaxis: { title: state.trendsRciKey.toUpperCase(), fixedrange: true, showgrid: true, gridcolor: "#dbe3ef" },
+    legend: { orientation: "h", y: -0.2 },
+    plot_bgcolor: "white", paper_bgcolor: "white",
+    font: { family: "Montserrat, ui-sans-serif, sans-serif", size: 11 }
+  };
+  Plotly.react("trendsPlot", traces, layout, { displayModeBar: false, responsive: true });
+
+  const firstMeta = courseMetaCache.get(editionIds[0]);
+  const headerEl = document.getElementById("trendsHeader");
+  if (headerEl && firstMeta) {
+    headerEl.innerHTML = "";
+    const name = document.createElement("strong");
+    name.textContent = firstMeta.name;
+    const sub = document.createElement("span");
+    sub.className = "note"; sub.style.marginLeft = "8px";
+    sub.textContent = [firstMeta.country, firstMeta.distance_km ? `${firstMeta.distance_km} km` : null].filter(Boolean).join(" · ");
+    headerEl.appendChild(name); headerEl.appendChild(sub);
+  }
+
+  const tableWrap = document.getElementById("trendsTableWrap");
+  if (tableWrap) {
+    const fL = t("trendsGenderWomen"); const mL = t("trendsGenderMen");
+    const rows = editionData.map(d => `<tr><td>${d.year}</td><td>${fmt(d.rc5f, 2)}</td><td>${fmt(d.rc10f, 2)}</td><td>${fmt(d.rc5m, 2)}</td><td>${fmt(d.rc10m, 2)}</td></tr>`).join("");
+    tableWrap.innerHTML = `<table><thead><tr><th>Année</th><th>RCI5 ${fL}</th><th>RCI10 ${fL}</th><th>RCI5 ${mL}</th><th>RCI10 ${mL}</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
 }
 
 // ---- Selection helpers ----
@@ -582,6 +821,7 @@ async function getRciRowsForGender(gender, options = {}) {
     if (raceGender && raceGender !== gender) continue;
     const filtered = getRciResultsForMode(course.results, gender, normalizeFemale);
     const row = {
+      base_race_id: meta.base_race_id || null,
       name: getCourseLabel(course),
       country: meta.country || "",
       series: normalizeSeries(meta.series).join(", "),
@@ -1409,6 +1649,7 @@ function setActiveTab(tab) {
 
   const pageMap = {
     rcinormcharts: "pageRciNorm",
+    trends: "pageTrends",
     visualization: "pageViz",
     charts: "pageCharts",
     import: "pageImport",
@@ -1420,11 +1661,13 @@ function setActiveTab(tab) {
   }
 
   document.getElementById("tabRciNorm")?.classList.toggle("active", safeTab === "rcinormcharts");
+  document.getElementById("tabTrends")?.classList.toggle("active", safeTab === "trends");
   document.getElementById("vizTabParity")?.classList.toggle("active", safeTab === "visualization");
   document.getElementById("tabCharts")?.classList.toggle("active", safeTab === "charts");
   document.getElementById("tabImport")?.classList.toggle("active", safeTab === "import");
   document.getElementById("tabRaces")?.classList.toggle("active", safeTab === "races");
 
+  if (safeTab === "trends") { renderTrendsRaceList(); renderTrendsChart(); }
   if (safeTab === "visualization") updateVisualization();
   if (safeTab === "charts") updateCharts();
   if (safeTab === "races") renderAdminRaceList(document.getElementById("searchRace")?.value || "");
@@ -1520,6 +1763,40 @@ async function updateAll() {
         updateCharts();
       });
     }
+
+    // Filter picker modal
+    document.getElementById("openPickerBtn")?.addEventListener("click", openPicker);
+    document.getElementById("closePickerBtn")?.addEventListener("click", closePicker);
+    document.getElementById("pickerOverlay")?.addEventListener("click", e => {
+      if (e.target.id === "pickerOverlay") closePicker();
+    });
+    document.getElementById("resetPickerBtn")?.addEventListener("click", () => _publicFilterReset());
+
+    // Trends tab
+    document.getElementById("trendsRaceSearch")?.addEventListener("input", renderTrendsRaceList);
+    const setTrendsGender = g => {
+      state.trendsGender = g;
+      document.getElementById("trendsGenderBoth")?.classList.toggle("active", g === "both");
+      document.getElementById("trendsGenderWomen")?.classList.toggle("active", g === "female");
+      document.getElementById("trendsGenderMen")?.classList.toggle("active", g === "male");
+      renderTrendsChart();
+    };
+    document.getElementById("trendsGenderBoth")?.addEventListener("click", () => setTrendsGender("both"));
+    document.getElementById("trendsGenderWomen")?.addEventListener("click", () => setTrendsGender("female"));
+    document.getElementById("trendsGenderMen")?.addEventListener("click", () => setTrendsGender("male"));
+    document.getElementById("trendsRciRci5")?.addEventListener("click", () => {
+      state.trendsRciKey = "rc5";
+      document.getElementById("trendsRciRci5")?.classList.add("active");
+      document.getElementById("trendsRciRci10")?.classList.remove("active");
+      renderTrendsChart();
+    });
+    document.getElementById("trendsRciRci10")?.addEventListener("click", () => {
+      state.trendsRciKey = "rc10";
+      document.getElementById("trendsRciRci10")?.classList.add("active");
+      document.getElementById("trendsRciRci5")?.classList.remove("active");
+      renderTrendsChart();
+    });
+    renderTrendsRaceList();
   }
 
   if (state.appMode === "admin") {
@@ -1561,10 +1838,14 @@ async function updateAll() {
 
   // Shared nav tabs
   document.getElementById("tabRciNorm")?.addEventListener("click", () => setActiveTab("rcinormcharts"));
+  document.getElementById("tabTrends")?.addEventListener("click", () => setActiveTab("trends"));
   document.getElementById("vizTabParity")?.addEventListener("click", () => setActiveTab("visualization"));
   document.getElementById("tabCharts")?.addEventListener("click", () => setActiveTab("charts"));
   document.getElementById("tabImport")?.addEventListener("click", () => setActiveTab("import"));
   document.getElementById("tabRaces")?.addEventListener("click", () => setActiveTab("races"));
+
+  // Lang toggle
+  document.getElementById("langToggle")?.addEventListener("click", () => setLang(lang === "fr" ? "en" : "fr"));
 
   // Init Plotly placeholders
   if (document.getElementById("plot")) {
@@ -1573,7 +1854,11 @@ async function updateAll() {
   if (document.getElementById("vizParityPlot")) {
     Plotly.newPlot("vizParityPlot", [], { paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)" }, { responsive: true, displayModeBar: false });
   }
+  if (document.getElementById("trendsPlot")) {
+    Plotly.newPlot("trendsPlot", [], { paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)" }, { responsive: true, displayModeBar: false });
+  }
 
+  applyLang();
   setActiveTab(state.activeTab);
   await updateAll();
 })();

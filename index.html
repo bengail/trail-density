@@ -7,161 +7,158 @@
   <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
-    :root { --bg:#f3f6fb; --panel:#ffffff; --muted:#64748b; --text:#1f2937; --border:#dbe3ef; --accent:#2233c7; --accent-soft:#47d9ab; }
+    :root { --bg:#f3f6fb; --panel:#ffffff; --muted:#64748b; --text:#1f2937; --border:#dbe3ef; --accent:#2233c7; }
     * { box-sizing: border-box; }
     body { margin:0; font-family: "Montserrat", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; background: var(--bg); color: var(--text); }
-    header { padding: 14px 18px; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
-    header h1 { font-size: 15px; margin:0; letter-spacing: .2px; }
-    header .sub { color: var(--muted); font-size: 13px; }
-    nav { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-    .page-menu { display:flex; gap:8px; align-items:center; flex-wrap:nowrap; }
-    nav button { cursor:pointer; border:1px solid var(--border); background:#f8fafc; color: var(--text); padding: 9px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; }
-    nav button.active { border-color: rgba(34,51,199,0.5); box-shadow: 0 0 0 1px rgba(34,51,199,0.15) inset; }
+    header { padding: 10px 18px; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; background: var(--panel); }
+    header h1 { font-size: 15px; margin:0; letter-spacing:.2px; }
+    header .sub { color: var(--muted); font-size: 12px; }
+    #filterBar { padding: 8px 18px; border-bottom: 1px solid var(--border); display:flex; align-items:center; gap:6px; flex-wrap:wrap; background: var(--panel); }
+    nav { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+    nav button { cursor:pointer; border:1px solid var(--border); background:#f8fafc; color:var(--text); padding:8px 12px; border-radius:12px; font-weight:700; font-size:12px; font-family:inherit; }
+    nav button.active { border-color:rgba(34,51,199,0.5); box-shadow:0 0 0 1px rgba(34,51,199,0.15) inset; }
+    nav a.nav-link { font-size:12px; font-weight:700; color:var(--muted); text-decoration:none; padding:8px 10px; border:1px solid var(--border); border-radius:12px; background:#f8fafc; }
     main { padding: 14px; display:none; }
     main.active { display:block; }
-    .grid { display:grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; }
-    .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 12px; box-shadow: 0 15px 35px rgba(15, 23, 42, 0.08); }
-    .sidebar { width: 320px; min-width: 280px; max-width: 480px; resize: horizontal; overflow: auto; }
-    .panel h2 { font-size: 13px; margin: 0 0 10px 0; color:#1e293b; font-weight: 700; }
-    .note { color: var(--muted); font-size: 12px; line-height: 1.35; }
-    .pill { display:inline-block; font-size: 11px; color: #0f172a; border: 1px solid rgba(15, 23, 42, 0.2); padding: 2px 8px; border-radius: 999px; background: rgba(79, 70, 229, 0.12); }
-    input[type="search"], select { width: 100%; padding: 10px 10px; border-radius: 10px; border: 1px solid var(--border); background:#f8fafc; color: var(--text); }
-    input[type="range"] { width: 100%; }
-    .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .btns { display:flex; gap:8px; flex-wrap:wrap; }
-    .btns button { cursor:pointer; border:1px solid var(--border); background:#f8fafc; color: var(--text); padding: 9px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; }
-    .btns button:hover { border-color: rgba(34,51,199,0.5); }
-    .btns button.active { border-color: rgba(34,51,199,0.55); box-shadow: 0 0 0 1px rgba(34,51,199,0.2) inset; background:#eef2ff; color:#1e40af; }
-    .list { max-height: 360px; overflow:auto; border: 1px solid var(--border); border-radius: 12px; padding: 8px; background:#f8fafc; }
-    .item { display:flex; align-items:center; gap:8px; padding: 6px 6px; border-radius: 10px; font-size: 12px; background:#ffffff; }
-    .item:hover { background: rgba(34,51,199,0.08); }
-    .item .item-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .item .pill { margin-left:auto; background: rgba(71,217,171,0.18); color:#0f766e; border-color: rgba(71,217,171,0.45); }
-    /* ── Public RCI table ── */
+    .grid { display:grid; grid-template-columns: 260px 1fr; gap:14px; align-items:start; }
+    .panel { background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow:0 15px 35px rgba(15,23,42,0.08); }
+    .panel h2 { font-size:13px; margin:0 0 10px 0; color:#1e293b; font-weight:700; }
+    .note { color:var(--muted); font-size:12px; line-height:1.45; }
+    .pill { display:inline-block; font-size:11px; color:#0f172a; border:1px solid rgba(15,23,42,0.2); padding:2px 8px; border-radius:999px; background:rgba(79,70,229,0.12); }
+    input[type="search"], select { width:100%; padding:8px 10px; border-radius:10px; border:1px solid var(--border); background:#f8fafc; color:var(--text); font-family:inherit; font-size:12px; }
+    input[type="range"] { width:100%; }
+    .chip-group { display:flex; flex-wrap:wrap; gap:6px; }
+    .chip { cursor:pointer; border:1px solid var(--border); background:#f8fafc; color:var(--text); padding:5px 13px; border-radius:999px; font-size:12px; font-weight:600; font-family:inherit; transition:border-color .1s, background .1s; user-select:none; }
+    .chip:hover { border-color:rgba(34,51,199,0.4); background:#f0f4ff; }
+    .chip.active { background:#eef2ff; border-color:rgba(34,51,199,0.55); color:var(--accent); box-shadow:0 0 0 1px rgba(34,51,199,0.15) inset; }
+    .chip-sm { cursor:pointer; border:1px solid var(--border); background:#f8fafc; color:var(--muted); padding:4px 10px; border-radius:999px; font-size:11px; font-weight:600; font-family:inherit; }
+    .chip-sm:hover { border-color:rgba(34,51,199,0.3); color:var(--text); }
+    .count-badge { display:inline-flex; align-items:center; justify-content:center; min-width:20px; padding:1px 6px; border-radius:999px; background:rgba(34,51,199,0.1); color:var(--accent); font-size:11px; font-weight:700; }
+    .filter-section { margin-bottom:16px; }
+    .filter-label { display:block; font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px; }
+    .filter-divider { border:none; border-top:1px solid var(--border); margin:14px 0; }
+    .list { overflow:auto; border:1px solid var(--border); border-radius:12px; padding:6px; background:#f8fafc; margin-top:6px; }
+    .item { display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:10px; font-size:12px; background:#ffffff; margin-bottom:2px; cursor:pointer; }
+    .item:hover { background:rgba(34,51,199,0.06); }
+    .item.selected { background:#eef2ff; }
+    .item .item-label { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    /* RCI table */
     .col-rank { width:36px; text-align:center !important; color:var(--muted); font-weight:400; }
     .rci-table td.col-rank { text-align:center; color:var(--muted); font-size:11px; font-variant-numeric:tabular-nums; }
     .rci-table .col-extra { display:none; }
     .rci-table.show-extra .col-extra { display:table-cell; }
-    /* ── Chip filter panel ── */
-    .filter-section { margin-bottom: 18px; }
-    .filter-label { display:block; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
-    .chip-group { display:flex; flex-wrap:wrap; gap: 6px; }
-    .chip { cursor:pointer; border:1px solid var(--border); background:#f8fafc; color: var(--text); padding: 5px 13px; border-radius: 999px; font-size: 12px; font-weight: 600; font-family: inherit; transition: border-color 0.1s, background 0.1s; user-select:none; }
-    .chip:hover { border-color: rgba(34,51,199,0.4); background:#f0f4ff; }
-    .chip.active { background:#eef2ff; border-color: rgba(34,51,199,0.55); color: var(--accent); box-shadow: 0 0 0 1px rgba(34,51,199,0.15) inset; }
-    .chip-sm { cursor:pointer; border:1px solid var(--border); background:#f8fafc; color: var(--muted); padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 600; font-family: inherit; }
-    .chip-sm:hover { border-color: rgba(34,51,199,0.3); color: var(--text); }
-    .count-badge { display:inline-flex; align-items:center; justify-content:center; min-width:20px; padding: 1px 6px; border-radius:999px; background: rgba(34,51,199,0.1); color: var(--accent); font-size: 11px; font-weight: 700; }
-    .collapsible-btn { background:none; border:none; cursor:pointer; padding:0; font-family:inherit; display:flex; align-items:center; gap:6px; }
-    .collapsible-btn .caret { font-size:10px; transition: transform 0.15s; }
-    .collapsible-btn[aria-expanded="true"] .caret { transform: rotate(90deg); }
-    .filter-divider { border:none; border-top: 1px solid var(--border); margin: 14px 0; }
-    /* ── Tables ── */
-    table { width:100%; border-collapse: collapse; font-size: 12px; background:#ffffff; border-radius: 12px; }
-    th, td { border-bottom: 1px solid var(--border); padding: 10px 12px; text-align: right; }
+    .rci-table tbody tr { cursor:pointer; }
+    .rci-table tbody tr:hover td { box-shadow:inset 0 0 0 999px rgba(34,51,199,0.04); }
+    /* Tables */
+    table { width:100%; border-collapse:collapse; font-size:12px; background:#ffffff; border-radius:12px; }
+    th, td { border-bottom:1px solid var(--border); padding:10px 12px; text-align:right; }
     th:first-child, td:first-child { text-align:left; }
-    th { color:#0f172a; cursor: pointer; user-select:none; }
-    th[data-key]::after { content: ' '; opacity:.7; }
-    th.sort-asc::after { content: ' ▲'; }
-    th.sort-desc::after { content: ' ▼'; }
-    thead th { font-weight: 700; background: rgba(15,23,42,0.03); position: sticky; top: 0; }
-    .tableWrap { max-height: 70vh; overflow:auto; border-radius: 12px; border:1px solid var(--border); background:#ffffff; }
-    .rci-table tbody tr:hover td { box-shadow: inset 0 0 0 999px rgba(255,255,255,0.14); }
-    .rci-table th:nth-child(-n+4), .rci-table td:nth-child(-n+4) { text-align:left; }
-    @media (max-width: 980px) {
-      .grid { grid-template-columns: 1fr; }
-      .sidebar { width: auto; min-width: 0; max-width: none; resize: none; overflow: visible; }
-    }
+    th { color:#0f172a; cursor:pointer; user-select:none; }
+    th[data-key]::after { content:' '; opacity:.7; }
+    th.sort-asc::after { content:' ▲'; }
+    th.sort-desc::after { content:' ▼'; }
+    thead th { font-weight:700; background:rgba(15,23,42,0.03); position:sticky; top:0; }
+    .tableWrap { overflow:auto; border-radius:12px; border:1px solid var(--border); background:#ffffff; }
+    /* Picker modal — bottom sheet on mobile, centered on desktop */
+    .modal-overlay { position:fixed; inset:0; background:rgba(15,23,42,0.45); z-index:100; display:flex; align-items:flex-end; justify-content:center; }
+    .modal-box { background:var(--panel); border-radius:18px 18px 0 0; width:100%; max-width:680px; max-height:88vh; overflow-y:auto; padding:20px; box-shadow:0 -8px 40px rgba(15,23,42,0.18); }
+    .modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+    .modal-header h3 { margin:0; font-size:14px; font-weight:700; }
+    @media (min-width:680px) { .modal-overlay { align-items:center; } .modal-box { border-radius:18px; max-height:80vh; } }
+    @media (max-width:900px) { .grid { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
 <header>
   <div>
     <h1>Trail Race Density</h1>
-    <div class="sub" title="RCI N = mean(top N) − std(top N). Higher = stronger, more uniform field.&#10;Women's ITRA scores are normalized: [(-0.000466 × ITRA) + 1.532] × ITRA" style="cursor:help;">Realized Competition Index across elite trail &amp; mountain races</div>
+    <div id="headerSub" class="sub" title="RCI N = mean(top N) − std(top N). Higher = stronger, more uniform field.&#10;Women's ITRA scores are normalized: [(-0.000466 × ITRA) + 1.532] × ITRA" style="cursor:help;" data-t="subtitle">Indice de Compétitivité en Trail &amp; Montagne</div>
   </div>
   <nav>
-    <div class="page-menu">
-      <button id="tabRciNorm" class="active">RCI</button>
-      <button id="vizTabParity">Parity</button>
-      <button id="tabCharts">Depth</button>
-    </div>
-    <a href="/admin/" style="font-size:12px; font-weight:700; color:var(--muted); text-decoration:none; padding:9px 10px; border:1px solid var(--border); border-radius:12px; background:#f8fafc;">Admin</a>
+    <button id="tabRciNorm" class="active" data-t="tabRci">RCI</button>
+    <button id="tabTrends" data-t="tabTrends">Tendances</button>
+    <button id="vizTabParity" data-t="tabParity">Parité</button>
+    <button id="tabCharts" data-t="tabDepth">Profondeur</button>
+    <button id="langToggle" class="chip-sm">EN</button>
+    <a href="/admin/" class="nav-link" data-t="admin">Admin →</a>
   </nav>
 </header>
 
-<main id="pageRciNorm" class="active">
-  <div class="grid">
-    <aside class="panel sidebar">
-      <div class="filter-section">
-        <span class="filter-label">Series</span>
-        <div id="publicSeriesChips" class="chip-group"></div>
-      </div>
-      <div class="filter-section">
-        <span class="filter-label">Year</span>
-        <div id="publicYearChips" class="chip-group"></div>
-      </div>
-      <div class="filter-section">
-        <span class="filter-label">Country</span>
-        <div id="publicCountryChips" class="chip-group"></div>
-      </div>
-      <div class="filter-section">
-        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-          <button class="collapsible-btn" id="publicRacesToggleBtn" aria-expanded="false">
-            <span class="filter-label" style="margin-bottom:0;">Races</span>
-            <span id="publicRaceCount" class="count-badge">0</span>
-            <span class="caret">▸</span>
-          </button>
-          <button id="publicSelectAll" class="chip-sm">All</button>
-          <button id="publicSelectNone" class="chip-sm">None</button>
-        </div>
-        <input id="publicRaceSearch" type="search" placeholder="Search races…" style="margin-bottom:8px; display:none;" />
-        <div id="publicRaceList" class="list" hidden></div>
-      </div>
-      <hr class="filter-divider" />
-      <div style="display:flex; gap:6px; flex-wrap:wrap;">
-        <button id="exportRciNormFemaleCsv" class="chip-sm">↓ Women CSV</button>
-        <button id="exportRciNormMaleCsv" class="chip-sm">↓ Men CSV</button>
-      </div>
-    </aside>
+<!-- Persistent filter bar — only visible on public pages -->
+<div id="filterBar">
+  <div id="filterBarChips" class="chip-group" style="flex:1; min-width:0;"></div>
+  <span id="filterBarCount" class="count-badge">0</span>
+  <button id="openPickerBtn" class="chip-sm">+ <span data-t="filterLabel">Filtrer</span></button>
+</div>
 
-    <section class="panel">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
-        <div class="chip-group">
-          <button id="rciTabWomen" class="chip active">Women</button>
-          <button id="rciTabMen" class="chip">Men</button>
-        </div>
-        <button id="rciToggleExtra" class="chip-sm">+ RCI3 &amp; RCI20</button>
+<!-- ── RCI tab — full width, no sidebar ──────────────────────────── -->
+<main id="pageRciNorm" class="active">
+  <div class="panel">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+      <div class="chip-group">
+        <button id="rciTabWomen" class="chip active" data-t="rciWomen">Femmes</button>
+        <button id="rciTabMen" class="chip" data-t="rciMen">Hommes</button>
       </div>
-      <div class="tableWrap">
-        <table id="publicRciTable" class="rci-table">
-          <thead>
-            <tr>
-              <th class="col-rank">#</th>
-              <th data-key="name">Race</th>
-              <th data-key="country">Country</th>
-              <th data-key="series">Series</th>
-              <th data-key="rc3" class="col-extra" title="RCI3 = mean(top 3) − std(top 3)">RCI3</th>
-              <th data-key="rc5" title="RCI5 = mean(top 5) − std(top 5)">RCI5</th>
-              <th data-key="rc10">RCI10</th>
-              <th data-key="rc20" class="col-extra" title="RCI20 = mean(top 20) − std(top 20)">RCI20</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+      <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+        <button id="rciToggleExtra" class="chip-sm" data-t="rciToggleExtra">+ RCI3 &amp; RCI20</button>
+        <button id="exportRciNormFemaleCsv" class="chip-sm" data-t="rciExportWomen">↓ CSV Femmes</button>
+        <button id="exportRciNormMaleCsv" class="chip-sm" data-t="rciExportMen">↓ CSV Hommes</button>
+      </div>
+    </div>
+    <div class="tableWrap" style="max-height:75vh;">
+      <table id="publicRciTable" class="rci-table">
+        <thead>
+          <tr>
+            <th class="col-rank">#</th>
+            <th data-key="name" data-t="rciColRace">Course</th>
+            <th data-key="country" data-t="rciColCountry">Pays</th>
+            <th data-key="series" data-t="rciColSeries">Séries</th>
+            <th data-key="rc3" class="col-extra" title="RCI3 = mean(top 3) − std(top 3)">RCI3</th>
+            <th data-key="rc5" title="RCI5 = mean(top 5) − std(top 5)">RCI5</th>
+            <th data-key="rc10">RCI10</th>
+            <th data-key="rc20" class="col-extra" title="RCI20 = mean(top 20) − std(top 20)">RCI20</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- ── Trends tab ─────────────────────────────────────────────────── -->
+<main id="pageTrends">
+  <div class="grid">
+    <aside class="panel">
+      <h2 data-t="filterRaces">Courses</h2>
+      <input id="trendsRaceSearch" type="search" data-t="trendsSearchRaces" placeholder="Rechercher…" style="margin-bottom:8px;" />
+      <div id="trendsRaceList" class="list" style="max-height:65vh;"></div>
+    </aside>
+    <section class="panel">
+      <div id="trendsEmpty" class="note" style="padding:4px 0;" data-t="trendsSelect">Sélectionnez une course dans la liste.</div>
+      <div id="trendsDetail" style="display:none;">
+        <div id="trendsHeader" style="margin-bottom:12px; font-size:13px;"></div>
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
+          <div class="chip-group">
+            <button id="trendsRciRci5" class="chip active">RCI5</button>
+            <button id="trendsRciRci10" class="chip">RCI10</button>
+          </div>
+          <div class="chip-group" style="margin-left:auto;">
+            <button id="trendsGenderBoth" class="chip active" data-t="trendsGenderBoth">Les deux</button>
+            <button id="trendsGenderWomen" class="chip" data-t="trendsGenderWomen">Femmes</button>
+            <button id="trendsGenderMen" class="chip" data-t="trendsGenderMen">Hommes</button>
+          </div>
+        </div>
+        <div id="trendsPlot" style="height:300px;"></div>
+        <div id="trendsTableWrap" class="tableWrap" style="margin-top:14px; max-height:260px;"></div>
       </div>
     </section>
   </div>
 </main>
 
-<main id="pageViz" class="">
+<!-- ── Parity tab ─────────────────────────────────────────────────── -->
+<main id="pageViz">
   <div class="grid">
-    <aside class="panel sidebar">
-      <div class="filter-section">
-        <span class="filter-label">Selection</span>
-        <div class="note"><span id="vizCount">0</span> races &mdash; adjust in the <b>RCI</b> tab</div>
-      </div>
-      <hr class="filter-divider" />
+    <aside class="panel">
       <div class="filter-section">
         <span class="filter-label">N</span>
         <div id="parityNChips" class="chip-group">
@@ -171,47 +168,75 @@
         </div>
       </div>
       <hr class="filter-divider" />
-      <div class="note" style="line-height:1.8;">
-        <span style="color:#10b981; font-weight:700;">▮</span> Women's field stronger<br/>
-        <span style="color:#3b82f6; font-weight:700;">▮</span> Men's field stronger
+      <div class="note" style="line-height:2;">
+        <span style="color:#10b981; font-weight:700;">▮</span> <span data-t="parityLegendWomen">Champ féminin plus fort</span><br/>
+        <span style="color:#3b82f6; font-weight:700;">▮</span> <span data-t="parityLegendMen">Champ masculin plus fort</span>
       </div>
     </aside>
-
     <section class="panel">
       <div id="vizParityPlot" style="height:600px;"></div>
     </section>
   </div>
 </main>
 
-<main id="pageCharts" class="">
+<!-- ── Depth tab ──────────────────────────────────────────────────── -->
+<main id="pageCharts">
   <div class="grid">
-    <aside class="panel sidebar">
+    <aside class="panel">
       <div class="filter-section">
-        <span class="filter-label">Selection</span>
-        <div class="note"><span id="chartsVizCount">0</span> races &mdash; adjust in the <b>RCI</b> tab</div>
-      </div>
-      <hr class="filter-divider" />
-      <div class="filter-section">
-        <span class="filter-label">Gender</span>
+        <span class="filter-label" data-t="depthGender">Genre</span>
         <div class="chip-group">
-          <button id="chartsGenderBoth" class="chip active">Both</button>
-          <button id="chartsGenderMen" class="chip">Men</button>
-          <button id="chartsGenderWomen" class="chip">Women</button>
+          <button id="chartsGenderBoth" class="chip active" data-t="depthBoth">Les deux</button>
+          <button id="chartsGenderMen" class="chip" data-t="depthMen">Hommes</button>
+          <button id="chartsGenderWomen" class="chip" data-t="depthWomen">Femmes</button>
         </div>
       </div>
       <div class="filter-section">
-        <span class="filter-label">Top N &mdash; <span id="nLabel">30</span></span>
+        <span class="filter-label">Top N — <span id="nLabel">30</span></span>
         <input id="topN" type="range" min="5" max="50" step="1" value="30" />
       </div>
-      <hr class="filter-divider" />
-      <div class="note">Index vs rank: how fast does field quality drop off from position 1 to N?</div>
     </aside>
-
     <section class="panel">
       <div id="plot" style="height:560px;"></div>
     </section>
   </div>
 </main>
+
+<!-- ── Picker modal ────────────────────────────────────────────────── -->
+<div id="pickerOverlay" class="modal-overlay" hidden>
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 data-t="filterTitle">Filtrer les éditions</h3>
+      <div style="display:flex; gap:6px;">
+        <button id="resetPickerBtn" class="chip-sm" data-t="filterReset">Réinitialiser</button>
+        <button id="closePickerBtn" class="chip active" data-t="filterClose">Fermer</button>
+      </div>
+    </div>
+    <div class="filter-section">
+      <span class="filter-label" data-t="filterSeries">Séries</span>
+      <div id="publicSeriesChips" class="chip-group"></div>
+    </div>
+    <div class="filter-section">
+      <span class="filter-label" data-t="filterYear">Année</span>
+      <div id="publicYearChips" class="chip-group"></div>
+    </div>
+    <div class="filter-section">
+      <span class="filter-label" data-t="filterCountry">Pays</span>
+      <div id="publicCountryChips" class="chip-group"></div>
+    </div>
+    <hr class="filter-divider" />
+    <div class="filter-section">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+        <span class="filter-label" style="margin:0;" data-t="filterRaces">Courses</span>
+        <span id="publicRaceCount" class="count-badge">0</span>
+        <button id="publicSelectAll" class="chip-sm" data-t="filterAll">Tout</button>
+        <button id="publicSelectNone" class="chip-sm" data-t="filterNone">Aucun</button>
+      </div>
+      <input id="publicRaceSearch" type="search" placeholder="Rechercher…" style="margin-bottom:6px;" />
+      <div id="publicRaceList" class="list" style="max-height:240px;"></div>
+    </div>
+  </div>
+</div>
 
 <script src="config.js" onerror=""></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
