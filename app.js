@@ -1011,10 +1011,11 @@ function parseItraHtml(html, url) {
   const doc = new DOMParser().parseFromString(html, "text/html");
   const table = doc.getElementById("RunnerRaceResults");
   if (!table) {
-    // Likely a login redirect
     const hasLoginHint = doc.querySelector('input[type="password"], form[action*="login"], [href*="login"]');
-    if (hasLoginHint) throw new Error("SessionToken expired or invalid — log in to itra.run and copy a fresh token.");
-    throw new Error("Results table not found. Check the URL and try again.");
+    const pageTitle = doc.querySelector("title")?.textContent?.trim() || "(no title)";
+    console.warn("[import] #RunnerRaceResults not found on:", url, "| page title:", pageTitle, "| login hint:", !!hasLoginHint);
+    if (hasLoginHint) throw new Error(`Cookie expired — re-paste a fresh cookie from itra.run.\nURL: ${url}`);
+    throw new Error(`Results table (#RunnerRaceResults) not found.\nURL: ${url}\nPage title: "${pageTitle}"\nPossible causes: edition cancelled, no published results, or ITRA page structure changed.`);
   }
 
   const rows = table.querySelectorAll("tbody tr");
@@ -1378,14 +1379,6 @@ async function importEdition(job) {
 
 async function saveEditionToSupabase(job, results) {
   if (!window.supabaseClient) throw new Error("Supabase not configured.");
-
-  const { data: { session } } = await window.supabaseClient.auth.getSession();
-  if (!session) throw new Error("Not authenticated — please sign in via /login/ first.");
-  console.log("[import] session user:", session.user?.email, "uid:", session.user?.id);
-
-  const { data: adminRow } = await window.supabaseClient.from("admins").select("email").maybeSingle();
-  console.log("[import] admins row visible:", adminRow);
-  if (!adminRow) throw new Error(`Authenticated as ${session.user?.email} but not found in admins table — check admins RLS or add this email.`);
 
   const { error: raceErr } = await window.supabaseClient.from("races").upsert({
     id: job.raceId,
