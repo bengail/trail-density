@@ -41,7 +41,8 @@ const T = {
   fr: {
     subtitle: "Indice de Compétitivité en Trail & Montagne",
     tabRci: "RCI", tabTrends: "Tendances", tabParity: "Parité", tabDepth: "Profondeur",
-    filterLabel: "Filtrer", filterTitle: "Filtrer les éditions", filterClose: "Fermer",
+    filterLabel: "Filtrer", filterChooseRaces: "Choisir des courses",
+    filterTitle: "Filtrer les éditions", filterClose: "Fermer",
     filterReset: "Réinitialiser", filterSeries: "Séries", filterYear: "Année",
     filterCountry: "Pays", filterRaces: "Courses", filterSearch: "Rechercher…",
     filterAll: "Tout", filterNone: "Aucun",
@@ -58,7 +59,8 @@ const T = {
   en: {
     subtitle: "Realized Competition Index across elite trail & mountain races",
     tabRci: "RCI", tabTrends: "Trends", tabParity: "Parity", tabDepth: "Depth",
-    filterLabel: "Filter", filterTitle: "Filter editions", filterClose: "Close",
+    filterLabel: "Filter", filterChooseRaces: "Choose races",
+    filterTitle: "Filter editions", filterClose: "Close",
     filterReset: "Reset", filterSeries: "Series", filterYear: "Year",
     filterCountry: "Country", filterRaces: "Races", filterSearch: "Search…",
     filterAll: "All", filterNone: "None",
@@ -642,7 +644,11 @@ function wirePublicChipFilters() {
     }
 
     const countEl = document.getElementById("filterBarCount");
-    if (countEl) countEl.textContent = String(state.rciNormSelected.size);
+    if (countEl) {
+      const n = state.rciNormSelected.size;
+      countEl.textContent = String(n);
+      countEl.style.display = n > 0 ? "" : "none";
+    }
   }
 
   function updateCountBadge() {
@@ -1483,7 +1489,7 @@ async function getVizRciPoints(options = {}) {
         if (!Number.isFinite(stats.rci)) continue;
         points.push({
           race_id: meta.race_id || ids[i],
-          race_name: meta.name || meta.race_id || ids[i],
+          race_name: getCourseLabel(course),
           year: meta.year,
           series: normalizeSeries(meta.series).join(", ") || "-",
           sex, n, rci: stats.rci
@@ -1551,7 +1557,9 @@ async function updateVisualization() {
 
 // ---- Charts: rank curve (depth) ----
 function getCourseLabel(course) {
-  return course.meta?.name || course.meta?.race_id || course.race_id;
+  const name = course.meta?.name || course.meta?.race_id || course.race_id;
+  const year = course.meta?.year;
+  return year ? `${name} ${year}` : name;
 }
 
 function groupForCharts(courses, topN, gender = "both") {
