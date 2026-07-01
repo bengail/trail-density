@@ -996,9 +996,9 @@ function renderEditionPicker(info, sourceRow) {
       const name = btn.dataset.siblingName;
       if (!state.discoverRaces.find(r => r.url === url)) {
         state.discoverRaces.unshift({ name, country: sourceRow?.country || "", km: null, elevation: null, url });
-        renderDiscoverResults();
       }
       panel.style.display = "none";
+      renderDiscoverResults();
       document.getElementById("discoverResultsPanel").style.display = "";
     });
   });
@@ -1529,11 +1529,13 @@ async function updateAll() {
     // Discover
     document.getElementById("discoverSearchBtn")?.addEventListener("click", discoverSearch);
 
-    // Edition picker back button
+    // Edition picker back button — re-render rows so buttons reset to "+ Editions"
     document.getElementById("backToDiscoverBtn")?.addEventListener("click", () => {
       document.getElementById("editionPickerPanel").style.display = "none";
-      document.getElementById("discoverResultsPanel").style.display =
-        state.discoverRaces.length ? "" : "none";
+      if (state.discoverRaces.length) {
+        renderDiscoverResults();
+        document.getElementById("discoverResultsPanel").style.display = "";
+      }
     });
 
     // Import queue
