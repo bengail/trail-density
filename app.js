@@ -4,11 +4,11 @@
 const MAX_INDEX_FOR_NORM = 1000;
 const TAB_ALLOWLIST = {
   public: ["rcinormcharts", "visualization", "charts"],
-  admin: ["race", "import", "discover", "bulk"]
+  admin: ["import", "races"]
 };
 const DEFAULT_TAB_BY_MODE = {
   public: "rcinormcharts",
-  admin: "race"
+  admin: "import"
 };
 const PARITY_N_LEVELS = [5, 10, 20];
 
@@ -107,121 +107,112 @@ function rciFromResults(results, n, limitByRank = true) {
 }
 
 // ---- Data loading ----
+// manifest.courses entries use `race_id` = edition.id ("utmb-170-2024") as the public UI key.
+// This keeps all downstream public code (chip filters, RCI table, charts) working unchanged.
 let manifest = null;
 const courseCache = new Map();
 const courseMetaCache = new Map();
 
 async function loadManifest() {
-  if (window.supabaseClient) {
-    const { data, error } = await window.supabaseClient
-      .from("courses").select("id, race_id").order("race_id");
-    if (error) throw new Error("Supabase loadManifest: " + error.message);
-    manifest = { courses: data.map(c => ({ race_id: c.race_id, id: c.id })) };
-    return manifest.courses;
+  if (!window.supabaseClient) return [];
+  const { data, error } = await window.supabaseClient
+    .from("editions")
+    .select("id, race_id, year, series, races(name, country, distance_km, elevation_gain)")
+    .order("id");
+  if (error) throw new Error("loadManifest: " + error.message);
+  manifest = { courses: data.map(e => ({ race_id: e.id, id: e.id })) };
+  for (const e of data) {
+    courseMetaCache.set(e.id, {
+      race_id: e.id,
+      base_race_id: e.race_id,
+      name: e.races?.name || e.id,
+      country: e.races?.country || null,
+      year: e.year,
+      series: e.series || [],
+      distance_km: e.races?.distance_km || null,
+      elevation_gain: e.races?.elevation_gain || null,
+    });
   }
-  const resp = await fetch(`${state.assetPrefix}data/courses_index.json`, { cache: "no-store" });
-  if (!resp.ok) throw new Error("Cannot load courses_index.json");
-  manifest = await resp.json();
-  return manifest.courses || [];
+  return manifest.courses;
 }
 
 function getManifestEntries() {
   return (manifest && manifest.courses) || [];
 }
 
-function getCourseMeta(raceId) {
-  return courseMetaCache.get(raceId) || null;
+function getCourseMeta(editionId) {
+  return courseMetaCache.get(editionId) || null;
 }
 
-function normalizeCourse(course, fallbackRaceId) {
-  const meta = course.meta || {};
-  const raceId = meta.race_id || fallbackRaceId;
-  return {
-    ...course,
-    meta: { ...meta, race_id: raceId, series: normalizeSeries(meta.series) },
-    results: (course.results || [])
-      .map(r => ({
-        rank: Number(r.rank), index: Number(r.index),
-        runner: r.runner ?? null, gender: r.gender ?? null, nationality: r.nationality ?? null
-      }))
-      .filter(r => Number.isFinite(r.rank) && Number.isFinite(r.index))
-      .sort((a, b) => a.rank - b.rank)
+function normalizeResults(results) {
+  return (results || [])
+    .map(r => ({
+      rank: Number(r.rank), index: Number(r.index),
+      runner: r.runner ?? null, gender: r.gender ?? null, nationality: r.nationality ?? null
+    }))
+    .filter(r => Number.isFinite(r.rank) && Number.isFinite(r.index))
+    .sort((a, b) => a.rank - b.rank);
+}
+
+async function loadCourse(editionId) {
+  if (courseCache.has(editionId)) return courseCache.get(editionId);
+  if (!window.supabaseClient) throw new Error("No Supabase client.");
+
+  const [edResp, resResp] = await Promise.all([
+    window.supabaseClient
+      .from("editions")
+      .select("id, race_id, year, series, date, itra_edition_url, races(name, country, distance_km, elevation_gain)")
+      .eq("id", editionId).single(),
+    window.supabaseClient
+      .from("results")
+      .select("rank, runner, index, gender, nationality")
+      .eq("edition_id", editionId).order("rank")
+  ]);
+
+  if (edResp.error) throw new Error("Edition: " + edResp.error.message);
+  if (resResp.error) throw new Error("Results: " + resResp.error.message);
+
+  const e = edResp.data;
+  const meta = {
+    race_id: e.id,
+    base_race_id: e.race_id,
+    name: e.races?.name || e.id,
+    country: e.races?.country || null,
+    year: e.year,
+    series: e.series || [],
+    distance_km: e.races?.distance_km || null,
   };
-}
-
-async function loadCourse(raceId) {
-  if (courseCache.has(raceId)) return courseCache.get(raceId);
-
-  if (window.supabaseClient) {
-    const entry = getManifestEntries().find(c => c.race_id === raceId);
-    if (!entry) throw new Error("Unknown race_id: " + raceId);
-
-    const [metaResp, resultsResp] = await Promise.all([
-      window.supabaseClient
-        .from("courses")
-        .select("id, race_id, name, series, country, year, distance_km, elevation_m, prize_money, data_source, source_url, notes")
-        .eq("id", entry.id).single(),
-      window.supabaseClient
-        .from("results")
-        .select("rank, runner, index, gender, nationality")
-        .eq("course_id", entry.id).order("rank")
-    ]);
-
-    if (metaResp.error) throw new Error("Supabase course meta: " + metaResp.error.message);
-    if (resultsResp.error) throw new Error("Supabase results: " + resultsResp.error.message);
-
-    const c = metaResp.data;
-    const normalized = normalizeCourse({
-      meta: {
-        race_id: c.race_id, name: c.name, series: c.series, country: c.country,
-        year: c.year, distance_km: c.distance_km, elevation_m: c.elevation_m,
-        prize_money: c.prize_money, data_source: c.data_source,
-        source_url: c.source_url, notes: c.notes
-      },
-      results: resultsResp.data
-    }, raceId);
-
-    courseCache.set(raceId, normalized);
-    courseMetaCache.set(raceId, normalized.meta);
-    return normalized;
-  }
-
-  const entry = getManifestEntries().find(c => c.race_id === raceId);
-  if (!entry) throw new Error("Unknown race_id: " + raceId);
-  const resp = await fetch(`${state.assetPrefix}${entry.path}`, { cache: "no-store" });
-  if (!resp.ok) throw new Error("Cannot load course json: " + entry.path);
-  const normalized = normalizeCourse(await resp.json(), raceId);
-  courseCache.set(raceId, normalized);
-  courseMetaCache.set(raceId, normalized.meta || {});
-  return normalized;
+  const course = { meta, results: normalizeResults(resResp.data) };
+  courseCache.set(editionId, course);
+  courseMetaCache.set(editionId, meta);
+  return course;
 }
 
 async function preloadAllCourseMeta() {
-  if (window.supabaseClient) {
-    const { data, error } = await window.supabaseClient
-      .from("courses")
-      .select("id, race_id, name, series, country, year, distance_km, elevation_m, prize_money, data_source, source_url, notes")
-      .order("race_id");
-    if (error) throw new Error("Supabase preloadAllCourseMeta: " + error.message);
-    for (const c of data) {
-      courseMetaCache.set(c.race_id, {
-        race_id: c.race_id, name: c.name, series: c.series || [],
-        country: c.country, year: c.year, distance_km: c.distance_km,
-        elevation_m: c.elevation_m, prize_money: c.prize_money,
-        data_source: c.data_source, source_url: c.source_url, notes: c.notes
-      });
-    }
-    return;
+  if (!window.supabaseClient) return;
+  const { data, error } = await window.supabaseClient
+    .from("editions")
+    .select("id, race_id, year, series, races(name, country, distance_km, elevation_gain)")
+    .order("id");
+  if (error) throw new Error("preloadAllCourseMeta: " + error.message);
+  for (const e of data) {
+    courseMetaCache.set(e.id, {
+      race_id: e.id,
+      base_race_id: e.race_id,
+      name: e.races?.name || e.id,
+      country: e.races?.country || null,
+      year: e.year,
+      series: e.series || [],
+      distance_km: e.races?.distance_km || null,
+      elevation_gain: e.races?.elevation_gain || null,
+    });
   }
-  const entries = getManifestEntries();
-  await Promise.all(entries.map(e => loadCourse(e.race_id).catch(() => null)));
 }
 
 // ---- UI state ----
 const state = {
   appMode: "public",
   assetPrefix: "",
-  raceSelected: null,
   publicRciGender: "female",
   publicRciShowExtra: false,
   rciNormSelected: new Set(),
@@ -234,10 +225,12 @@ const state = {
   chartsGender: "both",
   topN: 30,
   activeTab: "rcinormcharts",
-  importDraft: null,
-  bulkRows: [],
-  bulkRunning: false,
-  discoverRaces: []
+  // Admin state
+  itraCookie: "",
+  discoverRaces: [],
+  importQueue: [],
+  importRunning: false,
+  raceSelected: null,
 };
 
 // Viz tab shares selection with RCI tab
@@ -815,366 +808,367 @@ function parseItraHtml(html, url) {
   return results;
 }
 
-function itraUrlToMeta(url) {
-  // Pattern: /Races/RaceResults/{Slug}/{Year}/{NumericId}
-  const m = url.match(/RaceResults\/(.+?)\/(\d{4})\/(\d+)/);
-  if (!m) return {};
-  const slug = m[1];   // "Black.Canyon.Ultras.100K"
-  const year = parseInt(m[2], 10);
-  const name = slug.replace(/\./g, " ");  // "Black Canyon Ultras 100K"
-  const raceId = slug.toUpperCase().replace(/\./g, "_") + "_" + year; // "BLACK_CANYON_ULTRAS_100K_2026"
-  return { name, year, raceId };
+// ---- Admin: slug + URL utilities ----
+function slugToId(itraSlug) {
+  // "42km.du.Mont.Blanc" → "42km-du-mont-blanc"
+  return itraSlug.replace(/\./g, "-").toLowerCase();
 }
 
-function setItraStatus(message, type = "") {
-  const el = document.getElementById("itraStatus");
+function itraUrlParts(url) {
+  const m = url.match(/\/Races\/RaceResults\/([^/]+)\/(\d{4})\/(\d+)/);
+  if (!m) return null;
+  return { slug: m[1], year: parseInt(m[2], 10), itraId: m[3] };
+}
+
+// ---- Admin: cookie ----
+function saveCookie() {
+  const val = (document.getElementById("itraCookieInput")?.value || "").trim();
+  state.itraCookie = val;
+  const statusEl = document.getElementById("cookieStatus");
+  if (statusEl) statusEl.textContent = val ? "Cookie saved ✓" : "Not set";
+}
+
+// ---- Admin: discover ----
+function setDiscoverStatus(msg, type = "") {
+  const el = document.getElementById("discoverStatus");
   if (!el) return;
-  el.style.display = "block";
-  el.className = `status${type ? ` ${type}` : ""}`;
-  el.textContent = message;
+  el.textContent = msg;
+  el.className = "status" + (type ? ` ${type}` : "");
+  el.style.display = msg ? "" : "none";
 }
 
-async function fetchFromItra() {
-  const url = (document.getElementById("itraUrl")?.value || "").trim();
-  const cookieHeader = (document.getElementById("itraToken")?.value || "").trim();
-  const btn = document.getElementById("itraFetchBtn");
+function itraDateFormat(val) {
+  const [y, m, d] = val.split("-");
+  return `${d}-${m}-${y}`;
+}
 
-  if (!url) { setItraStatus("Paste an itra.run results URL first.", "error"); return; }
-  if (!cookieHeader) { setItraStatus("Paste your itra.run cookie header (from DevTools Network tab).", "error"); return; }
+async function discoverSearch() {
+  const countriesRaw = document.getElementById("discoverCountry")?.value || "";
+  const countries = countriesRaw.split(",").map(c => c.trim().toUpperCase()).filter(Boolean);
+  const dateStart = document.getElementById("discoverDateStart")?.value;
+  const dateEnd = document.getElementById("discoverDateEnd")?.value;
+  const minKm = parseFloat(document.getElementById("discoverMinKm")?.value) || 0;
+  const maxKm = parseFloat(document.getElementById("discoverMaxKm")?.value) || null;
 
-  if (btn) { btn.disabled = true; btn.textContent = "Fetching…"; }
-  setItraStatus("Fetching from itra.run…");
+  if (!countries.length) { setDiscoverStatus("Enter at least one country code (e.g. FR).", "error"); return; }
+  if (!dateStart || !dateEnd) { setDiscoverStatus("Set both From and To dates.", "error"); return; }
+
+  setDiscoverStatus("Searching itra.run…");
+  const btn = document.getElementById("discoverSearchBtn");
+  if (btn) btn.disabled = true;
+  document.getElementById("discoverResultsPanel").style.display = "none";
+  document.getElementById("editionPickerPanel").style.display = "none";
 
   try {
-    const resp = await fetch("/api/itra-proxy", {
+    const resp = await fetch("/api/discover-races", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url, cookieHeader })
+      body: JSON.stringify({ countries, dateStart: itraDateFormat(dateStart), dateEnd: itraDateFormat(dateEnd) }),
     });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || `HTTP ${resp.status}`);
 
-    if (!resp.ok) {
-      const err = await resp.json().catch(() => ({ error: `HTTP ${resp.status}` }));
-      throw new Error(err.error || `Proxy error ${resp.status}`);
+    let races = data.races;
+    if (minKm > 0) races = races.filter(r => (r.km ?? 0) >= minKm);
+    if (maxKm) races = races.filter(r => (r.km ?? Infinity) <= maxKm);
+
+    state.discoverRaces = races;
+    renderDiscoverResults();
+
+    const countEl = document.getElementById("discoverCount");
+    if (countEl) countEl.textContent = String(races.length);
+
+    if (races.length) {
+      setDiscoverStatus(`Found ${races.length} races with published results.`, "");
+      document.getElementById("discoverResultsPanel").style.display = "";
+    } else {
+      setDiscoverStatus("No races found matching your filters.", "error");
     }
-
-    const html = await resp.text();
-    const results = parseItraHtml(html, url);
-
-    // Pre-fill metadata fields from URL
-    const meta = itraUrlToMeta(url);
-    if (meta.raceId) {
-      const raceIdEl = document.getElementById("importRaceId");
-      if (raceIdEl && !raceIdEl.value) raceIdEl.value = meta.raceId;
-    }
-    if (meta.name) {
-      const nameEl = document.getElementById("importName");
-      if (nameEl && !nameEl.value) nameEl.value = meta.name;
-    }
-    if (meta.year) {
-      const yearEl = document.getElementById("importYear");
-      if (yearEl && !yearEl.value) yearEl.value = String(meta.year);
-    }
-
-    // Populate draft and preview (same pipeline as manual import)
-    state.importDraft = {
-      meta: {
-        race_id: document.getElementById("importRaceId")?.value || meta.raceId || "",
-        name: document.getElementById("importName")?.value || meta.name || "",
-        series: parseSeriesInput(document.getElementById("importSeries")?.value),
-        country: asNullableText(document.getElementById("importCountry")?.value),
-        data_source: "ITRA",
-        year: parseNullableNumber(document.getElementById("importYear")?.value) || meta.year || null,
-        distance_km: parseNullableNumber(document.getElementById("importDistanceKm")?.value),
-        elevation_m: parseNullableNumber(document.getElementById("importElevationM")?.value),
-        prize_money: asNullableText(document.getElementById("importPrizeMoney")?.value),
-        notes: asNullableText(document.getElementById("importNotes")?.value),
-        source_url: url
-      },
-      results
-    };
-
-    // Also set data_source field in form
-    const srcEl = document.getElementById("importDataSource");
-    if (srcEl && !srcEl.value) srcEl.value = "ITRA";
-    const srcUrlEl = document.getElementById("importSourceUrl");
-    if (srcUrlEl && !srcUrlEl.value) srcUrlEl.value = url;
-
-    renderImportPreview(results);
-    setItraStatus(`${results.length} results fetched. Review metadata below, then Save to Supabase.`, "ok");
-    setImportStatus(`${results.length} results loaded from ITRA. Fill any missing metadata, then save.`, "ok");
   } catch (err) {
-    setItraStatus(err.message || "Fetch failed.", "error");
+    setDiscoverStatus("Error: " + err.message, "error");
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = "Fetch & Preview"; }
+    if (btn) btn.disabled = false;
   }
 }
 
-function setImportStatus(message, type = "") {
-  const el = document.getElementById("importStatus");
-  if (!el) return;
-  el.className = `status${type ? ` ${type}` : ""}`;
-  el.textContent = message;
-}
-
-function renderImportPreview(results) {
-  const tbody = document.querySelector("#importPreviewTable tbody");
+function renderDiscoverResults() {
+  const tbody = document.getElementById("discoverTableBody");
   if (!tbody) return;
   tbody.innerHTML = "";
-  for (const r of results.slice(0, 200)) {
+  for (const r of state.discoverRaces) {
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${r.rank}</td><td>${r.runner ?? "-"}</td><td>${fmt(r.index, 1)}</td><td>${r.gender ?? "-"}</td><td>${r.nationality ?? "-"}</td>`;
-    tbody.appendChild(tr);
-  }
-}
-
-function readImportDraftFromForm(resultsOverride = null) {
-  const raceId = (document.getElementById("importRaceId")?.value || "").trim();
-  const name = (document.getElementById("importName")?.value || "").trim();
-  if (!raceId) throw new Error("Race ID is required.");
-  if (!name) throw new Error("Race name is required.");
-  const results = resultsOverride !== null
-    ? resultsOverride
-    : parsePastedResults(document.getElementById("importResultsInput")?.value || "");
-  const meta = {
-    race_id: raceId, name,
-    series: parseSeriesInput(document.getElementById("importSeries")?.value),
-    country: asNullableText(document.getElementById("importCountry")?.value),
-    data_source: asNullableText(document.getElementById("importDataSource")?.value),
-    year: parseNullableNumber(document.getElementById("importYear")?.value),
-    distance_km: parseNullableNumber(document.getElementById("importDistanceKm")?.value),
-    elevation_m: parseNullableNumber(document.getElementById("importElevationM")?.value),
-    prize_money: asNullableText(document.getElementById("importPrizeMoney")?.value),
-    notes: asNullableText(document.getElementById("importNotes")?.value),
-    source_url: asNullableText(document.getElementById("importSourceUrl")?.value)
-  };
-  return { meta, results };
-}
-
-function buildUpdatedManifestForImport(raceId) {
-  const courses = getManifestEntries().map(c => ({ race_id: c.race_id, path: c.path }));
-  const newEntry = { race_id: raceId, path: `data/courses/${raceId}.json` };
-  const existingIndex = courses.findIndex(c => c.race_id === raceId);
-  if (existingIndex >= 0) courses[existingIndex] = newEntry; else courses.push(newEntry);
-  courses.sort((a, b) => a.race_id.localeCompare(b.race_id));
-  return { courses };
-}
-
-function buildImportJson() {
-  try {
-    const rawText = (document.getElementById("importResultsInput")?.value || "").trim();
-    const existingResults = (!rawText && state.importDraft?.results?.length)
-      ? state.importDraft.results : null;
-    const draft = readImportDraftFromForm(existingResults);
-    state.importDraft = draft;
-    renderImportPreview(draft.results);
-    setImportStatus(`${draft.results.length} results ready.`, "ok");
-  } catch (err) {
-    state.importDraft = null;
-    renderImportPreview([]);
-    setImportStatus(err.message || "Unable to build JSON.", "error");
-  }
-}
-
-function downloadImportRaceJson() {
-  if (!state.importDraft) { setImportStatus("Build JSON first before downloading.", "error"); return; }
-  triggerJsonDownload(`${state.importDraft.meta?.race_id || "race"}.json`, state.importDraft);
-}
-
-function downloadImportManifestJson() {
-  if (!state.importDraft) { setImportStatus("Build JSON first.", "error"); return; }
-  triggerJsonDownload("courses_index.json", buildUpdatedManifestForImport(state.importDraft.meta?.race_id || ""));
-}
-
-async function saveRaceToSupabase(meta, results) {
-  if (!window.supabaseClient) throw new Error("Supabase not configured — check config.js.");
-  const seriesValue = meta.series ? (Array.isArray(meta.series) ? meta.series : [meta.series]) : [];
-  const courseRow = {
-    race_id: meta.race_id, name: meta.name, series: seriesValue, country: meta.country,
-    year: meta.year, distance_km: meta.distance_km, elevation_m: meta.elevation_m,
-    prize_money: meta.prize_money, data_source: meta.data_source,
-    source_url: meta.source_url, notes: meta.notes
-  };
-  const { data: courseData, error: courseError } = await window.supabaseClient
-    .from("courses").upsert(courseRow, { onConflict: "race_id" }).select("id").single();
-  if (courseError) throw new Error("Course upsert failed: " + courseError.message);
-  const courseId = courseData.id;
-  const { error: deleteError } = await window.supabaseClient
-    .from("results").delete().eq("course_id", courseId);
-  if (deleteError) throw new Error("Delete old results failed: " + deleteError.message);
-  const resultRows = results.map(r => ({
-    course_id: courseId, rank: r.rank, runner: r.runner,
-    index: r.index, gender: r.gender, nationality: r.nationality
-  }));
-  const { error: insertError } = await window.supabaseClient.from("results").insert(resultRows);
-  if (insertError) throw new Error("Insert results failed: " + insertError.message);
-  return { courseId, count: results.length };
-}
-
-async function importToSupabase() {
-  if (!window.supabaseClient) { setImportStatus("Supabase not configured — check config.js.", "error"); return; }
-  if (!state.importDraft) { setImportStatus("Preview the data first before saving.", "error"); return; }
-  const { meta, results } = state.importDraft;
-  const btn = document.getElementById("importSaveSupabaseBtn");
-  if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
-  setImportStatus("Saving to Supabase…");
-  try {
-    await saveRaceToSupabase(meta, results);
-    setImportStatus(`Saved "${meta.name}" (${results.length} results). Reloading…`, "ok");
-    setTimeout(() => location.reload(), 1200);
-  } catch (err) {
-    setImportStatus(err.message || "Save failed.", "error");
-    if (btn) { btn.disabled = false; btn.textContent = "Save to Supabase"; }
-  }
-}
-
-// ---- Bulk CSV Import ----
-function makeBulkRaceId(name, km, year) {
-  const parts = [name, km ? `${Math.round(km)}KM` : null, year].filter(Boolean);
-  return parts.join("_").toUpperCase().replace(/[^A-Z0-9]+/g, "_").replace(/^_+|_+$/g, "");
-}
-
-function parseCsvLine(line) {
-  const result = [];
-  let current = "";
-  let inQuotes = false;
-  for (const c of line) {
-    if (c === '"') { inQuotes = !inQuotes; }
-    else if ((c === "," || c === ";") && !inQuotes) { result.push(current.trim()); current = ""; }
-    else { current += c; }
-  }
-  result.push(current.trim());
-  return result;
-}
-
-function parseBulkCsv(text) {
-  const rows = [];
-  for (const line of text.split("\n").map(l => l.trim()).filter(Boolean)) {
-    const cols = parseCsvLine(line);
-    if (cols.length < 6) continue;
-    const url = cols[cols.length - 1];
-    if (!url.startsWith("http")) continue; // skip header or invalid rows
-    const name = cols[1] || null;
-    const km = parseFloat(cols[2]) || null;
-    const urlMeta = itraUrlToMeta(url);
-    const year = urlMeta.year || null;
-    const computedName = name ? (km ? `${name} ${km}km` : name) : (urlMeta.name || "");
-    const computedRaceId = makeBulkRaceId(name || urlMeta.name || "", km, year);
-    rows.push({
-      country: cols[0] || null,
-      name,
-      km,
-      elevation: parseFloat(cols[3]) || null,
-      url,
-      computedName,
-      computedRaceId,
-      status: "pending",
-      error: null,
-      resultCount: null
+    const nameCell = r.name || "";
+    tr.innerHTML = `
+      <td>${r.country || ""}</td>
+      <td style="font-weight:600;">${nameCell}</td>
+      <td style="text-align:right;">${r.km ?? ""}</td>
+      <td style="text-align:right;">${r.elevation ?? ""}</td>
+      <td><button class="chip-sm add-editions-btn">+ Editions</button></td>
+    `;
+    const addBtn = tr.querySelector(".add-editions-btn");
+    addBtn.addEventListener("click", async () => {
+      addBtn.disabled = true;
+      addBtn.textContent = "Loading…";
+      try {
+        if (!state.itraCookie) throw new Error("Set the ITRA cookie first (top of page).");
+        const resp = await fetch("/api/itra-race-info", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: r.url, cookieHeader: state.itraCookie })
+        });
+        const info = await resp.json();
+        if (!resp.ok) throw new Error(info.error || `HTTP ${resp.status}`);
+        renderEditionPicker(info, r);
+      } catch (err) {
+        addBtn.disabled = false;
+        addBtn.textContent = "+ Editions";
+        setDiscoverStatus("Error: " + err.message, "error");
+      }
     });
-  }
-  return rows;
-}
-
-function renderBulkPreview() {
-  const tbody = document.querySelector("#bulkPreviewTable tbody");
-  if (!tbody) return;
-  tbody.innerHTML = "";
-  for (const row of state.bulkRows) {
-    const icon = row.status === "pending" ? "⏳"
-      : row.status === "fetching" ? "⟳"
-      : row.status === "done" ? "✓"
-      : "✗";
-    const detail = row.status === "done" && row.resultCount ? ` (${row.resultCount})` : row.status === "error" ? ` ${row.error || ""}` : "";
-    const urlShort = row.url.replace("https://itra.run/Races/RaceResults/", "").slice(0, 55);
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${row.country ?? "-"}</td><td>${row.computedName ?? row.name ?? "-"}<br><span style="font-size:10px;color:var(--muted);">${row.computedRaceId ?? ""}</span></td><td>${row.km ?? "-"}</td><td>${row.elevation ?? "-"}</td><td title="${row.url}" style="font-size:11px;color:var(--muted);">${urlShort}</td><td style="white-space:nowrap;">${icon}${detail}</td>`;
     tbody.appendChild(tr);
   }
-  const countEl = document.getElementById("bulkCount");
-  if (countEl) countEl.textContent = `${state.bulkRows.length} races`;
 }
 
-function setBulkStatus(message, type = "") {
-  const el = document.getElementById("bulkStatus");
-  if (!el) return;
-  el.style.display = "block";
-  el.className = `status${type ? ` ${type}` : ""}`;
-  el.textContent = message;
-}
+// ---- Admin: edition picker ----
+function renderEditionPicker(info, sourceRow) {
+  const panel = document.getElementById("editionPickerPanel");
+  if (!panel) return;
 
-function parseBulkCsvAction() {
-  const text = document.getElementById("bulkCsvInput")?.value || "";
-  state.bulkRows = parseBulkCsv(text);
-  renderBulkPreview();
-  if (state.bulkRows.length) {
-    setBulkStatus(`${state.bulkRows.length} races parsed — review below, then Start Import.`, "");
-  } else {
-    setBulkStatus("No valid rows found. Expected: country, name, km, elevation, top10avg, itra-url", "error");
-  }
-}
+  document.getElementById("pickerEventName").textContent = info.eventName || "";
+  document.getElementById("pickerRaceName").textContent = info.raceName || info.slug || "";
 
-async function fetchAndSaveBulkRow(row, cookieHeader) {
-  const resp = await fetch("/api/itra-proxy", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ url: row.url, cookieHeader })
+  const raceId = slugToId(info.slug);
+
+  const otherDistances = info.siblings.filter(s => !s.isCurrent && !s.isCancelled);
+
+  const body = document.getElementById("pickerBody");
+  body.innerHTML = `
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:14px;">
+      <div>
+        <span class="filter-label">Editions to import</span>
+        <div id="editionCheckboxes" style="display:flex; flex-direction:column; gap:3px; margin-top:6px;">
+          ${info.editions.map((e, i) => `
+            <label class="edition-row">
+              <input type="checkbox" name="edition" value="${e.itraId}" data-year="${e.year}" data-url="${e.url}" ${i < 3 ? "checked" : ""} style="width:auto;" />
+              <span>${e.year}</span>
+            </label>
+          `).join("")}
+        </div>
+        ${info.editions.length === 0 ? '<div class="note">No edition history found.</div>' : ""}
+      </div>
+      <div>
+        <span class="filter-label">Series tags</span>
+        <input id="pickerSeries" type="text" placeholder="utmb-world-series, gtws…" style="margin-top:6px; margin-bottom:4px;" />
+        <div class="note">Comma-separated. Applied to all selected editions.</div>
+        ${otherDistances.length ? `
+          <span class="filter-label" style="margin-top:14px;">Other distances in event</span>
+          <div style="display:flex; flex-direction:column; gap:4px; margin-top:6px;">
+            ${otherDistances.map(s => `
+              <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+                <span style="flex:1;">${s.name}</span>
+                <button class="chip-sm" data-sibling-url="${s.url}" data-sibling-name="${s.name.replace(/"/g,"&quot;")}">+ Add</button>
+              </div>
+            `).join("")}
+          </div>
+        ` : ""}
+      </div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <button id="addToQueueBtn" class="chip active">Add to Queue</button>
+      <span id="pickerStatus" style="font-size:12px; color:var(--muted);"></span>
+    </div>
+  `;
+
+  // Store context on panel for queue button handler
+  panel.dataset.raceId = raceId;
+  panel.dataset.raceName = info.raceName || "";
+  panel.dataset.slug = info.slug;
+  panel.dataset.country = sourceRow?.country || "";
+  panel.dataset.km = sourceRow?.km ?? "";
+  panel.dataset.elevation = sourceRow?.elevation ?? "";
+
+  document.getElementById("addToQueueBtn").addEventListener("click", addSelectedToQueue);
+
+  // Sibling "Add" buttons — inject into discover results and go back
+  body.querySelectorAll("[data-sibling-url]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const url = btn.dataset.siblingUrl;
+      const name = btn.dataset.siblingName;
+      if (!state.discoverRaces.find(r => r.url === url)) {
+        state.discoverRaces.unshift({ name, country: sourceRow?.country || "", km: null, elevation: null, url });
+        renderDiscoverResults();
+      }
+      panel.style.display = "none";
+      document.getElementById("discoverResultsPanel").style.display = "";
+    });
   });
-  if (!resp.ok) {
-    const err = await resp.json().catch(() => ({ error: `HTTP ${resp.status}` }));
-    throw new Error(err.error || `Proxy error ${resp.status}`);
-  }
-  const html = await resp.text();
-  const results = parseItraHtml(html, row.url);
-  const urlMeta = itraUrlToMeta(row.url);
-  const meta = {
-    race_id: row.computedRaceId || urlMeta.raceId || "",
-    name: row.computedName || urlMeta.name || "",
-    series: [],
-    country: row.country || null,
-    data_source: "ITRA",
-    year: urlMeta.year || null,
-    distance_km: row.km || null,
-    elevation_m: row.elevation || null,
-    prize_money: null,
-    notes: null,
-    source_url: row.url
-  };
-  if (!meta.race_id) throw new Error("Could not derive race_id from CSV name/km/year");
-  const { count } = await saveRaceToSupabase(meta, results);
-  row.resultCount = count;
+
+  document.getElementById("discoverResultsPanel").style.display = "none";
+  panel.style.display = "";
 }
 
-async function startBulkImport() {
-  if (state.bulkRunning) return;
-  const cookieHeader = (document.getElementById("bulkItraToken")?.value || "").trim();
-  if (!cookieHeader) { setBulkStatus("Paste your ITRA cookie header first.", "error"); return; }
-  if (!state.bulkRows.length) { setBulkStatus("Parse a CSV first.", "error"); return; }
+function addSelectedToQueue() {
+  const panel = document.getElementById("editionPickerPanel");
+  const raceId = panel.dataset.raceId;
+  const raceName = panel.dataset.raceName;
+  const slug = panel.dataset.slug;
+  const country = panel.dataset.country || null;
+  const km = panel.dataset.km ? parseFloat(panel.dataset.km) : null;
+  const elevation = panel.dataset.elevation ? parseInt(panel.dataset.elevation, 10) : null;
+  const seriesRaw = (document.getElementById("pickerSeries")?.value || "").trim();
+  const series = seriesRaw ? seriesRaw.split(",").map(s => s.trim()).filter(Boolean) : [];
 
-  state.bulkRunning = true;
-  const btn = document.getElementById("bulkStartBtn");
+  const checked = [...document.querySelectorAll("#editionCheckboxes input[name='edition']:checked")];
+  const pickerStatus = document.getElementById("pickerStatus");
+  if (!checked.length) {
+    if (pickerStatus) pickerStatus.textContent = "Select at least one edition.";
+    return;
+  }
+
+  let added = 0;
+  for (const cb of checked) {
+    const year = parseInt(cb.dataset.year, 10);
+    const url = cb.dataset.url;
+    const editionId = `${raceId}-${year}`;
+    if (!state.importQueue.find(j => j.editionId === editionId)) {
+      state.importQueue.push({ editionId, raceId, raceName, slug, year, country, km, elevation, series, url, status: "pending", error: null, resultCount: null });
+      added++;
+    }
+  }
+
+  renderQueue();
+  if (pickerStatus) pickerStatus.textContent = added ? `${added} edition${added > 1 ? "s" : ""} added to queue.` : "Already in queue.";
+}
+
+// ---- Admin: import queue ----
+function setQueueStatus(msg, type = "") {
+  const el = document.getElementById("queueStatus");
+  if (!el) return;
+  el.textContent = msg;
+  el.className = "status" + (type ? ` ${type}` : "");
+  el.style.display = msg ? "" : "none";
+}
+
+function renderQueue() {
+  const list = document.getElementById("queueList");
+  const empty = document.getElementById("queueEmpty");
+  const countEl = document.getElementById("queueCount");
+  if (!list) return;
+
+  if (countEl) countEl.textContent = String(state.importQueue.length);
+  if (empty) empty.style.display = state.importQueue.length ? "none" : "";
+
+  list.innerHTML = "";
+  for (const job of state.importQueue) {
+    const icon = { pending: "⏳", running: "⟳", done: "✓", error: "✗" }[job.status] || "⏳";
+    const cls = { done: "qi-done", error: "qi-error", running: "qi-running" }[job.status] || "";
+    const detail = job.status === "done" ? `${job.resultCount} results saved`
+      : job.status === "error" ? job.error || "error"
+      : "";
+    const div = document.createElement("div");
+    div.className = `queue-item ${cls}`;
+    div.innerHTML = `
+      <span class="qi-icon">${icon}</span>
+      <div class="qi-body">
+        <div class="qi-name">${job.raceName} ${job.year}</div>
+        <div class="qi-sub">${job.raceId} · ${job.series.join(", ") || "no series"}</div>
+        ${detail ? `<div class="qi-detail" style="color:${job.status === "error" ? "#ef4444" : "#16a34a"};">${detail}</div>` : ""}
+      </div>
+    `;
+    list.appendChild(div);
+  }
+}
+
+async function startQueue() {
+  if (state.importRunning) return;
+  const pending = state.importQueue.filter(j => j.status === "pending" || j.status === "error");
+  if (!pending.length) { setQueueStatus("No pending jobs in queue.", ""); return; }
+  if (!state.itraCookie) { setQueueStatus("Set the ITRA cookie first.", "error"); return; }
+
+  state.importRunning = true;
+  const btn = document.getElementById("startQueueBtn");
   if (btn) { btn.disabled = true; btn.textContent = "Importing…"; }
 
   let ok = 0, fail = 0;
-  for (const row of state.bulkRows) {
-    if (row.status === "done") { ok++; continue; }
-    row.status = "fetching";
-    renderBulkPreview();
-    setBulkStatus(`Importing ${ok + fail + 1} / ${state.bulkRows.length}: ${row.name || row.url}…`);
+  for (const job of state.importQueue) {
+    if (job.status === "done") continue;
+    job.status = "running";
+    renderQueue();
+    setQueueStatus(`Importing ${ok + fail + 1} / ${pending.length}: ${job.raceName} ${job.year}…`);
     try {
-      await fetchAndSaveBulkRow(row, cookieHeader);
-      row.status = "done";
+      await importEdition(job);
+      job.status = "done";
       ok++;
     } catch (err) {
-      row.status = "error";
-      row.error = err.message;
+      job.status = "error";
+      job.error = err.message;
       fail++;
     }
-    renderBulkPreview();
+    renderQueue();
   }
 
-  state.bulkRunning = false;
-  if (btn) { btn.disabled = false; btn.textContent = "Start Import"; }
-  setBulkStatus(`Done — ${ok} imported, ${fail} failed.`, fail === 0 ? "ok" : ok > 0 ? "" : "error");
+  state.importRunning = false;
+  if (btn) { btn.disabled = false; btn.textContent = "▶ Start Import"; }
+  setQueueStatus(`Done — ${ok} imported, ${fail} failed.`, fail === 0 ? "ok" : ok > 0 ? "" : "error");
+
+  if (ok > 0) {
+    manifest = null;
+    courseCache.clear();
+    courseMetaCache.clear();
+    await loadManifest();
+    renderAdminRaceList(document.getElementById("searchRace")?.value || "");
+  }
+}
+
+async function importEdition(job) {
+  const resp = await fetch("/api/itra-proxy", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url: job.url, cookieHeader: state.itraCookie })
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({ error: `HTTP ${resp.status}` }));
+    throw new Error(err.error || `Proxy ${resp.status}`);
+  }
+  const html = await resp.text();
+  const results = parseItraHtml(html, job.url);
+  const { count } = await saveEditionToSupabase(job, results);
+  job.resultCount = count;
+}
+
+async function saveEditionToSupabase(job, results) {
+  if (!window.supabaseClient) throw new Error("Supabase not configured.");
+
+  const { error: raceErr } = await window.supabaseClient.from("races").upsert({
+    id: job.raceId,
+    name: job.raceName,
+    country: job.country || null,
+    distance_km: job.km || null,
+    elevation_gain: job.elevation || null,
+    itra_race_url: `https://itra.run/Races/RaceResults/${job.slug}`
+  }, { onConflict: "id" });
+  if (raceErr) throw new Error("Race upsert: " + raceErr.message);
+
+  const { error: edErr } = await window.supabaseClient.from("editions").upsert({
+    id: job.editionId,
+    race_id: job.raceId,
+    year: job.year,
+    series: job.series,
+    itra_edition_url: job.url
+  }, { onConflict: "id" });
+  if (edErr) throw new Error("Edition upsert: " + edErr.message);
+
+  const { error: delErr } = await window.supabaseClient.from("results").delete().eq("edition_id", job.editionId);
+  if (delErr) throw new Error("Delete results: " + delErr.message);
+
+  const rows = results.map(r => ({
+    edition_id: job.editionId, rank: r.rank, gender: r.gender,
+    index: r.index, runner: r.runner || null, nationality: r.nationality || null
+  }));
+  const { error: insErr } = await window.supabaseClient.from("results").insert(rows);
+  if (insErr) throw new Error("Insert results: " + insErr.message);
+
+  return { count: rows.length };
 }
 
 // ---- Visualization: Parity delta bar ----
@@ -1337,250 +1331,75 @@ async function updateCharts() {
   updateRankPlot(grouped, topN);
 }
 
-// ---- Race browser (admin) ----
-function renderRaceList(searchQuery) {
-  const list = document.getElementById("raceList");
-  if (!list) return;
-  const q = (searchQuery || "").trim().toLowerCase();
-  list.innerHTML = "";
-  for (const c of getManifestEntries()) {
-    const id = c.race_id;
-    const meta = getCourseMeta(id) || {};
-    const name = (meta.name || "").toLowerCase();
-    const idText = id.toLowerCase();
-    if (q && !idText.includes(q) && !name.includes(q)) continue;
-    const row = document.createElement("div");
-    row.className = "item";
-    const rb = document.createElement("input");
-    rb.type = "radio";
-    rb.name = "raceSelector";
-    rb.checked = state.raceSelected === id;
-    rb.addEventListener("change", () => { state.raceSelected = id; updateRaceDisplay(); });
-    const label = document.createElement("div");
-    label.className = "item-label";
-    label.textContent = meta.name || id;
-    const pill = document.createElement("span");
-    pill.className = "pill";
-    pill.textContent = getMetaLabel(meta);
-    row.appendChild(rb); row.appendChild(label); row.appendChild(pill);
-    list.appendChild(row);
-  }
-}
-
+// ---- Admin: Races tab ----
 function renderMetaCard(key, value) {
   const safe = value === null || value === undefined || value === "" ? "-" : String(value);
   return `<div class="metaCard"><div class="k">${key}</div><div class="v">${safe}</div></div>`;
 }
 
-async function updateRaceDisplay() {
-  if (!state.raceSelected) return;
-  const course = await loadCourse(state.raceSelected).catch(() => null);
-  if (!course) return;
-  const meta = course.meta || {};
-  const metaEl = document.getElementById("raceMeta");
-  if (!metaEl) return;
-  const series = normalizeSeries(meta.series).join(", ");
-  const sourceLink = meta.source_url
-    ? `<a href="${meta.source_url}" target="_blank" rel="noopener noreferrer">${meta.source_url}</a>`
-    : "-";
-  metaEl.innerHTML = [
-    renderMetaCard("Name", meta.name || meta.race_id || state.raceSelected),
-    renderMetaCard("Race ID", meta.race_id || state.raceSelected),
-    renderMetaCard("Year", meta.year),
-    renderMetaCard("Series", series),
-    renderMetaCard("Country", meta.country),
-    renderMetaCard("Source", meta.data_source),
-    renderMetaCard("Distance (km)", meta.distance_km),
-    renderMetaCard("Elevation (m)", meta.elevation_m),
-    renderMetaCard("Prize money", meta.prize_money),
-    renderMetaCard("Notes", meta.notes),
-    `<div class="metaCard"><div class="k">Source URL</div><div class="v">${sourceLink}</div></div>`
-  ].join("");
-
-  const tbody = document.querySelector("#raceRankingTable tbody");
-  if (!tbody) return;
-  tbody.innerHTML = "";
-  for (const r of course.results || []) {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${r.rank}</td><td>${r.runner ?? "-"}</td><td>${fmt(r.index, 1)}</td><td>${r.gender ?? "-"}</td><td>${r.nationality ?? "-"}</td>`;
-    tbody.appendChild(tr);
+function renderAdminRaceList(searchQuery) {
+  const list = document.getElementById("raceList");
+  if (!list) return;
+  const q = (searchQuery || "").trim().toLowerCase();
+  list.innerHTML = "";
+  const entries = getManifestEntries();
+  if (!entries.length) {
+    list.innerHTML = '<div class="note" style="padding:8px;">No editions imported yet.</div>';
+    return;
+  }
+  for (const c of entries) {
+    const id = c.race_id;
+    const meta = getCourseMeta(id) || {};
+    const name = (meta.name || "").toLowerCase();
+    if (q && !id.toLowerCase().includes(q) && !name.includes(q)) continue;
+    const row = document.createElement("div");
+    row.className = "item";
+    if (state.raceSelected === id) row.style.background = "rgba(34,51,199,0.08)";
+    const label = document.createElement("div");
+    label.className = "item-label";
+    label.textContent = meta.name ? `${meta.name} (${meta.year || "?"})` : id;
+    const pill = document.createElement("span");
+    pill.className = "pill";
+    pill.textContent = String(meta.year || "-");
+    row.appendChild(label);
+    row.appendChild(pill);
+    row.addEventListener("click", () => { state.raceSelected = id; renderAdminRaceList(q); renderAdminRaceDetail(id); });
+    list.appendChild(row);
   }
 }
 
-function renderRaceEditForm(course) {
-  const meta = course.meta || {};
-  const metaEl = document.getElementById("raceMeta");
-  if (!metaEl) return;
-  const series = normalizeSeries(meta.series).join(", ");
-  metaEl.innerHTML = `
-    <div class="formGrid" style="grid-column:1/-1;">
-      <div class="field"><label>Name</label><input id="editName" value="${(meta.name || "").replace(/"/g, "&quot;")}" /></div>
-      <div class="field"><label>Series</label><input id="editSeries" value="${series.replace(/"/g, "&quot;")}" /></div>
-      <div class="field"><label>Country</label><input id="editCountry" value="${(meta.country || "").replace(/"/g, "&quot;")}" /></div>
-      <div class="field"><label>Year</label><input id="editYear" type="number" value="${meta.year || ""}" /></div>
-      <div class="field"><label>Distance (km)</label><input id="editDistanceKm" type="number" step="0.01" value="${meta.distance_km || ""}" /></div>
-      <div class="field"><label>Elevation (m)</label><input id="editElevationM" type="number" step="1" value="${meta.elevation_m || ""}" /></div>
-      <div class="field"><label>Data Source</label><input id="editDataSource" value="${(meta.data_source || "").replace(/"/g, "&quot;")}" /></div>
-      <div class="field"><label>Source URL</label><input id="editSourceUrl" type="url" value="${(meta.source_url || "").replace(/"/g, "&quot;")}" /></div>
-      <div class="field"><label>Prize Money</label><input id="editPrizeMoney" value="${(meta.prize_money || "").replace(/"/g, "&quot;")}" /></div>
-      <div class="field" style="grid-column:1/-1;"><label>Notes</label><textarea id="editNotes">${meta.notes || ""}</textarea></div>
-    </div>
-    <div class="btns" style="grid-column:1/-1; margin-top:4px;">
-      <button id="raceSaveBtn" style="background:#eef2ff; border-color:rgba(79,70,229,0.5); color:#312e81; cursor:pointer; border-radius:10px; padding:9px 14px; font-weight:700; font-size:12px;">Save</button>
-      <button id="raceCancelBtn" style="cursor:pointer; border:1px solid var(--border); background:#f8fafc; border-radius:10px; padding:9px 14px; font-weight:700; font-size:12px;">Cancel</button>
-    </div>
-    <div id="raceEditStatus" class="status" style="grid-column:1/-1; display:none;"></div>
-  `;
-
-  document.getElementById("raceSaveBtn").addEventListener("click", () => saveRaceMeta(course));
-  document.getElementById("raceCancelBtn").addEventListener("click", () => updateRaceDisplay());
-}
-
-async function saveRaceMeta(course) {
-  if (!window.supabaseClient) return;
-  const entry = getManifestEntries().find(c => c.race_id === course.meta?.race_id);
-  if (!entry?.id) return;
-
-  const statusEl = document.getElementById("raceEditStatus");
-  const saveBtn = document.getElementById("raceSaveBtn");
-  if (statusEl) { statusEl.style.display = "block"; statusEl.className = "status"; statusEl.textContent = "Saving…"; }
-  if (saveBtn) saveBtn.disabled = true;
-
-  const seriesRaw = (document.getElementById("editSeries")?.value || "").trim();
-  const seriesValue = seriesRaw ? seriesRaw.split(",").map(s => s.trim()).filter(Boolean) : [];
-
-  const updates = {
-    name: asNullableText(document.getElementById("editName")?.value) || course.meta.name,
-    series: seriesValue,
-    country: asNullableText(document.getElementById("editCountry")?.value),
-    year: parseNullableNumber(document.getElementById("editYear")?.value),
-    distance_km: parseNullableNumber(document.getElementById("editDistanceKm")?.value),
-    elevation_m: parseNullableNumber(document.getElementById("editElevationM")?.value),
-    data_source: asNullableText(document.getElementById("editDataSource")?.value),
-    source_url: asNullableText(document.getElementById("editSourceUrl")?.value),
-    prize_money: asNullableText(document.getElementById("editPrizeMoney")?.value),
-    notes: asNullableText(document.getElementById("editNotes")?.value)
-  };
-
+async function renderAdminRaceDetail(editionId) {
+  const detail = document.getElementById("raceDetail");
+  if (!detail) return;
+  detail.innerHTML = '<div class="note">Loading…</div>';
   try {
-    const { error } = await window.supabaseClient.from("courses").update(updates).eq("id", entry.id);
-    if (error) throw new Error(error.message);
-    courseMetaCache.set(course.meta.race_id, { ...course.meta, ...updates });
-    courseCache.delete(course.meta.race_id);
-    if (statusEl) { statusEl.className = "status ok"; statusEl.textContent = "Saved successfully."; }
-    setTimeout(() => updateRaceDisplay(), 900);
-  } catch (err) {
-    if (statusEl) { statusEl.className = "status error"; statusEl.textContent = err.message || "Save failed."; }
-    if (saveBtn) saveBtn.disabled = false;
-  }
-}
-
-// ---- Discover ----
-function setDiscoverStatus(msg, type) {
-  const el = document.getElementById("discoverStatus");
-  if (!el) return;
-  el.textContent = msg;
-  el.className = "status" + (type ? ` ${type}` : "");
-  el.style.display = msg ? "" : "none";
-}
-
-function itraDateFormat(val) {
-  // HTML date input: "2025-04-01" → ITRA: "01-04-2025"
-  const [y, m, d] = val.split("-");
-  return `${d}-${m}-${y}`;
-}
-
-async function discoverSearch() {
-  const countriesRaw = document.getElementById("discoverCountry")?.value || "";
-  const countries = countriesRaw.split(",").map(c => c.trim().toUpperCase()).filter(Boolean);
-  const dateStart = document.getElementById("discoverDateStart")?.value;
-  const dateEnd = document.getElementById("discoverDateEnd")?.value;
-  const minKm = parseFloat(document.getElementById("discoverMinKm")?.value) || 0;
-  const maxKm = parseFloat(document.getElementById("discoverMaxKm")?.value) || null;
-
-  if (!countries.length) { setDiscoverStatus("Enter at least one country code (e.g. FR).", "error"); return; }
-  if (!dateStart || !dateEnd) { setDiscoverStatus("Set both From and To dates.", "error"); return; }
-
-  setDiscoverStatus("Searching itra.run…");
-  document.getElementById("discoverSearchBtn").disabled = true;
-  document.getElementById("discoverFeedBtn").disabled = true;
-  document.getElementById("discoverResultsPanel").style.display = "none";
-
-  try {
-    const resp = await fetch("/api/discover-races", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ countries, dateStart: itraDateFormat(dateStart), dateEnd: itraDateFormat(dateEnd) }),
-    });
-    const data = await resp.json();
-    if (!resp.ok) throw new Error(data.error || `HTTP ${resp.status}`);
-
-    let races = data.races;
-    if (minKm > 0) races = races.filter(r => (r.km ?? 0) >= minKm);
-    if (maxKm) races = races.filter(r => (r.km ?? Infinity) <= maxKm);
-
-    state.discoverRaces = races;
-    renderDiscoverResults();
-
-    const countEl = document.getElementById("discoverCount");
-    if (countEl) countEl.textContent = `${races.length} races`;
-
-    if (races.length) {
-      setDiscoverStatus(`Found ${races.length} races with published results.${data.total !== races.length ? ` (${data.total - races.length} filtered by km range)` : ""}`, "");
-      document.getElementById("discoverResultsPanel").style.display = "";
-      document.getElementById("discoverFeedBtn").disabled = false;
-    } else {
-      setDiscoverStatus("No races found matching your filters.", "error");
-    }
-  } catch (err) {
-    setDiscoverStatus("Error: " + err.message, "error");
-  } finally {
-    document.getElementById("discoverSearchBtn").disabled = false;
-  }
-}
-
-function renderDiscoverResults() {
-  const tbody = document.getElementById("discoverTableBody");
-  if (!tbody) return;
-  tbody.innerHTML = "";
-  for (const r of state.discoverRaces) {
-    const urlShort = r.url.replace("https://itra.run/Races/RaceResults/", "…/");
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${r.country || ""}</td>
-      <td>${r.name || ""}</td>
-      <td style="text-align:right;">${r.km ?? ""}</td>
-      <td style="text-align:right;">${r.elevation ?? ""}</td>
-      <td><a href="${r.url}" target="_blank" style="font-size:11px;">${urlShort}</a></td>
+    const course = await loadCourse(editionId);
+    const meta = course.meta || {};
+    const series = normalizeSeries(meta.series).join(", ");
+    detail.innerHTML = `
+      <div class="metaGrid">
+        ${renderMetaCard("Edition ID", editionId)}
+        ${renderMetaCard("Base race", meta.base_race_id || "-")}
+        ${renderMetaCard("Name", meta.name || "-")}
+        ${renderMetaCard("Year", meta.year || "-")}
+        ${renderMetaCard("Country", meta.country || "-")}
+        ${renderMetaCard("Distance (km)", meta.distance_km ?? "-")}
+        ${renderMetaCard("Series", series || "-")}
+      </div>
+      <div class="tableWrap" style="max-height:480px;">
+        <table>
+          <thead><tr><th>#</th><th>Runner</th><th>Index</th><th>Gender</th><th>Nat.</th></tr></thead>
+          <tbody>
+            ${(course.results || []).map(r =>
+              `<tr><td>${r.rank}</td><td>${r.runner ?? "-"}</td><td>${fmt(r.index, 1)}</td><td>${r.gender ?? "-"}</td><td>${r.nationality ?? "-"}</td></tr>`
+            ).join("")}
+          </tbody>
+        </table>
+      </div>
     `;
-    tbody.appendChild(tr);
+  } catch (err) {
+    detail.innerHTML = `<div class="status error">${err.message}</div>`;
   }
-}
-
-function feedDiscoverToBulk() {
-  if (!state.discoverRaces.length) return;
-  const csv = state.discoverRaces
-    .map(r => [r.country ?? "", r.name ?? "", r.km ?? "", r.elevation ?? "", "", r.url].join(","))
-    .join("\n");
-  const ta = document.getElementById("bulkCsvInput");
-  if (ta) ta.value = csv;
-  setActiveTab("bulk");
-  parseBulkCsvAction();
-}
-
-// ---- App-mode visibility ----
-function applyAppModeVisibility(mode) {
-  const publicButtons = ["tabRciNorm", "vizTabParity", "tabCharts"];
-  const adminButtons = ["tabRace", "tabImport", "tabDiscover", "tabBulk"];
-  const publicPages = ["pageRciNorm", "pageViz", "pageCharts"];
-  const adminPages = ["pageRace", "pageImport", "pageDiscover", "pageBulk"];
-
-  const hide = (id, hidden) => { const el = document.getElementById(id); if (el) el.hidden = hidden; };
-  const isAdmin = mode === "admin";
-  for (const id of publicButtons) hide(id, isAdmin);
-  for (const id of adminButtons) hide(id, !isAdmin);
-  for (const id of publicPages) hide(id, isAdmin);
-  for (const id of adminPages) hide(id, !isAdmin);
 }
 
 // ---- Page switching ----
@@ -1592,10 +1411,8 @@ function setActiveTab(tab) {
     rcinormcharts: "pageRciNorm",
     visualization: "pageViz",
     charts: "pageCharts",
-    race: "pageRace",
     import: "pageImport",
-    discover: "pageDiscover",
-    bulk: "pageBulk"
+    races: "pageRaces"
   };
   for (const [key, id] of Object.entries(pageMap)) {
     const el = document.getElementById(id);
@@ -1605,13 +1422,12 @@ function setActiveTab(tab) {
   document.getElementById("tabRciNorm")?.classList.toggle("active", safeTab === "rcinormcharts");
   document.getElementById("vizTabParity")?.classList.toggle("active", safeTab === "visualization");
   document.getElementById("tabCharts")?.classList.toggle("active", safeTab === "charts");
-  document.getElementById("tabRace")?.classList.toggle("active", safeTab === "race");
   document.getElementById("tabImport")?.classList.toggle("active", safeTab === "import");
-  document.getElementById("tabDiscover")?.classList.toggle("active", safeTab === "discover");
-  document.getElementById("tabBulk")?.classList.toggle("active", safeTab === "bulk");
+  document.getElementById("tabRaces")?.classList.toggle("active", safeTab === "races");
 
   if (safeTab === "visualization") updateVisualization();
   if (safeTab === "charts") updateCharts();
+  if (safeTab === "races") renderAdminRaceList(document.getElementById("searchRace")?.value || "");
 }
 
 // ---- Orchestrator ----
@@ -1629,9 +1445,8 @@ async function updateAll() {
   await loadManifest();
   await preloadAllCourseMeta();
 
-  setSelectionByYear(state.rciNormSelected, 2025);
-
   if (state.appMode === "public") {
+    setSelectionByYear(state.rciNormSelected, 2025);
     wirePublicChipFilters();
 
     document.getElementById("rciTabWomen")?.addEventListener("click", () => {
@@ -1670,7 +1485,6 @@ async function updateAll() {
       }
     }
 
-    // Parity N selector
     document.querySelectorAll("#parityNChips [data-n]").forEach(btn => {
       btn.addEventListener("click", () => {
         state.parityN = Number(btn.dataset.n);
@@ -1680,7 +1494,6 @@ async function updateAll() {
       });
     });
 
-    // Charts gender toggle
     const setChartsGender = (gender) => {
       state.chartsGender = gender;
       document.getElementById("chartsGenderBoth")?.classList.toggle("active", gender === "both");
@@ -1696,56 +1509,60 @@ async function updateAll() {
       exportRciCsv("female", { selectedSet: state.rciNormSelected, filters: state.rciNormFilters, sorts: state.rciNormSorts, normalizeFemale: true }));
     document.getElementById("exportRciNormMaleCsv")?.addEventListener("click", () =>
       exportRciCsv("male", { selectedSet: state.rciNormSelected, filters: state.rciNormFilters, sorts: state.rciNormSorts, normalizeFemale: true }));
+
+    const elTopN = document.getElementById("topN");
+    if (elTopN) {
+      elTopN.value = String(state.topN);
+      elTopN.addEventListener("input", () => {
+        state.topN = Number(elTopN.value);
+        const lbl = document.getElementById("nLabel");
+        if (lbl) lbl.textContent = String(state.topN);
+        updateCharts();
+      });
+    }
   }
 
-  // Nav tabs
+  if (state.appMode === "admin") {
+    // Cookie
+    document.getElementById("saveCookieBtn")?.addEventListener("click", saveCookie);
+
+    // Discover
+    document.getElementById("discoverSearchBtn")?.addEventListener("click", discoverSearch);
+
+    // Edition picker back button
+    document.getElementById("backToDiscoverBtn")?.addEventListener("click", () => {
+      document.getElementById("editionPickerPanel").style.display = "none";
+      document.getElementById("discoverResultsPanel").style.display =
+        state.discoverRaces.length ? "" : "none";
+    });
+
+    // Import queue
+    document.getElementById("startQueueBtn")?.addEventListener("click", startQueue);
+    document.getElementById("clearDoneBtn")?.addEventListener("click", () => {
+      state.importQueue = state.importQueue.filter(j => j.status !== "done");
+      renderQueue();
+    });
+
+    // Races tab search
+    const raceSearch = document.getElementById("searchRace");
+    raceSearch?.addEventListener("input", () => renderAdminRaceList(raceSearch.value));
+
+    // Sign out
+    document.getElementById("signOutBtn")?.addEventListener("click", async () => {
+      await window.supabaseClient?.auth.signOut();
+      location.href = "/login/";
+    });
+
+    renderQueue();
+    renderAdminRaceList("");
+  }
+
+  // Shared nav tabs
   document.getElementById("tabRciNorm")?.addEventListener("click", () => setActiveTab("rcinormcharts"));
   document.getElementById("vizTabParity")?.addEventListener("click", () => setActiveTab("visualization"));
   document.getElementById("tabCharts")?.addEventListener("click", () => setActiveTab("charts"));
-  document.getElementById("tabRace")?.addEventListener("click", () => setActiveTab("race"));
   document.getElementById("tabImport")?.addEventListener("click", () => setActiveTab("import"));
-  document.getElementById("tabDiscover")?.addEventListener("click", () => setActiveTab("discover"));
-  document.getElementById("tabBulk")?.addEventListener("click", () => setActiveTab("bulk"));
-  document.getElementById("discoverSearchBtn")?.addEventListener("click", discoverSearch);
-  document.getElementById("discoverFeedBtn")?.addEventListener("click", feedDiscoverToBulk);
-
-  // Top N slider
-  const elTopN = document.getElementById("topN");
-  if (elTopN) {
-    elTopN.value = String(state.topN);
-    elTopN.addEventListener("input", () => {
-      state.topN = Number(elTopN.value);
-      const lbl = document.getElementById("nLabel");
-      if (lbl) lbl.textContent = String(state.topN);
-      updateCharts();
-    });
-  }
-
-  // Admin: bulk CSV import
-  document.getElementById("bulkParseCsvBtn")?.addEventListener("click", parseBulkCsvAction);
-  document.getElementById("bulkStartBtn")?.addEventListener("click", startBulkImport);
-
-  // Admin: import
-  document.getElementById("itraFetchBtn")?.addEventListener("click", fetchFromItra);
-  document.getElementById("importBuildJsonBtn")?.addEventListener("click", buildImportJson);
-  document.getElementById("importSaveSupabaseBtn")?.addEventListener("click", importToSupabase);
-  document.getElementById("importDownloadRaceBtn")?.addEventListener("click", downloadImportRaceJson);
-  document.getElementById("importDownloadIndexBtn")?.addEventListener("click", downloadImportManifestJson);
-
-  // Admin: race browser + edit
-  const raceSearch = document.getElementById("searchRace");
-  if (raceSearch) {
-    const firstRace = getManifestEntries()[0];
-    state.raceSelected = firstRace ? firstRace.race_id : null;
-    raceSearch.addEventListener("input", () => renderRaceList(raceSearch.value));
-    renderRaceList("");
-  }
-
-  document.getElementById("raceEditBtn")?.addEventListener("click", async () => {
-    if (!state.raceSelected) return;
-    const course = await loadCourse(state.raceSelected).catch(() => null);
-    if (course) renderRaceEditForm(course);
-  });
+  document.getElementById("tabRaces")?.addEventListener("click", () => setActiveTab("races"));
 
   // Init Plotly placeholders
   if (document.getElementById("plot")) {
@@ -1755,8 +1572,6 @@ async function updateAll() {
     Plotly.newPlot("vizParityPlot", [], { paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)" }, { responsive: true, displayModeBar: false });
   }
 
-  applyAppModeVisibility(state.appMode);
   setActiveTab(state.activeTab);
   await updateAll();
-  if (state.appMode === "admin") await updateRaceDisplay();
 })();
