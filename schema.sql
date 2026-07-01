@@ -58,13 +58,19 @@ CREATE POLICY "public read" ON public.races    FOR SELECT USING (true);
 CREATE POLICY "public read" ON public.editions FOR SELECT USING (true);
 CREATE POLICY "public read" ON public.results  FOR SELECT USING (true);
 
+-- SECURITY DEFINER helper: checks admins table as function owner (bypasses admins RLS)
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS boolean LANGUAGE sql SECURITY DEFINER STABLE SET search_path = public AS $$
+  SELECT EXISTS (SELECT 1 FROM public.admins WHERE email = auth.email());
+$$;
+
 -- Admin write (must be in admins table)
-CREATE POLICY "admin write" ON public.races    FOR ALL USING (
-  auth.uid() IS NOT NULL AND EXISTS (SELECT 1 FROM public.admins WHERE email = auth.email())
-);
-CREATE POLICY "admin write" ON public.editions FOR ALL USING (
-  auth.uid() IS NOT NULL AND EXISTS (SELECT 1 FROM public.admins WHERE email = auth.email())
-);
-CREATE POLICY "admin write" ON public.results  FOR ALL USING (
-  auth.uid() IS NOT NULL AND EXISTS (SELECT 1 FROM public.admins WHERE email = auth.email())
-);
+CREATE POLICY "admin write" ON public.races    FOR ALL
+  USING      (auth.uid() IS NOT NULL AND public.is_admin())
+  WITH CHECK (auth.uid() IS NOT NULL AND public.is_admin());
+CREATE POLICY "admin write" ON public.editions FOR ALL
+  USING      (auth.uid() IS NOT NULL AND public.is_admin())
+  WITH CHECK (auth.uid() IS NOT NULL AND public.is_admin());
+CREATE POLICY "admin write" ON public.results  FOR ALL
+  USING      (auth.uid() IS NOT NULL AND public.is_admin())
+  WITH CHECK (auth.uid() IS NOT NULL AND public.is_admin());
