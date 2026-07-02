@@ -49,6 +49,8 @@ const T = {
     rciWomen: "Femmes", rciMen: "Hommes", rciToggleExtra: "+ RCI3 & RCI20",
     rciExportWomen: "↓ CSV Femmes", rciExportMen: "↓ CSV Hommes",
     rciColRace: "Course", rciColCountry: "Pays", rciColSeries: "Séries",
+    rciEmptyTitle: "Commencez par choisir des courses",
+    rciEmptyHint: "Sélectionnez des éditions pour afficher le classement RCI",
     trendsSelect: "Sélectionnez une course dans la liste.",
     trendsSearchRaces: "Rechercher…",
     trendsGenderBoth: "Les deux", trendsGenderWomen: "Femmes", trendsGenderMen: "Hommes",
@@ -67,6 +69,8 @@ const T = {
     rciWomen: "Women", rciMen: "Men", rciToggleExtra: "+ RCI3 & RCI20",
     rciExportWomen: "↓ Women CSV", rciExportMen: "↓ Men CSV",
     rciColRace: "Race", rciColCountry: "Country", rciColSeries: "Series",
+    rciEmptyTitle: "Start by choosing races",
+    rciEmptyHint: "Select editions to display the RCI ranking",
     trendsSelect: "Select a race from the list.",
     trendsSearchRaces: "Search…",
     trendsGenderBoth: "Both", trendsGenderWomen: "Women", trendsGenderMen: "Men",
@@ -385,6 +389,9 @@ async function renderPublicRciTable() {
     normalizeFemale: true
   });
 
+  const emptyEl = document.getElementById("rciEmptyState");
+  if (emptyEl) emptyEl.style.display = rows.length === 0 ? "" : "none";
+
   const allMetrics = rows.flatMap(r => [r.rc3, r.rc5, r.rc10, r.rc20]).filter(Number.isFinite);
   const minVal = allMetrics.length ? Math.min(...allMetrics) : 0;
   const maxVal = allMetrics.length ? Math.max(...allMetrics) : 0;
@@ -642,6 +649,10 @@ function wirePublicChipFilters() {
         renderCountryChips(); renderPublicRaceList(); renderFilterBar(); triggerUpdate();
       }));
     }
+
+    // Collapse chips container when empty so justify-content:center works on the button
+    container.style.flex = container.children.length ? "1" : "0";
+    container.style.minWidth = container.children.length ? "0" : "";
 
     const countEl = document.getElementById("filterBarCount");
     if (countEl) {
@@ -1815,6 +1826,7 @@ async function updateAll() {
 
     // Filter picker modal
     document.getElementById("openPickerBtn")?.addEventListener("click", openPicker);
+    document.getElementById("openPickerBtnEmpty")?.addEventListener("click", openPicker);
     document.getElementById("closePickerBtn")?.addEventListener("click", closePicker);
     document.getElementById("pickerOverlay")?.addEventListener("click", e => {
       if (e.target.id === "pickerOverlay") closePicker();
@@ -1910,4 +1922,9 @@ async function updateAll() {
   applyLang();
   setActiveTab(state.activeTab);
   await updateAll();
+
+  // Auto-open picker on landing when nothing is selected
+  if (state.appMode === "public" && state.rciNormSelected.size === 0) {
+    openPicker();
+  }
 })();
