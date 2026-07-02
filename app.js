@@ -39,43 +39,53 @@ let lang = (() => {
 
 const T = {
   fr: {
-    subtitle: "Indice de Compétitivité en Trail & Montagne",
+    subtitle: "Indice de compétitivité en trail",
     tabRci: "RCI", tabTrends: "Tendances", tabParity: "Parité", tabDepth: "Profondeur",
-    filterLabel: "Filtrer", filterChooseRaces: "Choisir des courses",
+    selectionCount: " courses sélectionnées", editSelection: "Modifier la sélection", clearSelection: "Effacer",
     filterTitle: "Filtrer les éditions", filterClose: "Fermer",
     filterReset: "Réinitialiser", filterSeries: "Séries", filterYear: "Année",
     filterCountry: "Pays", filterRaces: "Courses", filterSearch: "Rechercher…",
-    filterAll: "Tout", filterNone: "Aucun",
+    filterAll: "Tout", filterNone: "Aucun", editionsLabel: "Éditions",
+    rciSubtitle: "Indice de Compétitivité en Trail — moyenne moins écart-type des indices des meilleurs finishers. Plus élevé signifie un plateau plus fort et plus homogène.",
     rciWomen: "Femmes", rciMen: "Hommes", rciToggleExtra: "+ RCI3 & RCI20",
     rciExportWomen: "↓ CSV Femmes", rciExportMen: "↓ CSV Hommes",
     rciColRace: "Course", rciColCountry: "Pays", rciColSeries: "Séries",
     rciEmptyTitle: "Commencez par choisir des courses",
     rciEmptyHint: "Sélectionnez des éditions pour afficher le classement RCI",
+    trendsSubtitle: "Évolution de la densité du plateau d'une course au fil des éditions.",
     trendsSelect: "Sélectionnez une course dans la liste.",
-    trendsSearchRaces: "Rechercher…",
+    trendsSearchRaces: "Rechercher…", yearCol: "Année",
     trendsGenderBoth: "Les deux", trendsGenderWomen: "Femmes", trendsGenderMen: "Hommes",
+    paritySubtitle: "Où le plateau féminin est relativement plus fort ou plus faible que le plateau masculin, sur une même course — dernière édition de chacune.",
     parityLegendWomen: "Champ féminin plus fort", parityLegendMen: "Champ masculin plus fort",
+    depthSubtitle: "Indice par rang d'arrivée, pour les éditions sélectionnées — vitesse à laquelle le peloton s'amenuise.",
     depthGender: "Genre", depthBoth: "Les deux", depthMen: "Hommes", depthWomen: "Femmes",
+    depthEmptyMsg: "Sélectionnez des éditions pour tracer leurs courbes de profondeur.",
     admin: "Admin →",
   },
   en: {
-    subtitle: "Realized Competition Index across elite trail & mountain races",
+    subtitle: "Field-strength analytics for trail & ultra races",
     tabRci: "RCI", tabTrends: "Trends", tabParity: "Parity", tabDepth: "Depth",
-    filterLabel: "Filter", filterChooseRaces: "Choose races",
+    selectionCount: " editions selected", editSelection: "Edit selection", clearSelection: "Clear",
     filterTitle: "Filter editions", filterClose: "Close",
     filterReset: "Reset", filterSeries: "Series", filterYear: "Year",
     filterCountry: "Country", filterRaces: "Races", filterSearch: "Search…",
-    filterAll: "All", filterNone: "None",
+    filterAll: "All", filterNone: "None", editionsLabel: "Editions",
+    rciSubtitle: "Race Competitiveness Index — mean minus standard deviation of the top finishers' index scores. Higher means a stronger, more even field.",
     rciWomen: "Women", rciMen: "Men", rciToggleExtra: "+ RCI3 & RCI20",
     rciExportWomen: "↓ Women CSV", rciExportMen: "↓ Men CSV",
     rciColRace: "Race", rciColCountry: "Country", rciColSeries: "Series",
     rciEmptyTitle: "Start by choosing races",
     rciEmptyHint: "Select editions to display the RCI ranking",
+    trendsSubtitle: "How a race's field strength has evolved across editions.",
     trendsSelect: "Select a race from the list.",
-    trendsSearchRaces: "Search…",
+    trendsSearchRaces: "Search…", yearCol: "Year",
     trendsGenderBoth: "Both", trendsGenderWomen: "Women", trendsGenderMen: "Men",
+    paritySubtitle: "Where women's fields are relatively stronger or weaker than men's — latest edition of each race.",
     parityLegendWomen: "Women's field stronger", parityLegendMen: "Men's field stronger",
+    depthSubtitle: "Index score by finishing rank — how quickly the field thins out.",
     depthGender: "Gender", depthBoth: "Both", depthMen: "Men", depthWomen: "Women",
+    depthEmptyMsg: "Select editions (top bar) to plot their depth curves.",
     admin: "Admin →",
   }
 };
@@ -148,14 +158,12 @@ function densityColor(value, min, max) {
   if (!Number.isFinite(value)) return "";
   const clampedMin = Number.isFinite(min) ? min : value;
   const clampedMax = Number.isFinite(max) ? max : value;
-  if (clampedMax <= clampedMin) return "background:hsl(224,70%,92%); color:#0f172a; font-weight:600;";
-  const ratio = Math.max(0, Math.min(1, (value - clampedMin) / (clampedMax - clampedMin)));
-  const lightness = 92 - ratio * 47;
-  const saturation = 60 + ratio * 20;
-  const bg = `hsl(224, ${saturation.toFixed(0)}%, ${lightness.toFixed(0)}%)`;
-  const textColor = lightness < 68 ? "#ffffff" : "#0f172a";
-  const borderAlpha = (0.06 + ratio * 0.12).toFixed(3);
-  return `background:${bg}; color:${textColor}; font-weight:600; box-shadow: inset 0 0 0 1px rgba(15,23,42,${borderAlpha});`;
+  const ratio = clampedMax > clampedMin
+    ? Math.max(0, Math.min(1, (value - clampedMin) / (clampedMax - clampedMin)))
+    : 0.5;
+  const l = (0.97 - ratio * 0.10).toFixed(3);
+  const c = (0.02 + ratio * 0.05).toFixed(3);
+  return `background:oklch(${l} ${c} 45);`;
 }
 
 function normalizeItraFemaleIndex(score) {
@@ -401,13 +409,13 @@ async function renderPublicRciTable() {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td class="col-rank">${i + 1}</td>
-      <td style="font-weight:600;">${r.name}</td>
-      <td style="color:var(--muted);">${r.country || "-"}</td>
-      <td style="color:var(--muted);">${r.series || "-"}</td>
-      <td class="col-extra" style="${densityColor(r.rc3, minVal, maxVal)}">${fmt(r.rc3, 2)}</td>
-      <td style="${densityColor(r.rc5, minVal, maxVal)}">${fmt(r.rc5, 2)}</td>
-      <td style="${densityColor(r.rc10, minVal, maxVal)}">${fmt(r.rc10, 2)}</td>
-      <td class="col-extra" style="${densityColor(r.rc20, minVal, maxVal)}">${fmt(r.rc20, 2)}</td>
+      <td class="col-left" style="font-weight:600;">${r.name}</td>
+      <td class="col-left" style="color:var(--muted);">${r.country || "-"}</td>
+      <td class="col-left" style="color:var(--muted);">${r.series || "-"}</td>
+      <td class="col-extra col-num" style="${densityColor(r.rc3, minVal, maxVal)}">${fmt(r.rc3, 2)}</td>
+      <td class="col-num" style="${densityColor(r.rc5, minVal, maxVal)}">${fmt(r.rc5, 2)}</td>
+      <td class="col-num" style="${densityColor(r.rc10, minVal, maxVal)}">${fmt(r.rc10, 2)}</td>
+      <td class="col-extra col-num" style="${densityColor(r.rc20, minVal, maxVal)}">${fmt(r.rc20, 2)}</td>
     `;
     if (r.base_race_id) {
       tr.title = lang === "fr" ? "Voir les tendances →" : "View trends →";
@@ -612,54 +620,11 @@ function wirePublicChipFilters() {
   }
 
   function renderFilterBar() {
-    const container = document.getElementById("filterBarChips");
-    if (!container) return;
-    container.innerHTML = "";
-
-    function makeChip(label, onRemove) {
-      const chip = document.createElement("button");
-      chip.className = "chip active";
-      chip.style.cssText = "font-size:11px; padding:4px 10px;";
-      const span = document.createElement("span");
-      span.textContent = label;
-      const x = document.createElement("span");
-      x.textContent = " ×";
-      x.style.cssText = "opacity:.55;";
-      chip.appendChild(span); chip.appendChild(x);
-      chip.addEventListener("click", onRemove);
-      return chip;
-    }
-
-    for (const s of [...chipState.activeSeries].sort()) {
-      container.appendChild(makeChip(s, () => {
-        chipState.activeSeries.delete(s); chipState.isManual = false;
-        applyChipSelection(); renderSeriesChips(); renderYearChips(); renderPublicRaceList(); renderFilterBar(); triggerUpdate();
-      }));
-    }
-    for (const y of [...chipState.activeYears].sort()) {
-      container.appendChild(makeChip(String(y), () => {
-        chipState.activeYears.delete(y); chipState.isManual = false;
-        applyChipSelection(); renderSeriesChips(); renderYearChips(); renderPublicRaceList(); renderFilterBar(); triggerUpdate();
-      }));
-    }
-    if (chipState.activeCountry) {
-      const c = chipState.activeCountry;
-      container.appendChild(makeChip(c, () => {
-        chipState.activeCountry = ""; state.rciNormFilters.country = "";
-        renderCountryChips(); renderPublicRaceList(); renderFilterBar(); triggerUpdate();
-      }));
-    }
-
-    // Collapse chips container when empty so justify-content:center works on the button
-    container.style.flex = container.children.length ? "1" : "0";
-    container.style.minWidth = container.children.length ? "0" : "";
-
+    const n = state.rciNormSelected.size;
     const countEl = document.getElementById("filterBarCount");
-    if (countEl) {
-      const n = state.rciNormSelected.size;
-      countEl.textContent = String(n);
-      countEl.style.display = n > 0 ? "" : "none";
-    }
+    if (countEl) countEl.textContent = String(n);
+    const clearBtn = document.getElementById("clearSelectionBtn");
+    if (clearBtn) clearBtn.style.display = n > 0 ? "" : "none";
   }
 
   function updateCountBadge() {
@@ -731,20 +696,24 @@ function renderTrendsRaceList() {
     if (!meta.base_race_id) continue;
     const name = meta.name || meta.base_race_id;
     if (q && !name.toLowerCase().includes(q) && !meta.base_race_id.toLowerCase().includes(q)) continue;
-    if (!races.has(meta.base_race_id)) races.set(meta.base_race_id, { name, count: 0 });
-    races.get(meta.base_race_id).count++;
+    if (!races.has(meta.base_race_id)) races.set(meta.base_race_id, { name, years: [] });
+    if (meta.year) races.get(meta.base_race_id).years.push(meta.year);
   }
   list.innerHTML = "";
   for (const [raceId, info] of [...races.entries()].sort((a, b) => a[1].name.localeCompare(b[1].name))) {
+    info.years.sort((a, b) => a - b);
+    const yearsLabel = info.years.length > 1
+      ? `${info.years[0]}–${info.years[info.years.length - 1]}`
+      : (info.years[0] ? String(info.years[0]) : "");
     const item = document.createElement("div");
-    item.className = "item" + (state.trendsRaceId === raceId ? " selected" : "");
-    const label = document.createElement("div");
-    label.className = "item-label";
-    label.textContent = info.name;
-    const pill = document.createElement("span");
-    pill.className = "pill";
-    pill.textContent = info.count;
-    item.appendChild(label); item.appendChild(pill);
+    item.className = "race-item" + (state.trendsRaceId === raceId ? " selected" : "");
+    const nameEl = document.createElement("div");
+    nameEl.className = "race-item-name";
+    nameEl.textContent = info.name;
+    const yearsEl = document.createElement("span");
+    yearsEl.className = "race-item-years";
+    yearsEl.textContent = yearsLabel;
+    item.appendChild(nameEl); item.appendChild(yearsEl);
     item.addEventListener("click", () => {
       state.trendsRaceId = raceId;
       renderTrendsRaceList();
@@ -794,36 +763,45 @@ async function renderTrendsChart() {
   const showM = state.trendsGender !== "female";
 
   const traces = [];
-  if (showF) traces.push({ x: years, y: yF, name: t("trendsGenderWomen"), mode: "lines+markers", line: { color: "#10b981", width: 2 }, marker: { size: 7 }, connectgaps: false });
-  if (showM) traces.push({ x: years, y: yM, name: t("trendsGenderMen"), mode: "lines+markers", line: { color: "#3b82f6", width: 2 }, marker: { size: 7 }, connectgaps: false });
+  if (showF) traces.push({ x: years, y: yF, name: t("trendsGenderWomen"), mode: "lines+markers", line: { color: "rgb(75,131,88)", width: 3 }, marker: { size: 7 }, connectgaps: false });
+  if (showM) traces.push({ x: years, y: yM, name: t("trendsGenderMen"), mode: "lines+markers", line: { color: "rgb(198,93,38)", width: 3 }, marker: { size: 7 }, connectgaps: false });
 
   const layout = {
     margin: { l: 50, r: 20, t: 10, b: 40 },
-    xaxis: { tickmode: "linear", dtick: 1, fixedrange: true, showgrid: true, gridcolor: "#dbe3ef" },
-    yaxis: { title: state.trendsRciKey.toUpperCase(), fixedrange: true, showgrid: true, gridcolor: "#dbe3ef" },
-    legend: { orientation: "h", y: -0.2 },
-    plot_bgcolor: "white", paper_bgcolor: "white",
-    font: { family: "Montserrat, ui-sans-serif, sans-serif", size: 11 }
+    xaxis: { tickmode: "linear", dtick: 1, fixedrange: true, showgrid: true, gridcolor: "#e9e3d9" },
+    yaxis: { title: state.trendsRciKey.toUpperCase(), fixedrange: true, showgrid: true, gridcolor: "#e9e3d9" },
+    legend: { orientation: "h", y: 1.16, font: { size: 11 } },
+    plot_bgcolor: "rgba(0,0,0,0)", paper_bgcolor: "rgba(0,0,0,0)",
+    font: { family: "Archivo, sans-serif", size: 12 }
   };
   Plotly.react("trendsPlot", traces, layout, { displayModeBar: false, responsive: true });
 
   const firstMeta = courseMetaCache.get(editionIds[0]);
   const headerEl = document.getElementById("trendsHeader");
   if (headerEl && firstMeta) {
-    headerEl.innerHTML = "";
-    const name = document.createElement("strong");
-    name.textContent = firstMeta.name;
-    const sub = document.createElement("span");
-    sub.className = "note"; sub.style.marginLeft = "8px";
-    sub.textContent = [firstMeta.country, firstMeta.distance_km ? `${firstMeta.distance_km} km` : null].filter(Boolean).join(" · ");
-    headerEl.appendChild(name); headerEl.appendChild(sub);
+    const meta = [firstMeta.country, firstMeta.distance_km ? `${firstMeta.distance_km} km` : null].filter(Boolean).join(" · ");
+    headerEl.innerHTML = `
+      <div style="font-size:15px; font-weight:700;">${firstMeta.name}</div>
+      <div style="font-size:12px; color:var(--muted);">${meta}</div>`;
   }
 
   const tableWrap = document.getElementById("trendsTableWrap");
   if (tableWrap) {
-    const fL = t("trendsGenderWomen"); const mL = t("trendsGenderMen");
-    const rows = editionData.map(d => `<tr><td>${d.year}</td><td>${fmt(d.rc5f, 2)}</td><td>${fmt(d.rc10f, 2)}</td><td>${fmt(d.rc5m, 2)}</td><td>${fmt(d.rc10m, 2)}</td></tr>`).join("");
-    tableWrap.innerHTML = `<table><thead><tr><th>Année</th><th>RCI5 ${fL}</th><th>RCI10 ${fL}</th><th>RCI5 ${mL}</th><th>RCI10 ${mL}</th></tr></thead><tbody>${rows}</tbody></table>`;
+    const fL = t("trendsGenderWomen"); const mL = t("trendsGenderMen"); const yL = t("yearCol");
+    const rows = editionData.map(d => `
+      <tr>
+        <td class="col-left" style="font-family:'IBM Plex Mono',monospace;">${d.year}</td>
+        <td class="col-num">${fmt(d.rc5f, 2)}</td><td class="col-num">${fmt(d.rc10f, 2)}</td>
+        <td class="col-num">${fmt(d.rc5m, 2)}</td><td class="col-num">${fmt(d.rc10m, 2)}</td>
+      </tr>`).join("");
+    tableWrap.innerHTML = `<table>
+      <thead><tr>
+        <th class="col-left">${yL}</th>
+        <th>RCI5 ${fL}</th><th>RCI10 ${fL}</th>
+        <th>RCI5 ${mL}</th><th>RCI10 ${mL}</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
   }
 }
 
@@ -1544,19 +1522,20 @@ async function renderParityVisualization() {
     orientation: "h",
     x: rows.map(r => r.delta),
     y: rows.map(r => r.race_name),
-    marker: { color: rows.map(r => r.delta >= 0 ? "#10b981" : "#3b82f6") },
+    marker: { color: rows.map(r => r.delta >= 0 ? "rgb(75,131,88)" : "rgb(198,93,38)") },
     hovertemplate: "<b>%{y}</b><br>RCI_F − RCI_M = %{x:.2f}<extra></extra>"
   }], {
     paper_bgcolor: "rgba(0,0,0,0)",
     plot_bgcolor: "rgba(0,0,0,0)",
+    showlegend: false,
     margin: { l: 10, r: 40, t: 10, b: 50 },
-    font: { family: "Montserrat, ui-sans-serif, system-ui, sans-serif", size: 11 },
+    font: { family: "Archivo, sans-serif", size: 12 },
     xaxis: {
-      title: `RCI_F (normalized) − RCI_M · N=${n}`,
-      zeroline: true, zerolinecolor: "#94a3b8", zerolinewidth: 2,
-      gridcolor: "#e2e8f0"
+      title: `RCI${n} — féminin moins masculin`,
+      zeroline: true, zerolinecolor: "#c9c2b8", zerolinewidth: 1.5,
+      gridcolor: "#e9e3d9"
     },
-    yaxis: { automargin: true, tickfont: { size: 10 } }
+    yaxis: { automargin: true, tickfont: { size: 11 } }
   }, { responsive: true, displayModeBar: false });
 }
 
@@ -1613,9 +1592,9 @@ function updateRankPlot(grouped, topN) {
     paper_bgcolor: "rgba(0,0,0,0)",
     plot_bgcolor: "rgba(0,0,0,0)",
     margin: { l: 55, r: 160, t: 10, b: 50 },
-    font: { family: "Montserrat, ui-sans-serif, system-ui, sans-serif", size: 11 },
-    xaxis: { title: "Rank", range: [1, topN], gridcolor: "#e2e8f0", zeroline: false, tickfont: { size: 10 } },
-    yaxis: { title: "ITRA Index", gridcolor: "#e2e8f0", zeroline: false, tickfont: { size: 10 } },
+    font: { family: "Archivo, sans-serif", size: 12 },
+    xaxis: { title: "Rank", range: [1, topN], gridcolor: "#e9e3d9", zeroline: false, tickfont: { size: 10 } },
+    yaxis: { title: "Index", gridcolor: "#e9e3d9", zeroline: false, tickfont: { size: 10 } },
     legend: { orientation: "v", x: 1.02, y: 1, xanchor: "left", font: { size: 10 }, bgcolor: "rgba(255,255,255,0.85)", bordercolor: "#e2e8f0", borderwidth: 1 },
     hovermode: "closest"
   }, { responsive: true, displayModeBar: false });
@@ -1827,6 +1806,12 @@ async function updateAll() {
     // Filter picker modal
     document.getElementById("openPickerBtn")?.addEventListener("click", openPicker);
     document.getElementById("openPickerBtnEmpty")?.addEventListener("click", openPicker);
+    document.getElementById("clearSelectionBtn")?.addEventListener("click", () => {
+      state.rciNormSelected.clear();
+      chipState.activeSeries.clear(); chipState.activeYears.clear(); chipState.activeCountry = ""; chipState.isManual = false;
+      renderSeriesChips(); renderYearChips(); renderCountryChips(); renderPublicRaceList();
+      renderFilterBar(); triggerUpdate();
+    });
     document.getElementById("closePickerBtn")?.addEventListener("click", closePicker);
     document.getElementById("pickerOverlay")?.addEventListener("click", e => {
       if (e.target.id === "pickerOverlay") closePicker();
