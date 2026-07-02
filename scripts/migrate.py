@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""One-shot migration: data/courses/*.json → Supabase.
+"""Seed / re-seed Supabase from data/courses/*.json.
 
 Required env vars:
   SUPABASE_URL         https://xxxx.supabase.co
   SUPABASE_SERVICE_KEY service_role key (bypasses RLS; never expose to frontend)
+                       Find it in: Supabase dashboard → Project Settings → API → service_role
 
 Optional:
   Load from a .env file alongside this script or export before running.
@@ -11,11 +12,12 @@ Optional:
 Usage:
   pip install supabase python-dotenv
   export SUPABASE_URL=...  SUPABASE_SERVICE_KEY=...
-  python scripts/migrate.py
+  python3 scripts/migrate.py
 """
 
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -38,7 +40,7 @@ if not SUPABASE_URL or not SUPABASE_SERVICE_KEY:
 
 BATCH_SIZE = 500
 PROJECT_ROOT = Path(__file__).parent.parent
-INDEX_PATH = PROJECT_ROOT / "data" / "courses_index.json"
+COURSES_DIR = PROJECT_ROOT / "data" / "courses"
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -46,16 +48,41 @@ def series_to_list(value) -> list:
     if value is None:
         return []
     if isinstance(value, list):
-        return value
-    return [value]
+        return [v for v in value if v and str(v).strip().lower() != "none"]
+    if isinstance(value, str):
+        s = value.strip()
+        return [] if not s or s.lower() == "none" else [s]
+    return []
+
+
+COUNTRY_MAP = {
+    "italia": "Italy",
+    "ita":    "Italy",
+    "suisse": "Switzerland",
+    "schweiz": "Switzerland",
+    "espana": "Spain",
+    "españa": "Spain",
+}
+
+def normalize_country(value):
+    if value is None:
+        return None
+    return COUNTRY_MAP.get(value.strip().lower(), value.strip())
+
+
+def make_race_slug(race_id: str) -> str:
+    return re.sub(r"_\d{4}$", "", race_id)
 
 
 def build_course_row(meta: dict) -> dict:
+    race_id = meta["race_id"]
     return {
-        "race_id":     meta["race_id"],
+        "race_id":     race_id,
+        "race_slug":   meta.get("race_slug") or make_race_slug(race_id),
+        "itra_id":     meta.get("itra_id"),
         "name":        meta.get("name"),
         "series":      series_to_list(meta.get("series")),
-        "country":     meta.get("country"),
+        "country":     normalize_country(meta.get("country")),
         "year":        meta.get("year"),
         "distance_km": meta.get("distance_km"),
         "elevation_m": meta.get("elevation_m"),
@@ -96,23 +123,16 @@ def insert_batched(client: Client, table: str, rows: list) -> int:
 def main():
     client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
-    index = json.loads(INDEX_PATH.read_text(encoding="utf-8"))
-    entries = index["courses"]
-    print(f"Found {len(entries)} courses in index.")
+    course_files = sorted(COURSES_DIR.glob("*.json"))
+    print(f"Found {len(course_files)} course files in {COURSES_DIR}.")
 
     total_courses = 0
     total_results = 0
 
-    for entry in entries:
-        race_id = entry["race_id"]
-        course_file = PROJECT_ROOT / entry["path"]
-
-        if not course_file.exists():
-            print(f"  WARN  {race_id}: file not found at {course_file}, skipping.")
-            continue
-
+    for course_file in course_files:
         data = json.loads(course_file.read_text(encoding="utf-8"))
-        meta = data["meta"]
+        meta = data.get("meta", {})
+        race_id = meta.get("race_id") or course_file.stem
         raw_results = data.get("results", [])
 
         # Upsert course (update all fields on race_id conflict)

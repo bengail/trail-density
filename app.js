@@ -1,5 +1,14 @@
-// Trail Race Analytics
-// RCI = mean(top N) − std_pop(top N). Female ITRA scores normalized via quadratic.
+// Trail Race Analytics — entry point
+import { state, DEFAULT_TAB_BY_MODE } from './state.js';
+import { loadManifest, preloadAllCourseMeta, getManifestEntries, loadCourse } from './data.js';
+import { renderPublicRciTable, wirePublicChipFilters, exportRciCsv } from './render-public.js';
+import { updateVisualization, updateCharts } from './charts.js';
+import { getAppContext, applyAppModeVisibility, setActiveTab, getSafeTab, updateAll, readHashParams, writeHashParams } from './navigation.js';
+import { fetchFromItra, buildImportJson, importToSupabase } from './import-itra.js';
+import { parseBulkCsvAction, startBulkImport } from './bulk-import.js';
+import { renderRaceList, renderRaceEditForm, updateRaceDisplay } from './render-admin.js';
+import { discoverSearch, feedDiscoverToBulk } from './discover.js';
+import { wireTrendsTab } from './trends.js';
 
 const MAX_INDEX_FOR_NORM = 1000;
 const TAB_ALLOWLIST = {
@@ -1740,9 +1749,7 @@ async function updateAll() {
 
 // ---- Boot ----
 (async function boot() {
-  const appContext = getAppContext();
-  state.appMode = appContext.mode;
-  state.assetPrefix = appContext.assetPrefix;
+  state.appMode = getAppContext().mode;
   state.activeTab = DEFAULT_TAB_BY_MODE[state.appMode];
 
   await loadManifest();
@@ -1757,13 +1764,20 @@ async function updateAll() {
       document.getElementById("rciTabWomen")?.classList.add("active");
       document.getElementById("rciTabMen")?.classList.remove("active");
       renderPublicRciTable();
+      syncHash();
     });
     document.getElementById("rciTabMen")?.addEventListener("click", () => {
       state.publicRciGender = "male";
       document.getElementById("rciTabMen")?.classList.add("active");
       document.getElementById("rciTabWomen")?.classList.remove("active");
       renderPublicRciTable();
+      syncHash();
     });
+    // Restore gender button active state from state (may have been set via hash)
+    if (state.publicRciGender === "male") {
+      document.getElementById("rciTabMen")?.classList.add("active");
+      document.getElementById("rciTabWomen")?.classList.remove("active");
+    }
 
     document.getElementById("rciToggleExtra")?.addEventListener("click", function () {
       state.publicRciShowExtra = !state.publicRciShowExtra;
