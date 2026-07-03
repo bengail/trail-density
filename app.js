@@ -1595,7 +1595,9 @@ function updateRankPlot(grouped, topN) {
     font: { family: "Archivo, sans-serif", size: 12 },
     xaxis: { title: "Rank", range: [1, topN], gridcolor: "#e9e3d9", zeroline: false, tickfont: { size: 10 } },
     yaxis: { title: "Index", gridcolor: "#e9e3d9", zeroline: false, tickfont: { size: 10 } },
-    legend: { orientation: "v", x: 1.02, y: 1, xanchor: "left", font: { size: 10 }, bgcolor: "rgba(255,255,255,0.85)", bordercolor: "#e2e8f0", borderwidth: 1 },
+    legend: window.innerWidth < 720
+      ? { orientation: "h", x: 0, y: -0.2, font: { size: 10 } }
+      : { orientation: "v", x: 1.02, y: 1, xanchor: "left", font: { size: 10 }, bgcolor: "rgba(255,255,255,0.85)", bordercolor: "#e2e8f0", borderwidth: 1 },
     hovermode: "closest"
   }, { responsive: true, displayModeBar: false });
 }
@@ -1912,4 +1914,11 @@ async function updateAll() {
   if (state.appMode === "public" && state.rciNormSelected.size === 0) {
     openPicker();
   }
+
+  window.addEventListener("resize", () => {
+    ["trendsPlot", "vizParityPlot", "plot"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.children.length) Plotly.Plots.resize(el);
+    });
+  });
 })();
