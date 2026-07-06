@@ -775,6 +775,7 @@ async function renderTrendsChart() {
     font: { family: "Archivo, sans-serif", size: 12 }
   };
   Plotly.react("trendsPlot", traces, layout, { displayModeBar: false, responsive: true });
+  resizePlot("trendsPlot");
 
   const firstMeta = courseMetaCache.get(editionIds[0]);
   const headerEl = document.getElementById("trendsHeader");
@@ -1537,6 +1538,7 @@ async function renderParityVisualization() {
     },
     yaxis: { automargin: true, tickfont: { size: 11 } }
   }, { responsive: true, displayModeBar: false });
+  resizePlot("vizParityPlot");
 }
 
 async function updateVisualization() {
@@ -1600,6 +1602,7 @@ function updateRankPlot(grouped, topN) {
       : { orientation: "v", x: 1.02, y: 1, xanchor: "left", font: { size: 10 }, bgcolor: "rgba(255,255,255,0.85)", bordercolor: "#e2e8f0", borderwidth: 1 },
     hovermode: "closest"
   }, { responsive: true, displayModeBar: false });
+  resizePlot("plot");
 }
 
 async function updateCharts() {
@@ -1684,6 +1687,13 @@ async function renderAdminRaceDetail(editionId) {
 }
 
 // ---- Page switching ----
+function resizePlot(id) {
+  requestAnimationFrame(() => {
+    const el = document.getElementById(id);
+    if (el && el.children.length) Plotly.Plots.resize(el);
+  });
+}
+
 function setActiveTab(tab) {
   const safeTab = getSafeTab(state.appMode, tab);
   state.activeTab = safeTab;
