@@ -775,6 +775,7 @@ async function renderTrendsChart() {
     font: { family: "Archivo, sans-serif", size: 12 }
   };
   Plotly.react("trendsPlot", traces, layout, { displayModeBar: false, responsive: true });
+  resizePlot("trendsPlot");
 
   const firstMeta = courseMetaCache.get(editionIds[0]);
   const headerEl = document.getElementById("trendsHeader");
@@ -1537,6 +1538,7 @@ async function renderParityVisualization() {
     },
     yaxis: { automargin: true, tickfont: { size: 11 } }
   }, { responsive: true, displayModeBar: false });
+  resizePlot("vizParityPlot");
 }
 
 async function updateVisualization() {
@@ -1588,16 +1590,19 @@ function updateRankPlot(grouped, topN) {
     };
   });
 
+  const mobile = window.innerWidth < 720;
   Plotly.react("plot", traces, {
     paper_bgcolor: "rgba(0,0,0,0)",
     plot_bgcolor: "rgba(0,0,0,0)",
-    margin: { l: 55, r: 160, t: 10, b: 50 },
+    margin: mobile ? { l: 45, r: 10, t: 10, b: 50 } : { l: 55, r: 160, t: 10, b: 50 },
     font: { family: "Archivo, sans-serif", size: 12 },
     xaxis: { title: "Rank", range: [1, topN], gridcolor: "#e9e3d9", zeroline: false, tickfont: { size: 10 } },
     yaxis: { title: "Index", gridcolor: "#e9e3d9", zeroline: false, tickfont: { size: 10 } },
+    showlegend: !mobile,
     legend: { orientation: "v", x: 1.02, y: 1, xanchor: "left", font: { size: 10 }, bgcolor: "rgba(255,255,255,0.85)", bordercolor: "#e2e8f0", borderwidth: 1 },
     hovermode: "closest"
   }, { responsive: true, displayModeBar: false });
+  resizePlot("plot");
 }
 
 async function updateCharts() {
@@ -1682,6 +1687,13 @@ async function renderAdminRaceDetail(editionId) {
 }
 
 // ---- Page switching ----
+function resizePlot(id) {
+  requestAnimationFrame(() => {
+    const el = document.getElementById(id);
+    if (el && el.children.length) Plotly.Plots.resize(el);
+  });
+}
+
 function setActiveTab(tab) {
   const safeTab = getSafeTab(state.appMode, tab);
   state.activeTab = safeTab;
@@ -1912,4 +1924,11 @@ async function updateAll() {
   if (state.appMode === "public" && state.rciNormSelected.size === 0) {
     openPicker();
   }
+
+  window.addEventListener("resize", () => {
+    ["trendsPlot", "vizParityPlot", "plot"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.children.length) Plotly.Plots.resize(el);
+    });
+  });
 })();

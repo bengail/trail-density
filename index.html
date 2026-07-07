@@ -110,11 +110,14 @@
     .modal-header h3 { margin: 0; font-size: 15px; font-weight: 800; }
 
     [hidden] { display: none !important; }
-    @media (max-width: 900px) {
+    @media (max-width: 720px) {
       header { padding: 0 16px; }
       main { padding: 20px 16px 48px; }
       .filterbar-inner { padding: 10px 16px; }
       .grid { grid-template-columns: 1fr !important; }
+      #trendsPlot { height: 220px !important; }
+      #vizParityPlot { height: 420px !important; }
+      #plot { height: 420px !important; }
     }
   </style>
 </head>
@@ -203,12 +206,12 @@
     <h2 data-t="tabTrends">Tendances</h2>
     <p data-t="trendsSubtitle">Évolution de la densité du plateau d'une course au fil des éditions.</p>
   </div>
-  <div class="grid" style="grid-template-columns:280px 1fr;">
-    <aside class="panel">
+  <div class="grid" style="grid-template-columns:minmax(180px,280px) minmax(0,1fr);">
+    <aside class="panel" style="min-width:0;">
       <input id="trendsRaceSearch" type="search" data-t="trendsSearchRaces" placeholder="Rechercher…" style="margin-bottom:10px;" />
       <div id="trendsRaceList" class="race-list"></div>
     </aside>
-    <section class="panel-lg" style="min-height:520px;">
+    <section class="panel-lg" style="min-height:520px; overflow:hidden; min-width:0;">
       <div id="trendsEmpty" class="note" style="display:flex; align-items:center; justify-content:center; height:480px;" data-t="trendsSelect">Sélectionnez une course dans la liste.</div>
       <div id="trendsDetail" style="display:none;">
         <div id="trendsHeader" style="margin-bottom:12px;"></div>
@@ -223,7 +226,7 @@
             <button id="trendsGenderMen" class="chip" data-t="trendsGenderMen">Hommes</button>
           </div>
         </div>
-        <div id="trendsPlot" style="height:300px;"></div>
+        <div id="trendsPlot" style="height:300px; width:100%;"></div>
         <div id="trendsTableWrap" class="tableWrap" style="margin-top:16px; max-height:260px;"></div>
       </div>
     </section>
@@ -236,8 +239,8 @@
     <h2 data-t="tabParity">Parité</h2>
     <p data-t="paritySubtitle">Où le plateau féminin est relativement plus fort ou plus faible que le plateau masculin, sur une même course — dernière édition de chacune.</p>
   </div>
-  <div class="grid" style="grid-template-columns:220px 1fr;">
-    <aside class="panel">
+  <div class="grid" style="grid-template-columns:minmax(160px,220px) minmax(0,1fr);">
+    <aside class="panel" style="min-width:0;">
       <div class="filter-label">Top N</div>
       <div id="parityNChips" style="display:flex; flex-direction:column; gap:6px; margin-bottom:18px;">
         <button class="chip" data-n="5">N=5</button>
@@ -250,8 +253,8 @@
         <span style="color:var(--clay); font-weight:700;">▮</span> <span data-t="parityLegendMen">Champ masculin plus fort</span>
       </div>
     </aside>
-    <section class="panel-lg">
-      <div id="vizParityPlot" style="height:620px;"></div>
+    <section class="panel-lg" style="overflow:hidden; min-width:0;">
+      <div id="vizParityPlot" style="height:620px; width:100%;"></div>
     </section>
   </div>
 </main>
@@ -262,8 +265,8 @@
     <h2 data-t="tabDepth">Profondeur</h2>
     <p data-t="depthSubtitle">Indice par rang d'arrivée, pour les éditions sélectionnées — vitesse à laquelle le peloton s'amenuise.</p>
   </div>
-  <div class="grid" style="grid-template-columns:220px 1fr;">
-    <aside class="panel">
+  <div class="grid" style="grid-template-columns:minmax(160px,220px) minmax(0,1fr);">
+    <aside class="panel" style="min-width:0;">
       <div class="filter-label" data-t="depthGender">Genre</div>
       <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:18px;">
         <button id="chartsGenderBoth" class="chip active" data-t="depthBoth">Les deux</button>
@@ -273,8 +276,8 @@
       <div class="filter-label">Top N — <span id="nLabel">30</span></div>
       <input id="topN" type="range" min="5" max="50" step="1" value="30" />
     </aside>
-    <section class="panel-lg">
-      <div id="plot" style="height:580px;"></div>
+    <section class="panel-lg" style="overflow:hidden; min-width:0;">
+      <div id="plot" style="height:580px; width:100%;"></div>
     </section>
   </div>
 </main>
