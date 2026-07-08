@@ -1504,7 +1504,7 @@ async function utmbApi(path, params = {}) {
   return resp.json();
 }
 
-let utmbSearchState = { races: [], grouped: [], offset: 0, limit: 25, nbHits: 0, selectedIndices: new Set() };
+let utmbSearchState = { grouped: [], selectedIndices: new Set(), filterText: "" };
 let utmbDbRaces = [];
 
 const UTMB_NOISE = new Set([
@@ -1637,19 +1637,31 @@ function utmbGroupRaces(races) {
   return result;
 }
 
+async function utmbFetchAll() {
+  const limit = 25;
+  const first = await utmbApi("search/races-qualifiers", utmbBuildParams(0));
+  let races = first.races || [];
+  const total = first.nbHits || 0;
+  if (total > limit) {
+    setUtmbStatus(`Loading… (${races.length} / ${total})`);
+    const offsets = [];
+    for (let o = limit; o < total; o += limit) offsets.push(o);
+    const pages = await Promise.all(offsets.map(o => utmbApi("search/races-qualifiers", utmbBuildParams(o))));
+    for (const p of pages) races = races.concat(p.races || []);
+  }
+  return races;
+}
+
 async function utmbSearch() {
-  utmbSearchState.offset = 0;
   setUtmbStatus("Searching…");
   try {
-    const [data] = await Promise.all([
-      utmbApi("search/races-qualifiers", utmbBuildParams(0)),
-      loadUtmbDbRaces(),
-    ]);
-    utmbSearchState.races = data.races || [];
-    utmbSearchState.nbHits = data.nbHits || 0;
-    const groups = utmbGroupRaces(utmbSearchState.races);
+    const [races] = await Promise.all([utmbFetchAll(), loadUtmbDbRaces()]);
+    const groups = utmbGroupRaces(races);
     for (const g of groups) g.dbMatch = findUtmbDbMatch(g);
     utmbSearchState.grouped = groups;
+    utmbSearchState.filterText = "";
+    const filterEl = document.getElementById("utmbFilter");
+    if (filterEl) filterEl.value = "";
     setUtmbStatus("");
     renderUtmbResults();
   } catch (err) {
@@ -1669,23 +1681,24 @@ function renderUtmbResults() {
   const panel = document.getElementById("utmbResultsPanel");
   const tbody = document.getElementById("utmbTableBody");
   const countEl = document.getElementById("utmbCount");
-  const pageLabel = document.getElementById("utmbPageLabel");
   if (!panel || !tbody) return;
-  const { grouped, offset, limit, nbHits } = utmbSearchState;
+  const { grouped } = utmbSearchState;
   panel.style.display = grouped.length ? "" : "none";
   document.getElementById("utmbEditionPanel").style.display = "none";
   if (!grouped.length) return;
   utmbSearchState.selectedIndices.clear();
   syncUtmbMergeBtn();
-  countEl.textContent = nbHits;
-  const page = Math.floor(offset / limit) + 1;
-  const totalPages = Math.ceil(nbHits / limit);
-  pageLabel.textContent = `Page ${page} / ${totalPages}`;
-  document.getElementById("utmbPrevBtn").disabled = offset === 0;
-  document.getElementById("utmbNextBtn").disabled = offset + limit >= nbHits;
+  const q = utmbSearchState.filterText.toLowerCase();
+  const visible = q
+    ? grouped.filter(g =>
+        (g.raceName || "").toLowerCase().includes(q) ||
+        (g.eventName || "").toLowerCase().includes(q) ||
+        (g.country || "").toLowerCase().includes(q))
+    : grouped;
+  countEl.textContent = q ? `${visible.length} / ${grouped.length}` : grouped.length;
   tbody.innerHTML = "";
-  for (let i = 0; i < grouped.length; i++) {
-    const g = grouped[i];
+  for (const g of visible) {
+    const i = grouped.indexOf(g); // real index for merge
     const withResults = g.editions.filter(e => e.hasResults);
     const matchLabel = g.dbMatch
       ? `<span style="font-size:11px; color:var(--clay);" title="${g.dbMatch.name}">→ ${g.dbMatch.name.includes(" — ") ? g.dbMatch.name.split(" — ")[1] : g.dbMatch.name}</span>`
@@ -1740,25 +1753,6 @@ function mergeSelectedUtmbGroups() {
   renderUtmbResults();
 }
 
-async function utmbPageNav(dir) {
-  const { offset, limit, nbHits } = utmbSearchState;
-  const newOffset = Math.max(0, Math.min(offset + dir * limit, nbHits - limit));
-  if (newOffset === offset) return;
-  utmbSearchState.offset = newOffset;
-  setUtmbStatus("Loading…");
-  try {
-    const data = await utmbApi("search/races-qualifiers", utmbBuildParams(newOffset));
-    utmbSearchState.races = data.races || [];
-    utmbSearchState.nbHits = data.nbHits || 0;
-    const groups = utmbGroupRaces(utmbSearchState.races);
-    for (const g of groups) g.dbMatch = findUtmbDbMatch(g);
-    utmbSearchState.grouped = groups;
-    setUtmbStatus("");
-    renderUtmbResults();
-  } catch (err) {
-    setUtmbStatus("Error: " + err.message, "error");
-  }
-}
 
 function renderUtmbEditionPicker(group) {
   document.getElementById("utmbResultsPanel").style.display = "none";
@@ -2343,9 +2337,12 @@ async function updateAll() {
     });
     document.getElementById("utmbSearchBtn")?.addEventListener("click", utmbSearch);
     document.getElementById("utmbSearch")?.addEventListener("keydown", e => { if (e.key === "Enter") utmbSearch(); });
-    document.getElementById("utmbPrevBtn")?.addEventListener("click", () => utmbPageNav(-1));
-    document.getElementById("utmbNextBtn")?.addEventListener("click", () => utmbPageNav(1));
     document.getElementById("utmbMergeBtn")?.addEventListener("click", mergeSelectedUtmbGroups);
+    document.getElementById("utmbFilter")?.addEventListener("input", e => {
+      utmbSearchState.filterText = e.target.value.trim();
+      utmbSearchState.selectedIndices.clear();
+      renderUtmbResults();
+    });
     document.getElementById("utmbBackBtn")?.addEventListener("click", () => {
       document.getElementById("utmbEditionPanel").style.display = "none";
       if (utmbSearchState.grouped.length) document.getElementById("utmbResultsPanel").style.display = "";
