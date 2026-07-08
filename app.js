@@ -1504,7 +1504,7 @@ async function utmbApi(path, params = {}) {
   return resp.json();
 }
 
-let utmbSearchState = { races: [], grouped: [], offset: 0, limit: 25, nbHits: 0 };
+let utmbSearchState = { races: [], grouped: [], offset: 0, limit: 25, nbHits: 0, selectedIndices: new Set() };
 let utmbDbRaces = [];
 
 const UTMB_NOISE = new Set([
@@ -1657,6 +1657,14 @@ async function utmbSearch() {
   }
 }
 
+function syncUtmbMergeBtn() {
+  const btn = document.getElementById("utmbMergeBtn");
+  if (!btn) return;
+  const n = utmbSearchState.selectedIndices.size;
+  btn.style.display = n >= 2 ? "" : "none";
+  btn.textContent = n >= 2 ? `Merge selected (${n})` : "Merge selected";
+}
+
 function renderUtmbResults() {
   const panel = document.getElementById("utmbResultsPanel");
   const tbody = document.getElementById("utmbTableBody");
@@ -1667,6 +1675,8 @@ function renderUtmbResults() {
   panel.style.display = grouped.length ? "" : "none";
   document.getElementById("utmbEditionPanel").style.display = "none";
   if (!grouped.length) return;
+  utmbSearchState.selectedIndices.clear();
+  syncUtmbMergeBtn();
   countEl.textContent = nbHits;
   const page = Math.floor(offset / limit) + 1;
   const totalPages = Math.ceil(nbHits / limit);
@@ -1674,13 +1684,15 @@ function renderUtmbResults() {
   document.getElementById("utmbPrevBtn").disabled = offset === 0;
   document.getElementById("utmbNextBtn").disabled = offset + limit >= nbHits;
   tbody.innerHTML = "";
-  for (const g of grouped) {
+  for (let i = 0; i < grouped.length; i++) {
+    const g = grouped[i];
     const withResults = g.editions.filter(e => e.hasResults);
     const matchLabel = g.dbMatch
       ? `<span style="font-size:11px; color:var(--clay);" title="${g.dbMatch.name}">→ ${g.dbMatch.name.includes(" — ") ? g.dbMatch.name.split(" — ")[1] : g.dbMatch.name}</span>`
       : `<span style="font-size:11px; color:var(--muted);">new</span>`;
     const tr = document.createElement("tr");
     tr.innerHTML = `
+      <td style="width:28px; text-align:center;"><input type="checkbox" data-idx="${i}" style="width:auto; margin:0;" /></td>
       <td class="col-left">${g.country || "—"}</td>
       <td class="col-left">
         <div style="font-weight:700; font-size:13px;">${g.eventName}</div>
@@ -1695,12 +1707,37 @@ function renderUtmbResults() {
           ${withResults.length ? "+ Editions" : "No results"}
         </button>
       </td>`;
+    tr.querySelector("input[type=checkbox]").addEventListener("change", e => {
+      if (e.target.checked) utmbSearchState.selectedIndices.add(i);
+      else utmbSearchState.selectedIndices.delete(i);
+      syncUtmbMergeBtn();
+    });
     const btn = tr.querySelector("button");
     if (withResults.length) {
       btn.addEventListener("click", () => renderUtmbEditionPicker(g));
     }
     tbody.appendChild(tr);
   }
+}
+
+function mergeSelectedUtmbGroups() {
+  const indices = [...utmbSearchState.selectedIndices].sort((a, b) => a - b);
+  if (indices.length < 2) return;
+  const grouped = utmbSearchState.grouped;
+  const canonical = grouped[indices[0]];
+  for (let k = 1; k < indices.length; k++) {
+    const other = grouped[indices[k]];
+    canonical.editions = [...canonical.editions, ...other.editions]
+      .sort((a, b) => b.year - a.year);
+    // Keep the DB match from whichever group had one
+    if (!canonical.dbMatch && other.dbMatch) canonical.dbMatch = other.dbMatch;
+  }
+  // Remove merged rows (highest indices first to avoid shifting)
+  for (let k = indices.length - 1; k >= 1; k--) {
+    grouped.splice(indices[k], 1);
+  }
+  utmbSearchState.selectedIndices.clear();
+  renderUtmbResults();
 }
 
 async function utmbPageNav(dir) {
@@ -2308,6 +2345,7 @@ async function updateAll() {
     document.getElementById("utmbSearch")?.addEventListener("keydown", e => { if (e.key === "Enter") utmbSearch(); });
     document.getElementById("utmbPrevBtn")?.addEventListener("click", () => utmbPageNav(-1));
     document.getElementById("utmbNextBtn")?.addEventListener("click", () => utmbPageNav(1));
+    document.getElementById("utmbMergeBtn")?.addEventListener("click", mergeSelectedUtmbGroups);
     document.getElementById("utmbBackBtn")?.addEventListener("click", () => {
       document.getElementById("utmbEditionPanel").style.display = "none";
       if (utmbSearchState.grouped.length) document.getElementById("utmbResultsPanel").style.display = "";

@@ -218,7 +218,10 @@
       <!-- Search results table -->
       <div id="utmbResultsPanel" class="panel" style="display:none;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
-          <h2 style="margin:0;">Results <span id="utmbCount" class="count-badge">0</span></h2>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <h2 style="margin:0;">Results <span id="utmbCount" class="count-badge">0</span></h2>
+            <button id="utmbMergeBtn" class="chip-sm" style="display:none;" title="Merge selected rows into one group">Merge selected</button>
+          </div>
           <div style="display:flex; align-items:center; gap:8px;">
             <button id="utmbPrevBtn" class="chip-sm" disabled>← Prev</button>
             <span id="utmbPageLabel" class="note"></span>
@@ -229,6 +232,7 @@
           <table>
             <thead>
               <tr>
+                <th style="width:28px;"></th>
                 <th>Country</th>
                 <th>Race</th>
                 <th style="text-align:right;">km</th>
