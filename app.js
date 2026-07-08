@@ -4,7 +4,7 @@
 const MAX_INDEX_FOR_NORM = 1000;
 const TAB_ALLOWLIST = {
   public: ["rcinormcharts", "trends", "visualization", "charts"],
-  admin: ["import", "races"]
+  admin: ["import", "utmb", "races"]
 };
 const DEFAULT_TAB_BY_MODE = {
   public: "rcinormcharts",
@@ -35,6 +35,11 @@ let lang = (() => {
   const s = localStorage.getItem("trail-lang");
   if (s === "fr" || s === "en") return s;
   return navigator.language?.toLowerCase().startsWith("fr") ? "fr" : "en";
+})();
+
+let indexSource = (() => {
+  const s = localStorage.getItem("trail-index-source");
+  return s === "utmb" ? "utmb" : "itra";
 })();
 
 const T = {
@@ -196,11 +201,13 @@ async function loadManifest() {
   if (!window.supabaseClient) return [];
   const { data, error } = await window.supabaseClient
     .from("editions")
-    .select("id, race_id, year, series, races(name, country, distance_km, elevation_gain)")
+    .select("id, race_id, year, series, races(name, country, distance_km, elevation_gain, source)")
     .order("id");
   if (error) throw new Error("loadManifest: " + error.message);
-  manifest = { courses: data.map(e => ({ race_id: e.id, id: e.id })) };
-  for (const e of data) {
+  const filtered = data.filter(e => (e.races?.source || "itra") === state.indexSource);
+  manifest = { courses: filtered.map(e => ({ race_id: e.id, id: e.id })) };
+  courseMetaCache.clear();
+  for (const e of filtered) {
     courseMetaCache.set(e.id, {
       race_id: e.id,
       base_race_id: e.race_id,
@@ -210,6 +217,7 @@ async function loadManifest() {
       series: e.series || [],
       distance_km: e.races?.distance_km || null,
       elevation_gain: e.races?.elevation_gain || null,
+      source: e.races?.source || "itra",
     });
   }
   return manifest.courses;
@@ -291,6 +299,7 @@ async function preloadAllCourseMeta() {
 // ---- UI state ----
 const state = {
   appMode: "public",
+  indexSource,
   assetPrefix: "",
   publicRciGender: "female",
   publicRciShowExtra: false,
@@ -310,6 +319,7 @@ const state = {
   trendsRciKey: "rc5",
   // Admin state
   itraCookie: "",
+  utmbToken: "",
   discoverRaces: [],
   importQueue: [],
   importRunning: false,
@@ -1448,6 +1458,230 @@ async function saveEditionToSupabase(job, results) {
   return { count: rows.length };
 }
 
+// ---- Admin: UTMB Discover & Import ----
+
+function utmbTokenExpiry(token) {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.exp ? new Date(payload.exp * 1000) : null;
+  } catch { return null; }
+}
+
+function updateUtmbTokenStatus() {
+  const token = state.utmbToken;
+  const el = document.getElementById("utmbTokenStatus");
+  if (!el) return;
+  if (!token) { el.textContent = "Not set"; el.style.color = ""; return; }
+  const exp = utmbTokenExpiry(token);
+  if (!exp) { el.textContent = "Set (unknown expiry)"; el.style.color = ""; return; }
+  const mins = Math.round((exp - Date.now()) / 60000);
+  if (mins <= 0) { el.textContent = "Expired — paste new token"; el.style.color = "#dc2626"; }
+  else { el.textContent = `Valid · expires in ${mins} min`; el.style.color = mins < 5 ? "#d97706" : "#16a34a"; }
+}
+
+async function utmbApi(path, params = {}) {
+  const resp = await fetch("/api/utmb-proxy", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ path, params, token: state.utmbToken || null })
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({ error: `HTTP ${resp.status}` }));
+    throw new Error(err.error || `utmb-proxy ${resp.status}`);
+  }
+  return resp.json();
+}
+
+let utmbSearchState = { races: [], offset: 0, limit: 20, nbHits: 0 };
+
+function setUtmbStatus(msg, type = "info") {
+  const el = document.getElementById("utmbSearchStatus");
+  if (!el) return;
+  el.textContent = msg;
+  el.style.display = msg ? "" : "none";
+  el.className = "status " + (type === "error" ? "status-error" : "");
+}
+
+function utmbLog(msg, type = "info") {
+  const log = document.getElementById("utmbLogEntries");
+  const panel = document.getElementById("utmbImportLog");
+  if (!log || !panel) return;
+  panel.style.display = "";
+  const div = document.createElement("div");
+  div.textContent = msg;
+  div.style.color = type === "error" ? "#dc2626" : type === "ok" ? "#16a34a" : "#374151";
+  log.appendChild(div);
+  div.scrollIntoView({ block: "nearest" });
+}
+
+async function utmbSearch() {
+  const country = document.getElementById("utmbCountry")?.value.trim().toUpperCase() || "";
+  const dateStart = document.getElementById("utmbDateStart")?.value || "";
+  const dateEnd = document.getElementById("utmbDateEnd")?.value || "";
+  utmbSearchState.offset = 0;
+  setUtmbStatus("Searching…");
+  try {
+    const params = { lang: "en", limit: utmbSearchState.limit, offset: 0 };
+    if (country) params.countryCodes = country;
+    if (dateStart) params.dateMin = dateStart;
+    if (dateEnd) params.dateMax = dateEnd;
+    const data = await utmbApi("search/races-qualifiers", params);
+    utmbSearchState.races = data.races || [];
+    utmbSearchState.nbHits = data.nbHits || 0;
+    setUtmbStatus("");
+    renderUtmbResults();
+  } catch (err) {
+    setUtmbStatus("Error: " + err.message, "error");
+  }
+}
+
+function renderUtmbResults() {
+  const panel = document.getElementById("utmbResultsPanel");
+  const tbody = document.getElementById("utmbTableBody");
+  const countEl = document.getElementById("utmbCount");
+  const pageLabel = document.getElementById("utmbPageLabel");
+  if (!panel || !tbody) return;
+  const { races, offset, limit, nbHits } = utmbSearchState;
+  panel.style.display = races.length ? "" : "none";
+  if (!races.length) return;
+  countEl.textContent = nbHits;
+  const page = Math.floor(offset / limit) + 1;
+  const totalPages = Math.ceil(nbHits / limit);
+  pageLabel.textContent = `Page ${page} / ${totalPages}`;
+  document.getElementById("utmbPrevBtn").disabled = offset === 0;
+  document.getElementById("utmbNextBtn").disabled = offset + limit >= nbHits;
+  tbody.innerHTML = "";
+  for (const r of races) {
+    const hasResults = r.hasResults;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td class="col-left">${r.startCountry || "—"}</td>
+      <td class="col-left" style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+        <div style="font-weight:700; font-size:13px;">${r.eventName || ""}</div>
+        <div style="font-size:11px; color:#64748b;">${r.name || ""}</div>
+      </td>
+      <td>${r.year || "—"}</td>
+      <td style="text-align:right;">${r.distance ? parseFloat(r.distance).toFixed(1) : "—"}</td>
+      <td>${r.category || "—"}</td>
+      <td>
+        <button class="chip-sm${hasResults ? " active" : ""}" ${hasResults ? "" : "disabled"}
+          data-uri="${r.uriResults || ""}" data-name="${r.eventName || ""}" data-race="${r.name || ""}"
+          data-year="${r.year || ""}" data-country="${r.startCountry || ""}"
+          data-km="${r.distance || ""}" data-elevation="${r.elevationGain || ""}">
+          ${hasResults ? "Import" : "No results"}
+        </button>
+      </td>`;
+    tr.querySelector("button[data-uri]")?.addEventListener("click", async function() {
+      if (!this.dataset.uri) return;
+      this.disabled = true;
+      this.textContent = "Importing…";
+      try {
+        await importUtmbEdition({
+          uri: this.dataset.uri,
+          eventName: this.dataset.name,
+          raceName: this.dataset.race,
+          year: parseInt(this.dataset.year),
+          country: this.dataset.country,
+          km: parseFloat(this.dataset.km) || null,
+          elevation: parseInt(this.dataset.elevation) || null,
+        });
+        this.textContent = "Done ✓";
+      } catch (err) {
+        this.textContent = "Error";
+        this.disabled = false;
+        utmbLog("✗ " + this.dataset.uri + ": " + err.message, "error");
+      }
+    });
+    tbody.appendChild(tr);
+  }
+}
+
+async function utmbPageNav(dir) {
+  const { offset, limit, nbHits } = utmbSearchState;
+  const newOffset = Math.max(0, Math.min(offset + dir * limit, nbHits - limit));
+  if (newOffset === offset) return;
+  utmbSearchState.offset = newOffset;
+  setUtmbStatus("Loading…");
+  try {
+    const country = document.getElementById("utmbCountry")?.value.trim().toUpperCase() || "";
+    const dateStart = document.getElementById("utmbDateStart")?.value || "";
+    const dateEnd = document.getElementById("utmbDateEnd")?.value || "";
+    const params = { lang: "en", limit, offset: newOffset };
+    if (country) params.countryCodes = country;
+    if (dateStart) params.dateMin = dateStart;
+    if (dateEnd) params.dateMax = dateEnd;
+    const data = await utmbApi("search/races-qualifiers", params);
+    utmbSearchState.races = data.races || [];
+    utmbSearchState.nbHits = data.nbHits || 0;
+    setUtmbStatus("");
+    renderUtmbResults();
+  } catch (err) {
+    setUtmbStatus("Error: " + err.message, "error");
+  }
+}
+
+async function importUtmbEdition({ uri, eventName, raceName, year, country, km, elevation }) {
+  if (!state.utmbToken) throw new Error("Set UTMB token first.");
+  const exp = utmbTokenExpiry(state.utmbToken);
+  if (exp && exp <= new Date()) throw new Error("Token expired — paste a new one.");
+
+  utmbLog(`↓ Importing ${uri}…`);
+
+  // Fetch top 50 men and top 50 women
+  const [menData, womenData] = await Promise.all([
+    utmbApi(`races/${uri}/results`, { lang: "en", limit: 50, offset: 0, gender: "H" }),
+    utmbApi(`races/${uri}/results`, { lang: "en", limit: 50, offset: 0, gender: "F" }),
+  ]);
+
+  if (!menData.isLogged && !womenData.isLogged) {
+    throw new Error("Token rejected by UTMB — isLogged=false. Paste a fresh token.");
+  }
+
+  const results = [
+    ...(menData.results || []).map(r => ({ rank: r.rank, gender: "M", index: r.index, runner: r.fullname, nationality: r.nationalityCode })),
+    ...(womenData.results || []).map(r => ({ rank: r.rank, gender: "F", index: r.index, runner: r.fullname, nationality: r.nationalityCode })),
+  ].filter(r => r.index !== null && r.index !== undefined);
+
+  if (!results.length) throw new Error("No index scores returned — race may not be fully indexed yet.");
+
+  // Derive stable IDs from the URI base (without year)
+  const uriBase = uri.replace(/\.\d{4}$/, "");
+  const raceId = "utmb-" + uriBase.replace(/\./g, "-");
+  const editionId = "utmb-" + uri.replace(/\./g, "-");
+
+  if (!window.supabaseClient) throw new Error("Supabase not configured.");
+
+  const { error: raceErr } = await window.supabaseClient.from("races").upsert({
+    id: raceId,
+    name: eventName + (raceName && raceName !== eventName ? ` — ${raceName}` : ""),
+    country: country || null,
+    distance_km: km || null,
+    elevation_gain: elevation || null,
+    source: "utmb",
+  }, { onConflict: "id" });
+  if (raceErr) throw new Error("Race upsert: " + raceErr.message);
+
+  const { error: edErr } = await window.supabaseClient.from("editions").upsert({
+    id: editionId,
+    race_id: raceId,
+    year,
+    utmb_uri: uri,
+  }, { onConflict: "id" });
+  if (edErr) throw new Error("Edition upsert: " + edErr.message);
+
+  await window.supabaseClient.from("results").delete().eq("edition_id", editionId);
+
+  const rows = results.map(r => ({
+    edition_id: editionId, rank: r.rank, gender: r.gender,
+    index: r.index, runner: r.runner || null, nationality: r.nationality || null
+  }));
+  const { error: insErr } = await window.supabaseClient.from("results").insert(rows);
+  if (insErr) throw new Error("Insert results: " + insErr.message);
+
+  utmbLog(`✓ ${uri} — ${rows.length} results (${results.filter(r=>r.gender==="M").length}M / ${results.filter(r=>r.gender==="F").length}F)`, "ok");
+  updateUtmbTokenStatus();
+}
+
 // ---- Visualization: Parity delta bar ----
 function getVizFilteredIds() {
   return Array.from(state.vizSelected).sort();
@@ -1687,6 +1921,35 @@ async function renderAdminRaceDetail(editionId) {
 }
 
 // ---- Page switching ----
+function renderSourceToggle() {
+  document.querySelectorAll(".btn-source").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.s === state.indexSource);
+  });
+}
+
+async function switchSource(newSource) {
+  if (newSource === state.indexSource) return;
+  state.indexSource = newSource;
+  indexSource = newSource;
+  localStorage.setItem("trail-index-source", newSource);
+  state.rciNormSelected.clear();
+  chipState.activeSeries.clear();
+  chipState.activeYears.clear();
+  chipState.activeCountry = "";
+  chipState.isManual = false;
+  state.trendsRaceId = null;
+  courseCache.clear();
+  await loadManifest();
+  renderSourceToggle();
+  renderSeriesChips();
+  renderYearChips();
+  renderCountryChips();
+  renderPublicRaceList();
+  renderFilterBar();
+  await triggerUpdate();
+  openPicker();
+}
+
 function resizePlot(id) {
   requestAnimationFrame(() => {
     const el = document.getElementById(id);
@@ -1704,6 +1967,7 @@ function setActiveTab(tab) {
     visualization: "pageViz",
     charts: "pageCharts",
     import: "pageImport",
+    utmb: "pageUtmb",
     races: "pageRaces"
   };
   for (const [key, id] of Object.entries(pageMap)) {
@@ -1716,6 +1980,7 @@ function setActiveTab(tab) {
   document.getElementById("vizTabParity")?.classList.toggle("active", safeTab === "visualization");
   document.getElementById("tabCharts")?.classList.toggle("active", safeTab === "charts");
   document.getElementById("tabImport")?.classList.toggle("active", safeTab === "import");
+  document.getElementById("tabUtmb")?.classList.toggle("active", safeTab === "utmb");
   document.getElementById("tabRaces")?.classList.toggle("active", safeTab === "races");
 
   if (safeTab === "trends") { renderTrendsRaceList(); renderTrendsChart(); }
@@ -1861,6 +2126,20 @@ async function updateAll() {
     // Cookie
     document.getElementById("saveCookieBtn")?.addEventListener("click", saveCookie);
 
+    // UTMB token
+    document.getElementById("utmbSaveTokenBtn")?.addEventListener("click", () => {
+      const val = (document.getElementById("utmbTokenInput")?.value || "").trim();
+      if (!val) return;
+      state.utmbToken = val;
+      updateUtmbTokenStatus();
+      // Refresh status every minute while on the page
+      clearInterval(window._utmbTokenTimer);
+      window._utmbTokenTimer = setInterval(updateUtmbTokenStatus, 60000);
+    });
+    document.getElementById("utmbSearchBtn")?.addEventListener("click", utmbSearch);
+    document.getElementById("utmbPrevBtn")?.addEventListener("click", () => utmbPageNav(-1));
+    document.getElementById("utmbNextBtn")?.addEventListener("click", () => utmbPageNav(1));
+
     // Discover
     document.getElementById("discoverSearchBtn")?.addEventListener("click", discoverSearch);
 
@@ -1900,10 +2179,17 @@ async function updateAll() {
   document.getElementById("vizTabParity")?.addEventListener("click", () => setActiveTab("visualization"));
   document.getElementById("tabCharts")?.addEventListener("click", () => setActiveTab("charts"));
   document.getElementById("tabImport")?.addEventListener("click", () => setActiveTab("import"));
+  document.getElementById("tabUtmb")?.addEventListener("click", () => setActiveTab("utmb"));
   document.getElementById("tabRaces")?.addEventListener("click", () => setActiveTab("races"));
 
   // Lang toggle
   document.getElementById("langToggle")?.addEventListener("click", () => setLang(lang === "fr" ? "en" : "fr"));
+
+  // Source toggle
+  document.querySelectorAll(".btn-source").forEach(btn => {
+    btn.addEventListener("click", () => switchSource(btn.dataset.s));
+  });
+  renderSourceToggle();
 
   // Init Plotly placeholders
   if (document.getElementById("plot")) {

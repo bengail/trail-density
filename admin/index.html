@@ -70,7 +70,8 @@
 <header>
   <h1>Trail Race Density — Admin</h1>
   <nav>
-    <button id="tabImport" class="active">Import</button>
+    <button id="tabImport" class="active">Discover ITRA</button>
+    <button id="tabUtmb">Discover UTMB</button>
     <button id="tabRaces">Races</button>
     <a href="/" style="font-size:12px; font-weight:700; color:var(--muted); text-decoration:none; padding:9px 10px; border:1px solid var(--border); border-radius:12px; background:#f8fafc;">← Public</a>
     <button id="signOutBtn" style="color:#dc2626; border-color:#fca5a5; background:#fef2f2;">Sign Out</button>
@@ -169,6 +170,75 @@
         <div id="queueEmpty" class="note" style="padding:4px 0;">Queue is empty — discover races and add editions to import.</div>
       </div>
 
+    </div>
+  </div>
+</main>
+
+<!-- ── Discover UTMB tab ──────────────────────────────────────────────────── -->
+<main id="pageUtmb">
+
+  <!-- Token banner -->
+  <div class="panel" style="margin-bottom:14px;">
+    <div style="display:flex; align-items:flex-start; gap:10px; flex-wrap:wrap;">
+      <span class="filter-label" style="margin:0; padding-top:9px; white-space:nowrap;">UTMB Token</span>
+      <input id="utmbTokenInput" type="password" style="flex:1; min-width:200px; font-family:monospace; font-size:11px;"
+        placeholder="Paste access_token from DevTools → Application → Cookies → utmb.world" />
+      <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-start;">
+        <button id="utmbSaveTokenBtn" class="chip active" style="white-space:nowrap;">Save token</button>
+        <span id="utmbTokenStatus" class="note" style="white-space:nowrap;">Not set</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- Search sidebar -->
+    <aside class="panel sidebar">
+      <h2>Search Races</h2>
+      <div class="filter-section">
+        <span class="filter-label">Country code</span>
+        <input id="utmbCountry" type="text" placeholder="FR, ES, IT, US…" />
+      </div>
+      <div class="filter-section">
+        <span class="filter-label">From</span>
+        <input id="utmbDateStart" type="date" style="margin-bottom:8px;" />
+        <span class="filter-label">To</span>
+        <input id="utmbDateEnd" type="date" />
+      </div>
+      <button id="utmbSearchBtn" class="chip active" style="width:100%;">Search UTMB</button>
+      <div id="utmbSearchStatus" class="status" style="display:none; margin-top:10px;"></div>
+    </aside>
+
+    <!-- Results -->
+    <div style="display:flex; flex-direction:column; gap:14px;">
+      <div id="utmbResultsPanel" class="panel" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <h2 style="margin:0;">Results <span id="utmbCount" class="count-badge">0</span></h2>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button id="utmbPrevBtn" class="chip-sm" disabled>← Prev</button>
+            <span id="utmbPageLabel" class="note"></span>
+            <button id="utmbNextBtn" class="chip-sm">Next →</button>
+          </div>
+        </div>
+        <div class="tableWrap" style="max-height:400px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Country</th>
+                <th>Race</th>
+                <th>Year</th>
+                <th style="text-align:right;">km</th>
+                <th>Category</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="utmbTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="utmbImportLog" class="panel" style="display:none;">
+        <h2 style="margin:0 0 10px;">Import log</h2>
+        <div id="utmbLogEntries" style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-family:monospace;"></div>
+      </div>
     </div>
   </div>
 </main>
