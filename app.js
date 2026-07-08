@@ -1538,14 +1538,15 @@ async function loadUtmbDbRaces() {
 }
 
 function findUtmbDbMatch(group) {
-  const groupWords = normalizeUtmbName(group.raceName || group.eventName);
+  const groupWords = normalizeUtmbName(group.raceName);
   if (!groupWords.length) return null;
   let best = null, bestSim = 0;
   for (const r of utmbDbRaces) {
     if (group.country && r.country && r.country !== group.country) continue;
-    if (group.km && r.distance_km && Math.abs(group.km - r.distance_km) > 5) continue;
     const dbNamePart = r.name.includes(" — ") ? r.name.split(" — ")[1] : r.name;
     const sim = jaccardSim(groupWords, normalizeUtmbName(dbNamePart));
+    // Skip km check for strong name matches (course distances change across eras)
+    if (sim < 0.7 && group.km && r.distance_km && Math.abs(group.km - r.distance_km) > 20) continue;
     if (sim > bestSim) { bestSim = sim; best = r; }
   }
   return bestSim >= 0.35 ? { raceId: best.id, name: best.name } : null;
@@ -1609,20 +1610,25 @@ function utmbGroupRaces(races) {
   for (const g of map.values()) g.editions.sort((a, b) => b.year - a.year);
 
   // Step 2: merge groups that differ only by sponsor name
+  // Compare raceName only (the stable sub-race field, e.g. "CCC"), not eventName
+  // (eventName changes with sponsors and contains "UTMB" for almost all races)
   const groups = [...map.values()];
   const merged = new Set();
   const result = [];
   for (let i = 0; i < groups.length; i++) {
     if (merged.has(i)) continue;
     const g = { ...groups[i], editions: [...groups[i].editions] };
-    const wi = normalizeUtmbName(g.raceName || g.eventName);
+    const wi = normalizeUtmbName(g.raceName);
+    if (!wi.length) { result.push(g); continue; }
     for (let j = i + 1; j < groups.length; j++) {
       if (merged.has(j)) continue;
       const h = groups[j];
       if (g.country && h.country && g.country !== h.country) continue;
-      if (g.km && h.km && Math.abs(g.km - h.km) > 5) continue;
-      const wj = normalizeUtmbName(h.raceName || h.eventName);
-      if (jaccardSim(wi, wj) < 0.5) continue;
+      const wj = normalizeUtmbName(h.raceName);
+      const sim = jaccardSim(wi, wj);
+      if (sim < 0.5) continue;
+      // Skip km check for strong name matches (course distances change across eras)
+      if (sim < 0.8 && g.km && h.km && Math.abs(g.km - h.km) > 20) continue;
       g.editions = [...g.editions, ...h.editions].sort((a, b) => b.year - a.year);
       merged.add(j);
     }
