@@ -452,6 +452,9 @@ function fuzzyMatch(query, text) {
   return terms.every(t => lower.includes(t));
 }
 
+// Set by wirePublicChipFilters() — called from switchSource() at module level
+let refreshPublicChips = null;
+
 function wirePublicChipFilters() {
   // chipState is module-level (defined after state object)
 
@@ -683,6 +686,15 @@ function wirePublicChipFilters() {
     state.rciNormFilters.country = "";
     setSelectionByYear(state.rciNormSelected, 2025);
     renderSeriesChips(); renderYearChips(); renderCountryChips(); renderPublicRaceList(); renderFilterBar(); triggerUpdate();
+  };
+
+  // Expose for switchSource() which lives at module level
+  refreshPublicChips = () => {
+    renderSeriesChips();
+    renderYearChips();
+    renderCountryChips();
+    renderPublicRaceList();
+    renderFilterBar();
   };
 }
 
@@ -1493,6 +1505,51 @@ async function utmbApi(path, params = {}) {
 }
 
 let utmbSearchState = { races: [], grouped: [], offset: 0, limit: 25, nbHits: 0 };
+let utmbDbRaces = [];
+
+const UTMB_NOISE = new Set([
+  "world", "series", "dacia", "hoka", "by", "presented", "powered", "official",
+  "the", "de", "du", "la", "le", "les", "des", "and", "et",
+]);
+
+function normalizeUtmbName(name) {
+  return (name || "")
+    .toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter(w => w.length > 2 && !UTMB_NOISE.has(w))
+    .sort();
+}
+
+function jaccardSim(a, b) {
+  const sa = new Set(a), sb = new Set(b);
+  let inter = 0;
+  for (const w of sa) if (sb.has(w)) inter++;
+  const union = sa.size + sb.size - inter;
+  return union === 0 ? 0 : inter / union;
+}
+
+async function loadUtmbDbRaces() {
+  if (!window.supabaseClient) return;
+  const { data } = await window.supabaseClient
+    .from("races").select("id, name, country, distance_km").eq("source", "utmb");
+  utmbDbRaces = data || [];
+}
+
+function findUtmbDbMatch(group) {
+  const groupWords = normalizeUtmbName(group.raceName || group.eventName);
+  if (!groupWords.length) return null;
+  let best = null, bestSim = 0;
+  for (const r of utmbDbRaces) {
+    if (group.country && r.country && r.country !== group.country) continue;
+    if (group.km && r.distance_km && Math.abs(group.km - r.distance_km) > 5) continue;
+    const dbNamePart = r.name.includes(" — ") ? r.name.split(" — ")[1] : r.name;
+    const sim = jaccardSim(groupWords, normalizeUtmbName(dbNamePart));
+    if (sim > bestSim) { bestSim = sim; best = r; }
+  }
+  return bestSim >= 0.35 ? { raceId: best.id, name: best.name } : null;
+}
 
 function setUtmbStatus(msg, type = "info") {
   const el = document.getElementById("utmbSearchStatus");
@@ -1528,6 +1585,7 @@ function utmbBuildParams(offset = 0) {
 }
 
 function utmbGroupRaces(races) {
+  // Step 1: exact grouping by eventName|raceName
   const map = new Map();
   for (const r of races) {
     const key = (r.eventName || "") + "|" + (r.name || "");
@@ -1548,19 +1606,44 @@ function utmbGroupRaces(races) {
       hasResults: r.hasResults,
     });
   }
-  // Sort editions newest-first within each group
   for (const g of map.values()) g.editions.sort((a, b) => b.year - a.year);
-  return [...map.values()];
+
+  // Step 2: merge groups that differ only by sponsor name
+  const groups = [...map.values()];
+  const merged = new Set();
+  const result = [];
+  for (let i = 0; i < groups.length; i++) {
+    if (merged.has(i)) continue;
+    const g = { ...groups[i], editions: [...groups[i].editions] };
+    const wi = normalizeUtmbName(g.raceName || g.eventName);
+    for (let j = i + 1; j < groups.length; j++) {
+      if (merged.has(j)) continue;
+      const h = groups[j];
+      if (g.country && h.country && g.country !== h.country) continue;
+      if (g.km && h.km && Math.abs(g.km - h.km) > 5) continue;
+      const wj = normalizeUtmbName(h.raceName || h.eventName);
+      if (jaccardSim(wi, wj) < 0.5) continue;
+      g.editions = [...g.editions, ...h.editions].sort((a, b) => b.year - a.year);
+      merged.add(j);
+    }
+    result.push(g);
+  }
+  return result;
 }
 
 async function utmbSearch() {
   utmbSearchState.offset = 0;
   setUtmbStatus("Searching…");
   try {
-    const data = await utmbApi("search/races-qualifiers", utmbBuildParams(0));
+    const [data] = await Promise.all([
+      utmbApi("search/races-qualifiers", utmbBuildParams(0)),
+      loadUtmbDbRaces(),
+    ]);
     utmbSearchState.races = data.races || [];
     utmbSearchState.nbHits = data.nbHits || 0;
-    utmbSearchState.grouped = utmbGroupRaces(utmbSearchState.races);
+    const groups = utmbGroupRaces(utmbSearchState.races);
+    for (const g of groups) g.dbMatch = findUtmbDbMatch(g);
+    utmbSearchState.grouped = groups;
     setUtmbStatus("");
     renderUtmbResults();
   } catch (err) {
@@ -1587,6 +1670,9 @@ function renderUtmbResults() {
   tbody.innerHTML = "";
   for (const g of grouped) {
     const withResults = g.editions.filter(e => e.hasResults);
+    const matchLabel = g.dbMatch
+      ? `<span style="font-size:11px; color:var(--clay);" title="${g.dbMatch.name}">→ ${g.dbMatch.name.includes(" — ") ? g.dbMatch.name.split(" — ")[1] : g.dbMatch.name}</span>`
+      : `<span style="font-size:11px; color:var(--muted);">new</span>`;
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td class="col-left">${g.country || "—"}</td>
@@ -1597,6 +1683,7 @@ function renderUtmbResults() {
       <td style="text-align:right;">${g.km ? g.km.toFixed(1) : "—"}</td>
       <td>${g.category || "—"}</td>
       <td style="font-family:monospace; font-size:11px;">${g.editions.map(e => e.year).join(", ")}</td>
+      <td>${matchLabel}</td>
       <td>
         <button class="chip-sm${withResults.length ? " active" : ""}" ${withResults.length ? "" : "disabled"}>
           ${withResults.length ? "+ Editions" : "No results"}
@@ -1620,7 +1707,9 @@ async function utmbPageNav(dir) {
     const data = await utmbApi("search/races-qualifiers", utmbBuildParams(newOffset));
     utmbSearchState.races = data.races || [];
     utmbSearchState.nbHits = data.nbHits || 0;
-    utmbSearchState.grouped = utmbGroupRaces(utmbSearchState.races);
+    const groups = utmbGroupRaces(utmbSearchState.races);
+    for (const g of groups) g.dbMatch = findUtmbDbMatch(g);
+    utmbSearchState.grouped = groups;
     setUtmbStatus("");
     renderUtmbResults();
   } catch (err) {
@@ -1636,7 +1725,13 @@ function renderUtmbEditionPicker(group) {
 
   const withResults = group.editions.filter(e => e.hasResults);
   const body = document.getElementById("utmbPickerBody");
+  const matchBanner = group.dbMatch
+    ? `<div style="font-size:12px; color:var(--clay); background:var(--clay-tint); border-radius:6px; padding:6px 10px; margin-bottom:12px;">
+        → Will link to existing race: <strong>${group.dbMatch.name}</strong>
+       </div>`
+    : "";
   body.innerHTML = `
+    ${matchBanner}
     <div style="margin-bottom:14px;">
       <span class="filter-label">Editions to import</span>
       <div id="utmbEditionCheckboxes" style="display:flex; flex-direction:column; gap:3px; margin-top:6px;">
@@ -1676,6 +1771,7 @@ async function importUtmbSelected(group) {
         country: group.country,
         km: group.km,
         elevation: group.elevation,
+        overrideRaceId: group.dbMatch?.raceId,
       });
       cb.parentElement.style.opacity = "0.5";
       done++;
@@ -1688,7 +1784,7 @@ async function importUtmbSelected(group) {
   btn.disabled = false;
 }
 
-async function importUtmbEdition({ uri, eventName, raceName, year, country, km, elevation }) {
+async function importUtmbEdition({ uri, eventName, raceName, year, country, km, elevation, overrideRaceId }) {
   if (!state.utmbToken) throw new Error("Set UTMB token first.");
   const exp = utmbTokenExpiry(state.utmbToken);
   if (exp && exp <= new Date()) throw new Error("Token expired — paste a new one.");
@@ -1712,9 +1808,9 @@ async function importUtmbEdition({ uri, eventName, raceName, year, country, km, 
 
   if (!results.length) throw new Error("No index scores returned — race may not be fully indexed yet.");
 
-  // Derive stable IDs from the URI base (without year)
+  // Derive stable IDs from the URI base (without year), or use override if matched to existing
   const uriBase = uri.replace(/\.\d{4}$/, "");
-  const raceId = "utmb-" + uriBase.replace(/\./g, "-");
+  const raceId = overrideRaceId || ("utmb-" + uriBase.replace(/\./g, "-"));
   const editionId = "utmb-" + uri.replace(/\./g, "-");
 
   if (!window.supabaseClient) throw new Error("Supabase not configured.");
@@ -2009,13 +2105,8 @@ async function switchSource(newSource) {
   courseCache.clear();
   await loadManifest();
   renderSourceToggle();
-  renderSeriesChips();
-  renderYearChips();
-  renderCountryChips();
-  renderPublicRaceList();
-  renderFilterBar();
+  refreshPublicChips?.();
   await triggerUpdate();
-  openPicker();
 }
 
 function resizePlot(id) {
@@ -2261,7 +2352,7 @@ async function updateAll() {
   // Lang toggle
   document.getElementById("langToggle")?.addEventListener("click", () => setLang(lang === "fr" ? "en" : "fr"));
 
-  // Source toggle
+  // Source toggle (in picker modal)
   document.querySelectorAll(".btn-source").forEach(btn => {
     btn.addEventListener("click", () => switchSource(btn.dataset.s));
   });

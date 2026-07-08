@@ -110,9 +110,8 @@
     .modal-header h3 { margin: 0; font-size: 15px; font-weight: 800; }
 
     /* ── Source toggle ───────────────────────────────────────── */
-    .source-toggle { display: flex; gap: 3px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
-    .btn-source { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; padding: 3px 9px; border: none; border-radius: 6px; background: transparent; color: var(--muted); cursor: pointer; letter-spacing: 0.03em; }
-    .btn-source.active { background: var(--clay-tint); color: var(--clay); }
+    .btn-source { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; padding: 3px 11px; border: 1px solid var(--border); border-radius: 6px; background: transparent; color: var(--muted); cursor: pointer; letter-spacing: 0.03em; }
+    .btn-source.active { background: var(--clay-tint); color: var(--clay); border-color: var(--clay); }
 
     [hidden] { display: none !important; }
     @media (max-width: 720px) {
@@ -138,10 +137,6 @@
       <div id="headerSub" style="font-size:12.5px; color:var(--muted); margin-top:2px;" data-t="subtitle">Indice de compétitivité en trail</div>
     </div>
     <div style="display:flex; align-items:center; gap:8px;">
-      <div id="sourceToggle" class="source-toggle">
-        <button class="btn-source active" data-s="itra">ITRA</button>
-        <button class="btn-source" data-s="utmb">UTMB</button>
-      </div>
       <button id="langToggle" class="btn-lang">EN</button>
       <a href="/admin/" class="btn-admin" data-t="admin">Admin →</a>
     </div>
@@ -300,6 +295,10 @@
         <button id="resetPickerBtn" class="btn-ghost" data-t="filterReset">Réinitialiser</button>
         <button id="closePickerBtn" class="btn-clay" data-t="filterClose">Fermer</button>
       </div>
+    </div>
+    <div style="margin-bottom:16px; display:flex; gap:6px;">
+      <button class="btn-source active" data-s="itra">ITRA</button>
+      <button class="btn-source" data-s="utmb">UTMB</button>
     </div>
     <div style="margin-bottom:14px;">
       <div class="filter-label" data-t="filterSeries">Séries</div>
