@@ -195,6 +195,10 @@
     <aside class="panel sidebar">
       <h2>Search Races</h2>
       <div class="filter-section">
+        <span class="filter-label">Name</span>
+        <input id="utmbSearch" type="text" placeholder="UTMB, Zegama, Sierre…" />
+      </div>
+      <div class="filter-section">
         <span class="filter-label">Country code</span>
         <input id="utmbCountry" type="text" placeholder="FR, ES, IT, US…" />
       </div>
@@ -210,6 +214,8 @@
 
     <!-- Results -->
     <div style="display:flex; flex-direction:column; gap:14px;">
+
+      <!-- Search results table -->
       <div id="utmbResultsPanel" class="panel" style="display:none;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
           <h2 style="margin:0;">Results <span id="utmbCount" class="count-badge">0</span></h2>
@@ -219,15 +225,15 @@
             <button id="utmbNextBtn" class="chip-sm">Next →</button>
           </div>
         </div>
-        <div class="tableWrap" style="max-height:400px;">
+        <div class="tableWrap" style="max-height:340px;">
           <table>
             <thead>
               <tr>
                 <th>Country</th>
                 <th>Race</th>
-                <th>Year</th>
                 <th style="text-align:right;">km</th>
                 <th>Category</th>
+                <th>Editions</th>
                 <th></th>
               </tr>
             </thead>
@@ -235,6 +241,20 @@
           </table>
         </div>
       </div>
+
+      <!-- Edition picker -->
+      <div id="utmbEditionPanel" class="panel" style="display:none;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap;">
+          <button id="utmbBackBtn" class="chip-sm">← Back to results</button>
+          <div>
+            <div id="utmbPickerEventName" style="font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.05em;"></div>
+            <div id="utmbPickerRaceName" style="font-size:15px; font-weight:700;"></div>
+          </div>
+        </div>
+        <div id="utmbPickerBody"></div>
+      </div>
+
+      <!-- Import log -->
       <div id="utmbImportLog" class="panel" style="display:none;">
         <h2 style="margin:0 0 10px;">Import log</h2>
         <div id="utmbLogEntries" style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-family:monospace;"></div>

@@ -1492,7 +1492,7 @@ async function utmbApi(path, params = {}) {
   return resp.json();
 }
 
-let utmbSearchState = { races: [], offset: 0, limit: 20, nbHits: 0 };
+let utmbSearchState = { races: [], grouped: [], offset: 0, limit: 25, nbHits: 0 };
 
 function setUtmbStatus(msg, type = "info") {
   const el = document.getElementById("utmbSearchStatus");
@@ -1514,20 +1514,53 @@ function utmbLog(msg, type = "info") {
   div.scrollIntoView({ block: "nearest" });
 }
 
-async function utmbSearch() {
+function utmbBuildParams(offset = 0) {
+  const search = document.getElementById("utmbSearch")?.value.trim() || "";
   const country = document.getElementById("utmbCountry")?.value.trim().toUpperCase() || "";
   const dateStart = document.getElementById("utmbDateStart")?.value || "";
   const dateEnd = document.getElementById("utmbDateEnd")?.value || "";
+  const params = { lang: "en", limit: utmbSearchState.limit, offset };
+  if (search) params.search = search;
+  if (country) params.countryCodes = country;
+  if (dateStart) params.dateMin = dateStart;
+  if (dateEnd) params.dateMax = dateEnd;
+  return params;
+}
+
+function utmbGroupRaces(races) {
+  const map = new Map();
+  for (const r of races) {
+    const key = (r.eventName || "") + "|" + (r.name || "");
+    if (!map.has(key)) {
+      map.set(key, {
+        eventName: r.eventName || "",
+        raceName: r.name || "",
+        category: r.category || "",
+        country: r.startCountry || "",
+        km: r.distance ? parseFloat(r.distance) : null,
+        elevation: r.elevationGain || null,
+        editions: []
+      });
+    }
+    map.get(key).editions.push({
+      year: r.year,
+      uri: r.uriResults || "",
+      hasResults: r.hasResults,
+    });
+  }
+  // Sort editions newest-first within each group
+  for (const g of map.values()) g.editions.sort((a, b) => b.year - a.year);
+  return [...map.values()];
+}
+
+async function utmbSearch() {
   utmbSearchState.offset = 0;
   setUtmbStatus("Searching…");
   try {
-    const params = { lang: "en", limit: utmbSearchState.limit, offset: 0 };
-    if (country) params.countryCodes = country;
-    if (dateStart) params.dateMin = dateStart;
-    if (dateEnd) params.dateMax = dateEnd;
-    const data = await utmbApi("search/races-qualifiers", params);
+    const data = await utmbApi("search/races-qualifiers", utmbBuildParams(0));
     utmbSearchState.races = data.races || [];
     utmbSearchState.nbHits = data.nbHits || 0;
+    utmbSearchState.grouped = utmbGroupRaces(utmbSearchState.races);
     setUtmbStatus("");
     renderUtmbResults();
   } catch (err) {
@@ -1541,9 +1574,10 @@ function renderUtmbResults() {
   const countEl = document.getElementById("utmbCount");
   const pageLabel = document.getElementById("utmbPageLabel");
   if (!panel || !tbody) return;
-  const { races, offset, limit, nbHits } = utmbSearchState;
-  panel.style.display = races.length ? "" : "none";
-  if (!races.length) return;
+  const { grouped, offset, limit, nbHits } = utmbSearchState;
+  panel.style.display = grouped.length ? "" : "none";
+  document.getElementById("utmbEditionPanel").style.display = "none";
+  if (!grouped.length) return;
   countEl.textContent = nbHits;
   const page = Math.floor(offset / limit) + 1;
   const totalPages = Math.ceil(nbHits / limit);
@@ -1551,47 +1585,27 @@ function renderUtmbResults() {
   document.getElementById("utmbPrevBtn").disabled = offset === 0;
   document.getElementById("utmbNextBtn").disabled = offset + limit >= nbHits;
   tbody.innerHTML = "";
-  for (const r of races) {
-    const hasResults = r.hasResults;
+  for (const g of grouped) {
+    const withResults = g.editions.filter(e => e.hasResults);
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td class="col-left">${r.startCountry || "—"}</td>
-      <td class="col-left" style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-        <div style="font-weight:700; font-size:13px;">${r.eventName || ""}</div>
-        <div style="font-size:11px; color:#64748b;">${r.name || ""}</div>
+      <td class="col-left">${g.country || "—"}</td>
+      <td class="col-left">
+        <div style="font-weight:700; font-size:13px;">${g.eventName}</div>
+        <div style="font-size:11px; color:#64748b;">${g.raceName}</div>
       </td>
-      <td>${r.year || "—"}</td>
-      <td style="text-align:right;">${r.distance ? parseFloat(r.distance).toFixed(1) : "—"}</td>
-      <td>${r.category || "—"}</td>
+      <td style="text-align:right;">${g.km ? g.km.toFixed(1) : "—"}</td>
+      <td>${g.category || "—"}</td>
+      <td style="font-family:monospace; font-size:11px;">${g.editions.map(e => e.year).join(", ")}</td>
       <td>
-        <button class="chip-sm${hasResults ? " active" : ""}" ${hasResults ? "" : "disabled"}
-          data-uri="${r.uriResults || ""}" data-name="${r.eventName || ""}" data-race="${r.name || ""}"
-          data-year="${r.year || ""}" data-country="${r.startCountry || ""}"
-          data-km="${r.distance || ""}" data-elevation="${r.elevationGain || ""}">
-          ${hasResults ? "Import" : "No results"}
+        <button class="chip-sm${withResults.length ? " active" : ""}" ${withResults.length ? "" : "disabled"}>
+          ${withResults.length ? "+ Editions" : "No results"}
         </button>
       </td>`;
-    tr.querySelector("button[data-uri]")?.addEventListener("click", async function() {
-      if (!this.dataset.uri) return;
-      this.disabled = true;
-      this.textContent = "Importing…";
-      try {
-        await importUtmbEdition({
-          uri: this.dataset.uri,
-          eventName: this.dataset.name,
-          raceName: this.dataset.race,
-          year: parseInt(this.dataset.year),
-          country: this.dataset.country,
-          km: parseFloat(this.dataset.km) || null,
-          elevation: parseInt(this.dataset.elevation) || null,
-        });
-        this.textContent = "Done ✓";
-      } catch (err) {
-        this.textContent = "Error";
-        this.disabled = false;
-        utmbLog("✗ " + this.dataset.uri + ": " + err.message, "error");
-      }
-    });
+    const btn = tr.querySelector("button");
+    if (withResults.length) {
+      btn.addEventListener("click", () => renderUtmbEditionPicker(g));
+    }
     tbody.appendChild(tr);
   }
 }
@@ -1603,21 +1617,75 @@ async function utmbPageNav(dir) {
   utmbSearchState.offset = newOffset;
   setUtmbStatus("Loading…");
   try {
-    const country = document.getElementById("utmbCountry")?.value.trim().toUpperCase() || "";
-    const dateStart = document.getElementById("utmbDateStart")?.value || "";
-    const dateEnd = document.getElementById("utmbDateEnd")?.value || "";
-    const params = { lang: "en", limit, offset: newOffset };
-    if (country) params.countryCodes = country;
-    if (dateStart) params.dateMin = dateStart;
-    if (dateEnd) params.dateMax = dateEnd;
-    const data = await utmbApi("search/races-qualifiers", params);
+    const data = await utmbApi("search/races-qualifiers", utmbBuildParams(newOffset));
     utmbSearchState.races = data.races || [];
     utmbSearchState.nbHits = data.nbHits || 0;
+    utmbSearchState.grouped = utmbGroupRaces(utmbSearchState.races);
     setUtmbStatus("");
     renderUtmbResults();
   } catch (err) {
     setUtmbStatus("Error: " + err.message, "error");
   }
+}
+
+function renderUtmbEditionPicker(group) {
+  document.getElementById("utmbResultsPanel").style.display = "none";
+  const panel = document.getElementById("utmbEditionPanel");
+  document.getElementById("utmbPickerEventName").textContent = group.eventName;
+  document.getElementById("utmbPickerRaceName").textContent = group.raceName;
+
+  const withResults = group.editions.filter(e => e.hasResults);
+  const body = document.getElementById("utmbPickerBody");
+  body.innerHTML = `
+    <div style="margin-bottom:14px;">
+      <span class="filter-label">Editions to import</span>
+      <div id="utmbEditionCheckboxes" style="display:flex; flex-direction:column; gap:3px; margin-top:6px;">
+        ${withResults.map((e, i) => `
+          <label class="edition-row">
+            <input type="checkbox" name="utmb-edition" value="${e.uri}" data-year="${e.year}" ${i < 3 ? "checked" : ""} style="width:auto;" />
+            <span>${e.year}</span>
+          </label>
+        `).join("")}
+      </div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <button id="utmbImportSelectedBtn" class="chip active">Import selected</button>
+      <span id="utmbPickerStatus" style="font-size:12px; color:var(--muted);"></span>
+    </div>`;
+
+  document.getElementById("utmbImportSelectedBtn").addEventListener("click", () => importUtmbSelected(group));
+  panel.style.display = "";
+}
+
+async function importUtmbSelected(group) {
+  const checked = [...document.querySelectorAll("#utmbEditionCheckboxes input[name='utmb-edition']:checked")];
+  const statusEl = document.getElementById("utmbPickerStatus");
+  if (!checked.length) { if (statusEl) statusEl.textContent = "Select at least one edition."; return; }
+
+  const btn = document.getElementById("utmbImportSelectedBtn");
+  btn.disabled = true;
+  let done = 0, failed = 0;
+  for (const cb of checked) {
+    if (statusEl) statusEl.textContent = `Importing ${cb.dataset.year}…`;
+    try {
+      await importUtmbEdition({
+        uri: cb.value,
+        eventName: group.eventName,
+        raceName: group.raceName,
+        year: parseInt(cb.dataset.year),
+        country: group.country,
+        km: group.km,
+        elevation: group.elevation,
+      });
+      cb.parentElement.style.opacity = "0.5";
+      done++;
+    } catch (err) {
+      utmbLog(`✗ ${cb.value}: ${err.message}`, "error");
+      failed++;
+    }
+  }
+  if (statusEl) statusEl.textContent = `${done} imported${failed ? `, ${failed} failed` : ""}.`;
+  btn.disabled = false;
 }
 
 async function importUtmbEdition({ uri, eventName, raceName, year, country, km, elevation }) {
@@ -2137,8 +2205,13 @@ async function updateAll() {
       window._utmbTokenTimer = setInterval(updateUtmbTokenStatus, 60000);
     });
     document.getElementById("utmbSearchBtn")?.addEventListener("click", utmbSearch);
+    document.getElementById("utmbSearch")?.addEventListener("keydown", e => { if (e.key === "Enter") utmbSearch(); });
     document.getElementById("utmbPrevBtn")?.addEventListener("click", () => utmbPageNav(-1));
     document.getElementById("utmbNextBtn")?.addEventListener("click", () => utmbPageNav(1));
+    document.getElementById("utmbBackBtn")?.addEventListener("click", () => {
+      document.getElementById("utmbEditionPanel").style.display = "none";
+      if (utmbSearchState.grouped.length) document.getElementById("utmbResultsPanel").style.display = "";
+    });
 
     // Discover
     document.getElementById("discoverSearchBtn")?.addEventListener("click", discoverSearch);
