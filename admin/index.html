@@ -181,8 +181,8 @@
   <div class="panel" style="margin-bottom:14px;">
     <div style="display:flex; align-items:flex-start; gap:10px; flex-wrap:wrap;">
       <span class="filter-label" style="margin:0; padding-top:9px; white-space:nowrap;">UTMB Token</span>
-      <input id="utmbTokenInput" type="password" style="flex:1; min-width:200px; font-family:monospace; font-size:11px;"
-        placeholder="Paste access_token from DevTools → Application → Cookies → utmb.world" />
+      <textarea id="utmbTokenInput" rows="2" style="flex:1; min-width:200px;"
+        placeholder="Paste full Cookie header from DevTools (Network tab → any utmb.world request → Request Headers → Cookie)…"></textarea>
       <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-start;">
         <button id="utmbSaveTokenBtn" class="chip active" style="white-space:nowrap;">Save token</button>
         <span id="utmbTokenStatus" class="note" style="white-space:nowrap;">Not set</span>

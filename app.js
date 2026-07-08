@@ -2196,9 +2196,12 @@ async function updateAll() {
 
     // UTMB token
     document.getElementById("utmbSaveTokenBtn")?.addEventListener("click", () => {
-      const val = (document.getElementById("utmbTokenInput")?.value || "").trim();
-      if (!val) return;
-      state.utmbToken = val;
+      const raw = (document.getElementById("utmbTokenInput")?.value || "").trim();
+      if (!raw) return;
+      // Accept either the raw access_token JWT or a full Cookie header string
+      const m = raw.match(/(?:^|;\s*)access_token=([^;]+)/);
+      const token = m ? m[1].trim() : raw;
+      state.utmbToken = token;
       updateUtmbTokenStatus();
       // Refresh status every minute while on the page
       clearInterval(window._utmbTokenTimer);
