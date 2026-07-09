@@ -1794,6 +1794,13 @@ async function importUtmbSelected(group) {
   const statusEl = document.getElementById("utmbPickerStatus");
   if (!checked.length) { if (statusEl) statusEl.textContent = "Select at least one edition."; return; }
 
+  // Single canonical race_id for all editions in this group.
+  // If the group was merged or matched to an existing DB race, use that id.
+  // Otherwise anchor to the first checked edition's URI base so that editions
+  // from different UTMB numeric IDs (sponsor changes) all land under one race.
+  const firstUriBase = checked[0].value.replace(/\.\d{4}$/, "");
+  const canonicalRaceId = group.dbMatch?.raceId || ("utmb-" + firstUriBase.replace(/\./g, "-"));
+
   const btn = document.getElementById("utmbImportSelectedBtn");
   btn.disabled = true;
   let done = 0, failed = 0;
@@ -1808,7 +1815,7 @@ async function importUtmbSelected(group) {
         country: group.country,
         km: group.km,
         elevation: group.elevation,
-        overrideRaceId: group.dbMatch?.raceId,
+        overrideRaceId: canonicalRaceId,
       });
       cb.parentElement.style.opacity = "0.5";
       done++;
