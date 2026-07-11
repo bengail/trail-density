@@ -1306,7 +1306,7 @@ function renderEditionPicker(info, sourceRow) {
   panel.style.display = "";
 }
 
-function addSelectedToQueue() {
+async function addSelectedToQueue() {
   const panel = document.getElementById("editionPickerPanel");
   const raceId = panel.dataset.raceId;
   const raceName = panel.dataset.raceName;
