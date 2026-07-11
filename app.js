@@ -456,6 +456,9 @@ function fuzzyMatch(query, text) {
 let refreshPublicChips = null;
 // Tracks whether the edition picker is in flat (single-race) or grid (multi-race) mode
 let editionPickerMode = "flat";
+// Grid data + manual column merges for the currently-open edition picker
+let currentGrid = null;
+let gridManualMerges = {};
 
 function wirePublicChipFilters() {
   // chipState is module-level (defined after state object)
@@ -1233,6 +1236,39 @@ function renderDiscoverResults() {
 }
 
 // ---- Admin: edition picker ----
+function attachGridHandlers(body) {
+  body.querySelector("#gridSelectAll")?.addEventListener("click", () => {
+    body.querySelectorAll("input[name='grid-cell']").forEach(cb => { cb.checked = true; });
+  });
+  body.querySelector("#gridSelectNone")?.addEventListener("click", () => {
+    body.querySelectorAll("input[name='grid-cell']").forEach(cb => { cb.checked = false; });
+  });
+
+  // Merge: collapse selected canonical columns into one, then re-render
+  body.querySelector("#gridMergeBtn")?.addEventListener("click", () => {
+    const checked = [...body.querySelectorAll("input.col-merge-cb:checked")];
+    if (checked.length < 2) {
+      document.getElementById("pickerStatus").textContent = "Check ≥ 2 column headers to merge.";
+      return;
+    }
+    const superCanon = checked[0].dataset.colId;
+    for (let i = 1; i < checked.length; i++) {
+      gridManualMerges[checked[i].dataset.colId] = superCanon;
+    }
+    body.innerHTML = renderEditionGridHtml(currentGrid, gridManualMerges);
+    attachGridHandlers(body);
+    document.getElementById("pickerStatus").textContent = `Merged ${checked.length} columns → ${superCanon}`;
+  });
+
+  // Reset: clear all manual merges and re-render
+  body.querySelector("#gridUnmergeBtn")?.addEventListener("click", () => {
+    gridManualMerges = {};
+    body.innerHTML = renderEditionGridHtml(currentGrid, {});
+    attachGridHandlers(body);
+    document.getElementById("pickerStatus").textContent = "Columns reset.";
+  });
+}
+
 function renderEditionPicker(info, sourceRow) {
   const panel = document.getElementById("editionPickerPanel");
   if (!panel) return;
@@ -1252,41 +1288,10 @@ function renderEditionPicker(info, sourceRow) {
 
   if (info.grid) {
     editionPickerMode = "grid";
-    body.innerHTML = renderEditionGridHtml(info.grid);
-
-    body.querySelector("#gridSelectAll")?.addEventListener("click", () => {
-      body.querySelectorAll("input[name='grid-cell']").forEach(cb => { cb.checked = true; });
-    });
-    body.querySelector("#gridSelectNone")?.addEventListener("click", () => {
-      body.querySelectorAll("input[name='grid-cell']").forEach(cb => { cb.checked = false; });
-    });
-
-    // Merge selected columns: set all selected col inputs to the first selected's race ID
-    body.querySelector("#gridMergeBtn")?.addEventListener("click", () => {
-      const checked = [...body.querySelectorAll("input.col-merge-cb:checked")];
-      if (checked.length < 2) {
-        document.getElementById("pickerStatus").textContent = "Check ≥ 2 column headers to merge.";
-        return;
-      }
-      const canonInput = body.querySelector(`input.col-race-id[data-col-id="${CSS.escape(checked[0].dataset.colId)}"]`);
-      const canonId = canonInput?.value.trim() || checked[0].dataset.colId;
-      for (const cb of checked) {
-        const inp = body.querySelector(`input.col-race-id[data-col-id="${CSS.escape(cb.dataset.colId)}"]`);
-        if (inp) { inp.value = canonId; inp.style.color = "var(--clay)"; inp.style.borderColor = "var(--clay)"; }
-        cb.checked = false;
-      }
-      document.getElementById("pickerStatus").textContent = `Merged → ${canonId}`;
-    });
-
-    // Reset col IDs: restore each col-race-id input to its data-col-id
-    body.querySelector("#gridUnmergeBtn")?.addEventListener("click", () => {
-      body.querySelectorAll("input.col-race-id").forEach(inp => {
-        inp.value = inp.dataset.colId;
-        inp.style.color = "";
-        inp.style.borderColor = "";
-      });
-      document.getElementById("pickerStatus").textContent = "Column IDs reset.";
-    });
+    currentGrid = info.grid;
+    gridManualMerges = {};
+    body.innerHTML = renderEditionGridHtml(info.grid, {});
+    attachGridHandlers(body);
   } else {
     editionPickerMode = "flat";
     const otherDistances = info.siblings.filter(s => !s.isCurrent && !s.isCancelled);
@@ -1349,46 +1354,64 @@ function renderFlatEditionsHtml(info, otherDistances) {
   `;
 }
 
-function renderEditionGridHtml(grid) {
+function renderEditionGridHtml(grid, manualMerges = {}) {
   const years = Object.keys(grid).map(Number).sort((a, b) => b - a);
-  // allRaceIds ordered newest-first so auto-grouping keeps the most recent slug as canonical
-  const allRaceIds = [];
-  const raceNames = {};
+
+  // allSlugIds ordered newest-first — auto-grouping keeps the most recent slug as canonical
+  const allSlugIds = [];
+  const slugNames = {};
   for (const y of years) {
     for (const [rid, d] of Object.entries(grid[y])) {
-      if (!allRaceIds.includes(rid)) allRaceIds.push(rid);
-      raceNames[rid] = raceNames[rid] || d.name;
+      if (!allSlugIds.includes(rid)) allSlugIds.push(rid);
+      slugNames[rid] = slugNames[rid] || d.name;
     }
   }
 
-  const groups = autoGroupGridColumns(allRaceIds, raceNames);
+  // Auto-group first (slugId → autoCanonical), then apply manual merges on top
+  const autoGroups = autoGroupGridColumns(allSlugIds, slugNames);
+  const finalGroups = {};
+  for (const rid of allSlugIds) {
+    const autoC = autoGroups[rid];
+    finalGroups[rid] = manualMerges[autoC] || autoC;
+  }
 
-  const headerCols = allRaceIds.map(rid => {
-    const canon = groups[rid];
-    const isMerged = canon !== rid;
-    return `
+  // Canonical columns in appearance order (newest slug wins as canonical)
+  const canonicalIds = [...new Set(allSlugIds.map(rid => finalGroups[rid]))];
+
+  // Slugs belonging to each canonical
+  const canonSlugs = {};
+  for (const rid of allSlugIds) {
+    const c = finalGroups[rid];
+    (canonSlugs[c] = canonSlugs[c] || []).push(rid);
+  }
+
+  // Canonical display name: from the most recent slug in that group
+  const canonNames = {};
+  for (const c of canonicalIds) canonNames[c] = slugNames[canonSlugs[c][0]];
+
+  const headerCols = canonicalIds.map(c => `
     <th style="padding:4px 8px; text-align:center; border-bottom:1px solid var(--border); min-width:90px;">
       <div style="display:flex; align-items:center; gap:3px; justify-content:center; margin-bottom:3px;">
-        <input type="checkbox" class="col-merge-cb" data-col-id="${rid}" style="width:auto; margin:0;" title="Select to merge" />
-        <span style="font-size:11px; font-weight:600;">${raceNames[rid]}</span>
+        <input type="checkbox" class="col-merge-cb" data-col-id="${c}" style="width:auto; margin:0;" title="Select to merge with another column" />
+        <span style="font-size:11px; font-weight:600;">${canonNames[c]}</span>
       </div>
       <input type="text" class="col-race-id"
-        data-col-id="${rid}"
-        data-col-name="${raceNames[rid].replace(/"/g, "&quot;")}"
-        value="${canon}"
-        title="Race ID used for import. Edit to merge with another column."
-        style="width:100%; font-size:9px; text-align:center; padding:1px 3px;${isMerged ? " color:var(--clay); border-color:var(--clay);" : ""}" />
-    </th>`;
-  }).join("");
+        data-col-id="${c}"
+        data-col-name="${canonNames[c].replace(/"/g, "&quot;")}"
+        value="${c}"
+        title="Race ID for import — edit to further merge columns"
+        style="width:100%; font-size:9px; text-align:center; padding:1px 3px;" />
+    </th>`).join("");
 
   const rows = years.map(y => {
-    const cells = allRaceIds.map(rid => {
-      const cell = grid[y]?.[rid];
+    const cells = canonicalIds.map(c => {
+      // Use the first slug in the group that has data for this year
+      const cell = canonSlugs[c].map(s => grid[y]?.[s]).find(Boolean);
       if (!cell) return `<td style="padding:3px 6px; text-align:center; color:var(--muted);">—</td>`;
       return `<td style="padding:3px 6px; text-align:center;">
         <input type="checkbox" name="grid-cell" checked
-          data-year="${y}" data-race-id="${rid}"
-          data-race-name="${cell.name.replace(/"/g, "&quot;")}"
+          data-year="${y}" data-race-id="${c}"
+          data-race-name="${canonNames[c].replace(/"/g, "&quot;")}"
           data-slug="${cell.slug}"
           data-url="${cell.url.replace(/"/g, "&quot;")}"
           data-itra-id="${cell.itraId}" />
