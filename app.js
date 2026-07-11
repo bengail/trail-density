@@ -1325,18 +1325,48 @@ function addSelectedToQueue() {
   }
 
   let added = 0;
+  const warnings = [];
   for (const cb of checked) {
     const year = parseInt(cb.dataset.year, 10);
     const url = cb.dataset.url;
     const editionId = `${raceId}-${year}`;
-    if (!state.importQueue.find(j => j.editionId === editionId)) {
-      state.importQueue.push({ editionId, raceId, raceName, slug, year, country, km, elevation, series, url, status: "pending", error: null, resultCount: null });
-      added++;
+    if (state.importQueue.find(j => j.editionId === editionId)) continue;
+
+    // Detect shared itraId across different race slugs (ITRA uses one result set per event weekend)
+    const itraId = url.match(/\/(\d+)$/)?.[1] || null;
+    const queueConflict = itraId
+      ? state.importQueue.find(j => j.itraId === itraId && j.year === year)
+      : null;
+
+    // Also check DB for same itraId already imported
+    let dbConflict = null;
+    if (itraId && window.supabaseClient) {
+      const { data } = await window.supabaseClient
+        .from("editions")
+        .select("id, race_id")
+        .ilike("itra_edition_url", `%/${itraId}`)
+        .neq("id", editionId)
+        .limit(1);
+      dbConflict = data?.[0] || null;
     }
+
+    if (queueConflict || dbConflict) {
+      const conflictName = queueConflict
+        ? `"${queueConflict.raceName} ${year}" already in queue`
+        : `already imported as "${dbConflict.id}"`;
+      warnings.push(`${raceName} ${year}: same ITRA result set as ${conflictName} (itraId ${itraId}) — skipped`);
+      continue;
+    }
+
+    state.importQueue.push({ editionId, raceId, raceName, slug, year, country, km, elevation, series, url, itraId, status: "pending", error: null, resultCount: null });
+    added++;
   }
 
   renderQueue();
-  if (pickerStatus) pickerStatus.textContent = added ? `${added} edition${added > 1 ? "s" : ""} added to queue.` : "Already in queue.";
+  const msgs = [];
+  if (added) msgs.push(`${added} edition${added > 1 ? "s" : ""} added to queue.`);
+  if (warnings.length) msgs.push(...warnings);
+  if (pickerStatus) pickerStatus.textContent = msgs.join(" | ") || "Already in queue.";
 }
 
 // ---- Admin: import queue ----
@@ -1370,7 +1400,7 @@ function renderQueue() {
       <span class="qi-icon">${icon}</span>
       <div class="qi-body">
         <div class="qi-name">${job.raceName} ${job.year}</div>
-        <div class="qi-sub">${job.raceId} · ${job.series.join(", ") || "no series"}</div>
+        <div class="qi-sub">${job.raceId} · ${job.series.join(", ") || "no series"}${job.itraId ? ` · itraId ${job.itraId}` : ""}</div>
         <div class="qi-sub" style="font-size:10px; word-break:break-all;">
           <a href="${job.url}" target="_blank" rel="noopener" style="color:var(--muted); text-decoration:underline;">${job.url}</a>
         </div>
