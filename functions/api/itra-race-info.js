@@ -32,11 +32,25 @@ export async function onRequestPost(context) {
   }
 
   const html = await resp.text();
+  let parsed;
   try {
-    return Response.json(parseRacePageInfo(html, url));
+    parsed = parseRacePageInfo(html, url);
   } catch (err) {
     return Response.json({ error: err.message }, { status: 500 });
   }
+
+  // Build multi-race × multi-year grid if siblings exist (e.g. CCC / OCC / UTMB® sub-races)
+  const activeSiblings = parsed.siblings.filter(s => !s.isCancelled);
+  if (activeSiblings.length >= 2) {
+    try {
+      parsed.grid = await buildEditionGrid(parsed, cookieHeader, UA);
+    } catch (err) {
+      // Grid building failed — degrade gracefully, client falls back to flat edition list
+      parsed.gridError = err.message;
+    }
+  }
+
+  return Response.json(parsed);
 }
 
 function decodeHtmlEntities(str) {
@@ -45,6 +59,13 @@ function decodeHtmlEntities(str) {
     .replace(/&quot;/g, '"').replace(/&#39;/g, "'")
     .replace(/&#x([0-9A-Fa-f]+);/g, (_, h) => String.fromCharCode(parseInt(h, 16)))
     .replace(/&#(\d+);/g, (_, d) => String.fromCharCode(parseInt(d, 10)));
+}
+
+function slugToRaceId(rawSlug) {
+  // URL-decode, replace dots with dashes, lowercase
+  let s = rawSlug;
+  try { s = decodeURIComponent(rawSlug); } catch { /* already decoded */ }
+  return s.replace(/\./g, "-").toLowerCase();
 }
 
 function parseRacePageInfo(html, url) {
@@ -128,4 +149,79 @@ function parseRacePageInfo(html, url) {
   }
 
   return { eventName, raceName, slug, currentYear, currentItraId, editions, siblings };
+}
+
+// For each year in the dropdown (other than the current page year), fetch the year's page
+// and extract the sibling nav links. Those hrefs always carry the correct per-race itraId
+// for every sub-race for that year, regardless of which combined itraId was used to fetch.
+async function buildEditionGrid({ slug, currentYear, currentItraId, editions, siblings }, cookieHeader, UA) {
+  const grid = {};
+
+  // Current year: we already have correct itraIds from the page URL + sibling hrefs
+  grid[currentYear] = {};
+  for (const sib of siblings.filter(s => !s.isCancelled)) {
+    const itraId = sib.isCurrent ? currentItraId : sib.itraId;
+    const raceId = slugToRaceId(sib.slug);
+    grid[currentYear][raceId] = {
+      name: sib.name,
+      slug: sib.slug,
+      itraId,
+      url: `https://itra.run/Races/RaceResults/${sib.slug}/${currentYear}/${itraId}`
+    };
+  }
+
+  // Other years: parallel-fetch each year's page and parse the sibling nav
+  const otherEditions = editions.filter(e => e.year !== currentYear);
+  const fetched = await Promise.all(otherEditions.map(async (ed) => {
+    try {
+      const yearUrl = `https://itra.run/Races/RaceResults/${slug}/${ed.year}/${ed.itraId}`;
+      const r = await fetch(yearUrl, {
+        headers: { Cookie: cookieHeader, "User-Agent": UA, Accept: "text/html,application/xhtml+xml", "Accept-Language": "en-US,en;q=0.9" },
+        redirect: "follow",
+        signal: AbortSignal.timeout(12000),
+      });
+      if (!r.ok) return null;
+      const h = await r.text();
+      return { year: ed.year, html: h };
+    } catch {
+      return null;
+    }
+  }));
+
+  for (const res of fetched) {
+    if (!res) continue;
+    const { year, html: h } = res;
+
+    // Parse sibling nav links for this year — including the isCurrent one
+    const yearSibs = [];
+    const seen = new Set();
+    const re = /<a\s+class="btn btn-outline-dark([^"]*)"[^>]*href="\/Races\/RaceDetails\/([^"]+?)\/(\d{4})\/(\d+)"[^>]*>\s*([^<]+?)\s*<\/a>/g;
+    let m;
+    while ((m = re.exec(h)) !== null) {
+      const classes = m[1];
+      if (classes.includes("text-decoration-line-through")) continue;
+      const sibSlug = m[2];
+      const sibYear = parseInt(m[3], 10);
+      if (sibYear !== year) continue;
+      const sibItraId = m[4];
+      const sibName = decodeHtmlEntities(m[5].trim());
+      if (seen.has(sibSlug)) continue;
+      seen.add(sibSlug);
+      yearSibs.push({ slug: sibSlug, name: sibName, itraId: sibItraId });
+    }
+
+    if (yearSibs.length === 0) continue;
+    grid[year] = {};
+    for (const sib of yearSibs) {
+      const raceId = slugToRaceId(sib.slug);
+      grid[year][raceId] = {
+        name: sib.name,
+        slug: sib.slug,
+        itraId: sib.itraId,
+        url: `https://itra.run/Races/RaceResults/${sib.slug}/${year}/${sib.itraId}`
+      };
+    }
+  }
+
+  return grid;
 }

@@ -454,6 +454,8 @@ function fuzzyMatch(query, text) {
 
 // Set by wirePublicChipFilters() — called from switchSource() at module level
 let refreshPublicChips = null;
+// Tracks whether the edition picker is in flat (single-race) or grid (multi-race) mode
+let editionPickerMode = "flat";
 
 function wirePublicChipFilters() {
   // chipState is module-level (defined after state object)
@@ -1109,8 +1111,10 @@ function parseItraHtml(html, url) {
 
 // ---- Admin: slug + URL utilities ----
 function slugToId(itraSlug) {
-  // "42km.du.Mont.Blanc" → "42km-du-mont-blanc"
-  return itraSlug.replace(/\./g, "-").toLowerCase();
+  // URL-decode first (handles both raw "CCC%C2%AE" and already-decoded "CCC®" forms)
+  let s = itraSlug;
+  try { s = decodeURIComponent(itraSlug); } catch { /* already decoded */ }
+  return s.replace(/\./g, "-").toLowerCase();
 }
 
 function itraUrlParts(url) {
@@ -1236,12 +1240,58 @@ function renderEditionPicker(info, sourceRow) {
   document.getElementById("pickerEventName").textContent = info.eventName || "";
   document.getElementById("pickerRaceName").textContent = info.raceName || info.slug || "";
 
-  const raceId = slugToId(info.slug);
-
-  const otherDistances = info.siblings.filter(s => !s.isCurrent && !s.isCancelled);
+  const country = sourceRow?.country || "";
+  panel.dataset.raceId = slugToId(info.slug);
+  panel.dataset.raceName = info.raceName || "";
+  panel.dataset.slug = info.slug;
+  panel.dataset.country = country;
+  panel.dataset.km = sourceRow?.km ?? "";
+  panel.dataset.elevation = sourceRow?.elevation ?? "";
 
   const body = document.getElementById("pickerBody");
-  body.innerHTML = `
+
+  if (info.grid) {
+    editionPickerMode = "grid";
+    body.innerHTML = renderEditionGridHtml(info.grid);
+    body.querySelector("#gridSelectAll")?.addEventListener("click", () => {
+      body.querySelectorAll("input[name='grid-cell']").forEach(cb => { cb.checked = true; });
+    });
+    body.querySelector("#gridSelectNone")?.addEventListener("click", () => {
+      body.querySelectorAll("input[name='grid-cell']").forEach(cb => { cb.checked = false; });
+    });
+    body.querySelectorAll("[data-toggle-col]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const rid = btn.dataset.toggleCol;
+        const cells = [...body.querySelectorAll(`input[name='grid-cell'][data-race-id='${CSS.escape(rid)}']`)];
+        const allOn = cells.every(c => c.checked);
+        cells.forEach(c => { c.checked = !allOn; });
+      });
+    });
+  } else {
+    editionPickerMode = "flat";
+    const otherDistances = info.siblings.filter(s => !s.isCurrent && !s.isCancelled);
+    body.innerHTML = renderFlatEditionsHtml(info, otherDistances);
+    body.querySelectorAll("[data-sibling-url]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const url = btn.dataset.siblingUrl;
+        const name = btn.dataset.siblingName;
+        if (!state.discoverRaces.find(r => r.url === url)) {
+          state.discoverRaces.unshift({ name, country, km: null, elevation: null, url });
+        }
+        panel.style.display = "none";
+        renderDiscoverResults();
+        document.getElementById("discoverResultsPanel").style.display = "";
+      });
+    });
+  }
+
+  document.getElementById("addToQueueBtn").addEventListener("click", addSelectedToQueue);
+  document.getElementById("discoverResultsPanel").style.display = "none";
+  panel.style.display = "";
+}
+
+function renderFlatEditionsHtml(info, otherDistances) {
+  return `
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:14px;">
       <div>
         <span class="filter-label">Editions to import</span>
@@ -1265,7 +1315,7 @@ function renderEditionPicker(info, sourceRow) {
             ${otherDistances.map(s => `
               <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
                 <span style="flex:1;">${s.name}</span>
-                <button class="chip-sm" data-sibling-url="${s.url}" data-sibling-name="${s.name.replace(/"/g,"&quot;")}">+ Add</button>
+                <button class="chip-sm" data-sibling-url="${s.url}" data-sibling-name="${s.name.replace(/"/g, "&quot;")}">+ Add</button>
               </div>
             `).join("")}
           </div>
@@ -1277,76 +1327,121 @@ function renderEditionPicker(info, sourceRow) {
       <span id="pickerStatus" style="font-size:12px; color:var(--muted);"></span>
     </div>
   `;
+}
 
-  // Store context on panel for queue button handler
-  panel.dataset.raceId = raceId;
-  panel.dataset.raceName = info.raceName || "";
-  panel.dataset.slug = info.slug;
-  panel.dataset.country = sourceRow?.country || "";
-  panel.dataset.km = sourceRow?.km ?? "";
-  panel.dataset.elevation = sourceRow?.elevation ?? "";
+function renderEditionGridHtml(grid) {
+  const years = Object.keys(grid).map(Number).sort((a, b) => b - a);
+  // Ordered union of all race IDs, preserving first-appearance order
+  const allRaceIds = [];
+  const raceNames = {};
+  for (const y of years) {
+    for (const [rid, d] of Object.entries(grid[y])) {
+      if (!allRaceIds.includes(rid)) allRaceIds.push(rid);
+      raceNames[rid] = raceNames[rid] || d.name;
+    }
+  }
 
-  document.getElementById("addToQueueBtn").addEventListener("click", addSelectedToQueue);
+  const headerCols = allRaceIds.map(rid => `
+    <th style="padding:4px 10px; text-align:center; border-bottom:1px solid var(--border); white-space:nowrap;">
+      <div style="font-size:11px; margin-bottom:3px;">${raceNames[rid]}</div>
+      <button class="chip-sm" data-toggle-col="${rid}" style="font-size:10px;">Toggle</button>
+    </th>`).join("");
 
-  // Sibling "Add" buttons — inject into discover results and go back
-  body.querySelectorAll("[data-sibling-url]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const url = btn.dataset.siblingUrl;
-      const name = btn.dataset.siblingName;
-      if (!state.discoverRaces.find(r => r.url === url)) {
-        state.discoverRaces.unshift({ name, country: sourceRow?.country || "", km: null, elevation: null, url });
-      }
-      panel.style.display = "none";
-      renderDiscoverResults();
-      document.getElementById("discoverResultsPanel").style.display = "";
-    });
-  });
+  const rows = years.map(y => {
+    const cells = allRaceIds.map(rid => {
+      const cell = grid[y]?.[rid];
+      if (!cell) return `<td style="padding:4px 8px; text-align:center; color:var(--muted);">—</td>`;
+      return `<td style="padding:4px 8px; text-align:center;">
+        <input type="checkbox" name="grid-cell" checked
+          data-year="${y}" data-race-id="${rid}"
+          data-race-name="${cell.name.replace(/"/g, "&quot;")}"
+          data-slug="${cell.slug}"
+          data-url="${cell.url.replace(/"/g, "&quot;")}"
+          data-itra-id="${cell.itraId}" />
+      </td>`;
+    }).join("");
+    return `<tr><td style="padding:4px 8px; font-weight:600; font-size:12px;">${y}</td>${cells}</tr>`;
+  }).join("");
 
-  document.getElementById("discoverResultsPanel").style.display = "none";
-  panel.style.display = "";
+  return `
+    <div style="margin-bottom:10px; display:flex; gap:8px; align-items:center;">
+      <span class="filter-label" style="margin:0; white-space:nowrap;">Series tags</span>
+      <input id="pickerSeries" type="text" placeholder="utmb-world-series, gtws…" style="flex:1; min-width:160px;" />
+    </div>
+    <div style="overflow-x:auto; max-height:400px; overflow-y:auto; margin-bottom:10px; border:1px solid var(--border); border-radius:6px;">
+      <table style="border-collapse:collapse; font-size:12px; width:100%;">
+        <thead style="position:sticky; top:0; background:var(--bg); z-index:1;">
+          <tr>
+            <th style="padding:4px 8px; text-align:left; border-bottom:1px solid var(--border);">Year</th>
+            ${headerCols}
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+      <button id="addToQueueBtn" class="chip active">Add to Queue</button>
+      <button id="gridSelectAll" class="chip-sm">All</button>
+      <button id="gridSelectNone" class="chip-sm">None</button>
+      <span id="pickerStatus" style="font-size:12px; color:var(--muted);"></span>
+    </div>
+  `;
 }
 
 async function addSelectedToQueue() {
   const panel = document.getElementById("editionPickerPanel");
-  const raceId = panel.dataset.raceId;
-  const raceName = panel.dataset.raceName;
-  const slug = panel.dataset.slug;
-  const country = panel.dataset.country || null;
-  const km = panel.dataset.km ? parseFloat(panel.dataset.km) : null;
-  const elevation = panel.dataset.elevation ? parseInt(panel.dataset.elevation, 10) : null;
+  const pickerStatus = document.getElementById("pickerStatus");
   const seriesRaw = (document.getElementById("pickerSeries")?.value || "").trim();
   const series = seriesRaw ? seriesRaw.split(",").map(s => s.trim()).filter(Boolean) : [];
+  const country = panel.dataset.country || null;
 
-  const checked = [...document.querySelectorAll("#editionCheckboxes input[name='edition']:checked")];
-  const pickerStatus = document.getElementById("pickerStatus");
-  if (!checked.length) {
+  let cells;
+  if (editionPickerMode === "grid") {
+    cells = [...document.querySelectorAll("input[name='grid-cell']:checked")].map(cb => ({
+      year: parseInt(cb.dataset.year, 10),
+      raceId: cb.dataset.raceId,
+      raceName: cb.dataset.raceName,
+      slug: cb.dataset.slug,
+      url: cb.dataset.url,
+      km: null,
+      elevation: null,
+    }));
+  } else {
+    const raceId = panel.dataset.raceId;
+    const raceName = panel.dataset.raceName;
+    const slug = panel.dataset.slug;
+    const km = panel.dataset.km ? parseFloat(panel.dataset.km) : null;
+    const elevation = panel.dataset.elevation ? parseInt(panel.dataset.elevation, 10) : null;
+    cells = [...document.querySelectorAll("#editionCheckboxes input[name='edition']:checked")].map(cb => ({
+      year: parseInt(cb.dataset.year, 10),
+      raceId, raceName, slug, url: cb.dataset.url, km, elevation,
+    }));
+  }
+
+  if (!cells.length) {
     if (pickerStatus) pickerStatus.textContent = "Select at least one edition.";
     return;
   }
 
   let added = 0;
   const warnings = [];
-  for (const cb of checked) {
-    const year = parseInt(cb.dataset.year, 10);
-    const url = cb.dataset.url;
+  for (const cell of cells) {
+    const { year, raceId, raceName, slug, url, km, elevation } = cell;
     const editionId = `${raceId}-${year}`;
     if (state.importQueue.find(j => j.editionId === editionId)) continue;
 
-    // Detect shared itraId across different race slugs (ITRA uses one result set per event weekend)
     const itraId = url.match(/\/(\d+)$/)?.[1] || null;
+    // Only warn if a different race shares the same itraId (genuinely combined result set)
     const queueConflict = itraId
-      ? state.importQueue.find(j => j.itraId === itraId && j.year === year)
+      ? state.importQueue.find(j => j.itraId === itraId && j.year === year && j.raceId !== raceId)
       : null;
 
-    // Also check DB for same itraId already imported
     let dbConflict = null;
     if (itraId && window.supabaseClient) {
       const { data } = await window.supabaseClient
-        .from("editions")
-        .select("id, race_id")
+        .from("editions").select("id, race_id")
         .ilike("itra_edition_url", `%/${itraId}`)
-        .neq("id", editionId)
-        .limit(1);
+        .neq("id", editionId).limit(1);
       dbConflict = data?.[0] || null;
     }
 
