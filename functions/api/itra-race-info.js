@@ -170,12 +170,16 @@ async function buildEditionGrid({ slug, currentYear, currentItraId, editions, si
     };
   }
 
-  // Other years: parallel-fetch each year's page and parse the sibling nav
+  // Other years: fetch the event-level RaceDetails page for each year.
+  // Using RaceDetails/{eventItraId} (no slug) avoids slug mismatch — ITRA's slug for a sub-race
+  // changes with sponsors across years (e.g. "CCC®" in 2017 vs "HOKA.UTMB®.MONT.BLANC.CCC®"
+  // in 2025). The event overview page carries the year-appropriate sub-race buttons with
+  // correct slugs and per-race itraIds, so we parse those instead of guessing the slug.
   const otherEditions = editions.filter(e => e.year !== currentYear);
   const fetched = await Promise.all(otherEditions.map(async (ed) => {
     try {
-      const yearUrl = `https://itra.run/Races/RaceResults/${slug}/${ed.year}/${ed.itraId}`;
-      const r = await fetch(yearUrl, {
+      const eventUrl = `https://itra.run/Races/RaceDetails/${ed.itraId}`;
+      const r = await fetch(eventUrl, {
         headers: { Cookie: cookieHeader, "User-Agent": UA, Accept: "text/html,application/xhtml+xml", "Accept-Language": "en-US,en;q=0.9" },
         redirect: "follow",
         signal: AbortSignal.timeout(12000),
@@ -192,22 +196,35 @@ async function buildEditionGrid({ slug, currentYear, currentItraId, editions, si
     if (!res) continue;
     const { year, html: h } = res;
 
-    // Parse sibling nav links for this year — including the isCurrent one
     const yearSibs = [];
     const seen = new Set();
-    const re = /<a\s+class="btn btn-outline-dark([^"]*)"[^>]*href="\/Races\/RaceDetails\/([^"]+?)\/(\d{4})\/(\d+)"[^>]*>\s*([^<]+?)\s*<\/a>/g;
+
+    // Pattern A: sub-race navigation buttons (same format as results-page siblings)
+    const btnRe = /<a\s+class="btn btn-outline-dark([^"]*)"[^>]*href="\/Races\/RaceDetails\/([^"]+?)\/(\d{4})\/(\d+)"[^>]*>\s*([^<]+?)\s*<\/a>/g;
     let m;
-    while ((m = re.exec(h)) !== null) {
+    while ((m = btnRe.exec(h)) !== null) {
       const classes = m[1];
       if (classes.includes("text-decoration-line-through")) continue;
-      const sibSlug = m[2];
-      const sibYear = parseInt(m[3], 10);
+      const sibSlug = m[2], sibYear = parseInt(m[3], 10), sibItraId = m[4];
       if (sibYear !== year) continue;
-      const sibItraId = m[4];
       const sibName = decodeHtmlEntities(m[5].trim());
       if (seen.has(sibSlug)) continue;
       seen.add(sibSlug);
       yearSibs.push({ slug: sibSlug, name: sibName, itraId: sibItraId });
+    }
+
+    // Pattern B: direct RaceResults links (event overview may link here instead)
+    if (yearSibs.length === 0) {
+      const linkRe = /href="\/Races\/RaceResults\/([^"]+?)\/(\d{4})\/(\d+)"/g;
+      while ((m = linkRe.exec(h)) !== null) {
+        const sibSlug = m[1], sibYear = parseInt(m[2], 10), sibItraId = m[3];
+        if (sibYear !== year) continue;
+        if (seen.has(sibSlug)) continue;
+        seen.add(sibSlug);
+        // Derive name from slug as fallback
+        const sibName = decodeURIComponent(sibSlug).replace(/\./g, " ").trim();
+        yearSibs.push({ slug: sibSlug, name: sibName, itraId: sibItraId });
+      }
     }
 
     if (yearSibs.length === 0) continue;
