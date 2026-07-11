@@ -1253,19 +1253,39 @@ function renderEditionPicker(info, sourceRow) {
   if (info.grid) {
     editionPickerMode = "grid";
     body.innerHTML = renderEditionGridHtml(info.grid);
+
     body.querySelector("#gridSelectAll")?.addEventListener("click", () => {
       body.querySelectorAll("input[name='grid-cell']").forEach(cb => { cb.checked = true; });
     });
     body.querySelector("#gridSelectNone")?.addEventListener("click", () => {
       body.querySelectorAll("input[name='grid-cell']").forEach(cb => { cb.checked = false; });
     });
-    body.querySelectorAll("[data-toggle-col]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const rid = btn.dataset.toggleCol;
-        const cells = [...body.querySelectorAll(`input[name='grid-cell'][data-race-id='${CSS.escape(rid)}']`)];
-        const allOn = cells.every(c => c.checked);
-        cells.forEach(c => { c.checked = !allOn; });
+
+    // Merge selected columns: set all selected col inputs to the first selected's race ID
+    body.querySelector("#gridMergeBtn")?.addEventListener("click", () => {
+      const checked = [...body.querySelectorAll("input.col-merge-cb:checked")];
+      if (checked.length < 2) {
+        document.getElementById("pickerStatus").textContent = "Check ≥ 2 column headers to merge.";
+        return;
+      }
+      const canonInput = body.querySelector(`input.col-race-id[data-col-id="${CSS.escape(checked[0].dataset.colId)}"]`);
+      const canonId = canonInput?.value.trim() || checked[0].dataset.colId;
+      for (const cb of checked) {
+        const inp = body.querySelector(`input.col-race-id[data-col-id="${CSS.escape(cb.dataset.colId)}"]`);
+        if (inp) { inp.value = canonId; inp.style.color = "var(--clay)"; inp.style.borderColor = "var(--clay)"; }
+        cb.checked = false;
+      }
+      document.getElementById("pickerStatus").textContent = `Merged → ${canonId}`;
+    });
+
+    // Reset col IDs: restore each col-race-id input to its data-col-id
+    body.querySelector("#gridUnmergeBtn")?.addEventListener("click", () => {
+      body.querySelectorAll("input.col-race-id").forEach(inp => {
+        inp.value = inp.dataset.colId;
+        inp.style.color = "";
+        inp.style.borderColor = "";
       });
+      document.getElementById("pickerStatus").textContent = "Column IDs reset.";
     });
   } else {
     editionPickerMode = "flat";
@@ -1331,7 +1351,7 @@ function renderFlatEditionsHtml(info, otherDistances) {
 
 function renderEditionGridHtml(grid) {
   const years = Object.keys(grid).map(Number).sort((a, b) => b - a);
-  // Ordered union of all race IDs, preserving first-appearance order
+  // allRaceIds ordered newest-first so auto-grouping keeps the most recent slug as canonical
   const allRaceIds = [];
   const raceNames = {};
   for (const y of years) {
@@ -1341,17 +1361,31 @@ function renderEditionGridHtml(grid) {
     }
   }
 
-  const headerCols = allRaceIds.map(rid => `
-    <th style="padding:4px 10px; text-align:center; border-bottom:1px solid var(--border); white-space:nowrap;">
-      <div style="font-size:11px; margin-bottom:3px;">${raceNames[rid]}</div>
-      <button class="chip-sm" data-toggle-col="${rid}" style="font-size:10px;">Toggle</button>
-    </th>`).join("");
+  const groups = autoGroupGridColumns(allRaceIds, raceNames);
+
+  const headerCols = allRaceIds.map(rid => {
+    const canon = groups[rid];
+    const isMerged = canon !== rid;
+    return `
+    <th style="padding:4px 8px; text-align:center; border-bottom:1px solid var(--border); min-width:90px;">
+      <div style="display:flex; align-items:center; gap:3px; justify-content:center; margin-bottom:3px;">
+        <input type="checkbox" class="col-merge-cb" data-col-id="${rid}" style="width:auto; margin:0;" title="Select to merge" />
+        <span style="font-size:11px; font-weight:600;">${raceNames[rid]}</span>
+      </div>
+      <input type="text" class="col-race-id"
+        data-col-id="${rid}"
+        data-col-name="${raceNames[rid].replace(/"/g, "&quot;")}"
+        value="${canon}"
+        title="Race ID used for import. Edit to merge with another column."
+        style="width:100%; font-size:9px; text-align:center; padding:1px 3px;${isMerged ? " color:var(--clay); border-color:var(--clay);" : ""}" />
+    </th>`;
+  }).join("");
 
   const rows = years.map(y => {
     const cells = allRaceIds.map(rid => {
       const cell = grid[y]?.[rid];
-      if (!cell) return `<td style="padding:4px 8px; text-align:center; color:var(--muted);">—</td>`;
-      return `<td style="padding:4px 8px; text-align:center;">
+      if (!cell) return `<td style="padding:3px 6px; text-align:center; color:var(--muted);">—</td>`;
+      return `<td style="padding:3px 6px; text-align:center;">
         <input type="checkbox" name="grid-cell" checked
           data-year="${y}" data-race-id="${rid}"
           data-race-name="${cell.name.replace(/"/g, "&quot;")}"
@@ -1360,7 +1394,7 @@ function renderEditionGridHtml(grid) {
           data-itra-id="${cell.itraId}" />
       </td>`;
     }).join("");
-    return `<tr><td style="padding:4px 8px; font-weight:600; font-size:12px;">${y}</td>${cells}</tr>`;
+    return `<tr><td style="padding:3px 8px; font-weight:600; font-size:12px; white-space:nowrap;">${y}</td>${cells}</tr>`;
   }).join("");
 
   return `
@@ -1368,7 +1402,7 @@ function renderEditionGridHtml(grid) {
       <span class="filter-label" style="margin:0; white-space:nowrap;">Series tags</span>
       <input id="pickerSeries" type="text" placeholder="utmb-world-series, gtws…" style="flex:1; min-width:160px;" />
     </div>
-    <div style="overflow-x:auto; max-height:400px; overflow-y:auto; margin-bottom:10px; border:1px solid var(--border); border-radius:6px;">
+    <div style="overflow-x:auto; max-height:380px; overflow-y:auto; margin-bottom:10px; border:1px solid var(--border); border-radius:6px;">
       <table style="border-collapse:collapse; font-size:12px; width:100%;">
         <thead style="position:sticky; top:0; background:var(--bg); z-index:1;">
           <tr>
@@ -1383,6 +1417,8 @@ function renderEditionGridHtml(grid) {
       <button id="addToQueueBtn" class="chip active">Add to Queue</button>
       <button id="gridSelectAll" class="chip-sm">All</button>
       <button id="gridSelectNone" class="chip-sm">None</button>
+      <button id="gridMergeBtn" class="chip-sm">Merge selected cols</button>
+      <button id="gridUnmergeBtn" class="chip-sm">Reset col IDs</button>
       <span id="pickerStatus" style="font-size:12px; color:var(--muted);"></span>
     </div>
   `;
@@ -1397,15 +1433,24 @@ async function addSelectedToQueue() {
 
   let cells;
   if (editionPickerMode === "grid") {
-    cells = [...document.querySelectorAll("input[name='grid-cell']:checked")].map(cb => ({
-      year: parseInt(cb.dataset.year, 10),
-      raceId: cb.dataset.raceId,
-      raceName: cb.dataset.raceName,
-      slug: cb.dataset.slug,
-      url: cb.dataset.url,
-      km: null,
-      elevation: null,
-    }));
+    // Build map: original col raceId → { effectiveRaceId, effectiveName }
+    const colMap = {};
+    document.querySelectorAll("input.col-race-id").forEach(inp => {
+      const effective = inp.value.trim() || inp.dataset.colId;
+      colMap[inp.dataset.colId] = { raceId: effective, name: inp.dataset.colName };
+    });
+    cells = [...document.querySelectorAll("input[name='grid-cell']:checked")].map(cb => {
+      const col = colMap[cb.dataset.raceId] || { raceId: cb.dataset.raceId, name: cb.dataset.raceName };
+      return {
+        year: parseInt(cb.dataset.year, 10),
+        raceId: col.raceId,
+        raceName: col.name,
+        slug: cb.dataset.slug,
+        url: cb.dataset.url,
+        km: null,
+        elevation: null,
+      };
+    });
   } else {
     const raceId = panel.dataset.raceId;
     const raceName = panel.dataset.raceName;
@@ -1676,6 +1721,47 @@ function jaccardSim(a, b) {
   for (const w of sa) if (sb.has(w)) inter++;
   const union = sa.size + sb.size - inter;
   return union === 0 ? 0 : inter / union;
+}
+
+// ITRA-specific noise: strips sponsor names + geography that change year-to-year
+const ITRA_NOISE = new Set([
+  "world", "series", "hoka", "dacia", "north", "face", "by", "presented", "powered", "official",
+  "the", "de", "du", "la", "le", "les", "des", "and", "et",
+  "ultra", "trail", "mont", "blanc",
+]);
+
+function normalizeItraName(name) {
+  return (name || "")
+    .toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter(w => w.length > 1 && !ITRA_NOISE.has(w))
+    .sort();
+}
+
+// Returns { [originalRaceId]: canonicalRaceId } — columns with similar names share a canonical.
+// allRaceIds are ordered newest-first so the first element becomes the canonical.
+function autoGroupGridColumns(allRaceIds, raceNames) {
+  const assignment = {};
+  for (const rid of allRaceIds) assignment[rid] = rid;
+
+  for (let i = 0; i < allRaceIds.length; i++) {
+    for (let j = i + 1; j < allRaceIds.length; j++) {
+      const a = allRaceIds[i], b = allRaceIds[j];
+      if (assignment[a] === assignment[b]) continue;
+      const wordsA = normalizeItraName(raceNames[a]);
+      const wordsB = normalizeItraName(raceNames[b]);
+      if (wordsA.length === 0 || wordsB.length === 0) continue;
+      if (jaccardSim(wordsA, wordsB) >= 0.5) {
+        const canon = assignment[a]; // a is newer (earlier in array) → use its canonical
+        for (const rid of allRaceIds) {
+          if (assignment[rid] === assignment[b]) assignment[rid] = canon;
+        }
+      }
+    }
+  }
+  return assignment;
 }
 
 async function loadUtmbDbRaces() {
