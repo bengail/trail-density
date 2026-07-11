@@ -1465,6 +1465,7 @@ async function saveEditionToSupabase(job, results) {
     country: job.country || null,
     distance_km: job.km || null,
     elevation_gain: job.elevation || null,
+    source: "itra",
     itra_race_url: `https://itra.run/Races/RaceResults/${job.slug}`
   }, { onConflict: "id" });
   if (raceErr) throw new Error("Race upsert: " + raceErr.message);
