@@ -1350,15 +1350,16 @@ function addSelectedToQueue() {
       dbConflict = data?.[0] || null;
     }
 
+    let warning = null;
     if (queueConflict || dbConflict) {
       const conflictName = queueConflict
-        ? `"${queueConflict.raceName} ${year}" already in queue`
-        : `already imported as "${dbConflict.id}"`;
-      warnings.push(`${raceName} ${year}: same ITRA result set as ${conflictName} (itraId ${itraId}) — skipped`);
-      continue;
+        ? `"${queueConflict.raceName} ${year}" in queue`
+        : `"${dbConflict.id}" in DB`;
+      warning = `⚠ itraId ${itraId} shared with ${conflictName} — data may be combined event results`;
+      warnings.push(`${raceName} ${year}: ${warning}`);
     }
 
-    state.importQueue.push({ editionId, raceId, raceName, slug, year, country, km, elevation, series, url, itraId, status: "pending", error: null, resultCount: null });
+    state.importQueue.push({ editionId, raceId, raceName, slug, year, country, km, elevation, series, url, itraId, warning, status: "pending", error: null, resultCount: null });
     added++;
   }
 

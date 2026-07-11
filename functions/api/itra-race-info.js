@@ -89,6 +89,15 @@ function parseRacePageInfo(html, url) {
       itraId: currentItraId,
       url: `https://itra.run/Races/RaceResults/${slug}/${currentYear}/${currentItraId}`
     });
+  } else {
+    // The year dropdown shows the event-level itraId for the current year, which is shared
+    // across all sub-races in the same event weekend. The page URL itself has the correct
+    // per-race itraId. Override the current year's entry with it.
+    const cur = editions.find(e => e.year === currentYear);
+    if (cur && cur.itraId !== currentItraId) {
+      cur.itraId = currentItraId;
+      cur.url = `https://itra.run/Races/RaceResults/${slug}/${currentYear}/${currentItraId}`;
+    }
   }
 
   // Siblings: other distances in same event
