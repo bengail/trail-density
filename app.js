@@ -1371,7 +1371,11 @@ function renderQueue() {
       <div class="qi-body">
         <div class="qi-name">${job.raceName} ${job.year}</div>
         <div class="qi-sub">${job.raceId} · ${job.series.join(", ") || "no series"}</div>
+        <div class="qi-sub" style="font-size:10px; word-break:break-all;">
+          <a href="${job.url}" target="_blank" rel="noopener" style="color:var(--muted); text-decoration:underline;">${job.url}</a>
+        </div>
         ${detail ? `<div class="qi-detail" style="color:${job.status === "error" ? "#ef4444" : "#16a34a"};">${detail}</div>` : ""}
+        ${job.warning ? `<div class="qi-detail" style="color:#d97706;">${job.warning}</div>` : ""}
       </div>
     `;
     list.appendChild(div);
@@ -1431,6 +1435,23 @@ async function importEdition(job) {
   }
   const html = await resp.text();
   const results = parseItraHtml(html, job.url);
+
+  // Duplicate detection: check if top-10 runners match any other already-imported edition
+  if (results.length >= 10 && window.supabaseClient) {
+    const top10 = results.slice(0, 10).map(r => r.runner).filter(Boolean);
+    const { data: existing } = await window.supabaseClient
+      .from("results")
+      .select("edition_id, runner")
+      .in("runner", top10)
+      .eq("rank", 1)
+      .neq("edition_id", job.editionId)
+      .limit(5);
+    if (existing && existing.length > 0) {
+      const dupEditions = [...new Set(existing.map(r => r.edition_id))];
+      job.warning = `⚠ Top results match already-imported edition(s): ${dupEditions.join(", ")} — check URLs`;
+    }
+  }
+
   const { count } = await saveEditionToSupabase(job, results);
   job.resultCount = count;
 }
