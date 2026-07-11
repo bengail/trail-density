@@ -66,6 +66,7 @@ function parseRacePageInfo(html, url) {
 
   // Editions from <select id="select_id" onchange="GetEventPreviousEdition(this)">
   // Option value = numeric ITRA race ID, text = year (e.g. "2026")
+  // If the race has only one edition ITRA omits the dropdown entirely — fall back to current URL.
   const editions = [];
   const selectMatch = html.match(/<select[^>]+id="select_id"[^>]*>([\s\S]*?)<\/select>/);
   if (selectMatch) {
@@ -81,6 +82,13 @@ function parseRacePageInfo(html, url) {
       });
     }
     editions.sort((a, b) => b.year - a.year);
+  }
+  if (editions.length === 0) {
+    editions.push({
+      year: currentYear,
+      itraId: currentItraId,
+      url: `https://itra.run/Races/RaceResults/${slug}/${currentYear}/${currentItraId}`
+    });
   }
 
   // Siblings: other distances in same event
