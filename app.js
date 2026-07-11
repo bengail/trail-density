@@ -1203,12 +1203,15 @@ function renderDiscoverResults() {
   tbody.innerHTML = "";
   for (const r of state.discoverRaces) {
     const tr = document.createElement("tr");
-    const nameCell = r.name || "";
+    const kmCell = r.isFestival
+      ? r.distances.map(d => `<span class="chip-xs" style="font-size:10px;">${d.km ?? "?"}km</span>`).join(" ")
+      : (r.km ?? "");
+    const elevCell = r.isFestival ? "" : (r.elevation ?? "");
     tr.innerHTML = `
       <td>${r.country || ""}</td>
-      <td style="font-weight:600;">${nameCell}</td>
-      <td style="text-align:right;">${r.km ?? ""}</td>
-      <td style="text-align:right;">${r.elevation ?? ""}</td>
+      <td style="font-weight:600;">${r.name || ""}</td>
+      <td style="text-align:right; vertical-align:middle;">${kmCell}</td>
+      <td style="text-align:right;">${elevCell}</td>
       <td><button class="chip-sm add-editions-btn">+ Editions</button></td>
     `;
     const addBtn = tr.querySelector(".add-editions-btn");
@@ -1266,6 +1269,16 @@ function attachGridHandlers(body) {
     body.innerHTML = renderEditionGridHtml(currentGrid, {});
     attachGridHandlers(body);
     document.getElementById("pickerStatus").textContent = "Columns reset.";
+  });
+
+  // Column name click: toggle all years for that column
+  body.querySelectorAll("button.col-select-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const colId = btn.dataset.colId;
+      const cells = [...body.querySelectorAll(`input[name='grid-cell'][data-race-id="${CSS.escape(colId)}"]`)];
+      const allChecked = cells.every(c => c.checked);
+      cells.forEach(c => { c.checked = !allChecked; });
+    });
   });
 }
 
@@ -1393,7 +1406,8 @@ function renderEditionGridHtml(grid, manualMerges = {}) {
     <th style="padding:4px 8px; text-align:center; border-bottom:1px solid var(--border); min-width:90px;">
       <div style="display:flex; align-items:center; gap:3px; justify-content:center; margin-bottom:3px;">
         <input type="checkbox" class="col-merge-cb" data-col-id="${c}" style="width:auto; margin:0;" title="Select to merge with another column" />
-        <span style="font-size:11px; font-weight:600;">${canonNames[c]}</span>
+        <button class="col-select-btn" data-col-id="${c}" title="Toggle all years in this column"
+          style="background:none; border:none; padding:0; cursor:pointer; font-size:11px; font-weight:600; color:inherit; text-decoration:underline dotted;">${canonNames[c]}</button>
       </div>
       <input type="text" class="col-race-id"
         data-col-id="${c}"

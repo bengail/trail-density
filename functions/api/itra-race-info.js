@@ -213,16 +213,17 @@ async function buildEditionGrid({ slug, currentYear, currentItraId, editions, si
       yearSibs.push({ slug: sibSlug, name: sibName, itraId: sibItraId });
     }
 
-    // Pattern B: direct RaceResults links (event overview may link here instead)
+    // Pattern B: any <a> linking to /Races/RaceDetails/{slug}/{year}/{id}
+    // (festival/event overview pages list sub-races as plain links, not btn buttons)
     if (yearSibs.length === 0) {
-      const linkRe = /href="\/Races\/RaceResults\/([^"]+?)\/(\d{4})\/(\d+)"/g;
+      const linkRe = /<a\b[^>]*href="\/Races\/RaceDetails\/([^"]+?)\/(\d{4})\/(\d+)"[^>]*>([^<]*)<\/a>/g;
       while ((m = linkRe.exec(h)) !== null) {
         const sibSlug = m[1], sibYear = parseInt(m[2], 10), sibItraId = m[3];
+        const sibName = decodeHtmlEntities(m[4].trim());
         if (sibYear !== year) continue;
+        if (!sibName) continue;
         if (seen.has(sibSlug)) continue;
         seen.add(sibSlug);
-        // Derive name from slug as fallback
-        const sibName = decodeURIComponent(sibSlug).replace(/\./g, " ").trim();
         yearSibs.push({ slug: sibSlug, name: sibName, itraId: sibItraId });
       }
     }

@@ -150,19 +150,37 @@ function parseRaceCards(html) {
 
   tokens.sort((a, b) => a.pos - b.pos);
 
-  const races = [];
-  let curName = "";
-  let curCountry = "";
+  // Group boxes under events: one entry per h4 event name, accumulating sub-race boxes
+  const events = [];
+  let curName = "", curCountry = "";
+  let curBoxes = [];
+
+  const finalizeEvent = () => {
+    if (curBoxes.length > 0) {
+      events.push({ name: curName, country: curCountry, boxes: [...curBoxes] });
+      curBoxes = [];
+    }
+  };
 
   for (const t of tokens) {
-    if (t.type === "name") curName = t.value;
+    if (t.type === "name") { finalizeEvent(); curName = t.value; }
     else if (t.type === "country") curCountry = t.value;
-    else if (t.type === "box" && t.hasResults) {
-      races.push({ country: curCountry, name: curName, km: t.km, elevation: t.elevation, url: t.url });
-    }
+    else if (t.type === "box" && t.hasResults) curBoxes.push(t);
   }
+  finalizeEvent();
 
-  return races;
+  return events.map(ev => {
+    const kms = ev.boxes.map(b => b.km).filter(k => k != null);
+    return {
+      name: ev.name,
+      country: ev.country,
+      url: ev.boxes[0].url,
+      km: kms.length ? Math.max(...kms) : null,
+      elevation: ev.boxes.length === 1 ? ev.boxes[0].elevation : null,
+      isFestival: ev.boxes.length > 1,
+      distances: ev.boxes.map(b => ({ km: b.km, elevation: b.elevation, url: b.url })),
+    };
+  });
 }
 
 function parseKm(str) {
