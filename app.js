@@ -1155,8 +1155,9 @@ async function discoverSearch() {
   const dateEnd = document.getElementById("discoverDateEnd")?.value;
   const minKm = parseFloat(document.getElementById("discoverMinKm")?.value) || 0;
   const maxKm = parseFloat(document.getElementById("discoverMaxKm")?.value) || null;
+  const searchTerms = document.getElementById("discoverName")?.value.trim() || "";
 
-  if (!countries.length) { setDiscoverStatus("Enter at least one country code (e.g. FR).", "error"); return; }
+  if (!countries.length && !searchTerms) { setDiscoverStatus("Enter a race name or at least one country code.", "error"); return; }
   if (!dateStart || !dateEnd) { setDiscoverStatus("Set both From and To dates.", "error"); return; }
 
   setDiscoverStatus("Searching itra.run…");
@@ -1169,7 +1170,7 @@ async function discoverSearch() {
     const resp = await fetch("/api/discover-races", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ countries, dateStart: itraDateFormat(dateStart), dateEnd: itraDateFormat(dateEnd) }),
+      body: JSON.stringify({ countries, dateStart: itraDateFormat(dateStart), dateEnd: itraDateFormat(dateEnd), searchTerms }),
     });
     const data = await resp.json();
     if (!resp.ok) throw new Error(data.error || `HTTP ${resp.status}`);

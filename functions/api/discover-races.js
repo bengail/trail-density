@@ -8,11 +8,12 @@ export async function onRequestPost(context) {
     return Response.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { countries, dateStart, dateEnd } = body;
+  const { countries, dateStart, dateEnd, searchTerms } = body;
 
-  if (!Array.isArray(countries) || !countries.length || !dateStart || !dateEnd) {
+  const countryList = Array.isArray(countries) ? countries : [];
+  if ((!countryList.length && !searchTerms) || !dateStart || !dateEnd) {
     return Response.json(
-      { error: "countries (string[]), dateStart, dateEnd (DD-MM-YYYY) are required" },
+      { error: "Provide a race name or at least one country code, plus dateStart and dateEnd (DD-MM-YYYY)" },
       { status: 400 }
     );
   }
@@ -48,7 +49,7 @@ export async function onRequestPost(context) {
   // Step 2: POST search form
   const params = new URLSearchParams();
   params.append("__RequestVerificationToken", csrfToken);
-  for (const c of countries) params.append("Input.Country", c.toUpperCase());
+  for (const c of countryList) params.append("Input.Country", c.toUpperCase());
   params.append("Input.DateStart", dateStart);
   params.append("Input.DateEnd", dateEnd);
   params.append("Input.Longitude", "0");
@@ -65,7 +66,7 @@ export async function onRequestPost(context) {
   params.append("Input.MaxItraPts", "");
   params.append("Input.NationalLeagues", "false");
   params.append("Input.NationalLeague", "false");
-  params.append("Input.SearchTerms", "");
+  params.append("Input.SearchTerms", searchTerms || "");
 
   let postResp;
   try {
