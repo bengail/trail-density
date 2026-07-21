@@ -325,6 +325,8 @@ const state = {
   importRunning: false,
   raceSelected: null,
 };
+let allRacesData = []; // { id, name, country, distance_km, elevation_gain, source, editionCount }
+let racesTabInited = false;
 
 // Filter chip state — shared between wirePublicChipFilters and filter bar
 const chipState = { activeSeries: new Set(), activeYears: new Set([2025]), activeCountry: "", isManual: false };
@@ -1628,7 +1630,6 @@ async function startQueue() {
     courseCache.clear();
     courseMetaCache.clear();
     await loadManifest();
-    renderAdminRaceList(document.getElementById("searchRace")?.value || "");
   }
 }
 
@@ -2330,73 +2331,153 @@ async function updateCharts() {
 }
 
 // ---- Admin: Races tab ----
-function renderMetaCard(key, value) {
-  const safe = value === null || value === undefined || value === "" ? "-" : String(value);
-  return `<div class="metaCard"><div class="k">${key}</div><div class="v">${safe}</div></div>`;
+function escHtml(s) {
+  return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-function renderAdminRaceList(searchQuery) {
-  const list = document.getElementById("raceList");
-  if (!list) return;
-  const q = (searchQuery || "").trim().toLowerCase();
-  list.innerHTML = "";
-  const entries = getManifestEntries();
-  if (!entries.length) {
-    list.innerHTML = '<div class="note" style="padding:8px;">No editions imported yet.</div>';
+function setRacesStatus(msg, type = "") {
+  const el = document.getElementById("racesStatus");
+  if (!el) return;
+  el.textContent = msg;
+  el.className = "status" + (type ? " " + type : "");
+  el.style.display = msg ? "" : "none";
+}
+
+async function loadAllRacesData() {
+  if (!window.supabaseClient) return;
+  const [racesResp, editionsResp] = await Promise.all([
+    window.supabaseClient.from("races").select("id, name, country, distance_km, elevation_gain, source").order("name"),
+    window.supabaseClient.from("editions").select("race_id"),
+  ]);
+  if (racesResp.error) throw new Error(racesResp.error.message);
+  if (editionsResp.error) throw new Error(editionsResp.error.message);
+  const edCounts = {};
+  for (const e of editionsResp.data) edCounts[e.race_id] = (edCounts[e.race_id] || 0) + 1;
+  allRacesData = racesResp.data.map(r => ({ ...r, editionCount: edCounts[r.id] || 0 }));
+}
+
+function getCheckedRaceIds() {
+  return [...document.querySelectorAll("input.race-merge-cb:checked")].map(cb => cb.dataset.raceId);
+}
+
+function updateRacesMergeBtn() {
+  const btn = document.getElementById("racesMergeBtn");
+  if (btn) btn.disabled = getCheckedRaceIds().length < 2;
+}
+
+function renderRacesTable() {
+  const nameQ = (document.getElementById("racesSearchName")?.value || "").trim().toLowerCase();
+  const sourceQ = document.getElementById("racesFilterSource")?.value || "";
+  const tbody = document.getElementById("racesTableBody");
+  if (!tbody) return;
+
+  const filtered = allRacesData.filter(r => {
+    if (nameQ && !r.name?.toLowerCase().includes(nameQ) && !r.id.toLowerCase().includes(nameQ)) return false;
+    if (sourceQ && (r.source || "itra") !== sourceQ) return false;
+    return true;
+  });
+
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="note" style="padding:12px;">No races match the filters.</td></tr>';
     return;
   }
-  for (const c of entries) {
-    const id = c.race_id;
-    const meta = getCourseMeta(id) || {};
-    const name = (meta.name || "").toLowerCase();
-    if (q && !id.toLowerCase().includes(q) && !name.includes(q)) continue;
-    const row = document.createElement("div");
-    row.className = "item";
-    if (state.raceSelected === id) row.style.background = "rgba(34,51,199,0.08)";
-    const label = document.createElement("div");
-    label.className = "item-label";
-    label.textContent = meta.name ? `${meta.name} (${meta.year || "?"})` : id;
-    const pill = document.createElement("span");
-    pill.className = "pill";
-    pill.textContent = String(meta.year || "-");
-    row.appendChild(label);
-    row.appendChild(pill);
-    row.addEventListener("click", () => { state.raceSelected = id; renderAdminRaceList(q); renderAdminRaceDetail(id); });
-    list.appendChild(row);
+
+  tbody.innerHTML = filtered.map(r => `
+    <tr>
+      <td><input type="checkbox" class="race-merge-cb" data-race-id="${escHtml(r.id)}" /></td>
+      <td style="font-family:monospace; font-size:11px; color:var(--muted,#888);">${escHtml(r.id)}</td>
+      <td>${escHtml(r.name || "-")}</td>
+      <td>${escHtml(r.country || "-")}</td>
+      <td>${r.distance_km ?? "-"}</td>
+      <td>${r.elevation_gain != null ? r.elevation_gain.toLocaleString() : "-"}</td>
+      <td><span class="chip-xs">${escHtml(r.source || "itra")}</span></td>
+      <td>${r.editionCount}</td>
+    </tr>
+  `).join("");
+
+  tbody.querySelectorAll("input.race-merge-cb").forEach(cb => cb.addEventListener("change", updateRacesMergeBtn));
+
+  const selectAll = document.getElementById("racesSelectAll");
+  if (selectAll) selectAll.checked = false;
+}
+
+function openMergePanel() {
+  const ids = getCheckedRaceIds();
+  if (ids.length < 2) return;
+  const sel = document.getElementById("racesMergeCanonical");
+  sel.innerHTML = ids.map(id => {
+    const r = allRacesData.find(x => x.id === id);
+    return `<option value="${escHtml(id)}">${escHtml(r?.name || id)} — ${escHtml(id)} (${r?.editionCount ?? 0} eds)</option>`;
+  }).join("");
+  const totalEditions = ids.reduce((sum, id) => sum + (allRacesData.find(r => r.id === id)?.editionCount || 0), 0);
+  document.getElementById("racesMergePreview").textContent =
+    `${ids.length} races selected (${totalEditions} editions total). All editions will be re-pointed to the canonical ID; the other race records will be deleted.`;
+  const panel = document.getElementById("racesMergePanel");
+  panel.style.display = "";
+  panel.scrollIntoView({ behavior: "smooth" });
+}
+
+async function confirmMerge() {
+  const canonicalId = document.getElementById("racesMergeCanonical")?.value;
+  if (!canonicalId) return;
+  const ids = getCheckedRaceIds();
+  const toDelete = ids.filter(id => id !== canonicalId);
+  if (!toDelete.length) return;
+
+  setRacesStatus("Merging…");
+  document.getElementById("racesMergeConfirmBtn").disabled = true;
+  try {
+    for (const oldId of toDelete) {
+      const { error } = await window.supabaseClient
+        .from("editions").update({ race_id: canonicalId }).eq("race_id", oldId);
+      if (error) throw new Error(`Re-point "${oldId}": ` + error.message);
+    }
+    const { error: delErr } = await window.supabaseClient
+      .from("races").delete().in("id", toDelete);
+    if (delErr) throw new Error("Delete races: " + delErr.message);
+
+    setRacesStatus(`Merged ${toDelete.length} race${toDelete.length > 1 ? "s" : ""} → "${canonicalId}".`, "ok");
+    document.getElementById("racesMergePanel").style.display = "none";
+    manifest = null; courseCache.clear(); courseMetaCache.clear();
+    await Promise.all([loadAllRacesData(), loadManifest()]);
+    renderRacesTable();
+  } catch (err) {
+    setRacesStatus("Error: " + err.message, "error");
+  } finally {
+    const btn = document.getElementById("racesMergeConfirmBtn");
+    if (btn) btn.disabled = false;
   }
 }
 
-async function renderAdminRaceDetail(editionId) {
-  const detail = document.getElementById("raceDetail");
-  if (!detail) return;
-  detail.innerHTML = '<div class="note">Loading…</div>';
+async function initRacesTab() {
+  if (!racesTabInited) {
+    racesTabInited = true;
+    document.getElementById("racesSearchName")?.addEventListener("input", renderRacesTable);
+    document.getElementById("racesFilterSource")?.addEventListener("change", renderRacesTable);
+    document.getElementById("racesRefreshBtn")?.addEventListener("click", async () => {
+      setRacesStatus("Refreshing…");
+      try { await loadAllRacesData(); setRacesStatus(""); renderRacesTable(); }
+      catch (err) { setRacesStatus("Error: " + err.message, "error"); }
+    });
+    document.getElementById("racesMergeBtn")?.addEventListener("click", openMergePanel);
+    document.getElementById("racesMergeConfirmBtn")?.addEventListener("click", confirmMerge);
+    document.getElementById("racesMergeCancelBtn")?.addEventListener("click", () => {
+      document.getElementById("racesMergePanel").style.display = "none";
+      setRacesStatus("");
+    });
+    document.getElementById("racesSelectAll")?.addEventListener("change", e => {
+      document.querySelectorAll("input.race-merge-cb").forEach(cb => { cb.checked = e.target.checked; });
+      updateRacesMergeBtn();
+    });
+  }
+
+  setRacesStatus("Loading…");
   try {
-    const course = await loadCourse(editionId);
-    const meta = course.meta || {};
-    const series = normalizeSeries(meta.series).join(", ");
-    detail.innerHTML = `
-      <div class="metaGrid">
-        ${renderMetaCard("Edition ID", editionId)}
-        ${renderMetaCard("Base race", meta.base_race_id || "-")}
-        ${renderMetaCard("Name", meta.name || "-")}
-        ${renderMetaCard("Year", meta.year || "-")}
-        ${renderMetaCard("Country", meta.country || "-")}
-        ${renderMetaCard("Distance (km)", meta.distance_km ?? "-")}
-        ${renderMetaCard("Series", series || "-")}
-      </div>
-      <div class="tableWrap" style="max-height:480px;">
-        <table>
-          <thead><tr><th>#</th><th>Runner</th><th>Index</th><th>Gender</th><th>Nat.</th></tr></thead>
-          <tbody>
-            ${(course.results || []).map(r =>
-              `<tr><td>${r.rank}</td><td>${r.runner ?? "-"}</td><td>${fmt(r.index, 1)}</td><td>${r.gender ?? "-"}</td><td>${r.nationality ?? "-"}</td></tr>`
-            ).join("")}
-          </tbody>
-        </table>
-      </div>
-    `;
+    await loadAllRacesData();
+    setRacesStatus("");
+    renderRacesTable();
   } catch (err) {
-    detail.innerHTML = `<div class="status error">${err.message}</div>`;
+    setRacesStatus("Error loading races: " + err.message, "error");
   }
 }
 
@@ -2461,7 +2542,7 @@ function setActiveTab(tab) {
   if (safeTab === "trends") { renderTrendsRaceList(); renderTrendsChart(); }
   if (safeTab === "visualization") updateVisualization();
   if (safeTab === "charts") updateCharts();
-  if (safeTab === "races") renderAdminRaceList(document.getElementById("searchRace")?.value || "");
+  if (safeTab === "races") initRacesTab();
 }
 
 // ---- Orchestrator ----
@@ -2646,10 +2727,6 @@ async function updateAll() {
       renderQueue();
     });
 
-    // Races tab search
-    const raceSearch = document.getElementById("searchRace");
-    raceSearch?.addEventListener("input", () => renderAdminRaceList(raceSearch.value));
-
     // Sign out
     document.getElementById("signOutBtn")?.addEventListener("click", async () => {
       await window.supabaseClient?.auth.signOut();
@@ -2657,7 +2734,6 @@ async function updateAll() {
     });
 
     renderQueue();
-    renderAdminRaceList("");
   }
 
   // Shared nav tabs

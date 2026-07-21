@@ -270,15 +270,47 @@
 
 <!-- ── Races tab ──────────────────────────────────────────────────────────── -->
 <main id="pageRaces">
-  <div class="grid">
-    <aside class="panel sidebar">
-      <h2>Imported Editions</h2>
-      <input id="searchRace" type="search" placeholder="Search…" style="margin-bottom:10px;" />
-      <div id="raceList" class="list"></div>
-    </aside>
-    <section class="panel" id="raceDetail">
-      <div class="note">Select an edition on the left to view details.</div>
-    </section>
+  <div class="panel" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:14px;">
+    <input id="racesSearchName" type="search" placeholder="Filter by name or ID…" style="flex:1; min-width:160px;" />
+    <select id="racesFilterSource">
+      <option value="">All sources</option>
+      <option value="itra">ITRA</option>
+      <option value="utmb">UTMB</option>
+    </select>
+    <button id="racesMergeBtn" class="chip" disabled>Merge selected</button>
+    <button id="racesRefreshBtn" class="chip">↺ Refresh</button>
+    <span id="racesStatus" class="status" style="display:none;"></span>
+  </div>
+  <div class="panel">
+    <div class="tableWrap" style="max-height:calc(100vh - 230px);">
+      <table id="racesTable">
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="racesSelectAll" title="Select all visible" /></th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Country</th>
+            <th>km</th>
+            <th>Elev</th>
+            <th>Source</th>
+            <th>Editions</th>
+          </tr>
+        </thead>
+        <tbody id="racesTableBody">
+          <tr><td colspan="8" class="note" style="padding:12px;">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div id="racesMergePanel" class="panel" style="display:none; margin-top:14px;">
+    <h3 style="margin:0 0 10px;">Merge races</h3>
+    <div style="margin-bottom:10px;">
+      <span class="filter-label">Keep as canonical race ID</span>
+      <select id="racesMergeCanonical" style="width:100%; margin-top:4px;"></select>
+    </div>
+    <div id="racesMergePreview" class="note" style="margin-bottom:12px;"></div>
+    <button id="racesMergeConfirmBtn" class="chip active">Confirm merge</button>
+    <button id="racesMergeCancelBtn" class="chip" style="margin-left:8px;">Cancel</button>
   </div>
 </main>
 
