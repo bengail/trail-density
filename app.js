@@ -4,7 +4,7 @@
 const MAX_INDEX_FOR_NORM = 1000;
 const TAB_ALLOWLIST = {
   public: ["rcinormcharts", "trends", "visualization", "charts"],
-  admin: ["import", "races"]
+  admin: ["import", "utmb", "races"]
 };
 const DEFAULT_TAB_BY_MODE = {
   public: "rcinormcharts",
@@ -35,6 +35,11 @@ let lang = (() => {
   const s = localStorage.getItem("trail-lang");
   if (s === "fr" || s === "en") return s;
   return navigator.language?.toLowerCase().startsWith("fr") ? "fr" : "en";
+})();
+
+let indexSource = (() => {
+  const s = localStorage.getItem("trail-index-source");
+  return s === "utmb" ? "utmb" : "itra";
 })();
 
 const T = {
@@ -196,11 +201,13 @@ async function loadManifest() {
   if (!window.supabaseClient) return [];
   const { data, error } = await window.supabaseClient
     .from("editions")
-    .select("id, race_id, year, series, races(name, country, distance_km, elevation_gain)")
+    .select("id, race_id, year, series, races(name, country, distance_km, elevation_gain, source)")
     .order("id");
   if (error) throw new Error("loadManifest: " + error.message);
-  manifest = { courses: data.map(e => ({ race_id: e.id, id: e.id })) };
-  for (const e of data) {
+  const filtered = data.filter(e => (e.races?.source || "itra") === state.indexSource);
+  manifest = { courses: filtered.map(e => ({ race_id: e.id, id: e.id })) };
+  courseMetaCache.clear();
+  for (const e of filtered) {
     courseMetaCache.set(e.id, {
       race_id: e.id,
       base_race_id: e.race_id,
@@ -210,6 +217,7 @@ async function loadManifest() {
       series: e.series || [],
       distance_km: e.races?.distance_km || null,
       elevation_gain: e.races?.elevation_gain || null,
+      source: e.races?.source || "itra",
     });
   }
   return manifest.courses;
@@ -291,6 +299,7 @@ async function preloadAllCourseMeta() {
 // ---- UI state ----
 const state = {
   appMode: "public",
+  indexSource,
   assetPrefix: "",
   publicRciGender: "female",
   publicRciShowExtra: false,
@@ -310,11 +319,14 @@ const state = {
   trendsRciKey: "rc5",
   // Admin state
   itraCookie: "",
+  utmbToken: "",
   discoverRaces: [],
   importQueue: [],
   importRunning: false,
   raceSelected: null,
 };
+let allRacesData = []; // { id, name, country, distance_km, elevation_gain, source, editionCount }
+let racesTabInited = false;
 
 // Filter chip state — shared between wirePublicChipFilters and filter bar
 const chipState = { activeSeries: new Set(), activeYears: new Set([2025]), activeCountry: "", isManual: false };
@@ -441,6 +453,14 @@ function fuzzyMatch(query, text) {
   const lower = text.toLowerCase();
   return terms.every(t => lower.includes(t));
 }
+
+// Set by wirePublicChipFilters() — called from switchSource() at module level
+let refreshPublicChips = null;
+// Tracks whether the edition picker is in flat (single-race) or grid (multi-race) mode
+let editionPickerMode = "flat";
+// Grid data + manual column merges for the currently-open edition picker
+let currentGrid = null;
+let gridManualMerges = {};
 
 function wirePublicChipFilters() {
   // chipState is module-level (defined after state object)
@@ -673,6 +693,15 @@ function wirePublicChipFilters() {
     state.rciNormFilters.country = "";
     setSelectionByYear(state.rciNormSelected, 2025);
     renderSeriesChips(); renderYearChips(); renderCountryChips(); renderPublicRaceList(); renderFilterBar(); triggerUpdate();
+  };
+
+  // Expose for switchSource() which lives at module level
+  refreshPublicChips = () => {
+    renderSeriesChips();
+    renderYearChips();
+    renderCountryChips();
+    renderPublicRaceList();
+    renderFilterBar();
   };
 }
 
@@ -1087,8 +1116,10 @@ function parseItraHtml(html, url) {
 
 // ---- Admin: slug + URL utilities ----
 function slugToId(itraSlug) {
-  // "42km.du.Mont.Blanc" → "42km-du-mont-blanc"
-  return itraSlug.replace(/\./g, "-").toLowerCase();
+  // URL-decode first (handles both raw "CCC%C2%AE" and already-decoded "CCC®" forms)
+  let s = itraSlug;
+  try { s = decodeURIComponent(itraSlug); } catch { /* already decoded */ }
+  return s.replace(/\./g, "-").toLowerCase();
 }
 
 function itraUrlParts(url) {
@@ -1126,8 +1157,9 @@ async function discoverSearch() {
   const dateEnd = document.getElementById("discoverDateEnd")?.value;
   const minKm = parseFloat(document.getElementById("discoverMinKm")?.value) || 0;
   const maxKm = parseFloat(document.getElementById("discoverMaxKm")?.value) || null;
+  const searchTerms = document.getElementById("discoverName")?.value.trim() || "";
 
-  if (!countries.length) { setDiscoverStatus("Enter at least one country code (e.g. FR).", "error"); return; }
+  if (!countries.length && !searchTerms) { setDiscoverStatus("Enter a race name or at least one country code.", "error"); return; }
   if (!dateStart || !dateEnd) { setDiscoverStatus("Set both From and To dates.", "error"); return; }
 
   setDiscoverStatus("Searching itra.run…");
@@ -1140,7 +1172,7 @@ async function discoverSearch() {
     const resp = await fetch("/api/discover-races", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ countries, dateStart: itraDateFormat(dateStart), dateEnd: itraDateFormat(dateEnd) }),
+      body: JSON.stringify({ countries, dateStart: itraDateFormat(dateStart), dateEnd: itraDateFormat(dateEnd), searchTerms }),
     });
     const data = await resp.json();
     if (!resp.ok) throw new Error(data.error || `HTTP ${resp.status}`);
@@ -1174,12 +1206,15 @@ function renderDiscoverResults() {
   tbody.innerHTML = "";
   for (const r of state.discoverRaces) {
     const tr = document.createElement("tr");
-    const nameCell = r.name || "";
+    const kmCell = r.isFestival
+      ? r.distances.map(d => `<span class="chip-xs" style="font-size:10px;">${d.km ?? "?"}km</span>`).join(" ")
+      : (r.km ?? "");
+    const elevCell = r.isFestival ? "" : (r.elevation ?? "");
     tr.innerHTML = `
       <td>${r.country || ""}</td>
-      <td style="font-weight:600;">${nameCell}</td>
-      <td style="text-align:right;">${r.km ?? ""}</td>
-      <td style="text-align:right;">${r.elevation ?? ""}</td>
+      <td style="font-weight:600;">${r.name || ""}</td>
+      <td style="text-align:right; vertical-align:middle;">${kmCell}</td>
+      <td style="text-align:right;">${elevCell}</td>
       <td><button class="chip-sm add-editions-btn">+ Editions</button></td>
     `;
     const addBtn = tr.querySelector(".add-editions-btn");
@@ -1207,6 +1242,49 @@ function renderDiscoverResults() {
 }
 
 // ---- Admin: edition picker ----
+function attachGridHandlers(body) {
+  body.querySelector("#gridSelectAll")?.addEventListener("click", () => {
+    body.querySelectorAll("input[name='grid-cell']").forEach(cb => { cb.checked = true; });
+  });
+  body.querySelector("#gridSelectNone")?.addEventListener("click", () => {
+    body.querySelectorAll("input[name='grid-cell']").forEach(cb => { cb.checked = false; });
+  });
+
+  // Merge: collapse selected canonical columns into one, then re-render
+  body.querySelector("#gridMergeBtn")?.addEventListener("click", () => {
+    const checked = [...body.querySelectorAll("input.col-merge-cb:checked")];
+    if (checked.length < 2) {
+      document.getElementById("pickerStatus").textContent = "Check ≥ 2 column headers to merge.";
+      return;
+    }
+    const superCanon = checked[0].dataset.colId;
+    for (let i = 1; i < checked.length; i++) {
+      gridManualMerges[checked[i].dataset.colId] = superCanon;
+    }
+    body.innerHTML = renderEditionGridHtml(currentGrid, gridManualMerges);
+    attachGridHandlers(body);
+    document.getElementById("pickerStatus").textContent = `Merged ${checked.length} columns → ${superCanon}`;
+  });
+
+  // Reset: clear all manual merges and re-render
+  body.querySelector("#gridUnmergeBtn")?.addEventListener("click", () => {
+    gridManualMerges = {};
+    body.innerHTML = renderEditionGridHtml(currentGrid, {});
+    attachGridHandlers(body);
+    document.getElementById("pickerStatus").textContent = "Columns reset.";
+  });
+
+  // Column name click: toggle all years for that column
+  body.querySelectorAll("button.col-select-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const colId = btn.dataset.colId;
+      const cells = [...body.querySelectorAll(`input[name='grid-cell'][data-race-id="${CSS.escape(colId)}"]`)];
+      const allChecked = cells.every(c => c.checked);
+      cells.forEach(c => { c.checked = !allChecked; });
+    });
+  });
+}
+
 function renderEditionPicker(info, sourceRow) {
   const panel = document.getElementById("editionPickerPanel");
   if (!panel) return;
@@ -1214,12 +1292,47 @@ function renderEditionPicker(info, sourceRow) {
   document.getElementById("pickerEventName").textContent = info.eventName || "";
   document.getElementById("pickerRaceName").textContent = info.raceName || info.slug || "";
 
-  const raceId = slugToId(info.slug);
-
-  const otherDistances = info.siblings.filter(s => !s.isCurrent && !s.isCancelled);
+  const country = sourceRow?.country || "";
+  panel.dataset.raceId = slugToId(info.slug);
+  panel.dataset.raceName = info.raceName || "";
+  panel.dataset.slug = info.slug;
+  panel.dataset.country = country;
+  panel.dataset.km = sourceRow?.km ?? "";
+  panel.dataset.elevation = sourceRow?.elevation ?? "";
 
   const body = document.getElementById("pickerBody");
-  body.innerHTML = `
+
+  if (info.grid) {
+    editionPickerMode = "grid";
+    currentGrid = info.grid;
+    gridManualMerges = {};
+    body.innerHTML = renderEditionGridHtml(info.grid, {});
+    attachGridHandlers(body);
+  } else {
+    editionPickerMode = "flat";
+    const otherDistances = info.siblings.filter(s => !s.isCurrent && !s.isCancelled);
+    body.innerHTML = renderFlatEditionsHtml(info, otherDistances);
+    body.querySelectorAll("[data-sibling-url]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const url = btn.dataset.siblingUrl;
+        const name = btn.dataset.siblingName;
+        if (!state.discoverRaces.find(r => r.url === url)) {
+          state.discoverRaces.unshift({ name, country, km: null, elevation: null, url });
+        }
+        panel.style.display = "none";
+        renderDiscoverResults();
+        document.getElementById("discoverResultsPanel").style.display = "";
+      });
+    });
+  }
+
+  document.getElementById("addToQueueBtn").addEventListener("click", addSelectedToQueue);
+  document.getElementById("discoverResultsPanel").style.display = "none";
+  panel.style.display = "";
+}
+
+function renderFlatEditionsHtml(info, otherDistances) {
+  return `
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:14px;">
       <div>
         <span class="filter-label">Editions to import</span>
@@ -1243,7 +1356,7 @@ function renderEditionPicker(info, sourceRow) {
             ${otherDistances.map(s => `
               <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
                 <span style="flex:1;">${s.name}</span>
-                <button class="chip-sm" data-sibling-url="${s.url}" data-sibling-name="${s.name.replace(/"/g,"&quot;")}">+ Add</button>
+                <button class="chip-sm" data-sibling-url="${s.url}" data-sibling-name="${s.name.replace(/"/g, "&quot;")}">+ Add</button>
               </div>
             `).join("")}
           </div>
@@ -1255,66 +1368,186 @@ function renderEditionPicker(info, sourceRow) {
       <span id="pickerStatus" style="font-size:12px; color:var(--muted);"></span>
     </div>
   `;
-
-  // Store context on panel for queue button handler
-  panel.dataset.raceId = raceId;
-  panel.dataset.raceName = info.raceName || "";
-  panel.dataset.slug = info.slug;
-  panel.dataset.country = sourceRow?.country || "";
-  panel.dataset.km = sourceRow?.km ?? "";
-  panel.dataset.elevation = sourceRow?.elevation ?? "";
-
-  document.getElementById("addToQueueBtn").addEventListener("click", addSelectedToQueue);
-
-  // Sibling "Add" buttons — inject into discover results and go back
-  body.querySelectorAll("[data-sibling-url]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const url = btn.dataset.siblingUrl;
-      const name = btn.dataset.siblingName;
-      if (!state.discoverRaces.find(r => r.url === url)) {
-        state.discoverRaces.unshift({ name, country: sourceRow?.country || "", km: null, elevation: null, url });
-      }
-      panel.style.display = "none";
-      renderDiscoverResults();
-      document.getElementById("discoverResultsPanel").style.display = "";
-    });
-  });
-
-  document.getElementById("discoverResultsPanel").style.display = "none";
-  panel.style.display = "";
 }
 
-function addSelectedToQueue() {
+function renderEditionGridHtml(grid, manualMerges = {}) {
+  const years = Object.keys(grid).map(Number).sort((a, b) => b - a);
+
+  // allSlugIds ordered newest-first — auto-grouping keeps the most recent slug as canonical
+  const allSlugIds = [];
+  const slugNames = {};
+  for (const y of years) {
+    for (const [rid, d] of Object.entries(grid[y])) {
+      if (!allSlugIds.includes(rid)) allSlugIds.push(rid);
+      slugNames[rid] = slugNames[rid] || d.name;
+    }
+  }
+
+  // Auto-group first (slugId → autoCanonical), then apply manual merges on top
+  const autoGroups = autoGroupGridColumns(allSlugIds, slugNames);
+  const finalGroups = {};
+  for (const rid of allSlugIds) {
+    const autoC = autoGroups[rid];
+    finalGroups[rid] = manualMerges[autoC] || autoC;
+  }
+
+  // Canonical columns in appearance order (newest slug wins as canonical)
+  const canonicalIds = [...new Set(allSlugIds.map(rid => finalGroups[rid]))];
+
+  // Slugs belonging to each canonical
+  const canonSlugs = {};
+  for (const rid of allSlugIds) {
+    const c = finalGroups[rid];
+    (canonSlugs[c] = canonSlugs[c] || []).push(rid);
+  }
+
+  // Canonical display name: from the most recent slug in that group
+  const canonNames = {};
+  for (const c of canonicalIds) canonNames[c] = slugNames[canonSlugs[c][0]];
+
+  const headerCols = canonicalIds.map(c => `
+    <th style="padding:4px 8px; text-align:center; border-bottom:1px solid var(--border); min-width:90px;">
+      <div style="display:flex; align-items:center; gap:3px; justify-content:center; margin-bottom:3px;">
+        <input type="checkbox" class="col-merge-cb" data-col-id="${c}" style="width:auto; margin:0;" title="Select to merge with another column" />
+        <button class="col-select-btn" data-col-id="${c}" title="Toggle all years in this column"
+          style="background:none; border:none; padding:0; cursor:pointer; font-size:11px; font-weight:600; color:inherit; text-decoration:underline dotted;">${canonNames[c]}</button>
+      </div>
+      <input type="text" class="col-race-id"
+        data-col-id="${c}"
+        data-col-name="${canonNames[c].replace(/"/g, "&quot;")}"
+        value="${c}"
+        title="Race ID for import — edit to further merge columns"
+        style="width:100%; font-size:9px; text-align:center; padding:1px 3px;" />
+    </th>`).join("");
+
+  const rows = years.map(y => {
+    const cells = canonicalIds.map(c => {
+      // Use the first slug in the group that has data for this year
+      const cell = canonSlugs[c].map(s => grid[y]?.[s]).find(Boolean);
+      if (!cell) return `<td style="padding:3px 6px; text-align:center; color:var(--muted);">—</td>`;
+      return `<td style="padding:3px 6px; text-align:center;">
+        <input type="checkbox" name="grid-cell" checked
+          data-year="${y}" data-race-id="${c}"
+          data-race-name="${canonNames[c].replace(/"/g, "&quot;")}"
+          data-slug="${cell.slug}"
+          data-url="${cell.url.replace(/"/g, "&quot;")}"
+          data-itra-id="${cell.itraId}" />
+      </td>`;
+    }).join("");
+    return `<tr><td style="padding:3px 8px; font-weight:600; font-size:12px; white-space:nowrap;">${y}</td>${cells}</tr>`;
+  }).join("");
+
+  return `
+    <div style="margin-bottom:10px; display:flex; gap:8px; align-items:center;">
+      <span class="filter-label" style="margin:0; white-space:nowrap;">Series tags</span>
+      <input id="pickerSeries" type="text" placeholder="utmb-world-series, gtws…" style="flex:1; min-width:160px;" />
+    </div>
+    <div style="overflow-x:auto; max-height:380px; overflow-y:auto; margin-bottom:10px; border:1px solid var(--border); border-radius:6px;">
+      <table style="border-collapse:collapse; font-size:12px; width:100%;">
+        <thead style="position:sticky; top:0; background:var(--bg); z-index:1;">
+          <tr>
+            <th style="padding:4px 8px; text-align:left; border-bottom:1px solid var(--border);">Year</th>
+            ${headerCols}
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+      <button id="addToQueueBtn" class="chip active">Add to Queue</button>
+      <button id="gridSelectAll" class="chip-sm">All</button>
+      <button id="gridSelectNone" class="chip-sm">None</button>
+      <button id="gridMergeBtn" class="chip-sm">Merge selected cols</button>
+      <button id="gridUnmergeBtn" class="chip-sm">Reset col IDs</button>
+      <span id="pickerStatus" style="font-size:12px; color:var(--muted);"></span>
+    </div>
+  `;
+}
+
+async function addSelectedToQueue() {
   const panel = document.getElementById("editionPickerPanel");
-  const raceId = panel.dataset.raceId;
-  const raceName = panel.dataset.raceName;
-  const slug = panel.dataset.slug;
-  const country = panel.dataset.country || null;
-  const km = panel.dataset.km ? parseFloat(panel.dataset.km) : null;
-  const elevation = panel.dataset.elevation ? parseInt(panel.dataset.elevation, 10) : null;
+  const pickerStatus = document.getElementById("pickerStatus");
   const seriesRaw = (document.getElementById("pickerSeries")?.value || "").trim();
   const series = seriesRaw ? seriesRaw.split(",").map(s => s.trim()).filter(Boolean) : [];
+  const country = panel.dataset.country || null;
 
-  const checked = [...document.querySelectorAll("#editionCheckboxes input[name='edition']:checked")];
-  const pickerStatus = document.getElementById("pickerStatus");
-  if (!checked.length) {
+  let cells;
+  if (editionPickerMode === "grid") {
+    // Build map: original col raceId → { effectiveRaceId, effectiveName }
+    const colMap = {};
+    document.querySelectorAll("input.col-race-id").forEach(inp => {
+      const effective = inp.value.trim() || inp.dataset.colId;
+      colMap[inp.dataset.colId] = { raceId: effective, name: inp.dataset.colName };
+    });
+    cells = [...document.querySelectorAll("input[name='grid-cell']:checked")].map(cb => {
+      const col = colMap[cb.dataset.raceId] || { raceId: cb.dataset.raceId, name: cb.dataset.raceName };
+      return {
+        year: parseInt(cb.dataset.year, 10),
+        raceId: col.raceId,
+        raceName: col.name,
+        slug: cb.dataset.slug,
+        url: cb.dataset.url,
+        km: null,
+        elevation: null,
+      };
+    });
+  } else {
+    const raceId = panel.dataset.raceId;
+    const raceName = panel.dataset.raceName;
+    const slug = panel.dataset.slug;
+    const km = panel.dataset.km ? parseFloat(panel.dataset.km) : null;
+    const elevation = panel.dataset.elevation ? parseInt(panel.dataset.elevation, 10) : null;
+    cells = [...document.querySelectorAll("#editionCheckboxes input[name='edition']:checked")].map(cb => ({
+      year: parseInt(cb.dataset.year, 10),
+      raceId, raceName, slug, url: cb.dataset.url, km, elevation,
+    }));
+  }
+
+  if (!cells.length) {
     if (pickerStatus) pickerStatus.textContent = "Select at least one edition.";
     return;
   }
 
   let added = 0;
-  for (const cb of checked) {
-    const year = parseInt(cb.dataset.year, 10);
-    const url = cb.dataset.url;
+  const warnings = [];
+  for (const cell of cells) {
+    const { year, raceId, raceName, slug, url, km, elevation } = cell;
     const editionId = `${raceId}-${year}`;
-    if (!state.importQueue.find(j => j.editionId === editionId)) {
-      state.importQueue.push({ editionId, raceId, raceName, slug, year, country, km, elevation, series, url, status: "pending", error: null, resultCount: null });
-      added++;
+    if (state.importQueue.find(j => j.editionId === editionId)) continue;
+
+    const itraId = url.match(/\/(\d+)$/)?.[1] || null;
+    // Only warn if a different race shares the same itraId (genuinely combined result set)
+    const queueConflict = itraId
+      ? state.importQueue.find(j => j.itraId === itraId && j.year === year && j.raceId !== raceId)
+      : null;
+
+    let dbConflict = null;
+    if (itraId && window.supabaseClient) {
+      const { data } = await window.supabaseClient
+        .from("editions").select("id, race_id")
+        .ilike("itra_edition_url", `%/${itraId}`)
+        .neq("id", editionId).limit(1);
+      dbConflict = data?.[0] || null;
     }
+
+    let warning = null;
+    if (queueConflict || dbConflict) {
+      const conflictName = queueConflict
+        ? `"${queueConflict.raceName} ${year}" in queue`
+        : `"${dbConflict.id}" in DB`;
+      warning = `⚠ itraId ${itraId} shared with ${conflictName} — data may be combined event results`;
+      warnings.push(`${raceName} ${year}: ${warning}`);
+    }
+
+    state.importQueue.push({ editionId, raceId, raceName, slug, year, country, km, elevation, series, url, itraId, warning, status: "pending", error: null, resultCount: null });
+    added++;
   }
 
   renderQueue();
-  if (pickerStatus) pickerStatus.textContent = added ? `${added} edition${added > 1 ? "s" : ""} added to queue.` : "Already in queue.";
+  const msgs = [];
+  if (added) msgs.push(`${added} edition${added > 1 ? "s" : ""} added to queue.`);
+  if (warnings.length) msgs.push(...warnings);
+  if (pickerStatus) pickerStatus.textContent = msgs.join(" | ") || "Already in queue.";
 }
 
 // ---- Admin: import queue ----
@@ -1348,8 +1581,12 @@ function renderQueue() {
       <span class="qi-icon">${icon}</span>
       <div class="qi-body">
         <div class="qi-name">${job.raceName} ${job.year}</div>
-        <div class="qi-sub">${job.raceId} · ${job.series.join(", ") || "no series"}</div>
+        <div class="qi-sub">${job.raceId} · ${job.series.join(", ") || "no series"}${job.itraId ? ` · itraId ${job.itraId}` : ""}</div>
+        <div class="qi-sub" style="font-size:10px; word-break:break-all;">
+          <a href="${job.url}" target="_blank" rel="noopener" style="color:var(--muted); text-decoration:underline;">${job.url}</a>
+        </div>
         ${detail ? `<div class="qi-detail" style="color:${job.status === "error" ? "#ef4444" : "#16a34a"};">${detail}</div>` : ""}
+        ${job.warning ? `<div class="qi-detail" style="color:#d97706;">${job.warning}</div>` : ""}
       </div>
     `;
     list.appendChild(div);
@@ -1393,7 +1630,6 @@ async function startQueue() {
     courseCache.clear();
     courseMetaCache.clear();
     await loadManifest();
-    renderAdminRaceList(document.getElementById("searchRace")?.value || "");
   }
 }
 
@@ -1409,6 +1645,23 @@ async function importEdition(job) {
   }
   const html = await resp.text();
   const results = parseItraHtml(html, job.url);
+
+  // Duplicate detection: check if top-10 runners match any other already-imported edition
+  if (results.length >= 10 && window.supabaseClient) {
+    const top10 = results.slice(0, 10).map(r => r.runner).filter(Boolean);
+    const { data: existing } = await window.supabaseClient
+      .from("results")
+      .select("edition_id, runner")
+      .in("runner", top10)
+      .eq("rank", 1)
+      .neq("edition_id", job.editionId)
+      .limit(5);
+    if (existing && existing.length > 0) {
+      const dupEditions = [...new Set(existing.map(r => r.edition_id))];
+      job.warning = `⚠ Top results match already-imported edition(s): ${dupEditions.join(", ")} — check URLs`;
+    }
+  }
+
   const { count } = await saveEditionToSupabase(job, results);
   job.resultCount = count;
 }
@@ -1422,6 +1675,7 @@ async function saveEditionToSupabase(job, results) {
     country: job.country || null,
     distance_km: job.km || null,
     elevation_gain: job.elevation || null,
+    source: "itra",
     itra_race_url: `https://itra.run/Races/RaceResults/${job.slug}`
   }, { onConflict: "id" });
   if (raceErr) throw new Error("Race upsert: " + raceErr.message);
@@ -1446,6 +1700,467 @@ async function saveEditionToSupabase(job, results) {
   if (insErr) throw new Error("Insert results: " + insErr.message);
 
   return { count: rows.length };
+}
+
+// ---- Admin: UTMB Discover & Import ----
+
+function utmbTokenExpiry(token) {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.exp ? new Date(payload.exp * 1000) : null;
+  } catch { return null; }
+}
+
+function updateUtmbTokenStatus() {
+  const token = state.utmbToken;
+  const el = document.getElementById("utmbTokenStatus");
+  if (!el) return;
+  if (!token) { el.textContent = "Not set"; el.style.color = ""; return; }
+  const exp = utmbTokenExpiry(token);
+  if (!exp) { el.textContent = "Set (unknown expiry)"; el.style.color = ""; return; }
+  const mins = Math.round((exp - Date.now()) / 60000);
+  if (mins <= 0) { el.textContent = "Expired — paste new token"; el.style.color = "#dc2626"; }
+  else { el.textContent = `Valid · expires in ${mins} min`; el.style.color = mins < 5 ? "#d97706" : "#16a34a"; }
+}
+
+async function utmbApi(path, params = {}) {
+  const resp = await fetch("/api/utmb-proxy", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ path, params, token: state.utmbToken || null })
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({ error: `HTTP ${resp.status}` }));
+    throw new Error(err.error || `utmb-proxy ${resp.status}`);
+  }
+  return resp.json();
+}
+
+let utmbSearchState = { grouped: [], selectedIndices: new Set(), filterText: "" };
+let utmbDbRaces = [];
+
+const UTMB_NOISE = new Set([
+  "world", "series", "dacia", "hoka", "by", "presented", "powered", "official",
+  "the", "de", "du", "la", "le", "les", "des", "and", "et",
+]);
+
+function normalizeUtmbName(name) {
+  return (name || "")
+    .toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter(w => w.length > 2 && !UTMB_NOISE.has(w))
+    .sort();
+}
+
+function jaccardSim(a, b) {
+  const sa = new Set(a), sb = new Set(b);
+  let inter = 0;
+  for (const w of sa) if (sb.has(w)) inter++;
+  const union = sa.size + sb.size - inter;
+  return union === 0 ? 0 : inter / union;
+}
+
+// ITRA-specific noise: strips sponsor names + geography that change year-to-year
+const ITRA_NOISE = new Set([
+  "world", "series", "hoka", "dacia", "north", "face", "by", "presented", "powered", "official",
+  "the", "de", "du", "la", "le", "les", "des", "and", "et",
+  "ultra", "trail", "mont", "blanc",
+]);
+
+function normalizeItraName(name) {
+  return (name || "")
+    .toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter(w => w.length > 1 && !ITRA_NOISE.has(w))
+    .sort();
+}
+
+// Returns { [originalRaceId]: canonicalRaceId } — columns with similar names share a canonical.
+// allRaceIds are ordered newest-first so the first element becomes the canonical.
+function autoGroupGridColumns(allRaceIds, raceNames) {
+  const assignment = {};
+  for (const rid of allRaceIds) assignment[rid] = rid;
+
+  for (let i = 0; i < allRaceIds.length; i++) {
+    for (let j = i + 1; j < allRaceIds.length; j++) {
+      const a = allRaceIds[i], b = allRaceIds[j];
+      if (assignment[a] === assignment[b]) continue;
+      const wordsA = normalizeItraName(raceNames[a]);
+      const wordsB = normalizeItraName(raceNames[b]);
+      if (wordsA.length === 0 || wordsB.length === 0) continue;
+      if (jaccardSim(wordsA, wordsB) >= 0.5) {
+        const canon = assignment[a]; // a is newer (earlier in array) → use its canonical
+        for (const rid of allRaceIds) {
+          if (assignment[rid] === assignment[b]) assignment[rid] = canon;
+        }
+      }
+    }
+  }
+  return assignment;
+}
+
+async function loadUtmbDbRaces() {
+  if (!window.supabaseClient) return;
+  const { data } = await window.supabaseClient
+    .from("races").select("id, name, country, distance_km").eq("source", "utmb");
+  utmbDbRaces = data || [];
+}
+
+function findUtmbDbMatch(group) {
+  const groupWords = normalizeUtmbName(group.raceName);
+  if (!groupWords.length) return null;
+  let best = null, bestSim = 0;
+  for (const r of utmbDbRaces) {
+    if (group.country && r.country && r.country !== group.country) continue;
+    const dbNamePart = r.name.includes(" — ") ? r.name.split(" — ")[1] : r.name;
+    const sim = jaccardSim(groupWords, normalizeUtmbName(dbNamePart));
+    // Skip km check for strong name matches (course distances change across eras)
+    if (sim < 0.7 && group.km && r.distance_km && Math.abs(group.km - r.distance_km) > 20) continue;
+    if (sim > bestSim) { bestSim = sim; best = r; }
+  }
+  return bestSim >= 0.35 ? { raceId: best.id, name: best.name } : null;
+}
+
+function setUtmbStatus(msg, type = "info") {
+  const el = document.getElementById("utmbSearchStatus");
+  if (!el) return;
+  el.textContent = msg;
+  el.style.display = msg ? "" : "none";
+  el.className = "status " + (type === "error" ? "status-error" : "");
+}
+
+function utmbLog(msg, type = "info") {
+  const log = document.getElementById("utmbLogEntries");
+  const panel = document.getElementById("utmbImportLog");
+  if (!log || !panel) return;
+  panel.style.display = "";
+  const div = document.createElement("div");
+  div.textContent = msg;
+  div.style.color = type === "error" ? "#dc2626" : type === "ok" ? "#16a34a" : "#374151";
+  log.appendChild(div);
+  div.scrollIntoView({ block: "nearest" });
+}
+
+function utmbBuildParams(offset = 0) {
+  const search = document.getElementById("utmbSearch")?.value.trim() || "";
+  const country = document.getElementById("utmbCountry")?.value.trim().toUpperCase() || "";
+  const dateStart = document.getElementById("utmbDateStart")?.value || "";
+  const dateEnd = document.getElementById("utmbDateEnd")?.value || "";
+  const params = { lang: "en", limit: utmbSearchState.limit, offset };
+  if (search) params.search = search;
+  if (country) params.countryCodes = country;
+  if (dateStart) params.dateMin = dateStart;
+  if (dateEnd) params.dateMax = dateEnd;
+  return params;
+}
+
+function utmbGroupRaces(races) {
+  // Step 1: exact grouping by eventName|raceName
+  const map = new Map();
+  for (const r of races) {
+    const key = (r.eventName || "") + "|" + (r.name || "");
+    if (!map.has(key)) {
+      map.set(key, {
+        eventName: r.eventName || "",
+        raceName: r.name || "",
+        category: r.category || "",
+        country: r.startCountry || "",
+        km: r.distance ? parseFloat(r.distance) : null,
+        elevation: r.elevationGain || null,
+        editions: []
+      });
+    }
+    map.get(key).editions.push({
+      year: r.year,
+      uri: r.uriResults || "",
+      hasResults: r.hasResults,
+    });
+  }
+  for (const g of map.values()) g.editions.sort((a, b) => b.year - a.year);
+
+  // Step 2: merge groups that differ only by sponsor name
+  // Compare raceName only (the stable sub-race field, e.g. "CCC"), not eventName
+  // (eventName changes with sponsors and contains "UTMB" for almost all races)
+  const groups = [...map.values()];
+  const merged = new Set();
+  const result = [];
+  for (let i = 0; i < groups.length; i++) {
+    if (merged.has(i)) continue;
+    const g = { ...groups[i], editions: [...groups[i].editions] };
+    const wi = normalizeUtmbName(g.raceName);
+    if (!wi.length) { result.push(g); continue; }
+    for (let j = i + 1; j < groups.length; j++) {
+      if (merged.has(j)) continue;
+      const h = groups[j];
+      if (g.country && h.country && g.country !== h.country) continue;
+      const wj = normalizeUtmbName(h.raceName);
+      const sim = jaccardSim(wi, wj);
+      if (sim < 0.5) continue;
+      // Skip km check for strong name matches (course distances change across eras)
+      if (sim < 0.8 && g.km && h.km && Math.abs(g.km - h.km) > 20) continue;
+      g.editions = [...g.editions, ...h.editions].sort((a, b) => b.year - a.year);
+      merged.add(j);
+    }
+    result.push(g);
+  }
+  return result;
+}
+
+async function utmbFetchAll() {
+  const limit = 25;
+  const first = await utmbApi("search/races-qualifiers", utmbBuildParams(0));
+  let races = first.races || [];
+  const total = first.nbHits || 0;
+  if (total > limit) {
+    setUtmbStatus(`Loading… (${races.length} / ${total})`);
+    const offsets = [];
+    for (let o = limit; o < total; o += limit) offsets.push(o);
+    const pages = await Promise.all(offsets.map(o => utmbApi("search/races-qualifiers", utmbBuildParams(o))));
+    for (const p of pages) races = races.concat(p.races || []);
+  }
+  return races;
+}
+
+async function utmbSearch() {
+  setUtmbStatus("Searching…");
+  try {
+    const [races] = await Promise.all([utmbFetchAll(), loadUtmbDbRaces()]);
+    const groups = utmbGroupRaces(races);
+    for (const g of groups) g.dbMatch = findUtmbDbMatch(g);
+    utmbSearchState.grouped = groups;
+    utmbSearchState.filterText = "";
+    const filterEl = document.getElementById("utmbFilter");
+    if (filterEl) filterEl.value = "";
+    setUtmbStatus("");
+    renderUtmbResults();
+  } catch (err) {
+    setUtmbStatus("Error: " + err.message, "error");
+  }
+}
+
+function syncUtmbMergeBtn() {
+  const btn = document.getElementById("utmbMergeBtn");
+  if (!btn) return;
+  const n = utmbSearchState.selectedIndices.size;
+  btn.style.display = n >= 2 ? "" : "none";
+  btn.textContent = n >= 2 ? `Merge selected (${n})` : "Merge selected";
+}
+
+function renderUtmbResults() {
+  const panel = document.getElementById("utmbResultsPanel");
+  const tbody = document.getElementById("utmbTableBody");
+  const countEl = document.getElementById("utmbCount");
+  if (!panel || !tbody) return;
+  const { grouped } = utmbSearchState;
+  panel.style.display = grouped.length ? "" : "none";
+  document.getElementById("utmbEditionPanel").style.display = "none";
+  if (!grouped.length) return;
+  utmbSearchState.selectedIndices.clear();
+  syncUtmbMergeBtn();
+  const q = utmbSearchState.filterText.toLowerCase();
+  const visible = q
+    ? grouped.filter(g =>
+        (g.raceName || "").toLowerCase().includes(q) ||
+        (g.eventName || "").toLowerCase().includes(q) ||
+        (g.country || "").toLowerCase().includes(q))
+    : grouped;
+  countEl.textContent = q ? `${visible.length} / ${grouped.length}` : grouped.length;
+  tbody.innerHTML = "";
+  for (const g of visible) {
+    const i = grouped.indexOf(g); // real index for merge
+    const withResults = g.editions.filter(e => e.hasResults);
+    const matchLabel = g.dbMatch
+      ? `<span style="font-size:11px; color:var(--clay);" title="${g.dbMatch.name}">→ ${g.dbMatch.name.includes(" — ") ? g.dbMatch.name.split(" — ")[1] : g.dbMatch.name}</span>`
+      : `<span style="font-size:11px; color:var(--muted);">new</span>`;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td style="width:28px; text-align:center;"><input type="checkbox" data-idx="${i}" style="width:auto; margin:0;" /></td>
+      <td class="col-left">${g.country || "—"}</td>
+      <td class="col-left">
+        <div style="font-weight:700; font-size:13px;">${g.eventName}</div>
+        <div style="font-size:11px; color:#64748b;">${g.raceName}</div>
+      </td>
+      <td style="text-align:right;">${g.km ? g.km.toFixed(1) : "—"}</td>
+      <td>${g.category || "—"}</td>
+      <td style="font-family:monospace; font-size:11px;">${g.editions.map(e => e.year).join(", ")}</td>
+      <td>${matchLabel}</td>
+      <td>
+        <button class="chip-sm${withResults.length ? " active" : ""}" ${withResults.length ? "" : "disabled"}>
+          ${withResults.length ? "+ Editions" : "No results"}
+        </button>
+      </td>`;
+    tr.querySelector("input[type=checkbox]").addEventListener("change", e => {
+      if (e.target.checked) utmbSearchState.selectedIndices.add(i);
+      else utmbSearchState.selectedIndices.delete(i);
+      syncUtmbMergeBtn();
+    });
+    const btn = tr.querySelector("button");
+    if (withResults.length) {
+      btn.addEventListener("click", () => renderUtmbEditionPicker(g));
+    }
+    tbody.appendChild(tr);
+  }
+}
+
+function mergeSelectedUtmbGroups() {
+  const indices = [...utmbSearchState.selectedIndices].sort((a, b) => a - b);
+  if (indices.length < 2) return;
+  const grouped = utmbSearchState.grouped;
+  const canonical = grouped[indices[0]];
+  for (let k = 1; k < indices.length; k++) {
+    const other = grouped[indices[k]];
+    canonical.editions = [...canonical.editions, ...other.editions]
+      .sort((a, b) => b.year - a.year);
+    // Keep the DB match from whichever group had one
+    if (!canonical.dbMatch && other.dbMatch) canonical.dbMatch = other.dbMatch;
+  }
+  // Remove merged rows (highest indices first to avoid shifting)
+  for (let k = indices.length - 1; k >= 1; k--) {
+    grouped.splice(indices[k], 1);
+  }
+  utmbSearchState.selectedIndices.clear();
+  renderUtmbResults();
+}
+
+
+function renderUtmbEditionPicker(group) {
+  document.getElementById("utmbResultsPanel").style.display = "none";
+  const panel = document.getElementById("utmbEditionPanel");
+  document.getElementById("utmbPickerEventName").textContent = group.eventName;
+  document.getElementById("utmbPickerRaceName").textContent = group.raceName;
+
+  const withResults = group.editions.filter(e => e.hasResults);
+  const body = document.getElementById("utmbPickerBody");
+  const matchBanner = group.dbMatch
+    ? `<div style="font-size:12px; color:var(--clay); background:var(--clay-tint); border-radius:6px; padding:6px 10px; margin-bottom:12px;">
+        → Will link to existing race: <strong>${group.dbMatch.name}</strong>
+       </div>`
+    : "";
+  body.innerHTML = `
+    ${matchBanner}
+    <div style="margin-bottom:14px;">
+      <span class="filter-label">Editions to import</span>
+      <div id="utmbEditionCheckboxes" style="display:flex; flex-direction:column; gap:3px; margin-top:6px;">
+        ${withResults.map((e, i) => `
+          <label class="edition-row">
+            <input type="checkbox" name="utmb-edition" value="${e.uri}" data-year="${e.year}" ${i < 3 ? "checked" : ""} style="width:auto;" />
+            <span>${e.year}</span>
+          </label>
+        `).join("")}
+      </div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <button id="utmbImportSelectedBtn" class="chip active">Import selected</button>
+      <span id="utmbPickerStatus" style="font-size:12px; color:var(--muted);"></span>
+    </div>`;
+
+  document.getElementById("utmbImportSelectedBtn").addEventListener("click", () => importUtmbSelected(group));
+  panel.style.display = "";
+}
+
+async function importUtmbSelected(group) {
+  const checked = [...document.querySelectorAll("#utmbEditionCheckboxes input[name='utmb-edition']:checked")];
+  const statusEl = document.getElementById("utmbPickerStatus");
+  if (!checked.length) { if (statusEl) statusEl.textContent = "Select at least one edition."; return; }
+
+  // Single canonical race_id for all editions in this group.
+  // If the group was merged or matched to an existing DB race, use that id.
+  // Otherwise anchor to the first checked edition's URI base so that editions
+  // from different UTMB numeric IDs (sponsor changes) all land under one race.
+  const firstUriBase = checked[0].value.replace(/\.\d{4}$/, "");
+  const canonicalRaceId = group.dbMatch?.raceId || ("utmb-" + firstUriBase.replace(/\./g, "-"));
+
+  const btn = document.getElementById("utmbImportSelectedBtn");
+  btn.disabled = true;
+  let done = 0, failed = 0;
+  for (const cb of checked) {
+    if (statusEl) statusEl.textContent = `Importing ${cb.dataset.year}…`;
+    try {
+      await importUtmbEdition({
+        uri: cb.value,
+        eventName: group.eventName,
+        raceName: group.raceName,
+        year: parseInt(cb.dataset.year),
+        country: group.country,
+        km: group.km,
+        elevation: group.elevation,
+        overrideRaceId: canonicalRaceId,
+      });
+      cb.parentElement.style.opacity = "0.5";
+      done++;
+    } catch (err) {
+      utmbLog(`✗ ${cb.value}: ${err.message}`, "error");
+      failed++;
+    }
+  }
+  if (statusEl) statusEl.textContent = `${done} imported${failed ? `, ${failed} failed` : ""}.`;
+  btn.disabled = false;
+}
+
+async function importUtmbEdition({ uri, eventName, raceName, year, country, km, elevation, overrideRaceId }) {
+  if (!state.utmbToken) throw new Error("Set UTMB token first.");
+  const exp = utmbTokenExpiry(state.utmbToken);
+  if (exp && exp <= new Date()) throw new Error("Token expired — paste a new one.");
+
+  utmbLog(`↓ Importing ${uri}…`);
+
+  // Fetch top 50 men and top 50 women
+  const [menData, womenData] = await Promise.all([
+    utmbApi(`races/${uri}/results`, { lang: "en", limit: 50, offset: 0, gender: "H" }),
+    utmbApi(`races/${uri}/results`, { lang: "en", limit: 50, offset: 0, gender: "F" }),
+  ]);
+
+  if (!menData.isLogged && !womenData.isLogged) {
+    throw new Error("Token rejected by UTMB — isLogged=false. Paste a fresh token.");
+  }
+
+  const results = [
+    ...(menData.results || []).map(r => ({ rank: r.rank, gender: "M", index: r.index, runner: r.fullname, nationality: r.nationalityCode })),
+    ...(womenData.results || []).map(r => ({ rank: r.rank, gender: "F", index: r.index, runner: r.fullname, nationality: r.nationalityCode })),
+  ].filter(r => r.index !== null && r.index !== undefined);
+
+  if (!results.length) throw new Error("No index scores returned — race may not be fully indexed yet.");
+
+  // Derive stable IDs from the URI base (without year), or use override if matched to existing
+  const uriBase = uri.replace(/\.\d{4}$/, "");
+  const raceId = overrideRaceId || ("utmb-" + uriBase.replace(/\./g, "-"));
+  const editionId = "utmb-" + uri.replace(/\./g, "-");
+
+  if (!window.supabaseClient) throw new Error("Supabase not configured.");
+
+  const { error: raceErr } = await window.supabaseClient.from("races").upsert({
+    id: raceId,
+    name: eventName + (raceName && raceName !== eventName ? ` — ${raceName}` : ""),
+    country: country || null,
+    distance_km: km || null,
+    elevation_gain: elevation || null,
+    source: "utmb",
+  }, { onConflict: "id" });
+  if (raceErr) throw new Error("Race upsert: " + raceErr.message);
+
+  const { error: edErr } = await window.supabaseClient.from("editions").upsert({
+    id: editionId,
+    race_id: raceId,
+    year,
+    utmb_uri: uri,
+  }, { onConflict: "id" });
+  if (edErr) throw new Error("Edition upsert: " + edErr.message);
+
+  await window.supabaseClient.from("results").delete().eq("edition_id", editionId);
+
+  const rows = results.map(r => ({
+    edition_id: editionId, rank: r.rank, gender: r.gender,
+    index: r.index, runner: r.runner || null, nationality: r.nationality || null
+  }));
+  const { error: insErr } = await window.supabaseClient.from("results").insert(rows);
+  if (insErr) throw new Error("Insert results: " + insErr.message);
+
+  utmbLog(`✓ ${uri} — ${rows.length} results (${results.filter(r=>r.gender==="M").length}M / ${results.filter(r=>r.gender==="F").length}F)`, "ok");
+  updateUtmbTokenStatus();
 }
 
 // ---- Visualization: Parity delta bar ----
@@ -1616,77 +2331,181 @@ async function updateCharts() {
 }
 
 // ---- Admin: Races tab ----
-function renderMetaCard(key, value) {
-  const safe = value === null || value === undefined || value === "" ? "-" : String(value);
-  return `<div class="metaCard"><div class="k">${key}</div><div class="v">${safe}</div></div>`;
+function escHtml(s) {
+  return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-function renderAdminRaceList(searchQuery) {
-  const list = document.getElementById("raceList");
-  if (!list) return;
-  const q = (searchQuery || "").trim().toLowerCase();
-  list.innerHTML = "";
-  const entries = getManifestEntries();
-  if (!entries.length) {
-    list.innerHTML = '<div class="note" style="padding:8px;">No editions imported yet.</div>';
+function setRacesStatus(msg, type = "") {
+  const el = document.getElementById("racesStatus");
+  if (!el) return;
+  el.textContent = msg;
+  el.className = "status" + (type ? " " + type : "");
+  el.style.display = msg ? "" : "none";
+}
+
+async function loadAllRacesData() {
+  if (!window.supabaseClient) return;
+  const [racesResp, editionsResp] = await Promise.all([
+    window.supabaseClient.from("races").select("id, name, country, distance_km, elevation_gain, source").order("name"),
+    window.supabaseClient.from("editions").select("race_id"),
+  ]);
+  if (racesResp.error) throw new Error(racesResp.error.message);
+  if (editionsResp.error) throw new Error(editionsResp.error.message);
+  const edCounts = {};
+  for (const e of editionsResp.data) edCounts[e.race_id] = (edCounts[e.race_id] || 0) + 1;
+  allRacesData = racesResp.data.map(r => ({ ...r, editionCount: edCounts[r.id] || 0 }));
+}
+
+function getCheckedRaceIds() {
+  return [...document.querySelectorAll("input.race-merge-cb:checked")].map(cb => cb.dataset.raceId);
+}
+
+function updateRacesMergeBtn() {
+  const btn = document.getElementById("racesMergeBtn");
+  if (btn) btn.disabled = getCheckedRaceIds().length < 2;
+}
+
+function renderRacesTable() {
+  const nameQ = (document.getElementById("racesSearchName")?.value || "").trim().toLowerCase();
+  const sourceQ = document.getElementById("racesFilterSource")?.value || "";
+  const tbody = document.getElementById("racesTableBody");
+  if (!tbody) return;
+
+  const filtered = allRacesData.filter(r => {
+    if (nameQ && !r.name?.toLowerCase().includes(nameQ) && !r.id.toLowerCase().includes(nameQ)) return false;
+    if (sourceQ && (r.source || "itra") !== sourceQ) return false;
+    return true;
+  });
+
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="note" style="padding:12px;">No races match the filters.</td></tr>';
     return;
   }
-  for (const c of entries) {
-    const id = c.race_id;
-    const meta = getCourseMeta(id) || {};
-    const name = (meta.name || "").toLowerCase();
-    if (q && !id.toLowerCase().includes(q) && !name.includes(q)) continue;
-    const row = document.createElement("div");
-    row.className = "item";
-    if (state.raceSelected === id) row.style.background = "rgba(34,51,199,0.08)";
-    const label = document.createElement("div");
-    label.className = "item-label";
-    label.textContent = meta.name ? `${meta.name} (${meta.year || "?"})` : id;
-    const pill = document.createElement("span");
-    pill.className = "pill";
-    pill.textContent = String(meta.year || "-");
-    row.appendChild(label);
-    row.appendChild(pill);
-    row.addEventListener("click", () => { state.raceSelected = id; renderAdminRaceList(q); renderAdminRaceDetail(id); });
-    list.appendChild(row);
+
+  tbody.innerHTML = filtered.map(r => `
+    <tr>
+      <td><input type="checkbox" class="race-merge-cb" data-race-id="${escHtml(r.id)}" /></td>
+      <td style="font-family:monospace; font-size:11px; color:var(--muted,#888);">${escHtml(r.id)}</td>
+      <td>${escHtml(r.name || "-")}</td>
+      <td>${escHtml(r.country || "-")}</td>
+      <td>${r.distance_km ?? "-"}</td>
+      <td>${r.elevation_gain != null ? r.elevation_gain.toLocaleString() : "-"}</td>
+      <td><span class="chip-xs">${escHtml(r.source || "itra")}</span></td>
+      <td>${r.editionCount}</td>
+    </tr>
+  `).join("");
+
+  tbody.querySelectorAll("input.race-merge-cb").forEach(cb => cb.addEventListener("change", updateRacesMergeBtn));
+
+  const selectAll = document.getElementById("racesSelectAll");
+  if (selectAll) selectAll.checked = false;
+}
+
+function openMergePanel() {
+  const ids = getCheckedRaceIds();
+  if (ids.length < 2) return;
+  const sel = document.getElementById("racesMergeCanonical");
+  sel.innerHTML = ids.map(id => {
+    const r = allRacesData.find(x => x.id === id);
+    return `<option value="${escHtml(id)}">${escHtml(r?.name || id)} — ${escHtml(id)} (${r?.editionCount ?? 0} eds)</option>`;
+  }).join("");
+  const totalEditions = ids.reduce((sum, id) => sum + (allRacesData.find(r => r.id === id)?.editionCount || 0), 0);
+  document.getElementById("racesMergePreview").textContent =
+    `${ids.length} races selected (${totalEditions} editions total). All editions will be re-pointed to the canonical ID; the other race records will be deleted.`;
+  const panel = document.getElementById("racesMergePanel");
+  panel.style.display = "";
+  panel.scrollIntoView({ behavior: "smooth" });
+}
+
+async function confirmMerge() {
+  const canonicalId = document.getElementById("racesMergeCanonical")?.value;
+  if (!canonicalId) return;
+  const ids = getCheckedRaceIds();
+  const toDelete = ids.filter(id => id !== canonicalId);
+  if (!toDelete.length) return;
+
+  setRacesStatus("Merging…");
+  document.getElementById("racesMergeConfirmBtn").disabled = true;
+  try {
+    for (const oldId of toDelete) {
+      const { error } = await window.supabaseClient
+        .from("editions").update({ race_id: canonicalId }).eq("race_id", oldId);
+      if (error) throw new Error(`Re-point "${oldId}": ` + error.message);
+    }
+    const { error: delErr } = await window.supabaseClient
+      .from("races").delete().in("id", toDelete);
+    if (delErr) throw new Error("Delete races: " + delErr.message);
+
+    setRacesStatus(`Merged ${toDelete.length} race${toDelete.length > 1 ? "s" : ""} → "${canonicalId}".`, "ok");
+    document.getElementById("racesMergePanel").style.display = "none";
+    manifest = null; courseCache.clear(); courseMetaCache.clear();
+    await Promise.all([loadAllRacesData(), loadManifest()]);
+    renderRacesTable();
+  } catch (err) {
+    setRacesStatus("Error: " + err.message, "error");
+  } finally {
+    const btn = document.getElementById("racesMergeConfirmBtn");
+    if (btn) btn.disabled = false;
   }
 }
 
-async function renderAdminRaceDetail(editionId) {
-  const detail = document.getElementById("raceDetail");
-  if (!detail) return;
-  detail.innerHTML = '<div class="note">Loading…</div>';
+async function initRacesTab() {
+  if (!racesTabInited) {
+    racesTabInited = true;
+    document.getElementById("racesSearchName")?.addEventListener("input", renderRacesTable);
+    document.getElementById("racesFilterSource")?.addEventListener("change", renderRacesTable);
+    document.getElementById("racesRefreshBtn")?.addEventListener("click", async () => {
+      setRacesStatus("Refreshing…");
+      try { await loadAllRacesData(); setRacesStatus(""); renderRacesTable(); }
+      catch (err) { setRacesStatus("Error: " + err.message, "error"); }
+    });
+    document.getElementById("racesMergeBtn")?.addEventListener("click", openMergePanel);
+    document.getElementById("racesMergeConfirmBtn")?.addEventListener("click", confirmMerge);
+    document.getElementById("racesMergeCancelBtn")?.addEventListener("click", () => {
+      document.getElementById("racesMergePanel").style.display = "none";
+      setRacesStatus("");
+    });
+    document.getElementById("racesSelectAll")?.addEventListener("change", e => {
+      document.querySelectorAll("input.race-merge-cb").forEach(cb => { cb.checked = e.target.checked; });
+      updateRacesMergeBtn();
+    });
+  }
+
+  setRacesStatus("Loading…");
   try {
-    const course = await loadCourse(editionId);
-    const meta = course.meta || {};
-    const series = normalizeSeries(meta.series).join(", ");
-    detail.innerHTML = `
-      <div class="metaGrid">
-        ${renderMetaCard("Edition ID", editionId)}
-        ${renderMetaCard("Base race", meta.base_race_id || "-")}
-        ${renderMetaCard("Name", meta.name || "-")}
-        ${renderMetaCard("Year", meta.year || "-")}
-        ${renderMetaCard("Country", meta.country || "-")}
-        ${renderMetaCard("Distance (km)", meta.distance_km ?? "-")}
-        ${renderMetaCard("Series", series || "-")}
-      </div>
-      <div class="tableWrap" style="max-height:480px;">
-        <table>
-          <thead><tr><th>#</th><th>Runner</th><th>Index</th><th>Gender</th><th>Nat.</th></tr></thead>
-          <tbody>
-            ${(course.results || []).map(r =>
-              `<tr><td>${r.rank}</td><td>${r.runner ?? "-"}</td><td>${fmt(r.index, 1)}</td><td>${r.gender ?? "-"}</td><td>${r.nationality ?? "-"}</td></tr>`
-            ).join("")}
-          </tbody>
-        </table>
-      </div>
-    `;
+    await loadAllRacesData();
+    setRacesStatus("");
+    renderRacesTable();
   } catch (err) {
-    detail.innerHTML = `<div class="status error">${err.message}</div>`;
+    setRacesStatus("Error loading races: " + err.message, "error");
   }
 }
 
 // ---- Page switching ----
+function renderSourceToggle() {
+  document.querySelectorAll(".btn-source").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.s === state.indexSource);
+  });
+}
+
+async function switchSource(newSource) {
+  if (newSource === state.indexSource) return;
+  state.indexSource = newSource;
+  indexSource = newSource;
+  localStorage.setItem("trail-index-source", newSource);
+  state.rciNormSelected.clear();
+  chipState.activeSeries.clear();
+  chipState.activeYears.clear();
+  chipState.activeCountry = "";
+  chipState.isManual = false;
+  state.trendsRaceId = null;
+  courseCache.clear();
+  await loadManifest();
+  renderSourceToggle();
+  refreshPublicChips?.();
+  await triggerUpdate();
+}
+
 function resizePlot(id) {
   requestAnimationFrame(() => {
     const el = document.getElementById(id);
@@ -1704,6 +2523,7 @@ function setActiveTab(tab) {
     visualization: "pageViz",
     charts: "pageCharts",
     import: "pageImport",
+    utmb: "pageUtmb",
     races: "pageRaces"
   };
   for (const [key, id] of Object.entries(pageMap)) {
@@ -1716,12 +2536,13 @@ function setActiveTab(tab) {
   document.getElementById("vizTabParity")?.classList.toggle("active", safeTab === "visualization");
   document.getElementById("tabCharts")?.classList.toggle("active", safeTab === "charts");
   document.getElementById("tabImport")?.classList.toggle("active", safeTab === "import");
+  document.getElementById("tabUtmb")?.classList.toggle("active", safeTab === "utmb");
   document.getElementById("tabRaces")?.classList.toggle("active", safeTab === "races");
 
   if (safeTab === "trends") { renderTrendsRaceList(); renderTrendsChart(); }
   if (safeTab === "visualization") updateVisualization();
   if (safeTab === "charts") updateCharts();
-  if (safeTab === "races") renderAdminRaceList(document.getElementById("searchRace")?.value || "");
+  if (safeTab === "races") initRacesTab();
 }
 
 // ---- Orchestrator ----
@@ -1861,6 +2682,32 @@ async function updateAll() {
     // Cookie
     document.getElementById("saveCookieBtn")?.addEventListener("click", saveCookie);
 
+    // UTMB token
+    document.getElementById("utmbSaveTokenBtn")?.addEventListener("click", () => {
+      const raw = (document.getElementById("utmbTokenInput")?.value || "").trim();
+      if (!raw) return;
+      // Accept either the raw access_token JWT or a full Cookie header string
+      const m = raw.match(/(?:^|;\s*)access_token=([^;]+)/);
+      const token = m ? m[1].trim() : raw;
+      state.utmbToken = token;
+      updateUtmbTokenStatus();
+      // Refresh status every minute while on the page
+      clearInterval(window._utmbTokenTimer);
+      window._utmbTokenTimer = setInterval(updateUtmbTokenStatus, 60000);
+    });
+    document.getElementById("utmbSearchBtn")?.addEventListener("click", utmbSearch);
+    document.getElementById("utmbSearch")?.addEventListener("keydown", e => { if (e.key === "Enter") utmbSearch(); });
+    document.getElementById("utmbMergeBtn")?.addEventListener("click", mergeSelectedUtmbGroups);
+    document.getElementById("utmbFilter")?.addEventListener("input", e => {
+      utmbSearchState.filterText = e.target.value.trim();
+      utmbSearchState.selectedIndices.clear();
+      renderUtmbResults();
+    });
+    document.getElementById("utmbBackBtn")?.addEventListener("click", () => {
+      document.getElementById("utmbEditionPanel").style.display = "none";
+      if (utmbSearchState.grouped.length) document.getElementById("utmbResultsPanel").style.display = "";
+    });
+
     // Discover
     document.getElementById("discoverSearchBtn")?.addEventListener("click", discoverSearch);
 
@@ -1880,10 +2727,6 @@ async function updateAll() {
       renderQueue();
     });
 
-    // Races tab search
-    const raceSearch = document.getElementById("searchRace");
-    raceSearch?.addEventListener("input", () => renderAdminRaceList(raceSearch.value));
-
     // Sign out
     document.getElementById("signOutBtn")?.addEventListener("click", async () => {
       await window.supabaseClient?.auth.signOut();
@@ -1891,7 +2734,6 @@ async function updateAll() {
     });
 
     renderQueue();
-    renderAdminRaceList("");
   }
 
   // Shared nav tabs
@@ -1900,10 +2742,17 @@ async function updateAll() {
   document.getElementById("vizTabParity")?.addEventListener("click", () => setActiveTab("visualization"));
   document.getElementById("tabCharts")?.addEventListener("click", () => setActiveTab("charts"));
   document.getElementById("tabImport")?.addEventListener("click", () => setActiveTab("import"));
+  document.getElementById("tabUtmb")?.addEventListener("click", () => setActiveTab("utmb"));
   document.getElementById("tabRaces")?.addEventListener("click", () => setActiveTab("races"));
 
   // Lang toggle
   document.getElementById("langToggle")?.addEventListener("click", () => setLang(lang === "fr" ? "en" : "fr"));
+
+  // Source toggle (in picker modal)
+  document.querySelectorAll(".btn-source").forEach(btn => {
+    btn.addEventListener("click", () => switchSource(btn.dataset.s));
+  });
+  renderSourceToggle();
 
   // Init Plotly placeholders
   if (document.getElementById("plot")) {

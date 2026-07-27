@@ -8,11 +8,12 @@ export async function onRequestPost(context) {
     return Response.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { countries, dateStart, dateEnd } = body;
+  const { countries, dateStart, dateEnd, searchTerms } = body;
 
-  if (!Array.isArray(countries) || !countries.length || !dateStart || !dateEnd) {
+  const countryList = Array.isArray(countries) ? countries : [];
+  if ((!countryList.length && !searchTerms) || !dateStart || !dateEnd) {
     return Response.json(
-      { error: "countries (string[]), dateStart, dateEnd (DD-MM-YYYY) are required" },
+      { error: "Provide a race name or at least one country code, plus dateStart and dateEnd (DD-MM-YYYY)" },
       { status: 400 }
     );
   }
@@ -48,7 +49,7 @@ export async function onRequestPost(context) {
   // Step 2: POST search form
   const params = new URLSearchParams();
   params.append("__RequestVerificationToken", csrfToken);
-  for (const c of countries) params.append("Input.Country", c.toUpperCase());
+  for (const c of countryList) params.append("Input.Country", c.toUpperCase());
   params.append("Input.DateStart", dateStart);
   params.append("Input.DateEnd", dateEnd);
   params.append("Input.Longitude", "0");
@@ -65,7 +66,7 @@ export async function onRequestPost(context) {
   params.append("Input.MaxItraPts", "");
   params.append("Input.NationalLeagues", "false");
   params.append("Input.NationalLeague", "false");
-  params.append("Input.SearchTerms", "");
+  params.append("Input.SearchTerms", searchTerms || "");
 
   let postResp;
   try {
@@ -150,19 +151,37 @@ function parseRaceCards(html) {
 
   tokens.sort((a, b) => a.pos - b.pos);
 
-  const races = [];
-  let curName = "";
-  let curCountry = "";
+  // Group boxes under events: one entry per h4 event name, accumulating sub-race boxes
+  const events = [];
+  let curName = "", curCountry = "";
+  let curBoxes = [];
+
+  const finalizeEvent = () => {
+    if (curBoxes.length > 0) {
+      events.push({ name: curName, country: curCountry, boxes: [...curBoxes] });
+      curBoxes = [];
+    }
+  };
 
   for (const t of tokens) {
-    if (t.type === "name") curName = t.value;
+    if (t.type === "name") { finalizeEvent(); curName = t.value; }
     else if (t.type === "country") curCountry = t.value;
-    else if (t.type === "box" && t.hasResults) {
-      races.push({ country: curCountry, name: curName, km: t.km, elevation: t.elevation, url: t.url });
-    }
+    else if (t.type === "box" && t.hasResults) curBoxes.push(t);
   }
+  finalizeEvent();
 
-  return races;
+  return events.map(ev => {
+    const kms = ev.boxes.map(b => b.km).filter(k => k != null);
+    return {
+      name: ev.name,
+      country: ev.country,
+      url: ev.boxes[0].url,
+      km: kms.length ? Math.max(...kms) : null,
+      elevation: ev.boxes.length === 1 ? ev.boxes[0].elevation : null,
+      isFestival: ev.boxes.length > 1,
+      distances: ev.boxes.map(b => ({ km: b.km, elevation: b.elevation, url: b.url })),
+    };
+  });
 }
 
 function parseKm(str) {

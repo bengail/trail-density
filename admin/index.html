@@ -70,7 +70,8 @@
 <header>
   <h1>Trail Race Density — Admin</h1>
   <nav>
-    <button id="tabImport" class="active">Import</button>
+    <button id="tabImport" class="active">Discover ITRA</button>
+    <button id="tabUtmb">Discover UTMB</button>
     <button id="tabRaces">Races</button>
     <a href="/" style="font-size:12px; font-weight:700; color:var(--muted); text-decoration:none; padding:9px 10px; border:1px solid var(--border); border-radius:12px; background:#f8fafc;">← Public</a>
     <button id="signOutBtn" style="color:#dc2626; border-color:#fca5a5; background:#fef2f2;">Sign Out</button>
@@ -98,8 +99,12 @@
     <aside class="panel sidebar">
       <h2>Discover Races</h2>
       <div class="filter-section">
+        <span class="filter-label">Race name</span>
+        <input id="discoverName" type="text" placeholder="e.g. UTMB, Marathon du Mont-Blanc…" />
+      </div>
+      <div class="filter-section">
         <span class="filter-label">Countries</span>
-        <input id="discoverCountry" type="text" placeholder="FR, CH, IT, US…" />
+        <input id="discoverCountry" type="text" placeholder="FR, CH, IT, US… (optional with name)" />
       </div>
       <div class="filter-section">
         <span class="filter-label">From</span>
@@ -173,17 +178,139 @@
   </div>
 </main>
 
+<!-- ── Discover UTMB tab ──────────────────────────────────────────────────── -->
+<main id="pageUtmb">
+
+  <!-- Token banner -->
+  <div class="panel" style="margin-bottom:14px;">
+    <div style="display:flex; align-items:flex-start; gap:10px; flex-wrap:wrap;">
+      <span class="filter-label" style="margin:0; padding-top:9px; white-space:nowrap;">UTMB Token</span>
+      <textarea id="utmbTokenInput" rows="2" style="flex:1; min-width:200px;"
+        placeholder="Paste full Cookie header from DevTools (Network tab → any utmb.world request → Request Headers → Cookie)…"></textarea>
+      <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-start;">
+        <button id="utmbSaveTokenBtn" class="chip active" style="white-space:nowrap;">Save token</button>
+        <span id="utmbTokenStatus" class="note" style="white-space:nowrap;">Not set</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- Search sidebar -->
+    <aside class="panel sidebar">
+      <h2>Search Races</h2>
+      <div class="filter-section">
+        <span class="filter-label">Name</span>
+        <input id="utmbSearch" type="text" placeholder="UTMB, Zegama, Sierre…" />
+      </div>
+      <div class="filter-section">
+        <span class="filter-label">Country code</span>
+        <input id="utmbCountry" type="text" placeholder="FR, ES, IT, US…" />
+      </div>
+      <div class="filter-section">
+        <span class="filter-label">From</span>
+        <input id="utmbDateStart" type="date" style="margin-bottom:8px;" />
+        <span class="filter-label">To</span>
+        <input id="utmbDateEnd" type="date" />
+      </div>
+      <button id="utmbSearchBtn" class="chip active" style="width:100%;">Search UTMB</button>
+      <div id="utmbSearchStatus" class="status" style="display:none; margin-top:10px;"></div>
+    </aside>
+
+    <!-- Results -->
+    <div style="display:flex; flex-direction:column; gap:14px;">
+
+      <!-- Search results table -->
+      <div id="utmbResultsPanel" class="panel" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <h2 style="margin:0;">Results <span id="utmbCount" class="count-badge">0</span></h2>
+            <button id="utmbMergeBtn" class="chip-sm" style="display:none;" title="Merge selected rows into one group">Merge selected</button>
+          </div>
+        </div>
+        <input id="utmbFilter" type="search" placeholder="Filter by name or country…" style="margin-bottom:8px; width:100%;" />
+        <div class="tableWrap" style="max-height:520px;">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:28px;"></th>
+                <th>Country</th>
+                <th>Race</th>
+                <th style="text-align:right;">km</th>
+                <th>Category</th>
+                <th>Editions</th>
+                <th>DB match</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="utmbTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Edition picker -->
+      <div id="utmbEditionPanel" class="panel" style="display:none;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap;">
+          <button id="utmbBackBtn" class="chip-sm">← Back to results</button>
+          <div>
+            <div id="utmbPickerEventName" style="font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.05em;"></div>
+            <div id="utmbPickerRaceName" style="font-size:15px; font-weight:700;"></div>
+          </div>
+        </div>
+        <div id="utmbPickerBody"></div>
+      </div>
+
+      <!-- Import log -->
+      <div id="utmbImportLog" class="panel" style="display:none;">
+        <h2 style="margin:0 0 10px;">Import log</h2>
+        <div id="utmbLogEntries" style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-family:monospace;"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
 <!-- ── Races tab ──────────────────────────────────────────────────────────── -->
 <main id="pageRaces">
-  <div class="grid">
-    <aside class="panel sidebar">
-      <h2>Imported Editions</h2>
-      <input id="searchRace" type="search" placeholder="Search…" style="margin-bottom:10px;" />
-      <div id="raceList" class="list"></div>
-    </aside>
-    <section class="panel" id="raceDetail">
-      <div class="note">Select an edition on the left to view details.</div>
-    </section>
+  <div class="panel" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:14px;">
+    <input id="racesSearchName" type="search" placeholder="Filter by name or ID…" style="flex:1; min-width:160px;" />
+    <select id="racesFilterSource">
+      <option value="">All sources</option>
+      <option value="itra">ITRA</option>
+      <option value="utmb">UTMB</option>
+    </select>
+    <button id="racesMergeBtn" class="chip" disabled>Merge selected</button>
+    <button id="racesRefreshBtn" class="chip">↺ Refresh</button>
+    <span id="racesStatus" class="status" style="display:none;"></span>
+  </div>
+  <div class="panel">
+    <div class="tableWrap" style="max-height:calc(100vh - 230px);">
+      <table id="racesTable">
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="racesSelectAll" title="Select all visible" /></th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Country</th>
+            <th>km</th>
+            <th>Elev</th>
+            <th>Source</th>
+            <th>Editions</th>
+          </tr>
+        </thead>
+        <tbody id="racesTableBody">
+          <tr><td colspan="8" class="note" style="padding:12px;">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div id="racesMergePanel" class="panel" style="display:none; margin-top:14px;">
+    <h3 style="margin:0 0 10px;">Merge races</h3>
+    <div style="margin-bottom:10px;">
+      <span class="filter-label">Keep as canonical race ID</span>
+      <select id="racesMergeCanonical" style="width:100%; margin-top:4px;"></select>
+    </div>
+    <div id="racesMergePreview" class="note" style="margin-bottom:12px;"></div>
+    <button id="racesMergeConfirmBtn" class="chip active">Confirm merge</button>
+    <button id="racesMergeCancelBtn" class="chip" style="margin-left:8px;">Cancel</button>
   </div>
 </main>
 
