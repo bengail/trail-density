@@ -25,6 +25,8 @@ par recherche (jusqu'à 4, en étiquettes retirables), avec des suggestions (mê
 L'entrée principale est le bouton « Comparer avec… » de la fiche course. La sélection est dans l'URL
 (`/fr/comparer/?c=occ,sierre-zinal,zegama-marathon`, en query string pour rester un site statique).
 
+**Crédit** : le RCI (Realized Competition Index) a été proposé par Travis Loncar sur Freetrail (janvier 2026, https://fantasy.freetrail.com/news/2026/01/realized-competition-index). On le crédite sur l'accueil, la page Méthode et le pied de page. La conversion de l'index féminin est un ajout propre au site.
+
 ## Ton
 - Précis et sobre : média de données sportives, pas outil d'analyste. Le chiffre, puis une phrase qui l'interprète.
 - Le jargon est expliqué une fois, là où il apparaît (infobulle « en savoir plus »), pas en paragraphe en tête de page.

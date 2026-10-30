@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import { loadRace } from "../lib/data";
-import { t, racePath, rankingsPath, fmtNum, SOURCES, type Lang } from "../lib/i18n";
+import { t, racePath, rankingsPath, fmtNum, SOURCES, FREETRAIL_RCI, type Lang } from "../lib/i18n";
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -50,14 +50,26 @@ const fr = lang === "fr";
       <h2>{fr ? "Le RCI en une phrase" : "RCI in one sentence"}</h2>
       <p class="big">
         {fr
-          ? "Le RCI (Race Competitiveness Index) prend les meilleurs finishers d'une course et calcule la moyenne de leur index, moins leur dispersion."
-          : "RCI (Race Competitiveness Index) takes the best finishers of a race and computes the mean of their index, minus their spread."}
+          ? "Le RCI (Realized Competition Index) prend les 10 premiers d'une course et calcule la moyenne de leurs scores, moins leur dispersion."
+          : "RCI (Realized Competition Index) takes the top 10 of a race and computes the mean of their scores, minus their spread."}
       </p>
       <p class="formula num">RCI<sub>N</sub> = {fr ? "moyenne" : "mean"}(top N) − {fr ? "écart-type" : "std dev"}(top N)</p>
       <p>
         {fr
           ? "Il est calculé séparément pour les femmes et pour les hommes. Le RCI10, sur les 10 premières et les 10 premiers, sert de référence partout sur le site. Les RCI3, 5 et 20 sont dans le détail de chaque course."
           : "It is computed separately for women and for men. RCI10, over the first 10 women and the first 10 men, is the reference everywhere on the site. RCI3, 5 and 20 are in each race's details."}
+      </p>
+      <p>
+        {fr
+          ? "« Realized » : il se calcule sur les résultats, pas sur la liste de départ. Il mesure le niveau que la course a réellement produit, pas celui qu'on attendait sur le papier."
+          : "\"Realized\": it is computed from the results, not the start list. It measures the level the race actually produced, not the one expected on paper."}
+      </p>
+      <p class="credit">
+        {fr ? "L'indice a été proposé par " : "The index was proposed by "}<strong>Travis Loncar</strong>{fr ? " sur Freetrail, en janvier 2026 : " : " on Freetrail in January 2026: "}
+        <a href={FREETRAIL_RCI} rel="noopener">Realized Competition Index</a>.
+        {fr
+          ? " Trail Density reprend sa formule et l'applique à l'historique de chaque course."
+          : " Trail Density uses the same formula and applies it to every race's history."}
       </p>
     </section>
 
@@ -97,8 +109,8 @@ const fr = lang === "fr";
       <h2>{fr ? "L'index des femmes" : "Women's index"}</h2>
       <p>
         {fr
-          ? "Les index publiés pour les femmes et pour les hommes ne sont pas sur la même échelle. Pour pouvoir comparer un RCI femmes et un RCI hommes, l'index de chaque femme est converti à l'échelle des hommes avant le calcul :"
-          : "The published index for women and for men is not on the same scale. To compare a women's RCI with a men's RCI, each woman's index is converted to the men's scale before computing it:"}
+          ? "Les scores publiés pour les femmes et pour les hommes ne sont pas sur la même échelle. Pour pouvoir comparer un RCI femmes et un RCI hommes, Trail Density convertit le score de chaque femme à l'échelle des hommes avant le calcul. Cette étape est propre au site, elle ne fait pas partie de l'indice d'origine :"
+          : "Published scores for women and for men are not on the same scale. To compare a women's RCI with a men's RCI, Trail Density converts each woman's score to the men's scale before computing it. This step is specific to this site and not part of the original index:"}
       </p>
       <p class="formula num">{fr ? "index converti" : "converted index"} = (−0,000466 × index + 1,532) × index</p>
       <table class="example conv">
@@ -141,7 +153,7 @@ const fr = lang === "fr";
         {fr ? (
           <>
             <li>Il ne compte que les finishers qui ont un score. Les abandons et les coureurs sans score n'existent pas pour lui.</li>
-            <li>Il dépend des scores du jour : une édition où les favoris ont couru en dedans sort plus basse.</li>
+            <li>Il dépend des scores du jour : une édition où les favoris ont couru en dedans sort plus basse. À Leadville en 2025, David Roche gagne en 15 h 12, le 2e arrive trois heures plus tard : le RCI10 hommes tombe de 758 à 643.</li>
             <li>Sous 10 finishers avec un score, pas de RCI10 : la course n'est pas classée pour ce genre.</li>
             <li>Il mesure la tête de course, pas le niveau de tout le peloton. Pour le peloton, voir la répartition sur chaque fiche.</li>
             <li>Un écart de quelques points entre deux courses n'est pas significatif.</li>
@@ -149,7 +161,7 @@ const fr = lang === "fr";
         ) : (
           <>
             <li>It only counts finishers who have a score. Runners who dropped out or have no score do not exist for it.</li>
-            <li>It depends on the scores of the day: an edition where the favourites had an off day comes out lower.</li>
+            <li>It depends on the scores of the day: an edition where the favourites had an off day comes out lower. At Leadville in 2025, David Roche won in 15:12 and second place came in three hours later: the men's RCI10 dropped from 758 to 643.</li>
             <li>Under 10 finishers with a score, no RCI10: the race is not ranked for that gender.</li>
             <li>It measures the front of the race, not the whole field. For the whole field, see the distribution on each race page.</li>
             <li>A gap of a few points between two races is not meaningful.</li>
@@ -176,6 +188,7 @@ const fr = lang === "fr";
   .calc { font-size: 15px; margin-top: 12px; }
   .calc strong { color: var(--men); }
   .small { font-size: 13px; }
+  .credit { padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-s); background: var(--surface); }
   .card :global(.rci-mark) { stroke: var(--men); stroke-width: 2; }
   .example { border-collapse: collapse; width: 100%; margin: 4px 0 14px; font-size: 13.5px; }
   .example th, .example td { text-align: left; padding: 8px 8px 8px 0; border-top: 1px solid var(--divider); }

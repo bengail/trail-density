@@ -37,7 +37,7 @@ const STRINGS = {
     formats: { vertical: "verticales", short: "courtes (< 30 km)", medium: "moyennes (30–60 km)", long: "longues (60–120 km)", ultra: "ultra (≥ 120 km)" },
     format_label: { vertical: "Vertical", short: "Court", medium: "Moyen", long: "Long", ultra: "Ultra" },
     all_races: "Toutes les courses",
-    footer: "Données ITRA et UTMB, recalculées à chaque import.",
+    footer: "Données ITRA et UTMB, recalculées à chaque import. RCI : Travis Loncar, Freetrail.",
     source_label: "Source",
     alt_legend: (label: string) => `pointillés : ${label}`,
     scales_differ: "Index ITRA et UTMB Index sont deux barèmes différents : leurs RCI ne se comparent pas entre eux.",
@@ -47,6 +47,7 @@ const STRINGS = {
     home_title: "Quels trails ont les plateaux les plus relevés ?",
     home_sub: "Le RCI mesure le niveau et la densité des premières femmes et des premiers hommes de chaque course. L'index des femmes est ramené à l'échelle des hommes, pour comparer les deux.",
     method_link: "Comment c'est calculé",
+    credit: "Indice créé par Travis Loncar (Freetrail)",
     latest_title: "Les plus relevées",
     latest_sub: "RCI10 de la dernière édition de chaque course",
     by_format: "Par format",
@@ -109,7 +110,7 @@ const STRINGS = {
     formats: { vertical: "vertical", short: "short (< 30 km)", medium: "mid-distance (30–60 km)", long: "long (60–120 km)", ultra: "ultra (≥ 120 km)" },
     format_label: { vertical: "Vertical", short: "Short", medium: "Mid", long: "Long", ultra: "Ultra" },
     all_races: "All races",
-    footer: "ITRA and UTMB data, recomputed at every import.",
+    footer: "ITRA and UTMB data, recomputed at every import. RCI: Travis Loncar, Freetrail.",
     source_label: "Source",
     alt_legend: (label: string) => `dashed: ${label}`,
     scales_differ: "ITRA index and UTMB Index are two different scales: their RCIs are not comparable with each other.",
@@ -119,6 +120,7 @@ const STRINGS = {
     home_title: "Which trail races have the strongest fields?",
     home_sub: "RCI measures how strong and how deep the front of each race is, for women and for men. Women's index is mapped onto the men's scale so the two can be compared.",
     method_link: "How it's computed",
+    credit: "Index created by Travis Loncar (Freetrail)",
     latest_title: "Strongest fields",
     latest_sub: "RCI10 at each race's latest edition",
     by_format: "By format",
@@ -159,6 +161,9 @@ export const SERIES: Record<string, string> = {
   "wmra-world-cup": "WMRA World Cup",
   "canadian-trail-championships": "Championnats canadiens",
 };
+
+// The article that introduced RCI.
+export const FREETRAIL_RCI = "https://fantasy.freetrail.com/news/2026/01/realized-competition-index";
 
 export const SOURCES: Record<string, string> = { itra: "ITRA", utmb: "UTMB Index", legacy: "ITRA (archive)" };
 
