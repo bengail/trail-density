@@ -13,6 +13,11 @@
   --women: oklch(0.52 0.13 250);
   --women-tint: oklch(0.94 0.025 250);
   --grid: oklch(0.91 0.01 70);
+  /* Compare page: one colour per race, kept apart from the women / men hues */
+  --c1: oklch(0.3 0.02 55);
+  --c2: oklch(0.58 0.12 165);
+  --c3: oklch(0.55 0.18 340);
+  --c4: oklch(0.7 0.14 85);
   --font: "Archivo", system-ui, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
   --radius: 3px;
@@ -35,6 +40,10 @@
     --women: oklch(0.72 0.12 250);
     --women-tint: oklch(0.3 0.05 250);
     --grid: oklch(0.32 0.01 60);
+    --c1: oklch(0.92 0.01 75);
+    --c2: oklch(0.74 0.12 165);
+    --c3: oklch(0.72 0.16 340);
+    --c4: oklch(0.8 0.13 85);
     color-scheme: dark;
   }
 }
@@ -53,6 +62,10 @@
   --women: oklch(0.72 0.12 250);
   --women-tint: oklch(0.3 0.05 250);
   --grid: oklch(0.32 0.01 60);
+  --c1: oklch(0.92 0.01 75);
+  --c2: oklch(0.74 0.12 165);
+  --c3: oklch(0.72 0.16 340);
+  --c4: oklch(0.8 0.13 85);
   color-scheme: dark;
 }
 
@@ -117,6 +130,12 @@ h1, h2, h3 { margin: 0; line-height: 1.15; }
 .chart .end-label.f { fill: var(--women); }
 .chart .bar.m { fill: var(--men); }
 .chart .bar.f { fill: var(--women); }
+.chart .line.c1, .chart .dot.c1 { stroke: var(--c1); } .chart .end-label.c1 { fill: var(--c1); }
+.chart .line.c2, .chart .dot.c2 { stroke: var(--c2); } .chart .end-label.c2 { fill: var(--c2); }
+.chart .line.c3, .chart .dot.c3 { stroke: var(--c3); } .chart .end-label.c3 { fill: var(--c3); }
+.chart .line.c4, .chart .dot.c4 { stroke: var(--c4); } .chart .end-label.c4 { fill: var(--c4); }
+.legend .c1, .swatch.c1 { color: var(--c1); } .legend .c2, .swatch.c2 { color: var(--c2); }
+.legend .c3, .swatch.c3 { color: var(--c3); } .legend .c4, .swatch.c4 { color: var(--c4); }
 
 .legend { display: flex; gap: 16px; font-size: 12.5px; color: var(--text-2); }
 .legend span::before {

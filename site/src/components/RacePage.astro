@@ -1,7 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
 import { loadIndex, loadRace, formatRank } from "../lib/data";
-import { t, racePath, rankingsPath, countryName, flag, fmtNum, fmtDelta, SERIES, SOURCES, type Lang } from "../lib/i18n";
+import { suggest } from "../lib/compare";
+import { t, racePath, rankingsPath, comparePath, methodPath, countryName, flag, fmtNum, fmtDelta, SERIES, SOURCES, type Lang } from "../lib/i18n";
 import { historyChart } from "../lib/charts";
 import { editionView } from "../lib/edition-view";
 import type { Gender } from "../lib/types";
@@ -71,7 +72,7 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
           );
         })}
       </div>
-      <p class="help muted">{s.rci_help} <a href={`/${lang}/`}>{s.learn_more}</a></p>
+      <p class="help muted">{s.rci_help} <a href={methodPath(lang)}>{s.learn_more}</a></p>
     </section>
 
     {race.editions.length > 1 && (
@@ -110,7 +111,7 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
       </div>
     </section>
 
-    <p class="actions"><a class="btn" href={`/${lang}/`}>{s.compare_with}</a></p>
+    <p class="actions"><a class="btn" href={comparePath(lang, [id, ...suggest(loadIndex().races, [id], 2).map(r => r.id)])}>{s.compare_with}</a></p>
   </div>
 </Base>
 

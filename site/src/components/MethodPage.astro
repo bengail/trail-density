@@ -1,0 +1,190 @@
+---
+import Base from "../layouts/Base.astro";
+import { loadRace } from "../lib/data";
+import { t, racePath, rankingsPath, fmtNum, SOURCES, type Lang } from "../lib/i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const n = (v: number, d = 1) => fmtNum(lang, v, d);
+
+// Worked example from real data: the men's top 10 at the latest OCC.
+const occ = loadRace("occ");
+const ed = occ.editions.find(e => e.M?.rci10 != null)!;
+const top = ed.M!.top10.map(r => r.index);
+const mean = top.reduce((a, b) => a + b, 0) / top.length;
+const sd = Math.sqrt(top.reduce((a, b) => a + (b - mean) ** 2, 0) / top.length);
+
+// Two fields with the same mean: why the spread is subtracted.
+const even = Array(10).fill(800);
+const uneven = [950, 900, 850, 800, 780, 760, 750, 740, 730, 740];
+const rci = (xs: number[]) => {
+  const m = xs.reduce((a, b) => a + b, 0) / xs.length;
+  return m - Math.sqrt(xs.reduce((a, b) => a + (b - m) ** 2, 0) / xs.length);
+};
+
+const femaleToMale = (x: number) => (-0.000466 * x + 1.532) * x;
+
+// Strip of the 10 scores with the mean and mean − spread marked.
+const lo = Math.floor((Math.min(...top) - 20) / 10) * 10, hi = Math.ceil((Math.max(...top) + 10) / 10) * 10;
+const W = 640, H = 92, x = (v: number) => 20 + ((v - lo) / (hi - lo)) * (W - 40);
+const strip = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">
+  <line class="grid" x1="20" x2="${W - 20}" y1="40" y2="40"/>
+  ${top.map(v => `<circle class="dot m" cx="${x(v)}" cy="40" r="6"><title>${v}</title></circle>`).join("")}
+  <line class="marker" x1="${x(mean)}" x2="${x(mean)}" y1="14" y2="66"/>
+  <text class="tick" x="${x(mean)}" y="10" text-anchor="middle">${lang === "fr" ? "moyenne" : "mean"} ${n(mean)}</text>
+  <line class="rci-mark" x1="${x(mean - sd)}" x2="${x(mean - sd)}" y1="20" y2="66"/>
+  <text class="end-label m" x="${x(mean - sd)}" y="84" text-anchor="middle">RCI10 ${n(mean - sd)}</text>
+  <text class="tick" x="20" y="84">${lo}</text><text class="tick" x="${W - 20}" y="84" text-anchor="end">${hi}</text>
+</svg>`;
+const fr = lang === "fr";
+---
+<Base lang={lang} title={`${s.method_title} — Trail Density`} description={s.method_sub} alternate={{ fr: "/fr/methode/", en: "/en/method/" }}>
+  <article class="wrap method">
+    <header>
+      <h1>{s.method_title}</h1>
+      <p class="muted lede">{s.method_sub}</p>
+    </header>
+
+    <section>
+      <h2>{fr ? "Le RCI en une phrase" : "RCI in one sentence"}</h2>
+      <p class="big">
+        {fr
+          ? "Le RCI (Race Competitiveness Index) prend les meilleurs finishers d'une course et calcule la moyenne de leur index, moins leur dispersion."
+          : "RCI (Race Competitiveness Index) takes the best finishers of a race and computes the mean of their index, minus their spread."}
+      </p>
+      <p class="formula num">RCI<sub>N</sub> = {fr ? "moyenne" : "mean"}(top N) − {fr ? "écart-type" : "std dev"}(top N)</p>
+      <p>
+        {fr
+          ? "Il est calculé séparément pour les femmes et pour les hommes. Le RCI10, sur les 10 premières et les 10 premiers, sert de référence partout sur le site. Les RCI3, 5 et 20 sont dans le détail de chaque course."
+          : "It is computed separately for women and for men. RCI10, over the first 10 women and the first 10 men, is the reference everywhere on the site. RCI3, 5 and 20 are in each race's details."}
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>{fr ? `Exemple : ${occ.name} ${ed.year}, hommes` : `Example: ${occ.name} ${ed.year}, men`}</h2>
+      <p class="muted">
+        {fr ? "Index des 10 premiers : " : "Index of the top 10: "}<span class="num">{top.join(" · ")}</span>
+      </p>
+      <Fragment set:html={strip} />
+      <p class="calc num">
+        {fr ? "moyenne" : "mean"} {n(mean)} − {fr ? "écart-type" : "std dev"} {n(sd)} = <strong>RCI10 {n(mean - sd)}</strong>
+      </p>
+      <p class="muted small"><a href={racePath(lang, occ.id)}>{fr ? `Voir la fiche ${occ.name} →` : `See the ${occ.name} page →`}</a></p>
+    </section>
+
+    <section>
+      <h2>{fr ? "Pourquoi retirer la dispersion" : "Why subtract the spread"}</h2>
+      <p>
+        {fr
+          ? "La moyenne seule ne distingue pas un plateau dense d'un plateau avec une ou deux stars. Deux top 10 avec la même moyenne de 800 :"
+          : "The mean alone cannot tell a deep field from a field with one or two stars. Two top 10s with the same mean of 800:"}
+      </p>
+      <table class="example">
+        <tbody>
+          <tr><th>{fr ? "Plateau dense" : "Deep field"}</th><td class="num">{even.join(" · ")}</td><td class="num rci">RCI10 {n(rci(even))}</td></tr>
+          <tr><th>{fr ? "Deux stars" : "Two stars"}</th><td class="num">{uneven.join(" · ")}</td><td class="num rci">RCI10 {n(rci(uneven))}</td></tr>
+        </tbody>
+      </table>
+      <p>
+        {fr
+          ? "Le premier plateau est plus relevé au sens où l'entend le RCI : il faut battre dix coureurs de haut niveau, pas deux. Le RCI récompense la densité en tête de course."
+          : "The first field is stronger in the sense RCI means it: you have to beat ten top runners, not two. RCI rewards depth at the front of the race."}
+      </p>
+    </section>
+
+    <section>
+      <h2>{fr ? "L'index des femmes" : "Women's index"}</h2>
+      <p>
+        {fr
+          ? "Les index publiés pour les femmes et pour les hommes ne sont pas sur la même échelle. Pour pouvoir comparer un RCI femmes et un RCI hommes, l'index de chaque femme est converti à l'échelle des hommes avant le calcul :"
+          : "The published index for women and for men is not on the same scale. To compare a women's RCI with a men's RCI, each woman's index is converted to the men's scale before computing it:"}
+      </p>
+      <p class="formula num">{fr ? "index converti" : "converted index"} = (−0,000466 × index + 1,532) × index</p>
+      <table class="example conv">
+        <thead><tr><th>{fr ? "Index femme" : "Women's index"}</th>{[600, 700, 800, 900].map(v => <td class="num">{v}</td>)}</tr></thead>
+        <tbody><tr><th>{fr ? "Équivalent hommes" : "Men's equivalent"}</th>{[600, 700, 800, 900].map(v => <td class="num">{n(femaleToMale(v), 0)}</td>)}</tr></tbody>
+      </table>
+      <p>
+        {fr
+          ? "La conversion s'applique au RCI, aux courbes et aux comptes de profondeur. Les tops 10 affichent l'index tel que publié."
+          : "The conversion applies to RCI, curves and depth counts. Top 10 tables show the index as published."}
+      </p>
+    </section>
+
+    <section>
+      <h2>{fr ? "Les données" : "The data"}</h2>
+      <dl class="sources">
+        <dt>{SOURCES.itra}</dt>
+        <dd>{fr
+          ? "Source principale. Pour chaque finisher, le score de performance (Race Score) qu'ITRA lui attribue sur cette course. C'est lui qui sert pour les classements."
+          : "Main source. For each finisher, the performance score (Race Score) ITRA gives them for that race. It is the one used in the rankings."}</dd>
+        <dt>{SOURCES.utmb}</dt>
+        <dd>{fr
+          ? "Quand la course est aussi chez UTMB, son RCI est affiché à côté, en pointillés sur la fiche course. C'est un autre barème : on ne compare pas un RCI ITRA à un RCI UTMB."
+          : "When the race is also on UTMB, its RCI is shown alongside, dashed on the race page. It is a different scale: an ITRA RCI and a UTMB RCI are not compared with each other."}</dd>
+        <dt>{SOURCES.legacy}</dt>
+        <dd>{fr
+          ? "Quelques éditions anciennes viennent d'imports plus anciens, limités aux 249 premiers finishers. Le RCI n'en souffre pas, la profondeur peut être sous-estimée."
+          : "A few old editions come from earlier imports, capped at the first 249 finishers. RCI is unaffected; depth may be underestimated."}</dd>
+      </dl>
+      <p>
+        {fr
+          ? "Formats : vertical, court (< 30 km), moyen (30–60 km), long (60–120 km), ultra (≥ 120 km)."
+          : "Formats: vertical, short (< 30 km), mid (30–60 km), long (60–120 km), ultra (≥ 120 km)."}
+      </p>
+    </section>
+
+    <section>
+      <h2>{fr ? "Ce que le RCI ne dit pas" : "What RCI does not tell you"}</h2>
+      <ul class="limits">
+        {fr ? (
+          <>
+            <li>Il ne compte que les finishers qui ont un score. Les abandons et les coureurs sans score n'existent pas pour lui.</li>
+            <li>Il dépend des scores du jour : une édition où les favoris ont couru en dedans sort plus basse.</li>
+            <li>Sous 10 finishers avec un score, pas de RCI10 : la course n'est pas classée pour ce genre.</li>
+            <li>Il mesure la tête de course, pas le niveau de tout le peloton. Pour le peloton, voir la répartition sur chaque fiche.</li>
+            <li>Un écart de quelques points entre deux courses n'est pas significatif.</li>
+          </>
+        ) : (
+          <>
+            <li>It only counts finishers who have a score. Runners who dropped out or have no score do not exist for it.</li>
+            <li>It depends on the scores of the day: an edition where the favourites had an off day comes out lower.</li>
+            <li>Under 10 finishers with a score, no RCI10: the race is not ranked for that gender.</li>
+            <li>It measures the front of the race, not the whole field. For the whole field, see the distribution on each race page.</li>
+            <li>A gap of a few points between two races is not meaningful.</li>
+          </>
+        )}
+      </ul>
+      <p><a href={rankingsPath(lang)}>{fr ? "Voir le classement →" : "See the rankings →"}</a></p>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .method { display: grid; gap: 34px; padding-top: 36px; }
+  .method > * { max-width: 760px; }
+  h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; letter-spacing: -0.02em; }
+  h2 { font-size: 21px; margin-bottom: 10px; }
+  .lede { margin: 8px 0 0; }
+  p { margin: 0 0 12px; }
+  .big { font-size: 19px; font-weight: 600; line-height: 1.45; }
+  .formula {
+    font-size: 15px; padding: 12px 14px; background: var(--surface-2);
+    border-left: 3px solid var(--men); border-radius: var(--radius-s);
+  }
+  .calc { font-size: 15px; margin-top: 12px; }
+  .calc strong { color: var(--men); }
+  .small { font-size: 13px; }
+  .card :global(.rci-mark) { stroke: var(--men); stroke-width: 2; }
+  .example { border-collapse: collapse; width: 100%; margin: 4px 0 14px; font-size: 13.5px; }
+  .example th, .example td { text-align: left; padding: 8px 8px 8px 0; border-top: 1px solid var(--divider); }
+  .example th { font-weight: 600; white-space: nowrap; }
+  .example .rci { white-space: nowrap; font-weight: 600; text-align: right; }
+  .conv td { text-align: right; }
+  .sources { margin: 0 0 12px; }
+  .sources dt { font-weight: 700; margin-top: 12px; }
+  .sources dd { margin: 2px 0 0; color: var(--text-2); }
+  .limits { margin: 0 0 14px; padding-left: 20px; display: grid; gap: 6px; }
+  @media (max-width: 600px) { .example td.num:not(.rci) { font-size: 11.5px; } }
+</style>

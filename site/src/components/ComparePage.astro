@@ -1,0 +1,207 @@
+---
+import Base from "../layouts/Base.astro";
+import { loadIndex, loadRace } from "../lib/data";
+import { rank } from "../lib/rankings";
+import { compareView } from "../lib/compare";
+import { t, comparePath, type Lang } from "../lib/i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const races = loadIndex().races;
+// Never opens empty: the three strongest mid-distance fields, until the URL says otherwise (?c=a,b,c).
+const defaults = rank(races, "M", "latest", "medium").slice(0, 3).map(r => r.race.id);
+---
+<Base lang={lang} title={`${s.compare_title} — Trail Density`} description={s.compare_sub} alternate={{ fr: comparePath("fr"), en: comparePath("en") }}>
+  <div class="wrap compare" data-lang={lang} data-default={defaults.join(",")}>
+    <section>
+      <h1>{s.compare_title}</h1>
+      <p class="muted lede">{s.compare_sub}</p>
+    </section>
+
+    <section class="picker">
+      <ul class="picked"></ul>
+      <div class="search">
+        <input type="search" placeholder={s.compare_search} aria-label={s.compare_search} autocomplete="off" />
+        <ul class="matches" role="listbox" hidden></ul>
+      </div>
+      <p class="suggest"><span class="eyebrow">{s.compare_suggest}</span> <span class="chips"></span></p>
+    </section>
+
+    <div data-view>
+      <Fragment set:html={compareView(lang, defaults.map(loadRace))} />
+    </div>
+  </div>
+</Base>
+
+<script>
+  import { compareView, suggest, MAX_COMPARE } from "../lib/compare";
+  import { t, flag, comparePath, type Lang } from "../lib/i18n";
+  import type { Index, Race } from "../lib/types";
+
+  // Selection lives in the URL (?c=occ,sierre-zinal); race files are fetched once and kept.
+  const root = document.querySelector<HTMLElement>(".compare")!;
+  const lang = root.dataset.lang as Lang;
+  const s = t(lang);
+  const input = root.querySelector<HTMLInputElement>(".search input")!;
+  const matches = root.querySelector<HTMLUListElement>(".matches")!;
+  const cache = new Map<string, Promise<Race>>();
+  const fetchRace = (id: string) => {
+    if (!cache.has(id)) cache.set(id, fetch(`/data/races/${id}.json`).then(r => r.json()));
+    return cache.get(id)!;
+  };
+  const esc = (x: string) => x.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+  const fold = (x: string) => x.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+
+  // index.json is needed for search and suggestions before anything else.
+  (async () => {
+    const index: Index = await fetch("/data/index.json").then(r => r.json());
+    const byId = new Map(index.races.map(r => [r.id, r]));
+    const fromUrl = new URLSearchParams(location.search).get("c");
+    let selected = (fromUrl ?? root.dataset.default!).split(",").filter(id => byId.has(id)).slice(0, MAX_COMPARE);
+
+    async function render(fromDefault = false) {
+      root.querySelector(".picked")!.innerHTML = selected.map((id, i) => `
+        <li class="chip-race"><span class="swatch c${i + 1}"></span>${flag(byId.get(id)!.country)} ${esc(byId.get(id)!.name)}
+          <button type="button" data-remove="${id}" aria-label="${esc(s.compare_remove(byId.get(id)!.name))}">×</button></li>`).join("");
+      const full = selected.length >= MAX_COMPARE;
+      input.disabled = full;
+      input.placeholder = full ? s.compare_full : s.compare_search;
+      const sugg = full ? [] : suggest(index.races, selected, 4);
+      root.querySelector(".suggest")!.toggleAttribute("hidden", !sugg.length);
+      root.querySelector(".suggest .chips")!.innerHTML = sugg.map(r =>
+        `<button type="button" class="chip add" data-add="${r.id}">+ ${flag(r.country)} ${esc(r.name)}</button>`).join("");
+      if (!fromDefault) {
+        history.replaceState(null, "", comparePath(lang, selected));
+        const races = await Promise.all(selected.map(fetchRace));
+        root.querySelector("[data-view]")!.innerHTML = compareView(lang, races);
+      }
+    }
+
+    function add(id: string) {
+      if (selected.includes(id) || selected.length >= MAX_COMPARE) return;
+      selected = [...selected, id];
+      input.value = "";
+      matches.hidden = true;
+      render();
+    }
+
+    function showMatches() {
+      const q = fold(input.value.trim());
+      const found = q ? index.races.filter(r => !selected.includes(r.id) && fold(`${r.name} ${r.event.name}`).includes(q)).slice(0, 8) : [];
+      matches.innerHTML = found.map((r, i) =>
+        `<li role="option" data-add="${r.id}"${i === 0 ? ' aria-selected="true"' : ""}>${flag(r.country)} ${esc(r.name)}${r.format ? ` <small class="meta">${s.format_label[r.format]}</small>` : ""}</li>`).join("");
+      matches.hidden = !found.length;
+    }
+
+    input.addEventListener("input", showMatches);
+    input.addEventListener("keydown", e => {
+      const items = [...matches.querySelectorAll<HTMLElement>("li")];
+      const cur = items.findIndex(li => li.getAttribute("aria-selected") === "true");
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        if (!items.length) return;
+        const next = (cur + (e.key === "ArrowDown" ? 1 : items.length - 1)) % items.length;
+        items.forEach((li, i) => li.setAttribute("aria-selected", String(i === next)));
+      } else if (e.key === "Enter" && cur >= 0) {
+        e.preventDefault();
+        add(items[cur].dataset.add!);
+      } else if (e.key === "Escape") {
+        matches.hidden = true;
+      }
+    });
+    input.addEventListener("blur", () => setTimeout(() => (matches.hidden = true), 150));
+    root.addEventListener("click", e => {
+      const el = (e.target as HTMLElement).closest<HTMLElement>("[data-add], [data-remove]");
+      if (!el) return;
+      if (el.dataset.add) add(el.dataset.add);
+      else { selected = selected.filter(id => id !== el.dataset.remove); render(); }
+    });
+
+    render(fromUrl == null || selected.join(",") === root.dataset.default);
+  })();
+</script>
+
+<style>
+  .compare { display: grid; gap: 22px; padding-top: 36px; }
+  h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; letter-spacing: -0.02em; }
+  .lede { margin: 8px 0 0; }
+  .picker { display: grid; gap: 12px; }
+  .search { position: relative; max-width: 420px; }
+  input {
+    width: 100%; font: 500 15px var(--font); color: var(--text); background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius-s); padding: 9px 12px;
+  }
+  input:focus { outline: 2px solid var(--text); outline-offset: -1px; }
+  .suggest { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .suggest[hidden] { display: none; }
+  .suggest .chips { display: contents; }
+</style>
+
+<style is:global>
+  /* Markup injected by compareView / the picker script, hence global (scoped under .compare). */
+  .compare .picked { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .compare .chip-race {
+    display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 14px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-s); padding: 5px 6px 5px 10px;
+  }
+  .compare .chip-race button {
+    border: 0; background: none; color: var(--text-3); font-size: 18px; line-height: 1; cursor: pointer; padding: 0 4px;
+  }
+  .compare .chip-race button:hover { color: var(--text); }
+  .compare .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 1px; background: currentColor; flex: none; margin-right: 6px; }
+  .compare .chip.add { cursor: pointer; font: 600 12.5px var(--font); }
+  .compare .chip.add:hover { color: var(--text); border-color: var(--text-3); }
+  .compare .matches {
+    position: absolute; z-index: 5; left: 0; right: 0; top: calc(100% + 4px); margin: 0; padding: 4px 0; list-style: none;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-s); box-shadow: 0 6px 20px oklch(0 0 0 / 0.08);
+  }
+  .compare .matches li { padding: 7px 12px; cursor: pointer; font-size: 14px; }
+  .compare .matches li[aria-selected="true"], .compare .matches li:hover { background: var(--surface-2); }
+  .compare .matches .meta { color: var(--text-3); font: 500 11px var(--mono); margin-left: 6px; }
+
+  .compare [data-view] { display: grid; gap: 28px; }
+  .compare .verdicts { display: grid; gap: 6px; }
+  .compare .verdict { margin: 0; font-size: 17px; padding-left: 12px; border-left: 3px solid; }
+  .compare .verdict.f { border-color: var(--women); }
+  .compare .verdict.m { border-color: var(--men); }
+  .compare .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+  .compare .card-head h2, .compare .section-head h2 { font-size: 20px; }
+  .compare .sub { margin: 2px 0 0; font-size: 13px; }
+  .compare .section-head .legend { flex-wrap: wrap; align-self: flex-end; }
+  .compare .legend span { font-weight: 600; }
+
+  .compare table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .compare th, .compare td { text-align: left; padding: 9px 8px; border-top: 1px solid var(--divider); vertical-align: middle; }
+  .compare thead th { border-top: 0; font: 600 11px var(--mono); text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-2); }
+  .compare thead th.f { color: var(--women); }
+  .compare thead th.m { color: var(--men); }
+  .compare tbody th { font-weight: 600; }
+  .compare tbody th a { text-decoration: none; }
+  .compare tbody th a:hover { text-decoration: underline; }
+  .compare .meta { display: block; font: 500 11px var(--mono); color: var(--text-3); margin-left: 16px; }
+
+  .compare .faceoff th[scope="row"] { width: 34%; }
+  .compare .bar-cell { position: relative; }
+  .compare .bar-cell .bar { display: block; height: 8px; border-radius: 1px; opacity: 0.35; margin-bottom: 4px; }
+  .compare .bar-cell.f .bar { background: var(--women); }
+  .compare .bar-cell.m .bar { background: var(--men); }
+  .compare .bar-cell.best .bar { opacity: 1; }
+  .compare .bar-cell .v { font-weight: 600; font-size: 15px; }
+  .compare .bar-cell.best.f .v { color: var(--women); }
+  .compare .bar-cell.best.m .v { color: var(--men); }
+  .compare .bar-cell .yr { font-size: 11px; color: var(--text-3); margin-left: 6px; }
+
+  .compare .table-scroll { overflow-x: auto; }
+  .compare .details th:first-child { white-space: nowrap; color: var(--text-2); font-weight: 500; }
+  .compare .details thead th { text-transform: none; letter-spacing: 0; font: 600 13px var(--font); color: var(--text); text-align: right; }
+  .compare .details td { text-align: right; }
+  .compare .details tr.group th { font: 600 11px var(--mono); text-transform: uppercase; letter-spacing: 0.04em; padding-top: 18px; }
+  .compare .details tr.group.f th { color: var(--women); }
+  .compare .details tr.group.m th { color: var(--men); }
+  .compare .details tr.group td { padding-top: 18px; font-size: 11px; }
+  .compare .details td.best { font-weight: 700; }
+  .compare .details td.best.f { color: var(--women); }
+  .compare .details td.best.m { color: var(--men); }
+  .compare .empty { padding: 24px 0; }
+</style>

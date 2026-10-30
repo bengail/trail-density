@@ -2,15 +2,13 @@
 import Base from "../layouts/Base.astro";
 import { loadIndex } from "../lib/data";
 import { rank, rankingList } from "../lib/rankings";
-import { t, racePath, rankingsPath, flag, fmtDelta, fmtNum, type Lang } from "../lib/i18n";
+import { t, racePath, rankingsPath, methodPath, flag, fmtDelta, fmtNum, type Lang } from "../lib/i18n";
 import type { Gender } from "../lib/types";
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const s = t(lang);
 const races = loadIndex().races;
-const nEditions = races.reduce((n, r) => n + r.editions.length, 0);
-const since = Math.min(...races.flatMap(r => r.editions.map(e => e.year)));
 
 const latest = { F: rank(races, "F"), M: rank(races, "M") };
 const formats = ["vertical", "short", "medium", "long", "ultra"] as const;
@@ -21,12 +19,12 @@ const risers = (["F", "M"] as Gender[])
   .sort((a, b) => b.delta! - a.delta!)
   .slice(0, 6);
 ---
-<Base lang={lang} title={`Trail Density — ${s.tagline}`} description={s.home_sub(races.length, nEditions, since)} alternate={{ fr: "/fr/", en: "/en/" }}>
+<Base lang={lang} title={`Trail Density — ${s.tagline}`} description={s.home_sub} alternate={{ fr: "/fr/", en: "/en/" }}>
   <div class="wrap home">
     <section class="intro">
       <p class="eyebrow">Trail Density · RCI</p>
       <h1>{s.home_title}</h1>
-      <p class="lede muted">{s.home_sub(races.length, nEditions, since)}</p>
+      <p class="lede muted">{s.home_sub} <a href={methodPath(lang)}>{s.method_link} →</a></p>
     </section>
 
     <section>

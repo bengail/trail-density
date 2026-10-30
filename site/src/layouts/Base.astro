@@ -1,6 +1,6 @@
 ---
 import "../styles/global.css";
-import { t, rankingsPath, type Lang } from "../lib/i18n";
+import { t, rankingsPath, comparePath, methodPath, type Lang } from "../lib/i18n";
 
 interface Props {
   lang: Lang;
@@ -24,6 +24,7 @@ const other: Lang = lang === "fr" ? "en" : "fr";
     <meta property="og:type" content="website" />
     <link rel="alternate" hreflang="fr" href={new URL(alternate.fr, Astro.site)} />
     <link rel="alternate" hreflang="en" href={new URL(alternate.en, Astro.site)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -37,8 +38,8 @@ const other: Lang = lang === "fr" ? "en" : "fr";
         </a>
         <nav>
           <a href={rankingsPath(lang)}>{s.nav_rankings}</a>
-          <a href={`/${lang}/`}>{s.nav_compare}</a>
-          <a href={`/${lang}/`}>{s.nav_method}</a>
+          <a href={comparePath(lang)}>{s.nav_compare}</a>
+          <a href={methodPath(lang)}>{s.nav_method}</a>
           <a class="lang" href={alternate[other]} hreflang={other} lang={other}>{other.toUpperCase()}</a>
         </nav>
       </div>

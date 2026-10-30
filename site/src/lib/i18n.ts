@@ -45,7 +45,8 @@ const STRINGS = {
     no_source: (src: string) => `Pas de résultats ${src} pour cette édition.`,
     no_rows: "Aucune course pour ce filtre.",
     home_title: "Quels trails ont les plateaux les plus relevés ?",
-    home_sub: (races: number, eds: number, since: number) => `Le RCI mesure le niveau du haut de classement, à partir de l'index de tous les finishers. ${races} courses, ${eds} éditions depuis ${since}.`,
+    home_sub: "Le RCI mesure le niveau et la densité des premières femmes et des premiers hommes de chaque course. L'index des femmes est ramené à l'échelle des hommes, pour comparer les deux.",
+    method_link: "Comment c'est calculé",
     latest_title: "Les plus relevées",
     latest_sub: "RCI10 de la dernière édition de chaque course",
     by_format: "Par format",
@@ -57,6 +58,22 @@ const STRINGS = {
     season: "Saison",
     latest_edition: "Dernière édition",
     all_formats: "Tous",
+    compare_title: "Comparer",
+    compare_sub: "Jusqu'à 4 courses, chacune à sa dernière édition.",
+    compare_search: "Ajouter une course…",
+    compare_full: "4 courses au maximum",
+    compare_remove: (name: string) => `Retirer ${name}`,
+    compare_suggest: "Suggestions",
+    compare_pick: "Ajoutez au moins une course pour comparer.",
+    verdict: (g: string, name: string, v: string, gap: string | null) => `${g} : ${name} est la plus relevée (RCI10 ${v}${gap ? `, ${gap} sur la suivante` : ""}).`,
+    face_off: "Face à face",
+    face_off_sub: "RCI10 de la dernière édition",
+    details: "En détail",
+    details_sub: "Dernière édition de chaque course",
+    n_index: "Finishers avec index",
+    no_data: "–",
+    method_title: "Méthode",
+    method_sub: "Comment le RCI est calculé, d'où viennent les données, et ce qu'il ne dit pas.",
   },
   en: {
     tagline: "The trail running competitiveness index",
@@ -100,7 +117,8 @@ const STRINGS = {
     no_source: (src: string) => `No ${src} results for this edition.`,
     no_rows: "No race for this filter.",
     home_title: "Which trail races have the strongest fields?",
-    home_sub: (races: number, eds: number, since: number) => `RCI measures the strength at the front of the race, from the index of every finisher. ${races} races, ${eds} editions since ${since}.`,
+    home_sub: "RCI measures how strong and how deep the front of each race is, for women and for men. Women's index is mapped onto the men's scale so the two can be compared.",
+    method_link: "How it's computed",
     latest_title: "Strongest fields",
     latest_sub: "RCI10 at each race's latest edition",
     by_format: "By format",
@@ -112,6 +130,22 @@ const STRINGS = {
     season: "Season",
     latest_edition: "Latest edition",
     all_formats: "All",
+    compare_title: "Compare",
+    compare_sub: "Up to 4 races, each at its latest edition.",
+    compare_search: "Add a race…",
+    compare_full: "4 races at most",
+    compare_remove: (name: string) => `Remove ${name}`,
+    compare_suggest: "Suggestions",
+    compare_pick: "Add at least one race to compare.",
+    verdict: (g: string, name: string, v: string, gap: string | null) => `${g}: ${name} has the strongest field (RCI10 ${v}${gap ? `, ${gap} ahead of the next` : ""}).`,
+    face_off: "Head to head",
+    face_off_sub: "RCI10 at the latest edition",
+    details: "In detail",
+    details_sub: "Latest edition of each race",
+    n_index: "Finishers with an index",
+    no_data: "–",
+    method_title: "Method",
+    method_sub: "How RCI is computed, where the data comes from, and what it does not tell you.",
   },
 };
 
@@ -134,6 +168,15 @@ export function racePath(lang: Lang, id: string) {
 
 export function rankingsPath(lang: Lang) {
   return lang === "fr" ? "/fr/classement/" : "/en/rankings/";
+}
+
+export function comparePath(lang: Lang, ids: string[] = []) {
+  const base = lang === "fr" ? "/fr/comparer/" : "/en/compare/";
+  return ids.length ? `${base}?c=${ids.join(",")}` : base;
+}
+
+export function methodPath(lang: Lang) {
+  return lang === "fr" ? "/fr/methode/" : "/en/method/";
 }
 
 export function countryName(lang: Lang, iso2: string | null) {

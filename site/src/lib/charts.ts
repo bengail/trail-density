@@ -129,3 +129,46 @@ export function fieldChart(blocks: { M?: GenderBlock; F?: GenderBlock }, height 
   }
   return `<svg class="chart" viewBox="0 0 ${W} ${height}" role="img">${svg}</svg>`;
 }
+
+// Several races on one chart (Compare page). Each series gets a colour class (.c1 … .c4).
+export interface Series { label: string; cls: string; pts: [number, number][] }
+
+// Moves label positions apart so that none are closer than `gap` px, keeping their order.
+function spread(ys: number[], gap: number) {
+  const order = ys.map((y, i) => i).sort((a, b) => ys[a] - ys[b]);
+  const out = [...ys];
+  for (let k = 1; k < order.length; k++) {
+    const prev = out[order[k - 1]], i = order[k];
+    if (out[i] - prev < gap) out[i] = prev + gap;
+  }
+  return out;
+}
+
+// x = a number (year or rank), y = a score; lines with dots when there are few points.
+export function seriesChart(series: Series[], { xStep = 1, yStep = 50, xTicks, height = 260, dots = true }: { xStep?: number; yStep?: number; xTicks?: number[]; height?: number; dots?: boolean } = {}) {
+  const used = series.filter(s => s.pts.length);
+  const all = used.flatMap(s => s.pts);
+  if (all.length < 2) return "";
+  const xs = all.map(p => p[0]);
+  const x0 = Math.min(...xs), x1 = Math.max(...xs);
+  const [lo, hi] = niceRange(all.map(p => p[1]), yStep, 5);
+  const x = (v: number) => PAD.left + (x1 === x0 ? 0.5 : (v - x0) / (x1 - x0)) * (W - PAD.left - PAD.right);
+  const y = (v: number) => PAD.top + (1 - (v - lo) / (hi - lo)) * (height - PAD.top - PAD.bottom);
+
+  let svg = yAxis(lo, hi, yStep, y, W);
+  const span = x1 - x0, every = xStep * (span > 16 ? 5 : span > 8 ? 2 : 1);
+  const ticks = xTicks ?? Array.from({ length: Math.floor(span / every) + 1 }, (_, k) => x0 + k * every).concat(span % every ? [x1] : []);
+  for (const v of ticks) svg += `<text class="tick" x="${x(v)}" y="${height - 8}" text-anchor="middle">${v}</text>`;
+  const ends = spread(used.map(s => y(s.pts[s.pts.length - 1][1])), 18);
+  used.forEach((s, k) => {
+    svg += `<polyline class="line ${s.cls}" points="${s.pts.map(([a, b]) => `${x(a)},${y(b)}`).join(" ")}"/>`;
+    for (const [a, b] of s.pts) {
+      svg += dots
+        ? `<circle class="dot ${s.cls}" cx="${x(a)}" cy="${y(b)}" r="3.5"><title>${esc(s.label)} · ${a} · ${b.toFixed(1)}</title></circle>`
+        : `<circle class="hit" cx="${x(a)}" cy="${y(b)}" r="5"><title>${esc(s.label)} · ${a} · ${b.toFixed(1)}</title></circle>`;
+    }
+    const [la, lb] = s.pts[s.pts.length - 1];
+    svg += `<text class="end-label ${s.cls}" x="${x(la) + 8}" y="${ends[k] + 4}">${Math.round(lb)}</text>`;
+  });
+  return `<svg class="chart" viewBox="0 0 ${W} ${height}" role="img">${svg}</svg>`;
+}

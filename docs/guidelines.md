@@ -23,7 +23,7 @@ Jamais d'écran vide « commencez par choisir ». Les filtres affinent une répo
 **Comparer** : ne s'ouvre jamais vide (comparaison suggérée, p. ex. le top 3 d'un format). On ajoute une course
 par recherche (jusqu'à 4, en étiquettes retirables), avec des suggestions (même format, même circuit, RCI proche).
 L'entrée principale est le bouton « Comparer avec… » de la fiche course. La sélection est dans l'URL
-(`/fr/comparer/occ,sierre-zinal,zegama-marathon`).
+(`/fr/comparer/?c=occ,sierre-zinal,zegama-marathon`, en query string pour rester un site statique).
 
 ## Ton
 - Précis et sobre : média de données sportives, pas outil d'analyste. Le chiffre, puis une phrase qui l'interprète.
