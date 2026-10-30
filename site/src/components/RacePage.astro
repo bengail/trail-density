@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import { loadIndex, loadRace, formatRank } from "../lib/data";
-import { t, racePath, countryName, flag, fmtNum, fmtDelta, SERIES, SOURCES, type Lang } from "../lib/i18n";
+import { t, racePath, rankingsPath, countryName, flag, fmtNum, fmtDelta, SERIES, SOURCES, type Lang } from "../lib/i18n";
 import { historyChart } from "../lib/charts";
 import { editionView } from "../lib/edition-view";
 import type { Gender } from "../lib/types";
@@ -47,7 +47,7 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
 <Base lang={lang} title={title} description={desc} alternate={{ fr: racePath("fr", id), en: racePath("en", id) }}>
   <div class="wrap page">
     <section class="hero">
-      <p class="eyebrow"><a class="back" href={`/${lang}/`}>← {s.all_races}</a>{race.event.name !== race.name && <span> · {race.event.name}</span>}</p>
+      <p class="eyebrow"><a class="back" href={rankingsPath(lang)}>← {s.all_races}</a>{race.event.name !== race.name && <span> · {race.event.name}</span>}</p>
       <h1>{race.name}</h1>
       <p class="meta muted">{meta.join("  ·  ")}</p>
       {race.series.length > 0 && <p class="series">{race.series.map(x => <span class="chip">{SERIES[x] ?? x}</span>)}</p>}

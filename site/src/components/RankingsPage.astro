@@ -1,0 +1,99 @@
+---
+import Base from "../layouts/Base.astro";
+import { loadIndex } from "../lib/data";
+import { rank, rankingList, seasons } from "../lib/rankings";
+import { t, type Lang } from "../lib/i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const races = loadIndex().races;
+const formats = ["vertical", "short", "medium", "long", "ultra"] as const;
+---
+<Base lang={lang} title={`${s.rankings_title} — Trail Density`} description={s.rankings_sub} alternate={{ fr: "/fr/classement/", en: "/en/rankings/" }}>
+  <div class="wrap rankings" data-lang={lang}>
+    <section>
+      <h1>{s.rankings_title}</h1>
+      <p class="muted lede">{s.rankings_sub}</p>
+    </section>
+
+    <section class="filters">
+      <label class="season">
+        <span class="eyebrow">{s.season}</span>
+        <select name="season">
+          <option value="latest">{s.latest_edition}</option>
+          {seasons(races).map(y => <option value={y}>{y}</option>)}
+        </select>
+      </label>
+      <div class="formats" role="group">
+        <button type="button" data-format="all" aria-pressed="true">{s.all_formats}</button>
+        {formats.map(f => <button type="button" data-format={f} aria-pressed="false">{s.format_label[f]}</button>)}
+      </div>
+    </section>
+
+    <section class="pair">
+      <div class="card">
+        <h2 class="g-title f">{s.women}</h2>
+        <div data-list="F"><Fragment set:html={rankingList(lang, rank(races, "F"), "F")} /></div>
+      </div>
+      <div class="card">
+        <h2 class="g-title m">{s.men}</h2>
+        <div data-list="M"><Fragment set:html={rankingList(lang, rank(races, "M"), "M")} /></div>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import { rank, rankingList, type Season } from "../lib/rankings";
+  import type { Index, Format } from "../lib/types";
+  import type { Lang } from "../lib/i18n";
+
+  // Filters re-rank in the browser from index.json; the state lives in the URL (?season=2025&format=medium).
+  const root = document.querySelector<HTMLElement>(".rankings")!;
+  const lang = root.dataset.lang as Lang;
+  const select = root.querySelector<HTMLSelectElement>("select[name=season]")!;
+  const buttons = root.querySelectorAll<HTMLButtonElement>("[data-format]");
+  const params = new URLSearchParams(location.search);
+  let season = params.get("season") ?? "latest";
+  let format = params.get("format") ?? "all";
+  let index: Index | null = null;
+
+  async function render(push = true) {
+    index ??= await fetch("/data/index.json").then(r => r.json());
+    const sz: Season = season === "latest" ? "latest" : Number(season);
+    for (const g of ["F", "M"] as const) {
+      root.querySelector(`[data-list=${g}]`)!.innerHTML =
+        rankingList(lang, rank(index!.races, g, sz, format as Format | "all"), g, { showYear: sz === "latest", showFormat: format === "all" });
+    }
+    select.value = season;
+    buttons.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.format === format)));
+    if (push) {
+      const q = new URLSearchParams();
+      if (season !== "latest") q.set("season", season);
+      if (format !== "all") q.set("format", format);
+      history.replaceState(null, "", q.size ? `?${q}` : location.pathname);
+    }
+  }
+  select.addEventListener("change", () => { season = select.value; render(); });
+  buttons.forEach(b => b.addEventListener("click", () => { format = b.dataset.format!; render(); }));
+  if (season !== "latest" || format !== "all") render(false);
+</script>
+
+<style>
+  .rankings { display: grid; gap: 22px; padding-top: 36px; }
+  h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; letter-spacing: -0.02em; }
+  .lede { margin: 8px 0 0; }
+  .filters { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; }
+  .season { display: grid; gap: 6px; }
+  select {
+    font: 600 14px var(--font); color: var(--text); background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius-s); padding: 7px 10px;
+  }
+  .formats { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--border); border-radius: var(--radius-s); overflow: hidden; }
+  .formats button {
+    font: 600 13px var(--font); padding: 7px 13px; border: 0; background: var(--surface); color: var(--text-2); cursor: pointer;
+  }
+  .formats button + button { border-left: 1px solid var(--border); }
+  .formats button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+</style>

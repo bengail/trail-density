@@ -43,6 +43,20 @@ const STRINGS = {
     scales_differ: "Index ITRA et UTMB Index sont deux barèmes différents : leurs RCI ne se comparent pas entre eux.",
     raw_note: "Index tels que publiés. Dans les graphiques, l'index des femmes est ramené à l'échelle des hommes, comme pour le RCI.",
     no_source: (src: string) => `Pas de résultats ${src} pour cette édition.`,
+    no_rows: "Aucune course pour ce filtre.",
+    home_title: "Quels trails ont les plateaux les plus relevés ?",
+    home_sub: (races: number, eds: number, since: number) => `Le RCI mesure le niveau du haut de classement, à partir de l'index de tous les finishers. ${races} courses, ${eds} éditions depuis ${since}.`,
+    latest_title: "Les plus relevées",
+    latest_sub: "RCI10 de la dernière édition de chaque course",
+    by_format: "Par format",
+    risers: "Plus fortes progressions",
+    risers_sub: "Dernière édition comparée à la précédente",
+    see_all: "Classement complet",
+    rankings_title: "Classement",
+    rankings_sub: "RCI10 de chaque course, femmes et hommes classés séparément.",
+    season: "Saison",
+    latest_edition: "Dernière édition",
+    all_formats: "Tous",
   },
   en: {
     tagline: "The trail running competitiveness index",
@@ -84,6 +98,20 @@ const STRINGS = {
     scales_differ: "ITRA index and UTMB Index are two different scales: their RCIs are not comparable with each other.",
     raw_note: "Index as published. In the charts, women's index is mapped onto the men's scale, as for RCI.",
     no_source: (src: string) => `No ${src} results for this edition.`,
+    no_rows: "No race for this filter.",
+    home_title: "Which trail races have the strongest fields?",
+    home_sub: (races: number, eds: number, since: number) => `RCI measures the strength at the front of the race, from the index of every finisher. ${races} races, ${eds} editions since ${since}.`,
+    latest_title: "Strongest fields",
+    latest_sub: "RCI10 at each race's latest edition",
+    by_format: "By format",
+    risers: "Biggest rises",
+    risers_sub: "Latest edition compared with the previous one",
+    see_all: "Full rankings",
+    rankings_title: "Rankings",
+    rankings_sub: "RCI10 of every race, women and men ranked separately.",
+    season: "Season",
+    latest_edition: "Latest edition",
+    all_formats: "All",
   },
 };
 
@@ -102,6 +130,10 @@ export const SOURCES: Record<string, string> = { itra: "ITRA", utmb: "UTMB Index
 
 export function racePath(lang: Lang, id: string) {
   return lang === "fr" ? `/fr/course/${id}/` : `/en/race/${id}/`;
+}
+
+export function rankingsPath(lang: Lang) {
+  return lang === "fr" ? "/fr/classement/" : "/en/rankings/";
 }
 
 export function countryName(lang: Lang, iso2: string | null) {

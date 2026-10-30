@@ -1,6 +1,6 @@
 ---
 import "../styles/global.css";
-import { t, type Lang } from "../lib/i18n";
+import { t, rankingsPath, type Lang } from "../lib/i18n";
 
 interface Props {
   lang: Lang;
@@ -36,7 +36,7 @@ const other: Lang = lang === "fr" ? "en" : "fr";
           <span class="brand-tag">RCI</span>
         </a>
         <nav>
-          <a href={`/${lang}/`}>{s.nav_rankings}</a>
+          <a href={rankingsPath(lang)}>{s.nav_rankings}</a>
           <a href={`/${lang}/`}>{s.nav_compare}</a>
           <a href={`/${lang}/`}>{s.nav_method}</a>
           <a class="lang" href={alternate[other]} hreflang={other} lang={other}>{other.toUpperCase()}</a>
