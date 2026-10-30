@@ -1,9 +1,9 @@
-// Exports the v2 database to static JSON for the public site (site/data/), so visitors never query Supabase.
+// Exports the v2 database to static JSON for the public site (site/public/data/), so visitors never query Supabase.
 //
 //   pnpm run export
 //
-//   site/data/index.json          every race + a per-edition RCI summary (home, rankings, compare, search)
-//   site/data/races/<race>.json   one race in full: per edition and gender, RCI levels, density curve,
+//   site/public/data/index.json          every race + a per-edition RCI summary (home, rankings, compare, search)
+//   site/public/data/races/<race>.json   one race in full: per edition and gender, RCI levels, density curve,
 //                                 index histogram, depth counts and top 10
 //
 // One source per edition: ITRA, else UTMB, else legacy (the other sources' RCI10 is kept under `others`).
@@ -11,7 +11,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { connect } from "./lib/db.mjs";
 
-const OUT = path.resolve("site/data");
+const OUT = path.resolve("site/public/data");
 const SOURCE_PRIORITY = ["itra", "utmb", "legacy"];
 const HIST = { start: 300, step: 20, bins: 33 };          // 300–960; lower scores go to the first bin, higher to the last
 const DEPTH_THRESHOLDS = [800, 750, 700, 650];
@@ -79,7 +79,7 @@ try {
     })),
   };
   bytes += await write("index.json", index);
-  console.log(`${races.size} races, ${editions.length} editions → site/data (${Math.round(bytes / 1024)} KB)`);
+  console.log(`${races.size} races, ${editions.length} editions → site/public/data (${Math.round(bytes / 1024)} KB)`);
 } finally {
   await sql.end();
 }

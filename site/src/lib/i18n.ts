@@ -1,0 +1,136 @@
+// FR / EN strings and locale-aware formatting. The language is always part of the URL (/fr/…, /en/…).
+export type Lang = "fr" | "en";
+export const LANGS: Lang[] = ["fr", "en"];
+
+const STRINGS = {
+  fr: {
+    tagline: "L'indice de compétitivité du trail",
+    nav_rankings: "Classement",
+    nav_compare: "Comparer",
+    nav_method: "Méthode",
+    women: "Femmes",
+    men: "Hommes",
+    rci_help: "RCI10 : moyenne de l'index ITRA du top 10, moins leur dispersion. Plus il est haut, plus le plateau est relevé et homogène.",
+    learn_more: "En savoir plus",
+    rank_in_format: (rank: number, of: number, format: string) => `${ordinal("fr", rank)} sur ${of} courses ${format}`,
+    vs_last: (d: string, year: number) => `${d} vs ${year}`,
+    history: "Évolution du niveau",
+    history_sub: "RCI10 de chaque édition",
+    edition: "Édition",
+    density: "Courbe de densité",
+    density_sub: "Index ITRA des 50 premiers, rang par rang. Une courbe haute et plate = un plateau dense.",
+    field: "Le peloton",
+    field_sub: "Répartition de l'index de tous les finishers",
+    depth: "Profondeur",
+    above: (t: string) => `index ≥ ${t}`,
+    gap: "Écart 1er – 10e",
+    finishers: "finishers",
+    top10: "Top 10",
+    rank: "Rg",
+    runner: "Coureur",
+    time: "Temps",
+    index: "Index",
+    compare_with: "Comparer avec…",
+    source: (s: string) => `Source : ${s}`,
+    not_enough: "Moins de 10 finishers avec un index : pas de RCI10.",
+    points: "pts",
+    formats: { vertical: "verticales", short: "courtes (< 30 km)", medium: "moyennes (30–60 km)", long: "longues (60–120 km)", ultra: "ultra (≥ 120 km)" },
+    format_label: { vertical: "Vertical", short: "Court", medium: "Moyen", long: "Long", ultra: "Ultra" },
+    all_races: "Toutes les courses",
+    footer: "Données ITRA et UTMB, recalculées à chaque import.",
+  },
+  en: {
+    tagline: "The trail running competitiveness index",
+    nav_rankings: "Rankings",
+    nav_compare: "Compare",
+    nav_method: "Method",
+    women: "Women",
+    men: "Men",
+    rci_help: "RCI10: mean ITRA index of the top 10, minus their spread. The higher it is, the stronger and deeper the field.",
+    learn_more: "Learn more",
+    rank_in_format: (rank: number, of: number, format: string) => `${ordinal("en", rank)} of ${of} ${format} races`,
+    vs_last: (d: string, year: number) => `${d} vs ${year}`,
+    history: "Field strength over time",
+    history_sub: "RCI10 of each edition",
+    edition: "Edition",
+    density: "Density curve",
+    density_sub: "ITRA index of the top 50, rank by rank. A high, flat curve = a deep field.",
+    field: "The whole field",
+    field_sub: "Index distribution of all finishers",
+    depth: "Depth",
+    above: (t: string) => `index ≥ ${t}`,
+    gap: "Gap 1st – 10th",
+    finishers: "finishers",
+    top10: "Top 10",
+    rank: "#",
+    runner: "Runner",
+    time: "Time",
+    index: "Index",
+    compare_with: "Compare with…",
+    source: (s: string) => `Source: ${s}`,
+    not_enough: "Fewer than 10 finishers with an index: no RCI10.",
+    points: "pts",
+    formats: { vertical: "vertical", short: "short (< 30 km)", medium: "mid-distance (30–60 km)", long: "long (60–120 km)", ultra: "ultra (≥ 120 km)" },
+    format_label: { vertical: "Vertical", short: "Short", medium: "Mid", long: "Long", ultra: "Ultra" },
+    all_races: "All races",
+    footer: "ITRA and UTMB data, recomputed at every import.",
+  },
+};
+
+export function t(lang: Lang) {
+  return STRINGS[lang];
+}
+
+export const SERIES: Record<string, string> = {
+  gtws: "Golden Trail World Series",
+  "utmb-world-series": "UTMB World Series",
+  "wmra-world-cup": "WMRA World Cup",
+  "canadian-trail-championships": "Championnats canadiens",
+};
+
+export const SOURCES: Record<string, string> = { itra: "ITRA", utmb: "UTMB Index", legacy: "ITRA (archive)" };
+
+export function racePath(lang: Lang, id: string) {
+  return lang === "fr" ? `/fr/course/${id}/` : `/en/race/${id}/`;
+}
+
+export function countryName(lang: Lang, iso2: string | null) {
+  if (!iso2) return "";
+  try { return new Intl.DisplayNames([lang], { type: "region" }).of(iso2) ?? iso2; } catch { return iso2; }
+}
+
+export function flag(iso2: string | null) {
+  if (!iso2 || iso2.length !== 2) return "";
+  return String.fromCodePoint(...[...iso2.toUpperCase()].map(c => 0x1f1a5 + c.charCodeAt(0)));
+}
+
+export function fmtNum(lang: Lang, v: number | null | undefined, digits = 0) {
+  if (v == null) return "–";
+  return v.toLocaleString(lang === "fr" ? "fr-FR" : "en-US", { minimumFractionDigits: digits, maximumFractionDigits: digits });
+}
+
+export function fmtDelta(lang: Lang, d: number) {
+  return (d > 0 ? "+" : d < 0 ? "−" : "±") + fmtNum(lang, Math.abs(d), 1);
+}
+
+export function fmtTime(s: number | null) {
+  if (s == null) return "–";
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+  return `${h}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+}
+
+export function ordinal(lang: Lang, n: number) {
+  if (lang === "fr") return n === 1 ? "1re" : `${n}e`;
+  const s = ["th", "st", "nd", "rd"], v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
+// "MOIRAULT Jean-Pierre" → "Jean-Pierre Moirault" (ITRA puts the family name first, in capitals).
+export function displayName(raw: string) {
+  const parts = raw.trim().split(/\s+/);
+  const family: string[] = [], given: string[] = [];
+  for (const p of parts) (given.length === 0 && p === p.toUpperCase() && /\p{L}/u.test(p) ? family : given).push(p);
+  if (!family.length || !given.length) return raw;
+  const cap = (w: string) => w.toLowerCase().replace(/(^|[-'\s])(\p{L})/gu, (_, a, b) => a + b.toUpperCase());
+  return `${given.join(" ")} ${family.map(cap).join(" ")}`;
+}

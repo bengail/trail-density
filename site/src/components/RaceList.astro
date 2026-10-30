@@ -1,0 +1,49 @@
+---
+// Temporary home: every race, by format. Replaced by the editorial home page later.
+import Base from "../layouts/Base.astro";
+import { loadIndex, latestRci } from "../lib/data";
+import { t, racePath, flag, fmtNum, type Lang } from "../lib/i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const formats = ["ultra", "long", "medium", "short", "vertical", null] as const;
+const races = loadIndex().races;
+---
+<Base lang={lang} title={`Trail Density — ${s.tagline}`} description={s.tagline} alternate={{ fr: "/fr/", en: "/en/" }}>
+  <div class="wrap list">
+    <h1>{s.all_races}</h1>
+    {formats.map(f => {
+      const group = races.filter(r => r.format === f)
+        .sort((a, b) => (latestRci(b, "M")?.M?.rci10 ?? 0) - (latestRci(a, "M")?.M?.rci10 ?? 0));
+      if (!group.length) return null;
+      return (
+        <section>
+          <h2 class="eyebrow">{f ? s.format_label[f] : "—"}</h2>
+          <ul>
+            {group.map(r => (
+              <li>
+                <a href={racePath(lang, r.id)}>{flag(r.country)} {r.name}</a>
+                <span class="num f">{fmtNum(lang, latestRci(r, "F")?.F?.rci10, 0)}</span>
+                <span class="num m">{fmtNum(lang, latestRci(r, "M")?.M?.rci10, 0)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      );
+    })}
+  </div>
+</Base>
+
+<style>
+  .list { padding-top: 28px; display: grid; gap: 24px; }
+  h1 { font-size: 32px; font-weight: 800; }
+  ul { list-style: none; padding: 0; margin: 10px 0 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+  li { display: grid; grid-template-columns: 1fr 4em 4em; gap: 8px; padding: 9px 14px; border-top: 1px solid var(--divider); }
+  li:first-child { border-top: 0; }
+  li a { text-decoration: none; font-weight: 600; }
+  li a:hover { text-decoration: underline; }
+  .num { text-align: right; font-weight: 600; }
+  .f { color: var(--women); }
+  .m { color: var(--men); }
+</style>

@@ -23,3 +23,5 @@ node_modules/
 .auth/
 data/raw/
 .env
+site/dist/
+site/.astro/

@@ -1,0 +1,13 @@
+---
+// Language entry point: browser language, French by default for French speakers, English otherwise.
+---
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Trail Density</title>
+    <meta http-equiv="refresh" content="0; url=/en/" />
+    <script is:inline>location.replace((navigator.language || "").toLowerCase().startsWith("fr") ? "/fr/" : "/en/");</script>
+  </head>
+  <body></body>
+</html>

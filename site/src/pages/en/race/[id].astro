@@ -1,0 +1,9 @@
+---
+import RacePage from "../../../components/RacePage.astro";
+import { loadIndex } from "../../../lib/data";
+
+export function getStaticPaths() {
+  return loadIndex().races.map(r => ({ params: { id: r.id } }));
+}
+---
+<RacePage lang="en" id={Astro.params.id} />
