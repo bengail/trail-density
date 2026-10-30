@@ -37,7 +37,7 @@ const STRINGS = {
     formats: { vertical: "verticales", short: "courtes (< 30 km)", medium: "moyennes (30–60 km)", long: "longues (60–120 km)", ultra: "ultra (≥ 120 km)" },
     format_label: { vertical: "Vertical", short: "Court", medium: "Moyen", long: "Long", ultra: "Ultra" },
     all_races: "Toutes les courses",
-    footer: "Données ITRA et UTMB, recalculées à chaque import. RCI : Travis Loncar, Freetrail.",
+    footer: "Données ITRA et UTMB, recalculées à chaque import.",
     source_label: "Source",
     alt_legend: (label: string) => `pointillés : ${label}`,
     scales_differ: "Index ITRA et UTMB Index sont deux barèmes différents : leurs RCI ne se comparent pas entre eux.",
@@ -110,7 +110,7 @@ const STRINGS = {
     formats: { vertical: "vertical", short: "short (< 30 km)", medium: "mid-distance (30–60 km)", long: "long (60–120 km)", ultra: "ultra (≥ 120 km)" },
     format_label: { vertical: "Vertical", short: "Short", medium: "Mid", long: "Long", ultra: "Ultra" },
     all_races: "All races",
-    footer: "ITRA and UTMB data, recomputed at every import. RCI: Travis Loncar, Freetrail.",
+    footer: "ITRA and UTMB data, recomputed at every import.",
     source_label: "Source",
     alt_legend: (label: string) => `dashed: ${label}`,
     scales_differ: "ITRA index and UTMB Index are two different scales: their RCIs are not comparable with each other.",
@@ -164,6 +164,9 @@ export const SERIES: Record<string, string> = {
 
 // The article that introduced RCI.
 export const FREETRAIL_RCI = "https://fantasy.freetrail.com/news/2026/01/realized-competition-index";
+
+// Where the women's index conversion comes from (Enduraw's formulas, published by Distances+).
+export const ENDURAW_NORM = "https://distances.plus/communaute/trail-running-classement-teams-trail-composition-2025/";
 
 export const SOURCES: Record<string, string> = { itra: "ITRA", utmb: "UTMB Index", legacy: "ITRA (archive)" };
 

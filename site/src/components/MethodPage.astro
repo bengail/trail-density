@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import { loadRace } from "../lib/data";
-import { t, racePath, rankingsPath, fmtNum, SOURCES, FREETRAIL_RCI, type Lang } from "../lib/i18n";
+import { t, racePath, rankingsPath, fmtNum, SOURCES, FREETRAIL_RCI, ENDURAW_NORM, type Lang } from "../lib/i18n";
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -109,13 +109,22 @@ const fr = lang === "fr";
       <h2>{fr ? "L'index des femmes" : "Women's index"}</h2>
       <p>
         {fr
-          ? "Les scores publiés pour les femmes et pour les hommes ne sont pas sur la même échelle. Pour pouvoir comparer un RCI femmes et un RCI hommes, Trail Density convertit le score de chaque femme à l'échelle des hommes avant le calcul. Cette étape est propre au site, elle ne fait pas partie de l'indice d'origine :"
-          : "Published scores for women and for men are not on the same scale. To compare a women's RCI with a men's RCI, Trail Density converts each woman's score to the men's scale before computing it. This step is specific to this site and not part of the original index:"}
+          ? "Les scores publiés pour les femmes et pour les hommes ne sont pas sur la même échelle. Pour pouvoir comparer un RCI femmes et un RCI hommes, Trail Density convertit le score de chaque femme à l'échelle des hommes avant le calcul. Cette étape ne fait pas partie de l'indice d'origine :"
+          : "Published scores for women and for men are not on the same scale. To compare a women's RCI with a men's RCI, Trail Density converts each woman's score to the men's scale before computing it. This step is not part of the original index:"}
       </p>
-      <p class="formula num">{fr ? "index converti" : "converted index"} = (−0,000466 × index + 1,532) × index</p>
+      <p class="formula num">
+        ITRA : ({fr ? "−0,000466" : "−0.000466"} × index + {fr ? "1,532" : "1.532"}) × index<br />
+        UTMB : ({fr ? "−0,000397" : "−0.000397"} × index + {fr ? "1,481" : "1.481"}) × index
+      </p>
+      <p class="credit">
+        {fr
+          ? "Ces formules viennent d'Enduraw, ajustées sur les 160 meilleures femmes et les 160 meilleurs hommes, une par barème. Elles ont été publiées par Distances+ : "
+          : "These formulas come from Enduraw, fitted on the top 160 women and the top 160 men, one per scale. They were published by Distances+: "}
+        <a href={ENDURAW_NORM} rel="noopener">{fr ? "la normalisation des cotes féminines" : "normalizing women's scores"}</a>.
+      </p>
       <table class="example conv">
         <thead><tr><th>{fr ? "Index femme" : "Women's index"}</th>{[600, 700, 800, 900].map(v => <td class="num">{v}</td>)}</tr></thead>
-        <tbody><tr><th>{fr ? "Équivalent hommes" : "Men's equivalent"}</th>{[600, 700, 800, 900].map(v => <td class="num">{n(femaleToMale(v), 0)}</td>)}</tr></tbody>
+        <tbody><tr><th>{fr ? "Équivalent hommes (ITRA)" : "Men's equivalent (ITRA)"}</th>{[600, 700, 800, 900].map(v => <td class="num">{n(femaleToMale(v), 0)}</td>)}</tr></tbody>
       </table>
       <p>
         {fr

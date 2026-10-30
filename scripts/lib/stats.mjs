@@ -4,15 +4,22 @@
 export const RCI_LEVELS = [3, 5, 10, 20];
 export const TOP_SCORES_KEPT = 50;
 
-// ITRA female scores are mapped onto the male scale before computing RCI (app.js normalizeItraFemaleIndex).
-// Open question: whether UTMB Index needs the same — kept identical to the current site for now.
+// Female scores are mapped onto the male scale before computing RCI: (a·s + b)·s, Enduraw's formulas
+// (fitted on the top 160 women and men, one per scale), published by Distances+ in April 2025:
+// https://distances.plus/communaute/trail-running-classement-teams-trail-composition-2025/
+const FEMALE_TO_MALE = {
+  "itra-female-quadratic": [-0.000466, 1.532],
+  "utmb-female-quadratic": [-0.000397, 1.481],
+};
+
 export function normalizationFor(source, gender) {
-  return gender === "F" && (source === "itra" || source === "utmb" || source === "legacy")
-    ? "itra-female-quadratic" : "none";
+  if (gender !== "F") return "none";
+  return source === "utmb" ? "utmb-female-quadratic" : "itra-female-quadratic";
 }
 
 export function normalize(score, normalization) {
-  return normalization === "itra-female-quadratic" ? (-0.000466 * score + 1.532) * score : score;
+  const k = FEMALE_TO_MALE[normalization];
+  return k ? (k[0] * score + k[1]) * score : score;
 }
 
 function rci(values) {
