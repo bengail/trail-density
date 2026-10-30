@@ -28,7 +28,7 @@ const { values: opts, positionals: targets } = parseArgs({
   },
 });
 const dryRun = opts["dry-run"];
-const ITRA_DELAY_MS = 3000;
+const ITRA_DELAY_MS = 6000;   // ITRA shows a captcha when paged faster
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const catalog = await loadCatalog();

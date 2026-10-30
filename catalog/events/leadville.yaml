@@ -7,5 +7,37 @@ races:
     editions:
       2025:
         legacy: [data/courses/LEADVILLE2025.json]
+        itra: https://itra.run/Races/RaceResults/Leadville.Trail.100.Run.Leadville.Trail.100.Run/2025/113021
       2024:
         legacy: [data/courses/LEADVILLE2024.json]
+        itra: https://itra.run/Races/RaceResults/Leadville.Trail.100.Run.100m/2024/112871
+      2019:
+        itra: https://itra.run/Races/RaceResults/Leadville.Trail.100.Run.Leadville.Trail.100.Run/2019/41269
+      2018:
+        itra: https://itra.run/Races/RaceResults/Leadville.Trail.100.Run.Leadville.Trail.100.Run/2018/36235
+      2017:
+        itra: https://itra.run/Races/RaceResults/LEADVILLE.TRAIL.100.RUN.100.MI/2017/25331
+      2016:
+        itra: https://itra.run/Races/RaceResults/LEADVILLE.TRAIL.100.RUN.100.MILE.TRAIL.RUN/2016/15375
+      2015:
+        itra: https://itra.run/Races/RaceResults/LEADVILLE.TRAIL.100.RUN.100.MILE.TRAIL.RUN/2015/10852
+      2014:
+        itra: https://itra.run/Races/RaceResults/LEADVILLE.TRAIL.100.RUN.100.MILE.TRAIL.RUN/2014/7113
+      2013:
+        itra: https://itra.run/Races/RaceResults/Leadville.Trail.100.Run.100.MILE.TRAIL.RUN/2013/4294
+      2012:
+        itra: https://itra.run/Races/RaceResults/Leadville.Trail.100.Run.100.MILE.TRAIL.RUN/2012/2917
+      2011:
+        itra: https://itra.run/Races/RaceResults/Leadville.Trail.100.Run.100.MILE.TRAIL.RUN/2011/2401
+      2010:
+        itra: https://itra.run/Races/RaceResults/Leadville.Trail.100.Run.100.MILE.TRAIL.RUN/2010/1573
+      2009:
+        itra: https://itra.run/Races/RaceResults/Leadville.Trail.100.Run.100.MILE.TRAIL.RUN/2009/809
+      2008:
+        itra: https://itra.run/Races/RaceResults/Leadville.Trail.100.Run.100.MILE.TRAIL.RUN/2008/464
+      2007:
+        itra: https://itra.run/Races/RaceResults/Leadville.Trail.100.Run.100.MILE.TRAIL.RUN/2007/103
+      2006:
+        itra: https://itra.run/Races/RaceResults/Leadville.Trail.100.Run.100.MILE.TRAIL.RUN/2006/5988
+      2005:
+        itra: https://itra.run/Races/RaceResults/Leadville.Trail.100.Run.100.MILE.TRAIL.RUN/2005/5989

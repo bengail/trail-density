@@ -7,3 +7,4 @@ races:
       2025:
         series: [wmra-world-cup]
         legacy: [data/courses/ZMEUCLASSIC2025.json]
+        itra: https://itra.run/Races/RaceResults/Zmeu.X.Fest.Classic.Mountain/2025/100888

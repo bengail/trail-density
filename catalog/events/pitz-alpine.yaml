@@ -4,6 +4,9 @@ races:
   pitz-alpine:
     name: "Pitz Alpine Glacier Trail"
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Pitz.Alpine.Glacier.Trail.World.Series/2026/122649
       2025:
         series: [gtws]
         legacy: [data/courses/PITZALPINE2025.json]
+        itra: https://itra.run/Races/RaceResults/Pitz.Alpine.Glacier.Trail.Golden.Trail.World.Series/2025/105143

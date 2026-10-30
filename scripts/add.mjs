@@ -7,7 +7,12 @@
 // The second form follows the race back through every year of its event and writes one edition
 // per year into catalog/events/<event>.yaml (existing entries are kept; missing itra URLs are filled in).
 // Review the diff, then: pnpm run import <race>.
+//
+//   pnpm run add --batch races.txt [--import]
+//        one race per line: <itra url> <event> <race> [name="LUT 120K"] [km=120] … (# comments allowed).
+//        Everything runs in one Chrome session (one ITRA login); --import then imports the added races.
 import { parseArgs } from "node:util";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
 import YAML from "yaml";
@@ -21,23 +26,53 @@ const { values: opts, positionals } = parseArgs({
     event: { type: "string" }, race: { type: "string" }, name: { type: "string" },
     "event-name": { type: "string" }, country: { type: "string" },
     km: { type: "string" }, dplus: { type: "string" }, series: { type: "string" },
-    from: { type: "string" },
+    from: { type: "string" }, batch: { type: "string" }, import: { type: "boolean" },
   },
 });
 
 const [cmd, ...rest] = positionals;
-if (!cmd) {
-  console.error('Usage: pnpm run add search "<terms>"  |  pnpm run add <itra url> --event <id> --race <id>');
+if (!cmd && !opts.batch) {
+  console.error('Usage: pnpm run add search "<terms>"  |  pnpm run add <itra url> --event <id> --race <id>  |  pnpm run add --batch <file> [--import]');
   process.exit(1);
 }
+const jobs = opts.batch ? await readBatch(opts.batch) : cmd === "search" ? [] : [{ url: cmd, ...opts }];
 
 const context = await openSession();
+const added = [];
 try {
   if (cmd === "search") await search(rest.join(" "));
-  else await addRace(cmd);
-  await saveSessionCookies(context);
+  for (const job of jobs) {
+    if (jobs.length > 1) console.log(`\n######## ${job.event}/${job.race}`);
+    try {
+      await addRace(job);
+      added.push(job.race);
+    } catch (e) {
+      if (e.message === "ITRA_LOGIN_REQUIRED") throw e;
+      console.log(`  ✗ ${e.message.split("\n")[0]}`);
+    }
+  }
 } finally {
+  await saveSessionCookies(context).catch(() => {});
   await context.close();
+}
+
+// Session cookies were just saved, so the import's browser starts already logged in.
+if (opts.import && added.length) {
+  const r = spawnSync(process.execPath, ["scripts/import.mjs", ...added], { stdio: "inherit" });
+  process.exitCode = r.status;
+}
+
+async function readBatch(file) {
+  const out = [];
+  for (const line of (await fs.readFile(file, "utf8")).split("\n")) {
+    const parts = line.replace(/#.*/, "").match(/(?:[^\s"]+="[^"]*"|\S)+/g);
+    if (!parts) continue;
+    const [url, event, race, ...kv] = parts;
+    const job = { url, event, race };
+    for (const p of kv) { const [k, v] = p.split("="); job[k] = v.replace(/^"|"$/g, ""); }
+    out.push(job);
+  }
+  return out;
 }
 
 async function search(terms) {
@@ -49,7 +84,8 @@ async function search(terms) {
   }
 }
 
-async function addRace(url) {
+async function addRace(opts) {
+  const { url } = opts;
   if (!opts.event || !opts.race) throw new Error("--event and --race are required");
   const history = await raceHistory(context, url);
   console.log(`${history.eventName} — ${history.raceName}`);
@@ -87,7 +123,7 @@ async function addRace(url) {
   const editions = doc.getIn([...raceKey, "editions"]);
   editions.items.sort((a, b) => Number(b.key.value ?? b.key) - Number(a.key.value ?? a.key));
 
-  await fs.writeFile(file, doc.toString({ lineWidth: 0 }));
+  await fs.writeFile(file, doc.toString({ lineWidth: 0, flowCollectionPadding: false }));
   console.log(`\n${path.relative(process.cwd(), file)} : ${added} éditions ajoutées, ${filled} complétées, ${kept} inchangées`);
 
   const { errors } = await loadCatalog();

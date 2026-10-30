@@ -7,46 +7,98 @@ races:
     editions:
       2024:
         legacy: [data/courses/QMT_2024_110.json]
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.110.km/2024/92273
+      2023:
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.QMT.110/2023/80598
+      2022:
+        itra: https://itra.run/Races/RaceResults/QMT...Québec.Mega.Trail.QMT.110/2022/77709
+      2021:
+        itra: https://itra.run/Races/RaceResults/Québec.Mega.Trail..QMT..QMT.110/2021/68692
   qmt-50k:
     name: "QMT 50K"
     distance_km: 50
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.50.km/2026/117501
       2025:
         series: [canadian-trail-championships]
         elevation_gain: 2500
         legacy: [data/courses/QMT_2025_50.json]
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.50.km/2025/98344
       2024:
         series: [canadian-trail-championships]
         legacy: [data/courses/QMT_2024_50.json]
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.50.km/2024/92279
+      2023:
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.QMT.50/2023/80596
+      2022:
+        itra: https://itra.run/Races/RaceResults/QMT...Québec.Mega.Trail.QMT.50/2022/77711
+      2021:
+        itra: https://itra.run/Races/RaceResults/Québec.Mega.Trail..QMT..QMT.50/2021/68693
+      2019:
+        itra: https://itra.run/Races/RaceResults/Québec.Mega.Trail.QMT...50./2019/40603
+      2018:
+        itra: https://itra.run/Races/RaceResults/Québec.Mega.Trail...Trans.Vallée.QMT...50.KM/2018/31955
   qmt-80k:
     name: "QMT 80K"
     distance_km: 80
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.80.km/2026/117503
       2025:
         series: [canadian-trail-championships]
         elevation_gain: 3500
         legacy: [data/courses/QMT_2025_80.json]
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.80.km/2025/95465
       2024:
         series: [canadian-trail-championships]
         legacy: [data/courses/QMT_2024_80.json]
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.80.km/2024/92278
+      2023:
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.QMT.80/2023/80600
+      2022:
+        itra: https://itra.run/Races/RaceResults/QMT...Québec.Mega.Trail.QMT.80/2022/77710
+      2021:
+        itra: https://itra.run/Races/RaceResults/Québec.Mega.Trail..QMT..QMT.80/2021/68694
   qmt-135k:
     name: "QMT 135K"
     distance_km: 135
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.135.km/2026/117504
       2025:
         elevation_gain: 5000
         legacy: [data/courses/QMT_2025_135.json]
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.135.km/2025/95481
   qmt-25k:
     name: "QMT 25K"
     distance_km: 25
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.25.km/2026/117502
       2025:
         elevation_gain: 1000
         legacy: [data/courses/QMT_2025_25.json]
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.25.km/2025/95464
+      2024:
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.25.km/2024/92281
+      2023:
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.QMT.25/2023/80597
+      2022:
+        itra: https://itra.run/Races/RaceResults/QMT...Québec.Mega.Trail.QMT.25/2022/77712
+      2021:
+        itra: https://itra.run/Races/RaceResults/Québec.Mega.Trail..QMT..QMT.25/2021/68691
+      2019:
+        itra: https://itra.run/Races/RaceResults/Québec.Mega.Trail.QMT..25./2019/40607
+      2018:
+        itra: https://itra.run/Races/RaceResults/Québec.Mega.Trail...Trans.Vallée.QMT...25.KM/2018/31957
   qmt-32k:
     name: "QMT 32K"
     distance_km: 32
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.32.km/2026/117505
       2025:
         elevation_gain: 1200
         legacy: [data/courses/QMT_2025_32.json]
+        itra: https://itra.run/Races/RaceResults/Quebec.Mega.Trail.32.km/2025/98377

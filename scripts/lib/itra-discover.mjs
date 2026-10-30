@@ -1,6 +1,5 @@
 // ITRA discovery: race search + per-year history of one race (its per-race itraId and slug each year).
 // Ported from functions/api/discover-races.js and itra-race-info.js, but run in the browser session.
-import { cached } from "./cache.mjs";
 import { fetchItraResults, itraIdFromUrl } from "./itra.mjs";
 
 const SEARCH_URL = "https://itra.run/Races/FindRaceResults";
@@ -30,34 +29,35 @@ export async function searchItra(context, terms, { from = "01-01-2023", to = tod
 
 // Follows one race back through every year of its event. Returns
 // { eventName, raceName, years: [{ year, url, name }], unmatched: [year] } — newest first.
+// The year dropdown now holds per-race ids (it used to hold event-level ids): each year's results
+// page is opened directly, and its active race button confirms the race and gives the canonical slug.
+// Pages land in the "itra" cache, so the following import reuses them.
 export async function raceHistory(context, resultsUrl) {
   const getContext = async () => context;
   const { body: html } = await fetchItraResults(resultsUrl, getContext);
   const info = parseResultsPageInfo(html, resultsUrl);
+  const slug = resultsUrl.match(/\/RaceResults\/([^/]+)\//)[1];
   const years = [{ year: info.year, url: resultsUrl, name: info.raceName }];
   const unmatched = [];
 
-  for (const ed of info.editions.filter(e => e.year !== info.year)) {
-    const { body } = await cached("itra-details", ed.eventItraId, "html", () => fetchPage(context, `https://itra.run/Races/RaceDetails/${ed.eventItraId}`));
-    const sibs = parseSiblingButtons(body).filter(s => s.year === ed.year);
-    const best = bestMatch(info.raceName, sibs, s => s.name)
-      ?? (sibs.length === 1 ? sibs[0] : null);
-    if (!best) { unmatched.push(ed.year); continue; }
-    years.push({ year: ed.year, url: `https://itra.run/Races/RaceResults/${best.slug}/${ed.year}/${best.itraId}`, name: best.name });
+  for (const ed of info.editions.filter(e => e.year !== info.year && e.year <= new Date().getFullYear())) {
+    try {
+      const raw = await fetchItraResults(`https://itra.run/Races/RaceResults/${slug}/${ed.year}/${ed.eventItraId}`, getContext);
+      if (!raw.cached) await new Promise(r => setTimeout(r, 6000));   // ITRA shows a captcha when paged faster
+      if (!raw.body.includes('id="RunnerRaceResults"')) { unmatched.push(ed.year); continue; }
+      const sibs = parseSiblingButtons(raw.body).filter(s => s.year === ed.year);
+      const current = sibs.find(s => s.isCurrent);
+      // The id alone is not proof: in old years it can open a sibling race (e.g. the 100K page from the 50K dropdown).
+      const best = matchSibling(info.raceName, sibs);
+      if (!best) { unmatched.push(`${ed.year} (page: ${current?.name ?? "?"})`); continue; }
+      years.push({ year: ed.year, url: `https://itra.run/Races/RaceResults/${best.slug}/${ed.year}/${best.itraId}`, name: best.name });
+    } catch (e) {
+      if (e.message === "ITRA_LOGIN_REQUIRED") throw e;
+      unmatched.push(ed.year);
+    }
   }
   years.sort((a, b) => b.year - a.year);
   return { eventName: info.eventName, raceName: info.raceName, siblings: info.siblings, years, unmatched };
-}
-
-async function fetchPage(context, url) {
-  const page = await context.newPage();
-  try {
-    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60000 });
-    await page.waitForSelector("footer", { state: "attached", timeout: 60000 });
-    return await page.content();
-  } finally {
-    await page.close();
-  }
 }
 
 // ── Parsing ──────────────────────────────────────────────────────────────────
@@ -70,7 +70,7 @@ function parseResultsPageInfo(html, url) {
   const current = siblings.find(s => s.isCurrent);
   const raceName = current?.name || decode(html.match(/<h3>\s*([^<]+?)\s*<\/h3>/)?.[1] || "");
 
-  // Year dropdown: option values are EVENT-level itraIds (shared by all races of that weekend).
+  // Year dropdown: option values are the race's itraId for each year (event-level ids in older pages).
   const editions = [];
   const select = html.match(/<select[^>]+id="select_id"[^>]*>([\s\S]*?)<\/select>/);
   for (const m of (select?.[1] || "").matchAll(/<option value="(\d+)"[^>]*>\s*(\d{4})\s*<\/option>/g)) {
@@ -103,7 +103,7 @@ function parseRaceCards(html) {
   for (const m of content.matchAll(/\/images\/CountryFlags\/([a-z]{2})\.svg/g)) tokens.push({ type: "country", pos: m.index, value: m[1].toUpperCase() });
   for (const m of content.matchAll(/class='boxes'>/g)) {
     const chunk = content.slice(m.index, m.index + 1000);
-    const href = chunk.match(/href='(\/Races\/RaceDetails\/[^']+)'/);
+    const href = chunk.match(/href='(\/Races\/Race(?:Details|Results)\/[^']+)'/);  // cards link RaceResults now, RaceDetails before
     const km = chunk.match(/class='count'>([^<]+)</);
     const elev = chunk.match(/class='distance'>([^<]+)</);
     if (href && km && chunk.includes("green.svg")) {
@@ -150,6 +150,24 @@ function bestMatch(target, items, key) {
     if (s > score) { best = it; score = s; }
   }
   return score >= 0.5 ? best : null;
+}
+
+// Same race in another year: similar name, else the only sibling with a compatible distance
+// ("50K" ~ "50 km" ~ "QMT 50", "50M" ~ "50 Mile", "Leadville Trail 100 Run" ~ "100 MILE TRAIL RUN").
+function matchSibling(target, sibs) {
+  const byName = bestMatch(target, sibs, s => s.name);
+  if (byName) return byName;
+  const want = distances(target);
+  if (!want.length) return null;
+  const compatible = sibs.filter(s => distances(s.name).some(d => want.some(w => w.n === d.n && (!w.unit || !d.unit || w.unit === d.unit))));
+  return compatible.length === 1 ? compatible[0] : null;
+}
+
+function distances(name) {
+  return [...decode(name).matchAll(/\b(\d+(?:[.,]\d+)?)\s*(km|k|miles?|mi|m)?\b/gi)].map(m => ({
+    n: parseFloat(m[1].replace(",", ".")),
+    unit: !m[2] ? null : /^k/i.test(m[2]) ? "km" : "mi",
+  }));
 }
 
 function decode(s) {

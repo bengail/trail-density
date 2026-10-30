@@ -5,51 +5,167 @@ races:
     name: "UTHC 125K"
     distance_km: 125
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.UTHC.125/2026/109485
       2025:
         legacy: [data/courses/UTHC_2025_125.json]
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.UTHC.125/2025/104086
       2024:
         legacy: [data/courses/UTHC_2024_125.json]
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.UTHC.125/2024/93213
+      2023:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada.UTHC.125/2023/82553
+      2022:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.125K/2022/77175
+      2021:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.125K/2021/69633
+      2020:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.125K/2020/58983
+      2019:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.125K/2019/41185
+      2018:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.125K/2018/27245
+      2017:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.125K/2017/18645
+      2016:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.125K/2016/11081
+      2015:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.125K/2015/9370
   uthc-42k-classique:
     name: "UTHC 42K Classique"
     distance_km: 42
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.UTHC.42.Classique/2026/109488
       2025:
         legacy: [data/courses/UTHC_2025_42C.json]
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.UTHC.42.Classique/2025/104089
       2024:
         legacy: [data/courses/UTHC_2024_42C.json]
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.UTHC.42.Classique/2024/93216
+      2023:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada.UTHC.42.Classique/2023/82560
+      2019:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.42K/2019/41187
+      2017:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.42Km/2017/18785
   uthc-42k-saint-simeon:
     name: "UTHC 42K Saint-Siméon"
     distance_km: 42
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.42K.Saint.Siméon/2026/109489
       2025:
         legacy: [data/courses/UTHC_2025_42S.json]
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.42K.Saint.Siméon/2025/104090
       2024:
         legacy: [data/courses/UTHC_2024_42S.json]
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.42K.Saint.Siméon/2024/93217
+      2023:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada.42K.Saint.Siméon/2023/82561
+      2022:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.42K.St.Siméon/2022/77178
+      2021:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.42K.St.Siméon/2021/69637
   uthc-65k:
     name: "UTHC 65K"
     distance_km: 65
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.UTHC.65/2026/109483
       2025:
         legacy: [data/courses/UTHC_2025_65.json]
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.UTHC.65/2025/104084
       2024:
         legacy: [data/courses/UTHC_2024_65.json]
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.UTHC.65/2024/93211
+      2023:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada.UTHC.65/2023/82559
+      2022:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.65K/2022/77172
+      2021:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.65K/2021/69631
+      2020:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.65K/2020/58977
+      2019:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.65K/2019/41179
+      2018:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.65K/2018/27239
+      2017:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.65K/2017/18641
+      2016:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.65K/2016/11082
+      2015:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.65K/2015/9276
+      2014:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.65K/2014/6205
+      2013:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.65K/2013/4150
   uthc-80k:
     name: "UTHC 80K"
     distance_km: 80
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.UTHC.80/2026/109484
       2025:
         legacy: [data/courses/UTHC_2025_80.json]
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.UTHC.80/2025/104085
       2024:
         legacy: [data/courses/UTHC_2024_80.json]
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.UTHC.80/2024/93212
+      2023:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada.UTHC.80/2023/82554
+      2022:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.80K/2022/77173
+      2021:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.80K/2021/69634
+      2020:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.80K/2020/58985
+      2018:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.80K..50.Miles./2018/27247
+      2016:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.UT.HARRICANA.DU.CANADA...UTHC.80K..50.miles./2016/11080
+      2014:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.UT.HARRICANA.DU.CANADA...UTHC.80K..50.miles./2014/6920
   uthc-20k:
     name: "UTHC 20K"
     distance_km: 20
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.Trail.20k/2026/109487
       2025:
         legacy: [data/courses/UTHC_2025_20.json]
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.Trail.20k/2025/104088
+      2024:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.Trail.20k/2024/93215
+      2023:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada.Trail.20k/2023/82602
+      2022:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.20K/2022/77176
+      2021:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.20K/2021/69635
   uthc-28k:
     name: "UTHC 28K"
     distance_km: 28
     editions:
       2025:
         legacy: [data/courses/UTHC_2025_28.json]
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.Trail.28K/2025/104087
+      2024:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada...UTHC.Trail.28K/2024/93214
+      2023:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Harricana.du.Canada.Trail.28K/2023/82601
+      2022:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.28K/2022/77174
+      2021:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.28K/2021/69632
+      2019:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.28K/2019/41183
+      2018:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.28K/2018/27241
+      2017:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.Trail.Harricana.du.Canada...28km/2017/18647
+      2015:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.UT.HARRICANA.DU.CANADA...TRAIL.28K/2015/11065
+      2014:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail®.Harricana.du.Canada.UT.HARRICANA.DU.CANADA...TRAIL.28K/2014/8365
