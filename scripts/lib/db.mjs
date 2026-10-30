@@ -41,15 +41,27 @@ export async function findOrphans(sql, events) {
   const raceIds = events.flatMap(ev => ev.races.map(r => r.id));
   const editionIds = events.flatMap(ev => ev.races.flatMap(r => r.editions.map(e => e.id)));
   const eventIds = events.map(ev => ev.id);
+  // Result sets whose source is no longer declared for the edition (same rule as import.mjs).
+  const expected = new Set(events.flatMap(ev => ev.races.flatMap(r => r.editions.flatMap(e => {
+    const sources = [e.itra_url && "itra", e.utmb_uri && "utmb"].filter(Boolean);
+    return (sources.length ? sources : e.legacy.length ? ["legacy"] : []).map(s => `${e.id}|${s}`);
+  }))));
+  const sets = (await sql`SELECT edition_id, source FROM v2.result_sets`)
+    .map(r => `${r.edition_id}|${r.source}`).filter(k => !expected.has(k));
   return {
     events: (await sql`SELECT id FROM v2.events WHERE id <> ALL(${eventIds})`).map(r => r.id),
     races: (await sql`SELECT id FROM v2.races WHERE id <> ALL(${raceIds})`).map(r => r.id),
     editions: (await sql`SELECT id FROM v2.editions WHERE id <> ALL(${editionIds})`).map(r => r.id),
+    sets,
   };
 }
 
 export async function deleteOrphans(sql, orphans) {
   await sql.begin(async tx => {
+    for (const key of orphans.sets) {
+      const [editionId, source] = key.split("|");
+      await tx`DELETE FROM v2.result_sets WHERE edition_id = ${editionId} AND source = ${source}`;
+    }
     if (orphans.editions.length) await tx`DELETE FROM v2.editions WHERE id = ANY(${orphans.editions})`;
     if (orphans.races.length) await tx`DELETE FROM v2.races WHERE id = ANY(${orphans.races})`;
     if (orphans.events.length) await tx`DELETE FROM v2.events WHERE id = ANY(${orphans.events})`;

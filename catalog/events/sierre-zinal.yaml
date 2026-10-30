@@ -24,7 +24,7 @@ races:
         utmb: 1501.sierre-zinalsierre-zinal.2022
       2021:
         itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2021/69934
-        utmb: 1501.sierre-zinalsierre-zinal.2021
+        # utmb 1501.sierre-zinalsierre-zinal.2021 only has 89 results (vs 1357 on ITRA) — partial, not used
       2020:
         itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2020/67690
       2019:

@@ -66,9 +66,9 @@ try {
   if (sql) {
     await db.syncCatalog(sql, catalog.events);
     const orphans = await db.findOrphans(sql, catalog.events);
-    const nOrphans = orphans.events.length + orphans.races.length + orphans.editions.length;
+    const nOrphans = orphans.events.length + orphans.races.length + orphans.editions.length + orphans.sets.length;
     if (nOrphans && opts.prune) { await db.deleteOrphans(sql, orphans); console.log(`Pruned ${nOrphans} rows no longer in the catalog`); }
-    else if (nOrphans) console.log(`⚠ In DB but not in catalog (use --prune): ${[...orphans.events, ...orphans.races, ...orphans.editions].join(", ")}`);
+    else if (nOrphans) console.log(`⚠ In DB but not in catalog (use --prune): ${[...orphans.events, ...orphans.races, ...orphans.editions, ...orphans.sets].join(", ")}`);
   }
   const published = sql ? await db.existingResultSets(sql) : new Map();
 
