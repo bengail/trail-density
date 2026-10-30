@@ -1,0 +1,55 @@
+name: "Ultra-Trail Harricana"
+country: CA
+races:
+  uthc-125k:
+    name: "UTHC 125K"
+    distance_km: 125
+    editions:
+      2025:
+        legacy: [data/courses/UTHC_2025_125.json]
+      2024:
+        legacy: [data/courses/UTHC_2024_125.json]
+  uthc-42k-classique:
+    name: "UTHC 42K Classique"
+    distance_km: 42
+    editions:
+      2025:
+        legacy: [data/courses/UTHC_2025_42C.json]
+      2024:
+        legacy: [data/courses/UTHC_2024_42C.json]
+  uthc-42k-saint-simeon:
+    name: "UTHC 42K Saint-Siméon"
+    distance_km: 42
+    editions:
+      2025:
+        legacy: [data/courses/UTHC_2025_42S.json]
+      2024:
+        legacy: [data/courses/UTHC_2024_42S.json]
+  uthc-65k:
+    name: "UTHC 65K"
+    distance_km: 65
+    editions:
+      2025:
+        legacy: [data/courses/UTHC_2025_65.json]
+      2024:
+        legacy: [data/courses/UTHC_2024_65.json]
+  uthc-80k:
+    name: "UTHC 80K"
+    distance_km: 80
+    editions:
+      2025:
+        legacy: [data/courses/UTHC_2025_80.json]
+      2024:
+        legacy: [data/courses/UTHC_2024_80.json]
+  uthc-20k:
+    name: "UTHC 20K"
+    distance_km: 20
+    editions:
+      2025:
+        legacy: [data/courses/UTHC_2025_20.json]
+  uthc-28k:
+    name: "UTHC 28K"
+    distance_km: 28
+    editions:
+      2025:
+        legacy: [data/courses/UTHC_2025_28.json]

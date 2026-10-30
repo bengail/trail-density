@@ -1,0 +1,10 @@
+name: "Ledro Sky"
+country: IT
+races:
+  ledro-gtws-final:
+    name: "Ledro GTWS Grand Final"
+    discipline: skyrace
+    editions:
+      2025:
+        series: [gtws]
+        legacy: [data/courses/LEDROF2025.json, data/courses/LEDROM2025.json]

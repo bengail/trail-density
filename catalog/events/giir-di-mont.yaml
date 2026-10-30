@@ -1,0 +1,9 @@
+name: "Giir di Mont"
+country: IT
+races:
+  giir-di-mont:
+    name: "Giir di Mont"
+    editions:
+      2025:
+        series: [wmra-world-cup]
+        legacy: [data/courses/GIIR2025.json]

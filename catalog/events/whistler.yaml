@@ -1,0 +1,34 @@
+name: "Whistler by UTMB"
+country: CA
+races:
+  whistler-25k:
+    name: "Whistler 25K"
+    distance_km: 25
+    editions:
+      2025:
+        series: [utmb-world-series]
+        legacy: [data/courses/WHISTLER_2025_25.json]
+      2024:
+        legacy: [data/courses/WHISTLER_2024_25.json]
+  whistler-50k:
+    name: "Whistler 50K"
+    distance_km: 50
+    editions:
+      2025:
+        series: [utmb-world-series]
+        legacy: [data/courses/WHISTLER_2025_50.json]
+      2024:
+        legacy: [data/courses/WHISTLER_2024_50.json]
+  whistler-70k:
+    name: "Whistler 70K"
+    distance_km: 70
+    editions:
+      2024:
+        legacy: [data/courses/WHISTLER_2024_70.json]
+  whistler-100k:
+    name: "Whistler 100K"
+    distance_km: 100
+    editions:
+      2025:
+        series: [utmb-world-series]
+        legacy: [data/courses/WHISTLER_2025_100.json]

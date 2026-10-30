@@ -1,0 +1,10 @@
+name: "Trail des Collines"
+country: CA
+races:
+  trail-des-collines-16k:
+    name: "Trail des Collines 16 km"
+    distance_km: 16
+    elevation_gain: 802
+    editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Trail.des.Collines.16km...Coupe.Québec.Salomon/2026/114802

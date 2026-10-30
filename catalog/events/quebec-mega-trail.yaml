@@ -1,0 +1,52 @@
+name: "Québec Mega Trail"
+country: CA
+races:
+  qmt-110k:
+    name: "QMT 110K"
+    distance_km: 110
+    editions:
+      2024:
+        legacy: [data/courses/QMT_2024_110.json]
+  qmt-50k:
+    name: "QMT 50K"
+    distance_km: 50
+    editions:
+      2025:
+        series: [canadian-trail-championships]
+        elevation_gain: 2500
+        legacy: [data/courses/QMT_2025_50.json]
+      2024:
+        series: [canadian-trail-championships]
+        legacy: [data/courses/QMT_2024_50.json]
+  qmt-80k:
+    name: "QMT 80K"
+    distance_km: 80
+    editions:
+      2025:
+        series: [canadian-trail-championships]
+        elevation_gain: 3500
+        legacy: [data/courses/QMT_2025_80.json]
+      2024:
+        series: [canadian-trail-championships]
+        legacy: [data/courses/QMT_2024_80.json]
+  qmt-135k:
+    name: "QMT 135K"
+    distance_km: 135
+    editions:
+      2025:
+        elevation_gain: 5000
+        legacy: [data/courses/QMT_2025_135.json]
+  qmt-25k:
+    name: "QMT 25K"
+    distance_km: 25
+    editions:
+      2025:
+        elevation_gain: 1000
+        legacy: [data/courses/QMT_2025_25.json]
+  qmt-32k:
+    name: "QMT 32K"
+    distance_km: 32
+    editions:
+      2025:
+        elevation_gain: 1200
+        legacy: [data/courses/QMT_2025_32.json]

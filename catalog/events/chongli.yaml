@@ -1,0 +1,16 @@
+name: "Chongli"
+country: CN
+races:
+  chongli-classic:
+    name: "Chongli Classic"
+    editions:
+      2025:
+        series: [wmra-world-cup]
+        legacy: [data/courses/CHONGLI_2025_CLASSIC.json]
+  chongli-uphill:
+    name: "Chongli Uphill"
+    discipline: uphill
+    editions:
+      2025:
+        series: [wmra-world-cup]
+        legacy: [data/courses/CHONGLI_2025_UPHILL.json]

@@ -1,0 +1,50 @@
+name: "Sierre-Zinal"
+country: CH
+races:
+  sierre-zinal:
+    name: "Sierre-Zinal"
+    distance_km: 31
+    elevation_gain: 2190
+    series: [gtws]
+    editions:
+      2025:
+        itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2025/107976
+        utmb: 1501.sierre-zinalsierre-zinal.2025
+        legacy: [data/courses/SZ2025.json]
+      2024:
+        itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2024/95918
+        utmb: 1501.sierre-zinalsierre-zinal.2024
+        legacy: [data/courses/SZ2024.json]
+      2023:
+        itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2023/78434
+        utmb: 1501.sierre-zinalsierre-zinal.2023
+        legacy: [data/courses/SZ2023.json]
+      2022:
+        itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2022/78431
+        utmb: 1501.sierre-zinalsierre-zinal.2022
+      2021:
+        itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2021/69934
+        utmb: 1501.sierre-zinalsierre-zinal.2021
+      2020:
+        itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2020/67690
+      2019:
+        itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2019/51225
+        utmb: 1501.sierre-zinalsierre-zinal.2019
+      2018:
+        itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2018/36009
+      2017:
+        itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2017/24325
+      2016:
+        itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2016/15227
+      2015:
+        itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2015/10712
+      2014:
+        itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2014/8197
+      2013:
+        itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2013/4934
+      2012:
+        itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2012/3794
+      2011:
+        itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2011/3783
+      2010:
+        itra: https://itra.run/Races/RaceResults/SIERRE.ZINAL.SIERRE.ZINAL/2010/3789

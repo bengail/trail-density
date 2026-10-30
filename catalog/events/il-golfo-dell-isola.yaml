@@ -1,0 +1,9 @@
+name: "Il Golfo dell'Isola"
+country: IT
+races:
+  il-golfo-dell-isola:
+    name: "Il Golfo dell'Isola"
+    editions:
+      2025:
+        series: [gtws]
+        legacy: [data/courses/ILGOLFO2025.json]

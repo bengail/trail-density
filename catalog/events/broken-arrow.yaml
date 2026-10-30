@@ -1,0 +1,17 @@
+name: "Broken Arrow Skyrace"
+country: US
+races:
+  broken-arrow-skyrace:
+    name: "Broken Arrow Skyrace"
+    discipline: skyrace
+    editions:
+      2025:
+        series: [gtws]
+        legacy: [data/courses/BROKENARROW2025.json]
+  broken-arrow-ascent:
+    name: "Broken Arrow Ascent"
+    discipline: uphill
+    editions:
+      2025:
+        series: [gtws, wmra-world-cup]
+        legacy: [data/courses/BROKENARROW2025_ASCENT.json]

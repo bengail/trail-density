@@ -1,0 +1,36 @@
+name: "Hardrock 100 Endurance Run"
+country: US
+races:
+  hardrock-100:
+    name: "Hardrock 100"
+    distance_km: 162
+    elevation_gain: 10360
+    editions:
+      2025:
+        itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2025/106248
+      2024:
+        itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2024/95243
+      2023:
+        itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2023/81959
+      2022:
+        itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2022/77916
+      2021:
+        itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2021/107133
+      2018:
+        itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2018/35383
+      2017:
+        itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2017/23697
+      2016:
+        itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2016/14723
+      2015:
+        itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2015/10491
+      2014:
+        itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2014/7133
+      2013:
+        itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2013/4284
+      2012:
+        itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2012/2916
+      2011:
+        itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2011/2299
+      2010:
+        itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2010/1544

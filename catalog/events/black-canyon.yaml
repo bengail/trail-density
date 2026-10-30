@@ -1,0 +1,25 @@
+name: "Black Canyon Ultras"
+country: US
+races:
+  black-canyon-100k:
+    name: "Black Canyon 100K"
+    distance_km: 100
+    editions:
+      2025:
+        legacy: [data/courses/BLACKCANYON_2025_100.json]
+      2024:
+        legacy: [data/courses/BLACKCANYON_2024_100.json]
+      2023:
+        legacy: [data/courses/BLACKCANYON_2023_100.json]
+      2022:
+        legacy: [data/courses/BLACKCANYON_2022_100.json]
+  black-canyon-50k:
+    name: "Black Canyon 50K"
+    distance_km: 50
+    editions:
+      2025:
+        legacy: [data/courses/BLACKCANYON_2025_50.json]
+      2024:
+        legacy: [data/courses/BLACKCANYON_2024_50.json]
+      2022:
+        legacy: [data/courses/BLACKCANYON_2022_50.json]

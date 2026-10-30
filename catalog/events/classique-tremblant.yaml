@@ -1,0 +1,9 @@
+name: "La Classique Tremblant"
+country: CA
+races:
+  classique-tremblant-30k:
+    name: "La Classique Tremblant 30K"
+    distance_km: 30
+    editions:
+      2025:
+        legacy: [data/courses/CLASSIQUETREMBLANT_2025_30.json]

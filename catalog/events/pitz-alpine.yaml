@@ -1,0 +1,9 @@
+name: "Pitz Alpine Glacier Trail"
+country: AT
+races:
+  pitz-alpine:
+    name: "Pitz Alpine Glacier Trail"
+    editions:
+      2025:
+        series: [gtws]
+        legacy: [data/courses/PITZALPINE2025.json]

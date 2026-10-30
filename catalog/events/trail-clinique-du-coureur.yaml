@@ -1,0 +1,11 @@
+name: "Trail de la Clinique du Coureur"
+country: CA
+races:
+  tdlc-50k:
+    name: "Trail de la Clinique du Coureur 50K"
+    distance_km: 50
+    editions:
+      2025:
+        legacy: [data/courses/TDLC2025_50.json]
+      2024:
+        legacy: [data/courses/TDLC_2024_50.json]

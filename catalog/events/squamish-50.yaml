@@ -1,0 +1,21 @@
+name: "Squamish 50"
+country: CA
+races:
+  squamish-50k:
+    name: "Squamish 50K"
+    distance_km: 50
+    editions:
+      2025:
+        legacy: [data/courses/SQUAMISH_2025_50K.json]
+      2024:
+        series: [canadian-trail-championships]
+        legacy: [data/courses/SQUAMISH_2024_50K.json]
+  squamish-50m:
+    name: "Squamish 50 Mile"
+    distance_km: 80
+    editions:
+      2025:
+        legacy: [data/courses/SQUAMISH_2025_50M.json]
+      2024:
+        series: [canadian-trail-championships]
+        legacy: [data/courses/SQUAMISH_2024_50M.json]

@@ -1,0 +1,28 @@
+name: "Transvulcania"
+country: ES
+races:
+  transvulcania-ultra:
+    name: "Transvulcania Ultramarathon"
+    distance_km: 74
+    elevation_gain: 4261
+    editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Transvulcania.adidas.La.Palma.Island.Ultramarathon/2026/119338
+      2025:
+        itra: https://itra.run/Races/RaceResults/Transvulcania.adidas.La.Palma.Island.Ultramarathon/2025/105134
+      2024:
+        itra: https://itra.run/Races/RaceResults/Transvulcania.adidas.La.Palma.Island.Ultramarathon/2024/95516
+      2023:
+        itra: https://itra.run/Races/RaceResults/Transvulcania.adidas.La.Palma.Island.Ultramarathon/2023/84380
+      2022:
+        itra: https://itra.run/Races/RaceResults/Transvulcania.adidas.La.Palma.Island.Ultramarathon/2022/80460
+      2019:
+        itra: https://itra.run/Races/RaceResults/Transvulcania.adidas.La.Palma.Island.Ultramarathon/2019/38465
+      2018:
+        itra: https://itra.run/Races/RaceResults/Transvulcania.adidas.La.Palma.Island.Ultramarathon/2018/29983
+      2017:
+        itra: https://itra.run/Races/RaceResults/Transvulcania.adidas.La.Palma.Island.Ultramarathon/2017/17327
+      2016:
+        itra: https://itra.run/Races/RaceResults/Transvulcania.adidas.La.Palma.Island.Ultramarathon/2016/11409
+      2015:
+        itra: https://itra.run/Races/RaceResults/Transvulcania.adidas.La.Palma.Island.Ultramarathon/2015/10104

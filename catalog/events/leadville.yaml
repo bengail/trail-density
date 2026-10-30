@@ -1,0 +1,11 @@
+name: "Leadville Race Series"
+country: US
+races:
+  leadville-100:
+    name: "Leadville Trail 100 Run"
+    distance_km: 161
+    editions:
+      2025:
+        legacy: [data/courses/LEADVILLE2025.json]
+      2024:
+        legacy: [data/courses/LEADVILLE2024.json]

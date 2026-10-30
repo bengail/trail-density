@@ -1,0 +1,9 @@
+name: "Zmeu"
+country: RO
+races:
+  zmeu-classic:
+    name: "Zmeu Classic"
+    editions:
+      2025:
+        series: [wmra-world-cup]
+        legacy: [data/courses/ZMEUCLASSIC2025.json]

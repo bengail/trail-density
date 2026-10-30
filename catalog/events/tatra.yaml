@@ -1,0 +1,8 @@
+name: "Tatra Festival"
+country: PL
+races:
+  tatra-festival:
+    name: "Tatra Festival"
+    editions:
+      2025:
+        legacy: [data/courses/TATRA2025.json]

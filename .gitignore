@@ -17,3 +17,9 @@ venv/
 
 # Supabase credentials (copy config.js.example → config.js and fill in)
 config.js
+
+# Import tooling
+node_modules/
+.auth/
+data/raw/
+.env

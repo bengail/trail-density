@@ -1,0 +1,132 @@
+name: "UTMB Mont-Blanc"
+country: FR
+races:
+  ccc:
+    name: "CCC"
+    distance_km: 100
+    elevation_gain: 6156
+    series: [utmb-world-series]
+    editions:
+      2025:
+        itra: https://itra.run/Races/RaceResults/HOKA.UTMB®.MONT.BLANC.CCC®/2025/107989
+        utmb: 141.hokautmbmont-blancccc.2025
+        legacy: [data/courses/CCC2025.json]
+      2024:
+        itra: https://itra.run/Races/RaceResults/HOKA.UTMB®.MONT.BLANC.CCC®/2024/96212
+        utmb: 141.hokautmbmont-blancccc.2024
+        legacy: [data/courses/CCC2024.json]
+      2023:
+        itra: https://itra.run/Races/RaceResults/UTMB®.CCC®/2023/86559
+        utmb: 141.daciautmb-r-montblancccc.2023
+        legacy: [data/courses/CCC2023.json]
+      2022:
+        itra: https://itra.run/Races/RaceResults/UTMB®.CCC®/2022/78420
+        utmb: 141.utmb-r-montblancccc-r-.2022
+      2021:
+        itra: https://itra.run/Races/RaceResults/UTMB®.CCC®/2021/72497
+        utmb: 141.utmb-r-ccc-r-.2021
+      2019:
+        itra: https://itra.run/Races/RaceResults/UTMB®.CCC®/2019/39883
+        utmb: 141.utmb-r-ccc-r-.2019
+      2018:
+        itra: https://itra.run/Races/RaceResults/UTMB®.CCC®/2018/25075
+        utmb: 141.utmb-r-ccc-r-.2018
+      2017:
+        itra: https://itra.run/Races/RaceResults/UTMB®.CCC®/2017/24795
+        utmb: 141.utmb-r-ccc-r-.2017
+      2016:
+        itra: https://itra.run/Races/RaceResults/UTMB®.CCC®/2016/11260
+        utmb: 141.utmb-r-ccc-r-.2016
+      2015:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Du.Mont.Blanc®.CCC®/2015/8593
+        utmb: 141.ultra-traildumont-blanc-r-ccc-r-.2015
+      2014:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Du.Mont.Blanc®.CCC®/2014/6555
+        utmb: 141.ultra-traildumont-blanc-r-ccc-r-.2014
+      2013:
+        itra: https://itra.run/Races/RaceResults/The.North.Face.Ultra.Trail.Du.Mont.Blanc®.CCC®/2013/3941
+        utmb: 141.thenorthfaceultra-traildumont-blanc-r-ccc-r-.2013
+      2012:
+        itra: https://itra.run/Races/RaceResults/The.North.Face.Ultra.Trail.Du.Mont.Blanc®.CCC®/2012/2877
+        utmb: 141.thenorthfaceultra-traildumont-blanc-r-ccc-r-.2012
+      2011:
+        itra: https://itra.run/Races/RaceResults/The.North.Face.Ultra.Trail.Du.Mont.Blanc®.CCC®/2011/2255
+        utmb: 141.thenorthfaceultra-traildumont-blanc-r-ccc-r-.2011
+      2010:
+        itra: https://itra.run/Races/RaceResults/The.North.Face.Ultra.Trail.Du.Mont.Blanc®.CCC®/2010/1303
+        utmb: 141.thenorthfaceultra-traildumont-blanc-r-ccc-r-.2010
+  occ:
+    name: "OCC"
+    distance_km: 52.4
+    elevation_gain: 3322
+    series: [utmb-world-series]
+    editions:
+      2025:
+        itra: https://itra.run/Races/RaceResults/HOKA.UTMB®.MONT.BLANC.OCC®/2025/107991
+        utmb: 2280.hokautmbmont-blancocc.2025
+      2024:
+        itra: https://itra.run/Races/RaceResults/HOKA.UTMB®.MONT.BLANC.OCC®/2024/96215
+        utmb: 2280.hokautmbmont-blancocc.2024
+      2023:
+        itra: https://itra.run/Races/RaceResults/UTMB®.OCC®/2023/86562
+        utmb: 2280.daciautmb-r-montblancocc.2023
+      2022:
+        itra: https://itra.run/Races/RaceResults/UTMB®.OCC®/2022/78424
+        utmb: 2280.utmb-r-montblancocc.2022
+      2021:
+        itra: https://itra.run/Races/RaceResults/UTMB®.OCC®/2021/72502
+        utmb: 2280.utmb-r-occ.2021
+      2019:
+        itra: https://itra.run/Races/RaceResults/UTMB®.OCC/2019/39885
+        utmb: 2280.utmb-r-occ.2019
+      2018:
+        itra: https://itra.run/Races/RaceResults/UTMB®.OCC/2018/25077
+        utmb: 2280.utmb-r-occ.2018
+      2017:
+        itra: https://itra.run/Races/RaceResults/UTMB®.OCC/2017/17387
+        utmb: 2280.utmb-r-occ.2017
+      2016:
+        itra: https://itra.run/Races/RaceResults/UTMB®.OCC/2016/11261
+        utmb: 2280.utmb-r-occ.2016
+      2015:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Du.Mont.Blanc®.OCC/2015/8589
+        utmb: 2280.ultra-traildumont-blanc-r-occ.2015
+      2014:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Du.Mont.Blanc®.OCC/2014/6104
+  utmb:
+    name: "UTMB"
+    distance_km: 171
+    elevation_gain: 9963
+    series: [utmb-world-series]
+    editions:
+      2025:
+        utmb: 142.hokautmbmont-blancutmb.2025
+        legacy: [data/courses/UTMB2025.json]
+      2024:
+        utmb: 142.hokautmbmont-blancutmb.2024
+        legacy: [data/courses/UTMB2024.json]
+      2023:
+        utmb: 142.daciautmb-r-montblancutmb.2023
+        legacy: [data/courses/UTMB2023.json]
+      2022:
+        utmb: 142.utmb-r-montblancutmb-r-.2022
+      2021:
+        utmb: 142.utmb-r-utmb-r-.2021
+      2019:
+        utmb: 142.utmb-r-utmb-r-.2019
+      2018:
+        utmb: 142.utmb-r-utmb-r-.2018
+      2017:
+        utmb: 142.utmb-r-utmb-r-.2017
+      2015:
+        utmb: 142.ultra-traildumont-blanc-r-utmb-r-.2015
+      2014:
+        utmb: 142.ultra-traildumont-blanc-r-utmb-r-.2014
+      2013:
+        utmb: 142.thenorthfaceultra-traildumont-blanc-r-utmb-r-.2013
+      2012:
+        utmb: 142.thenorthfaceultra-traildumont-blanc-r-utmb-r-.2012
+      2011:
+        utmb: 142.thenorthfaceultra-traildumont-blanc-r-utmb-r-.2011
+      2010:
+        utmb: 142.thenorthfaceultra-traildumont-blanc-r-utmb-r-.2010

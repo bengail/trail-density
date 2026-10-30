@@ -1,0 +1,9 @@
+name: "Jinshanling"
+country: CN
+races:
+  jinshanling:
+    name: "Jinshanling"
+    editions:
+      2025:
+        series: [gtws]
+        legacy: [data/courses/JINSHANLING2025.json]
