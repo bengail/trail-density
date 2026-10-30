@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import { loadIndex, loadRace, formatRank } from "../lib/data";
-import { t, racePath, countryName, flag, fmtNum, fmtDelta, SERIES, type Lang } from "../lib/i18n";
+import { t, racePath, countryName, flag, fmtNum, fmtDelta, SERIES, SOURCES, type Lang } from "../lib/i18n";
 import { historyChart } from "../lib/charts";
 import { editionView } from "../lib/edition-view";
 import type { Gender } from "../lib/types";
@@ -40,6 +40,9 @@ const desc = lang === "fr"
   ? `Niveau du plateau de ${race.name} : RCI10 ${kpis.F ? `femmes ${Math.round(kpis.F.value)}` : ""}${kpis.F && kpis.M ? ", " : ""}${kpis.M ? `hommes ${Math.round(kpis.M.value)}` : ""} (${latest.year}), évolution depuis ${race.editions.at(-1)!.year}.`
   : `Field strength at ${race.name}: RCI10 ${kpis.F ? `women ${Math.round(kpis.F.value)}` : ""}${kpis.F && kpis.M ? ", " : ""}${kpis.M ? `men ${Math.round(kpis.M.value)}` : ""} (${latest.year}), history since ${race.editions.at(-1)!.year}.`;
 const years = race.editions.map(e => e.year);
+// Secondary source shown alongside the primary one (UTMB Index next to ITRA when both exist).
+const altSource = race.sources.find(src => src !== "legacy" && race.editions.some(e => e.source !== src && e.sources[src]));
+const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undefined;
 ---
 <Base lang={lang} title={title} description={desc} alternate={{ fr: racePath("fr", id), en: racePath("en", id) }}>
   <div class="wrap page">
@@ -78,18 +81,29 @@ const years = race.editions.map(e => e.year);
             <h2>{s.history}</h2>
             <p class="sub muted">{s.history_sub}</p>
           </div>
-          <div class="legend"><span class="f">{s.women}</span><span class="m">{s.men}</span></div>
+          <div class="legend">
+            <span class="f">{s.women}</span><span class="m">{s.men}</span>
+            {alt && <span class="dashed">{s.alt_legend(alt.label)}</span>}
+          </div>
         </div>
-        <Fragment set:html={historyChart(race.editions, { M: s.men, F: s.women })} />
+        <Fragment set:html={historyChart(race.editions, { M: s.men, F: s.women }, alt)} />
+        {alt && <p class="note muted">{s.scales_differ}</p>}
       </section>
     )}
 
     <section class="edition" data-race={id} data-lang={lang}>
       <div class="ed-head">
         <h2>{s.edition} <span class="num" data-year>{latest.year}</span></h2>
-        <div class="years" role="tablist">
-          {years.map((y, i) => <button type="button" class="year num" role="tab" aria-selected={i === 0 ? "true" : "false"} data-y={y}>{y}</button>)}
-        </div>
+        {race.sources.filter(x => x !== "legacy").length > 1 && (
+          <div class="sources" role="group" aria-label={s.source_label}>
+            {race.sources.filter(x => x !== "legacy").map(src => (
+              <button type="button" class="src" data-src={src} aria-pressed={src === latest.source ? "true" : "false"}>{SOURCES[src]}</button>
+            ))}
+          </div>
+        )}
+      </div>
+      <div class="years" role="tablist">
+        {years.map((y, i) => <button type="button" class="year num" role="tab" aria-selected={i === 0 ? "true" : "false"} data-y={y}>{y}</button>)}
       </div>
       <div data-edition>
         <Fragment set:html={editionView(lang, latest)} />
@@ -102,24 +116,31 @@ const years = race.editions.map(e => e.year);
 
 <script>
   import { editionView } from "../lib/edition-view";
-  import type { Race } from "../lib/types";
+  import type { Race, Source } from "../lib/types";
   import type { Lang } from "../lib/i18n";
 
-  // Switch the edition block without reloading: the race JSON is fetched once, on first use.
+  // Switch edition / source without reloading: the race JSON is fetched once, on first use.
   const root = document.querySelector<HTMLElement>(".edition");
   if (root) {
     const lang = root.dataset.lang as Lang;
     let race: Race | null = null;
-    root.querySelectorAll<HTMLButtonElement>("button.year").forEach(btn => {
-      btn.addEventListener("click", async () => {
-        race ??= await fetch(`/data/races/${root.dataset.race}.json`).then(r => r.json());
-        const ed = race!.editions.find(e => e.year === Number(btn.dataset.y));
-        if (!ed) return;
-        root.querySelector("[data-edition]")!.innerHTML = editionView(lang, ed);
-        root.querySelector("[data-year]")!.textContent = String(ed.year);
-        root.querySelectorAll("button.year").forEach(b => b.setAttribute("aria-selected", String(b === btn)));
+    let year = Number(root.querySelector<HTMLElement>("button.year[aria-selected=true]")?.dataset.y);
+    let source = root.querySelector<HTMLElement>("button.src[aria-pressed=true]")?.dataset.src as Source | undefined;
+
+    async function render() {
+      race ??= await fetch(`/data/races/${root!.dataset.race}.json`).then(r => r.json());
+      const ed = race!.editions.find(e => e.year === year);
+      if (!ed) return;
+      root!.querySelector("[data-edition]")!.innerHTML = editionView(lang, ed, source && ed.sources[source] ? source : ed.source);
+      root!.querySelector("[data-year]")!.textContent = String(year);
+      root!.querySelectorAll<HTMLElement>("button.year").forEach(b => b.setAttribute("aria-selected", String(Number(b.dataset.y) === year)));
+      root!.querySelectorAll<HTMLButtonElement>("button.src").forEach(b => {
+        b.setAttribute("aria-pressed", String(b.dataset.src === source));
+        b.disabled = !ed.sources[b.dataset.src as Source];
       });
-    });
+    }
+    root.querySelectorAll<HTMLElement>("button.year").forEach(b => b.addEventListener("click", () => { year = Number(b.dataset.y); render(); }));
+    root.querySelectorAll<HTMLElement>("button.src").forEach(b => b.addEventListener("click", () => { source = b.dataset.src as Source; render(); }));
   }
 </script>
 
@@ -157,9 +178,16 @@ const years = race.editions.map(e => e.year);
   .edition { display: grid; gap: 16px; }
   .ed-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
   .ed-head h2 { font-size: 22px; font-weight: 800; }
+  .sources { display: inline-flex; border: 1px solid var(--border); border-radius: var(--radius-s); overflow: hidden; }
+  .src { font: 600 12.5px var(--font); padding: 6px 12px; border: 0; background: var(--surface); color: var(--text-2); cursor: pointer; }
+  .src + .src { border-left: 1px solid var(--border); }
+  .src[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+  .src:disabled { opacity: 0.4; cursor: default; }
+  .note { font-size: 12.5px; margin: 8px 0 0; }
+  .legend .dashed::before { background: none; border-top: 2px dashed var(--text-2); height: 0; width: 14px; vertical-align: 3px; }
   .years { display: flex; gap: 6px; overflow-x: auto; max-width: 100%; padding-bottom: 4px; scrollbar-width: thin; }
   .year {
-    font-size: 12.5px; font-weight: 500; padding: 5px 10px; border-radius: 999px; cursor: pointer;
+    font-size: 12.5px; font-weight: 500; padding: 5px 10px; border-radius: var(--radius-s); cursor: pointer;
     border: 1px solid var(--border); background: var(--surface); color: var(--text-2);
   }
   .year[aria-selected="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
@@ -175,7 +203,7 @@ const years = race.editions.map(e => e.year);
   .depth.f h4, .top.f h4 { color: var(--women); }
   .depth.m h4, .top.m h4 { color: var(--men); }
   .depth dl { margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .depth dl div { background: var(--surface-2); border-radius: 8px; padding: 8px 10px; }
+  .depth dl div { background: var(--surface-2); border-radius: var(--radius-s); padding: 8px 10px; }
   .depth dt { font-size: 11.5px; color: var(--text-2); }
   .depth dd { margin: 2px 0 0; font-size: 18px; font-weight: 600; }
 
@@ -193,7 +221,7 @@ const years = race.editions.map(e => e.year);
 
   .actions { margin: 4px 0 0; }
   .btn {
-    display: inline-block; padding: 9px 16px; border-radius: 8px; font-weight: 700; font-size: 14px;
+    display: inline-block; padding: 9px 16px; border-radius: var(--radius-s); font-weight: 700; font-size: 14px;
     background: var(--men); color: white; text-decoration: none;
   }
 </style>

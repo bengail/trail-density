@@ -24,13 +24,18 @@ function yAxis(lo: number, hi: number, step: number, y: (v: number) => number, w
   return out;
 }
 
-// RCI10 per edition, one line per gender.
-export function historyChart(editions: Edition[], labels: { M: string; F: string }, height = 260) {
+// RCI10 per edition, one line per gender (primary source); a second source, if given, as dashed lines.
+export function historyChart(editions: Edition[], labels: { M: string; F: string }, alt?: { source: string; label: string }, height = 260) {
   const pts = { M: [] as [number, number][], F: [] as [number, number][] };
+  const altPts = { M: [] as [number, number][], F: [] as [number, number][] };
   for (const e of [...editions].sort((a, b) => a.year - b.year)) {
-    for (const g of ["M", "F"] as const) if (e[g]?.rci10 != null) pts[g].push([e.year, e[g]!.rci10!]);
+    for (const g of ["M", "F"] as const) {
+      if (e[g]?.rci10 != null) pts[g].push([e.year, e[g]!.rci10!]);
+      const a = alt && e.source !== alt.source ? e.sources[alt.source]?.[g]?.rci10 : null;
+      if (a != null) altPts[g].push([e.year, a]);
+    }
   }
-  const all = [...pts.M, ...pts.F];
+  const all = [...pts.M, ...pts.F, ...altPts.M, ...altPts.F];
   if (all.length < 2) return "";
   const years = all.map(p => p[0]);
   const x0 = Math.min(...years), x1 = Math.max(...years);
@@ -49,6 +54,12 @@ export function historyChart(editions: Edition[], labels: { M: string; F: string
   if (ends.M != null && ends.F != null && Math.abs(ends.M - ends.F) < 16) {
     const midY = (ends.M + ends.F) / 2, upper = ends.M <= ends.F ? "M" : "F";
     ends[upper] = midY - 8; ends[upper === "M" ? "F" : "M"] = midY + 8;
+  }
+  for (const g of ["M", "F"] as const) {
+    const p = altPts[g];
+    if (!p.length) continue;
+    svg += `<polyline class="line alt ${g.toLowerCase()}" points="${p.map(([a, b]) => `${x(a)},${y(b)}`).join(" ")}"/>`;
+    svg += p.map(([a, b]) => `<circle class="hit" cx="${x(a)}" cy="${y(b)}" r="5"><title>${a} · ${esc(labels[g])} · ${esc(alt!.label)} ${b.toFixed(1)}</title></circle>`).join("");
   }
   for (const g of ["M", "F"] as const) {
     const p = pts[g];

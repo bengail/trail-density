@@ -3,13 +3,16 @@
 //   pnpm run export
 //
 //   site/public/data/index.json          every race + a per-edition RCI summary (home, rankings, compare, search)
-//   site/public/data/races/<race>.json   one race in full: per edition and gender, RCI levels, density curve,
-//                                 index histogram, depth counts and top 10
+//   site/public/data/races/<race>.json   one race in full: per edition, source and gender, RCI levels,
+//                                 density curve, index histogram, depth counts and top 10
 //
-// One source per edition: ITRA, else UTMB, else legacy (the other sources' RCI10 is kept under `others`).
+// Each edition has a primary source (ITRA, else UTMB, else legacy) whose blocks are also copied to edition.M / .F;
+// every available source is under edition.sources. Charts and depth counts use the normalized index
+// (women's scores on the men's scale, as for RCI); the top 10 shows the raw index as published.
 import fs from "node:fs/promises";
 import path from "node:path";
 import { connect } from "./lib/db.mjs";
+import { normalize } from "./lib/stats.mjs";
 
 const OUT = path.resolve("site/public/data");
 const SOURCE_PRIORITY = ["itra", "utmb", "legacy"];
@@ -23,45 +26,50 @@ try {
   const sets = await sql`SELECT id, edition_id, source, n_results, warnings FROM v2.result_sets`;
   const stats = await sql`SELECT * FROM v2.edition_stats`;
 
-  // Pick the preferred result set per edition.
-  const chosen = new Map();
+  // Primary result set per edition.
+  const primary = new Map();
   for (const s of sets) {
-    const cur = chosen.get(s.edition_id);
-    if (!cur || SOURCE_PRIORITY.indexOf(s.source) < SOURCE_PRIORITY.indexOf(cur.source)) chosen.set(s.edition_id, s);
+    const cur = primary.get(s.edition_id);
+    if (!cur || SOURCE_PRIORITY.indexOf(s.source) < SOURCE_PRIORITY.indexOf(cur.source)) primary.set(s.edition_id, s);
   }
-  const chosenIds = [...chosen.values()].map(s => s.id);
   const results = await sql`
     SELECT result_set_id, rank, gender_rank, gender, index, runner, nationality, time_s
-    FROM v2.results WHERE result_set_id = ANY(${chosenIds}) ORDER BY result_set_id, gender, gender_rank`;
+    FROM v2.results ORDER BY result_set_id, gender, gender_rank`;
   for (const r of results) r.index = Number(r.index);         // numeric columns come back as strings
   const resultsBySet = groupBy(results, r => r.result_set_id);
+  const setsByEdition = groupBy(sets, s => s.edition_id);
   const statsByKey = new Map(stats.map(s => [`${s.edition_id}|${s.source}|${s.gender}`, s]));
 
   const races = new Map();
   for (const e of editions) {
-    const set = chosen.get(e.edition_id);
-    if (!set) continue;
+    const main = primary.get(e.edition_id);
+    if (!main) continue;
     const race = races.get(e.race_id) ?? races.set(e.race_id, {
       id: e.race_id, name: e.race_name, event: { id: e.event_id, name: e.event_name }, country: e.country?.trim() ?? null,
       discipline: e.discipline, format: e.format, distance_km: num(e.distance_km), elevation_gain: e.elevation_gain,
-      series: [], editions: [],
+      series: [], sources: [], editions: [],
     }).get(e.race_id);
     for (const s of e.series ?? []) if (!race.series.includes(s)) race.series.push(s);
 
-    const field = resultsBySet.get(set.id) ?? [];
     const edition = {
       year: e.year, date: e.date, distance_km: num(e.distance_km), elevation_gain: e.elevation_gain, series: e.series ?? [],
-      source: set.source, warnings: set.warnings ?? [], others: {},
+      source: main.source, sources: {},
     };
-    for (const g of ["M", "F"]) {
-      const st = statsByKey.get(`${e.edition_id}|${set.source}|${g}`);
-      if (st) edition[g] = genderBlock(st, field.filter(r => r.gender === g));
+    for (const set of setsByEdition.get(e.edition_id).sort((a, b) => SOURCE_PRIORITY.indexOf(a.source) - SOURCE_PRIORITY.indexOf(b.source))) {
+      const field = resultsBySet.get(set.id) ?? [];
+      const block = { warnings: set.warnings ?? [] };
+      for (const g of ["M", "F"]) {
+        const st = statsByKey.get(`${e.edition_id}|${set.source}|${g}`);
+        if (st) block[g] = genderBlock(st, field.filter(r => r.gender === g));
+      }
+      edition.sources[set.source] = block;
+      if (!race.sources.includes(set.source)) race.sources.push(set.source);
     }
-    for (const other of sets.filter(s => s.edition_id === e.edition_id && s.source !== set.source)) {
-      edition.others[other.source] = Object.fromEntries(["M", "F"].map(g => [g, rci10(statsByKey.get(`${e.edition_id}|${other.source}|${g}`))]));
-    }
+    edition.M = edition.sources[main.source].M;
+    edition.F = edition.sources[main.source].F;
     race.editions.push(edition);
   }
+  for (const race of races.values()) race.sources.sort((a, b) => SOURCE_PRIORITY.indexOf(a) - SOURCE_PRIORITY.indexOf(b));
 
   await fs.rm(OUT, { recursive: true, force: true });
   await fs.mkdir(path.join(OUT, "races"), { recursive: true });
@@ -85,17 +93,19 @@ try {
 }
 
 function genderBlock(st, field) {
+  const norm = v => Math.round(normalize(v, st.normalization));
+  const scores = field.map(r => norm(r.index));
   const hist = new Array(HIST.bins).fill(0);
-  for (const r of field) hist[Math.min(HIST.bins - 1, Math.max(0, Math.floor((r.index - HIST.start) / HIST.step)))]++;
+  for (const v of scores) hist[Math.min(HIST.bins - 1, Math.max(0, Math.floor((v - HIST.start) / HIST.step)))]++;
   const top = field.slice(0, 10);
   return {
     n: st.n_finishers,
     normalization: st.normalization,
     rci3: num(st.rci3), rci5: num(st.rci5), rci10: rci10(st), rci20: num(st.rci20),
-    curve: st.top_scores.map(Number),                       // raw index of the top 50, by gender rank
+    curve: st.top_scores.map(v => norm(Number(v))),          // normalized index of the top 50, by gender rank
     hist: { ...HIST, counts: hist },
-    depth: Object.fromEntries(DEPTH_THRESHOLDS.map(t => [t, field.filter(r => r.index >= t).length])),
-    gap_1_10: top.length === 10 ? top[0].index - top[9].index : null,
+    depth: Object.fromEntries(DEPTH_THRESHOLDS.map(t => [t, scores.filter(v => v >= t).length])),
+    gap_1_10: top.length === 10 ? scores[0] - scores[9] : null,
     top10: top.map(r => ({ rank: r.gender_rank, overall: r.rank, name: r.runner, nat: r.nationality?.trim() ?? null, index: r.index, time_s: r.time_s })),
   };
 }

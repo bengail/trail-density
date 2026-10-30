@@ -10,12 +10,13 @@
   --text-3: oklch(0.62 0.02 60);
   --men: oklch(0.6 0.15 45);
   --men-tint: oklch(0.94 0.03 45);
-  --women: oklch(0.56 0.09 150);
-  --women-tint: oklch(0.94 0.02 150);
+  --women: oklch(0.52 0.13 250);
+  --women-tint: oklch(0.94 0.025 250);
   --grid: oklch(0.91 0.01 70);
   --font: "Archivo", system-ui, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
-  --radius: 12px;
+  --radius: 3px;
+  --radius-s: 2px;
   color-scheme: light;
 }
 
@@ -31,8 +32,8 @@
     --text-3: oklch(0.6 0.015 70);
     --men: oklch(0.7 0.14 45);
     --men-tint: oklch(0.32 0.05 45);
-    --women: oklch(0.72 0.1 150);
-    --women-tint: oklch(0.3 0.04 150);
+    --women: oklch(0.72 0.12 250);
+    --women-tint: oklch(0.3 0.05 250);
     --grid: oklch(0.32 0.01 60);
     color-scheme: dark;
   }
@@ -49,8 +50,8 @@
   --text-3: oklch(0.6 0.015 70);
   --men: oklch(0.7 0.14 45);
   --men-tint: oklch(0.32 0.05 45);
-  --women: oklch(0.72 0.1 150);
-  --women-tint: oklch(0.3 0.04 150);
+  --women: oklch(0.72 0.12 250);
+  --women-tint: oklch(0.3 0.05 250);
   --grid: oklch(0.32 0.01 60);
   color-scheme: dark;
 }
@@ -89,7 +90,7 @@ h1, h2, h3 { margin: 0; line-height: 1.15; }
   display: inline-flex; align-items: center; gap: 6px;
   padding: 3px 10px;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: var(--radius-s);
   font-size: 12.5px; font-weight: 600;
   color: var(--text-2);
   background: var(--surface);
@@ -101,6 +102,7 @@ h1, h2, h3 { margin: 0; line-height: 1.15; }
 .chart .grid { stroke: var(--grid); stroke-width: 1; }
 .chart .marker { stroke: var(--text-3); stroke-width: 1; stroke-dasharray: 3 4; }
 .chart .tick { font: 11px var(--mono); fill: var(--text-3); }
+.chart .line.alt { stroke-width: 1.5; stroke-dasharray: 5 4; opacity: 0.8; }
 .chart .line { fill: none; stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
 .chart .line.m, .chart .dot.m { stroke: var(--men); }
 .chart .line.f, .chart .dot.f { stroke: var(--women); }
@@ -118,8 +120,8 @@ h1, h2, h3 { margin: 0; line-height: 1.15; }
 
 .legend { display: flex; gap: 16px; font-size: 12.5px; color: var(--text-2); }
 .legend span::before {
-  content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 3px;
-  margin-right: 6px; vertical-align: -1px; background: currentColor;
+  content: ""; display: inline-block; width: 10px; height: 10px;
+  margin-right: 6px; vertical-align: -1px; background: currentColor; border-radius: 1px;
 }
 .legend .f { color: var(--women); }
 .legend .m { color: var(--men); }

@@ -18,7 +18,7 @@ const STRINGS = {
     history_sub: "RCI10 de chaque édition",
     edition: "Édition",
     density: "Courbe de densité",
-    density_sub: "Index ITRA des 50 premiers, rang par rang. Une courbe haute et plate = un plateau dense.",
+    density_sub: "Index des 50 premiers, rang par rang. Une courbe haute et plate = un plateau dense.",
     field: "Le peloton",
     field_sub: "Répartition de l'index de tous les finishers",
     depth: "Profondeur",
@@ -38,6 +38,11 @@ const STRINGS = {
     format_label: { vertical: "Vertical", short: "Court", medium: "Moyen", long: "Long", ultra: "Ultra" },
     all_races: "Toutes les courses",
     footer: "Données ITRA et UTMB, recalculées à chaque import.",
+    source_label: "Source",
+    alt_legend: (label: string) => `pointillés : ${label}`,
+    scales_differ: "Index ITRA et UTMB Index sont deux barèmes différents : leurs RCI ne se comparent pas entre eux.",
+    raw_note: "Index tels que publiés. Dans les graphiques, l'index des femmes est ramené à l'échelle des hommes, comme pour le RCI.",
+    no_source: (src: string) => `Pas de résultats ${src} pour cette édition.`,
   },
   en: {
     tagline: "The trail running competitiveness index",
@@ -54,7 +59,7 @@ const STRINGS = {
     history_sub: "RCI10 of each edition",
     edition: "Edition",
     density: "Density curve",
-    density_sub: "ITRA index of the top 50, rank by rank. A high, flat curve = a deep field.",
+    density_sub: "Index of the top 50, rank by rank. A high, flat curve = a deep field.",
     field: "The whole field",
     field_sub: "Index distribution of all finishers",
     depth: "Depth",
@@ -74,6 +79,11 @@ const STRINGS = {
     format_label: { vertical: "Vertical", short: "Short", medium: "Mid", long: "Long", ultra: "Ultra" },
     all_races: "All races",
     footer: "ITRA and UTMB data, recomputed at every import.",
+    source_label: "Source",
+    alt_legend: (label: string) => `dashed: ${label}`,
+    scales_differ: "ITRA index and UTMB Index are two different scales: their RCIs are not comparable with each other.",
+    raw_note: "Index as published. In the charts, women's index is mapped onto the men's scale, as for RCI.",
+    no_source: (src: string) => `No ${src} results for this edition.`,
   },
 };
 
@@ -125,12 +135,13 @@ export function ordinal(lang: Lang, n: number) {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
-// "MOIRAULT Jean-Pierre" → "Jean-Pierre Moirault" (ITRA puts the family name first, in capitals).
+// "MOIRAULT Jean-Pierre" (ITRA) or "Jean-Pierre MOIRAULT" (UTMB) → "Jean-Pierre Moirault".
+// Family names are the all-capital words; a name entirely in capitals is just title-cased.
 export function displayName(raw: string) {
-  const parts = raw.trim().split(/\s+/);
-  const family: string[] = [], given: string[] = [];
-  for (const p of parts) (given.length === 0 && p === p.toUpperCase() && /\p{L}/u.test(p) ? family : given).push(p);
-  if (!family.length || !given.length) return raw;
   const cap = (w: string) => w.toLowerCase().replace(/(^|[-'\s])(\p{L})/gu, (_, a, b) => a + b.toUpperCase());
+  const parts = raw.trim().split(/\s+/);
+  const isFamily = (p: string) => p === p.toUpperCase() && /\p{L}{2}/u.test(p);
+  const family = parts.filter(isFamily), given = parts.filter(p => !isFamily(p));
+  if (!family.length || !given.length) return parts.map(cap).join(" ");
   return `${given.join(" ")} ${family.map(cap).join(" ")}`;
 }

@@ -2,7 +2,7 @@
 // and re-rendered in the browser when another year is picked.
 import { densityChart, fieldChart } from "./charts";
 import { t, fmtNum, fmtTime, flag, displayName, SOURCES, type Lang } from "./i18n";
-import type { Edition, GenderBlock, Gender } from "./types";
+import type { Edition, GenderBlock, Gender, Source } from "./types";
 
 function esc(s: string) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -45,10 +45,12 @@ function topTable(lang: Lang, g: Gender, b: GenderBlock | undefined) {
     </div>`;
 }
 
-export function editionView(lang: Lang, e: Edition) {
+export function editionView(lang: Lang, e: Edition, source: Source = e.source) {
   const s = t(lang);
   const labels = { M: s.men, F: s.women };
-  const blocks = { M: e.M, F: e.F };
+  const block = e.sources[source];
+  if (!block) return `<p class="card muted">${s.no_source(SOURCES[source] ?? source)}</p>`;
+  const blocks = { M: block.M, F: block.F };
   return `
     <div class="ed-grid">
       <section class="card">
@@ -66,11 +68,11 @@ export function editionView(lang: Lang, e: Edition) {
     </div>
     <section class="card">
       <h3>${s.depth}</h3>
-      <div class="depth-grid">${depthBlock(lang, "F", e.F)}${depthBlock(lang, "M", e.M)}</div>
+      <div class="depth-grid">${depthBlock(lang, "F", block.F)}${depthBlock(lang, "M", block.M)}</div>
     </section>
     <section class="card">
       <h3>${s.top10}</h3>
-      <div class="top-grid">${topTable(lang, "F", e.F)}${topTable(lang, "M", e.M)}</div>
-      <p class="source muted">${s.source(SOURCES[e.source] ?? e.source)}</p>
+      <div class="top-grid">${topTable(lang, "F", block.F)}${topTable(lang, "M", block.M)}</div>
+      <p class="source muted">${s.source(SOURCES[source] ?? source)} · ${s.raw_note}</p>
     </section>`;
 }

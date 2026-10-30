@@ -11,7 +11,7 @@ export function normalizationFor(source, gender) {
     ? "itra-female-quadratic" : "none";
 }
 
-function normalize(score, normalization) {
+export function normalize(score, normalization) {
   return normalization === "itra-female-quadratic" ? (-0.000466 * score + 1.532) * score : score;
 }
 

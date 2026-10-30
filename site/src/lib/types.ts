@@ -32,9 +32,16 @@ export interface Edition {
   distance_km: number | null;
   elevation_gain: number | null;
   series: string[];
-  source: "itra" | "utmb" | "legacy";
+  source: Source;                                   // primary source, copied to M / F
+  sources: Partial<Record<Source, SourceBlock>>;
+  M?: GenderBlock;
+  F?: GenderBlock;
+}
+
+export type Source = "itra" | "utmb" | "legacy";
+
+export interface SourceBlock {
   warnings: string[];
-  others: Record<string, Record<Gender, number | null>>;
   M?: GenderBlock;
   F?: GenderBlock;
 }
@@ -52,6 +59,7 @@ interface RaceBase {
 }
 
 export interface Race extends RaceBase {
+  sources: Source[];
   editions: Edition[];
 }
 

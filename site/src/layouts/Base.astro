@@ -61,14 +61,14 @@ const other: Lang = lang === "fr" ? "en" : "fr";
   .brand-tag {
     font: 500 10.5px var(--mono); letter-spacing: 0.04em;
     color: var(--men); background: var(--men-tint);
-    padding: 2px 7px; border-radius: 5px;
+    padding: 2px 7px; border-radius: var(--radius-s);
   }
   nav { display: flex; align-items: center; gap: 18px; font-size: 14px; font-weight: 600; }
   nav a { text-decoration: none; color: var(--text-2); }
   nav a:hover { color: var(--text); }
   nav .lang {
     font: 600 12px var(--mono); padding: 4px 8px;
-    border: 1px solid var(--border); border-radius: 8px;
+    border: 1px solid var(--border); border-radius: var(--radius-s);
   }
   @media (max-width: 560px) { nav a:not(.lang) { display: none; } }
   .site-footer { padding: 40px 16px 48px; font-size: 13px; }
