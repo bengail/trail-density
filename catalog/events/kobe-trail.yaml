@@ -3,6 +3,8 @@ country: JP
 races:
   kobe-trail:
     name: "Kobe Trail"
+    distance_km: 21
+    elevation_gain: 1844
     editions:
       2025:
         series: [gtws]

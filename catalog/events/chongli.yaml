@@ -3,6 +3,8 @@ country: CN
 races:
   chongli-classic:
     name: "Chongli Classic"
+    distance_km: 21
+    elevation_gain: 1254
     editions:
       2025:
         series: [wmra-world-cup]

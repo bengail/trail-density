@@ -3,6 +3,8 @@ country: IT
 races:
   ledro-gtws-final:
     name: "Ledro GTWS Grand Final"
+    distance_km: 21
+    elevation_gain: 1700
     discipline: skyrace
     editions:
       2025:

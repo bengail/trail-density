@@ -6,7 +6,8 @@
     "login": "node scripts/login.mjs",
     "probe": "node scripts/probe.mjs",
     "import": "node scripts/import.mjs",
-    "add": "node scripts/add.mjs"
+    "add": "node scripts/add.mjs",
+    "export": "node scripts/export.mjs"
   },
   "devDependencies": {
     "node-html-parser": "^9.0.5",

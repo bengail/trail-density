@@ -3,6 +3,8 @@ country: US
 races:
   broken-arrow-skyrace:
     name: "Broken Arrow Skyrace"
+    distance_km: 23
+    elevation_gain: 1370
     discipline: skyrace
     editions:
       2025:

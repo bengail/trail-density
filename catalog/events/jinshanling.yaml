@@ -3,6 +3,7 @@ country: CN
 races:
   jinshanling:
     name: "Jinshanling GTWS Elite 24K"
+    distance_km: 24
     editions:
       2025:
         series: [gtws]

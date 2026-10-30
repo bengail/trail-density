@@ -3,6 +3,8 @@ country: AT
 races:
   pitz-alpine:
     name: "Pitz Alpine Glacier Trail"
+    distance_km: 20
+    elevation_gain: 985
     editions:
       2026:
         itra: https://itra.run/Races/RaceResults/Pitz.Alpine.Glacier.Trail.World.Series/2026/122649
