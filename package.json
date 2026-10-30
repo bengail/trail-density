@@ -8,7 +8,8 @@
     "import": "node scripts/import.mjs",
     "add": "node scripts/add.mjs",
     "export": "node scripts/export.mjs",
-    "recompute-stats": "node scripts/recompute-stats.mjs"
+    "recompute-stats": "node scripts/recompute-stats.mjs",
+    "deploy:next": "cd site && pnpm run build && pnpm dlx wrangler@4 pages deploy dist --project-name trail-density-next --branch main --commit-dirty=true"
   },
   "devDependencies": {
     "node-html-parser": "^9.0.5",
