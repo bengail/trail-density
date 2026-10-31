@@ -81,8 +81,8 @@ try {
       ...race,
       editions: editions.map(ed => ({
         year: ed.year, source: ed.source,
-        M: ed.M ? { n: ed.M.n, rci10: ed.M.rci10 } : null,
-        F: ed.F ? { n: ed.F.n, rci10: ed.F.rci10 } : null,
+        M: ed.M ? summary(ed.M) : null,
+        F: ed.F ? summary(ed.F) : null,
       })),
     })),
   };
@@ -102,12 +102,30 @@ function genderBlock(st, field) {
     n: st.n_finishers,
     normalization: st.normalization,
     rci3: num(st.rci3), rci5: num(st.rci5), rci10: rci10(st), rci20: num(st.rci20),
+    top_stats: topStats(st),
     curve: st.top_scores.map(v => norm(Number(v))),          // normalized index of the top 50, by gender rank
     hist: { ...HIST, counts: hist },
     depth: Object.fromEntries(DEPTH_THRESHOLDS.map(t => [t, scores.filter(v => v >= t).length])),
     gap_1_10: top.length === 10 ? scores[0] - scores[9] : null,
     top10: top.map(r => ({ rank: r.gender_rank, overall: r.rank, name: r.runner, nat: r.nationality?.trim() ?? null, index: r.index, time_s: r.time_s })),
   };
+}
+
+// Per-gender figures kept in index.json (rankings, MCP server) — the rest is in races/<id>.json.
+function summary(b) {
+  return { n: b.n, rci3: b.rci3, rci10: b.rci10, rci20: b.rci20, mean10: b.top_stats[10]?.mean ?? null, median10: b.top_stats[10]?.median ?? null };
+}
+
+// Mean, median and spread of the normalized top N, for N = 10 and 20 (only when the field is that large).
+function topStats(st) {
+  const scores = st.top_scores.map(v => normalize(Number(v), st.normalization));
+  const r = v => Math.round(v * 10) / 10;
+  return Object.fromEntries([10, 20].filter(n => scores.length >= n).map(n => {
+    const xs = scores.slice(0, n), sorted = [...xs].sort((a, b) => a - b);
+    const mean = xs.reduce((a, b) => a + b, 0) / n;
+    const sd = Math.sqrt(xs.reduce((a, b) => a + (b - mean) ** 2, 0) / n);
+    return [n, { mean: r(mean), median: r((sorted[n / 2 - 1] + sorted[n / 2]) / 2), sd: r(sd) }];
+  }));
 }
 
 function rci10(st) {

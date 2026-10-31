@@ -112,6 +112,8 @@ function details(lang: Lang, races: Race[]) {
     { label: "RCI3", get: b => b.rci3, digits: 1 },
     { label: "RCI10", get: b => b.rci10, digits: 1 },
     { label: "RCI20", get: b => b.rci20, digits: 1 },
+    { label: s.mean10, get: b => b.top_stats?.[10]?.mean ?? null, digits: 1 },
+    { label: s.median10, get: b => b.top_stats?.[10]?.median ?? null, digits: 1 },
     ...["750", "700", "650"].map(th => ({ label: s.above(th), get: (b: GenderBlock) => b.depth[th] ?? null, digits: 0 })),
     { label: s.gap, get: b => b.gap_1_10, digits: 1, lowerIsBetter: true },
     { label: s.n_index, get: b => b.n, digits: 0 },
