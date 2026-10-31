@@ -1,0 +1,36 @@
+name: "Festival des Templiers"
+country: FR
+races:
+  grand-trail-des-templiers:
+    name: "Grand Trail des Templiers"
+    distance_km: 80
+    elevation_gain: 3443
+    editions:
+      2025:
+        itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2025/108531
+      2024:
+        itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2024/91371
+      2023:
+        itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2023/82664
+      2022:
+        itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2022/75505
+      2021:
+        itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2021/71226
+      2018:
+        itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2018/29185
+      2017:
+        itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2017/18851
+      2016:
+        itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2016/12065
+      2015:
+        itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2015/8875
+      2014:
+        itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2014/7074
+      2013:
+        itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2013/4223
+      2012:
+        itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2012/2918
+      2011:
+        itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2011/2058
+      2010:
+        itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2010/1302

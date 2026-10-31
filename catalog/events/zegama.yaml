@@ -1,0 +1,40 @@
+name: "Zegama-Aizkorri Mendi Maratoia"
+country: ES
+races:
+  zegama-marathon:
+    name: "Zegama Marathon"
+    distance_km: 43
+    elevation_gain: 2634
+    series: [gtws]
+    editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/ZEGAMA.AIZKORRI.MENDI.MARATOIA.XXV..Zegama.Aizkorri.Mendi.Maratoia/2026/114759
+      2025:
+        itra: https://itra.run/Races/RaceResults/ZEGAMA.AIZKORRI.MENDI.MARATOIA.XXV..Zegama.Aizkorri.Mendi.Maratoia/2025/101430
+        legacy: [data/courses/ZEGAMA2025.json]
+      2024:
+        itra: https://itra.run/Races/RaceResults/ZEGAMA.AIZKORRI.MENDI.MARATOIA.XXV..Zegama.Aizkorri.Mendi.Maratoia/2024/90409
+      2023:
+        itra: https://itra.run/Races/RaceResults/ZEGAMA.AIZKORRI.MENDI.MARATOIA.XXV..Zegama.Aizkorri.Mendi.Maratoia/2023/84517
+      2022:
+        itra: https://itra.run/Races/RaceResults/ZEGAMA.AIZKORRI.MENDI.MARATOIA.XXV..Zegama.Aizkorri.Mendi.Maratoia/2022/77184
+      2019:
+        itra: https://itra.run/Races/RaceResults/ZEGAMA.AIZKORRI.MENDI.MARATOIA.XXV..Zegama.Aizkorri.Mendi.Maratoia/2019/48829
+      2018:
+        itra: https://itra.run/Races/RaceResults/ZEGAMA.AIZKORRI.MENDI.MARATOIA.XXV..Zegama.Aizkorri.Mendi.Maratoia/2018/34157
+      2017:
+        itra: https://itra.run/Races/RaceResults/ZEGAMA.AIZKORRI.MENDI.MARATOIA.XXV..Zegama.Aizkorri.Mendi.Maratoia/2017/22559
+      2016:
+        itra: https://itra.run/Races/RaceResults/ZEGAMA.AIZKORRI.MENDI.MARATOIA.XXV..Zegama.Aizkorri.Mendi.Maratoia/2016/13801
+      2015:
+        itra: https://itra.run/Races/RaceResults/ZEGAMA.AIZKORRI.MENDI.MARATOIA.XXV..Zegama.Aizkorri.Mendi.Maratoia/2015/10177
+      2014:
+        itra: https://itra.run/Races/RaceResults/ZEGAMA.AIZKORRI.MENDI.MARATOIA.XXV..Zegama.Aizkorri.Mendi.Maratoia/2014/7803
+      2013:
+        itra: https://itra.run/Races/RaceResults/ZEGAMA.AIZKORRI.MENDI.MARATOIA.XXV..Zegama.Aizkorri.Mendi.Maratoia/2013/5467
+      2012:
+        itra: https://itra.run/Races/RaceResults/ZEGAMA.AIZKORRI.MENDI.MARATOIA.XXV..Zegama.Aizkorri.Mendi.Maratoia/2012/3118
+      2011:
+        itra: https://itra.run/Races/RaceResults/ZEGAMA.AIZKORRI.MENDI.MARATOIA.XXV..Zegama.Aizkorri.Mendi.Maratoia/2011/1885
+      2010:
+        itra: https://itra.run/Races/RaceResults/ZEGAMA.AIZKORRI.MENDI.MARATOIA.XXV..Zegama.Aizkorri.Mendi.Maratoia/2010/1884

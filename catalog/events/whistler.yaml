@@ -1,0 +1,45 @@
+name: "Whistler by UTMB"
+country: CA
+races:
+  whistler-25k:
+    name: "Whistler 25K"
+    distance_km: 25
+    editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Whistler.by.UTMB.25K/2026/123027
+      2025:
+        series: [utmb-world-series]
+        legacy: [data/courses/WHISTLER_2025_25.json]
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Whistler.by.UTMB.25K/2025/111632
+      2024:
+        legacy: [data/courses/WHISTLER_2024_25.json]
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Whistler.by.UTMB.25K/2024/97348
+  whistler-50k:
+    name: "Whistler 50K"
+    distance_km: 50
+    editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Whistler.by.UTMB.50K/2026/123028
+      2025:
+        series: [utmb-world-series]
+        legacy: [data/courses/WHISTLER_2025_50.json]
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Whistler.by.UTMB.50K/2025/111633
+      2024:
+        legacy: [data/courses/WHISTLER_2024_50.json]
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Whistler.by.UTMB.50K/2024/97349
+  whistler-70k:
+    name: "Whistler 70K"
+    distance_km: 70
+    editions:
+      2024:
+        legacy: [data/courses/WHISTLER_2024_70.json]
+  whistler-100k:
+    name: "Whistler 100K"
+    distance_km: 100
+    editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Whistler.by.UTMB.100K/2026/123029
+      2025:
+        series: [utmb-world-series]
+        legacy: [data/courses/WHISTLER_2025_100.json]
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Whistler.by.UTMB.100K/2025/111634

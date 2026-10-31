@@ -1,0 +1,23 @@
+name: "Broken Arrow Skyrace"
+country: US
+races:
+  broken-arrow-skyrace:
+    name: "Broken Arrow Skyrace"
+    distance_km: 23
+    elevation_gain: 1370
+    discipline: skyrace
+    editions:
+      2025:
+        series: [gtws]
+        legacy: [data/courses/BROKENARROW2025.json]
+        itra: https://itra.run/Races/RaceResults/The.Broken.Arrow.Skyrace.23K/2025/107170
+      2023:
+        itra: https://itra.run/Races/RaceResults/The.Broken.Arrow.Skyrace.23K/2023/85200
+  broken-arrow-ascent:
+    name: "Broken Arrow Ascent"
+    discipline: uphill
+    editions:
+      2025:
+        series: [gtws, wmra-world-cup]
+        legacy: [data/courses/BROKENARROW2025_ASCENT.json]
+        itra: https://itra.run/Races/RaceResults/The.Broken.Arrow.Skyrace.The.Ascent/2025/107166

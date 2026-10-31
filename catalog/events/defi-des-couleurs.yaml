@@ -1,0 +1,74 @@
+name: "Défi des Couleurs"
+country: CA
+races:
+  defi-des-couleurs-classic:
+    name: "Défi des Couleurs Classic"
+    editions:
+      2024:
+        series: [wmra-world-cup]
+        legacy: [data/courses/DDC_2024_CLASSIC.json]
+  defi-des-couleurs-uphill:
+    name: "Défi des Couleurs Uphill"
+    discipline: uphill
+    editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.MSA.uphill/2026/111404
+      2025:
+        series: [wmra-world-cup]
+        legacy: [data/courses/DDC_2025_UPHILL.json]
+      2024:
+        series: [wmra-world-cup]
+        legacy: [data/courses/DDC_2024_UPHILL.json]
+  defi-des-couleurs-26k:
+    name: "Défi des Couleurs 26K"
+    distance_km: 26
+    editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.26.km.TRAIL/2026/111398
+      2025:
+        legacy: [data/courses/DDC_2025_26.json]
+        itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.26.km.TRAIL/2025/103701
+      2024:
+        itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.26.km.TRAIL/2024/95605
+      2022:
+        itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.26.km/2022/76257
+  defi-des-couleurs-32k:
+    name: "Défi des Couleurs 32K"
+    distance_km: 32
+    editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.32.km.TRAIL/2026/111400
+      2025:
+        legacy: [data/courses/DDC_2025_32.json]
+        itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.32.km.TRAIL/2025/103702
+      2024:
+        itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.32.km.TRAIL/2024/95604
+  defi-des-couleurs-42k:
+    name: "Défi des Couleurs 42K"
+    distance_km: 42
+    editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.42.km.TRAIL/2026/111397
+      2025:
+        legacy: [data/courses/DDC_2025_42.json]
+        itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.42.km.TRAIL/2025/103700
+      2024:
+        itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.42.km.TRAIL/2024/95603
+      2022:
+        itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.42.km/2022/76256
+      2019:
+        itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.42.km/2019/54393
+      2018:
+        itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.42.km/2018/31173
+  defi-des-couleurs-up-down:
+    name: "Défi des Couleurs Up & Down"
+    distance_km: 11
+    editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.MSA.Classic.Up.Down/2026/111406
+      2025:
+        series: [wmra-world-cup]
+        legacy: [data/courses/DDC_2025_UPDOWN.json]
+        itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.MSA.Classic.Up.Down/2025/103708
+      2024:
+        itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.MSA.Classic.Up.Down/2024/95652

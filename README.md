@@ -1,35 +1,49 @@
-# Trail Race Analytics (v2)
+# Trail Density
 
-Web app statique (GitHub Pages friendly) pour analyser / comparer des courses via des Race Scores (ITRA / UTMB Index).
+Quels trails ont les plateaux les plus relevés ? Le site mesure le niveau en tête de course avec le
+**RCI** (Realized Competition Index, proposé par Travis Loncar sur
+[Freetrail](https://fantasy.freetrail.com/news/2026/01/realized-competition-index)) :
 
-## Features
-- **Table** interactive : sélection de courses + **tri** par colonnes (Top3/5/10, RCI10/20/30, AUC, Gini…)
-- **Graphes** : rank→index (aire), Lorenz + Gini, heatmap par déciles
+    RCI_N = moyenne(top N) − écart-type population(top N)
 
-## Données (JSON)
-- `data/courses_index.json` : manifest (liste des courses)
-- `data/courses/<race_id>.json` : un fichier par course, avec :
-  - `meta` : description (enrichissable : pays, série, prize money, etc.)
-  - `results` : classement (rank / index / runner / gender / nationality)
+calculé séparément pour les femmes et les hommes, sur les scores ITRA (source principale) et UTMB Index.
+Les scores des femmes sont ramenés à l'échelle des hommes avec les formules d'Enduraw
+([Distances+](https://distances.plus/communaute/trail-running-classement-teams-trail-composition-2025/)).
 
-## RCIs
-RCI_N = mean(top N) - std(top N) (écart-type population).
+Site : https://trail-density.pages.dev (FR / EN).
 
-## Lancer en local
+## Organisation
+
+| Dossier | Rôle |
+|---|---|
+| `catalog/events/*.yaml` | Les courses suivies et l'URL ITRA / UTMB de chaque édition. Ajouter une course = éditer le catalogue et commiter. |
+| `scripts/` | Import (Playwright + Chrome, avec ton compte ITRA / UTMB), calcul des stats, export JSON. |
+| `migrations/` | Schéma `v2` dans Supabase (`events → races → editions → result_sets → results`, `edition_stats`). |
+| `data/courses/` | Anciens fichiers JSON, utilisés comme source « archive » pour quelques éditions. |
+| `site/` | Le site public (Astro, statique), lit les JSON de `site/public/data/`. |
+| `docs/guidelines.md` | Principes du site : public, pages, ton, identité visuelle, règles sur les chiffres. |
+
+## Mettre à jour les données
+
 ```bash
-python3 -m http.server 8000
-# ouvrir http://localhost:8000
+pnpm install
+cp .env.example .env          # DATABASE_URL, et en option les identifiants ITRA / UTMB
+pnpm run add search "lavaredo"                                  # trouve la course sur ITRA
+pnpm run add <url ITRA> --event lavaredo --race lut-120k        # l'ajoute au catalogue (ou --batch fichier)
+pnpm run import               # récupère les résultats, valide, écrit dans Supabase
+pnpm run export               # écrit site/public/data/*.json
+git commit                    # les JSON exportés sont versionnés : le build n'a pas besoin de la base
 ```
 
-## Navigation
-- `/` : landing page with `RCI Charts`, `RCI Normalized`, and `Visualisation`.
-- `/admin/` : admin pages (`Summary`, `Charts`, `Race`, `Import`) without auth.
+`pnpm run recompute-stats` recalcule les stats depuis les résultats en base (après un changement de formule).
 
-## Mettre à jour les données depuis un Excel
+## Site
+
 ```bash
-python3 scripts/build_json_from_xlsx.py itra_resultats.xlsx .
+cd site
+pnpm install
+pnpm run dev                  # http://localhost:4321
 ```
-Puis commit/push.
 
-## Publier sur GitHub Pages
-Le projet est statique. Configure GitHub Pages pour servir la branche `main` à la racine.
+Cloudflare Pages construit `site/` à chaque push sur `main` (commande `cd site && pnpm install && pnpm run build`,
+sortie `site/dist`). `pnpm run deploy:next` publie une prévisualisation sur https://trail-density-next.pages.dev.

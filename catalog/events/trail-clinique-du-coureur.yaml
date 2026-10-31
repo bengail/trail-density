@@ -1,0 +1,15 @@
+name: "Trail de la Clinique du Coureur"
+country: CA
+races:
+  tdlc-50k:
+    name: "Trail de la Clinique du Coureur 50K"
+    distance_km: 50
+    editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Trail.La.Clinique.Du.Coureur.50.km.Trail.La.Clinique.Du.Coureur/2026/106299
+      2025:
+        legacy: [data/courses/TDLC2025_50.json]
+        itra: https://itra.run/Races/RaceResults/Trail.La.Clinique.Du.Coureur.50.km.Trail.La.Clinique.Du.Coureur/2025/105445
+      2024:
+        legacy: [data/courses/TDLC_2024_50.json]
+        itra: https://itra.run/Races/RaceResults/Trail.La.Clinique.Du.Coureur.Trail.LCDC.50.km/2024/94050

@@ -1,0 +1,12 @@
+name: "Zmeu"
+country: RO
+races:
+  zmeu-classic:
+    name: "Zmeu Classic"
+    distance_km: 20
+    elevation_gain: 1729
+    editions:
+      2025:
+        series: [wmra-world-cup]
+        legacy: [data/courses/ZMEUCLASSIC2025.json]
+        itra: https://itra.run/Races/RaceResults/Zmeu.X.Fest.Classic.Mountain/2025/100888

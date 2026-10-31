@@ -1,0 +1,71 @@
+name: "Squamish 50"
+country: CA
+races:
+  squamish-50k:
+    name: "Squamish 50K"
+    distance_km: 50
+    editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50K/2026/111216
+      2025:
+        legacy: [data/courses/SQUAMISH_2025_50K.json]
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50.km/2025/97422
+      2024:
+        series: [canadian-trail-championships]
+        legacy: [data/courses/SQUAMISH_2024_50K.json]
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish.50.50.KM/2024/94798
+      2023:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50.km/2023/96828
+      2022:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish.50.50.KM/2022/84017
+      2021:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish.50.50.KM/2021/72818
+      2019:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50K/2019/38321
+      2018:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50K/2018/27671
+      2017:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50K/2017/16549
+      2016:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50K/2016/11558
+      2015:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50K/2015/11070
+      2014:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50K/2014/8294
+      2013:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50K/2013/4678
+  squamish-50m:
+    name: "Squamish 50 Mile"
+    distance_km: 80
+    editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50M/2026/111215
+      2025:
+        legacy: [data/courses/SQUAMISH_2025_50M.json]
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50.Mile/2025/97421
+      2024:
+        series: [canadian-trail-championships]
+        legacy: [data/courses/SQUAMISH_2024_50M.json]
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish.50.50.Mile/2024/94797
+      2023:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50.Mile/2023/95896
+      2022:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish.50.50.Mile/2022/84016
+      2021:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish.50.50.Mile/2021/72817
+      2019:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50M/2019/38319
+      2018:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50M/2018/27669
+      2017:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50M/2017/16547
+      2016:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50M/2016/11559
+      2015:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50M/2015/10249
+      2014:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50M/2014/8072
+      2013:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50M/2013/4758
+      2012:
+        itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50M/2012/3307

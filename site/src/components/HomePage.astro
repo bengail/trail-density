@@ -1,0 +1,112 @@
+---
+import Base from "../layouts/Base.astro";
+import { loadIndex } from "../lib/data";
+import { rank, rankingList } from "../lib/rankings";
+import { t, racePath, rankingsPath, methodPath, FREETRAIL_RCI, flag, fmtDelta, fmtNum, type Lang } from "../lib/i18n";
+import type { Gender } from "../lib/types";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const races = loadIndex().races;
+
+const latest = { F: rank(races, "F"), M: rank(races, "M") };
+const formats = ["vertical", "short", "medium", "long", "ultra"] as const;
+
+// Biggest rises at the latest edition, both genders together.
+const risers = (["F", "M"] as Gender[])
+  .flatMap(g => latest[g].filter(r => r.delta != null && r.delta > 0 && r.n >= 30).map(r => ({ ...r, g })))
+  .sort((a, b) => b.delta! - a.delta!)
+  .slice(0, 6);
+---
+<Base lang={lang} title={`Trail Density — ${s.tagline}`} description={s.home_sub} alternate={{ fr: "/fr/", en: "/en/" }}>
+  <div class="wrap home">
+    <section class="intro">
+      <p class="eyebrow">Trail Density · RCI</p>
+      <h1>{s.home_title}</h1>
+      <p class="lede muted">{s.home_sub} <a href={methodPath(lang)}>{s.method_link} →</a></p>
+      <p class="credit muted"><a href={FREETRAIL_RCI} rel="noopener">{s.credit} ↗</a></p>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2>{s.latest_title}</h2>
+          <p class="muted">{s.latest_sub}</p>
+        </div>
+        <a class="more" href={rankingsPath(lang)}>{s.see_all} →</a>
+      </div>
+      <div class="pair">
+        <div class="card">
+          <h3 class="g-title f">{s.women}</h3>
+          <Fragment set:html={rankingList(lang, latest.F, "F", { limit: 10 })} />
+        </div>
+        <div class="card">
+          <h3 class="g-title m">{s.men}</h3>
+          <Fragment set:html={rankingList(lang, latest.M, "M", { limit: 10 })} />
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head"><h2>{s.by_format}</h2></div>
+      <div class="formats">
+        {formats.map(f => (
+          <div class="card fmt">
+            <h3>{s.format_label[f]}</h3>
+            <p class="fmt-sub muted">{s.formats[f]}</p>
+            <h4 class="g-title f">{s.women}</h4>
+            <Fragment set:html={rankingList(lang, rank(races, "F", "latest", f), "F", { limit: 3, compact: true })} />
+            <h4 class="g-title m">{s.men}</h4>
+            <Fragment set:html={rankingList(lang, rank(races, "M", "latest", f), "M", { limit: 3, compact: true })} />
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {risers.length > 0 && (
+      <section>
+        <div class="section-head">
+          <div>
+            <h2>{s.risers}</h2>
+            <p class="muted">{s.risers_sub}</p>
+          </div>
+        </div>
+        <ul class="risers">
+          {risers.map(r => (
+            <li class={`card ${r.g.toLowerCase()}`}>
+              <span class="r-delta num">{fmtDelta(lang, r.delta!)}</span>
+              <a href={racePath(lang, r.race.id)} class="r-name">{flag(r.race.country)} {r.race.name}</a>
+              <span class="r-from num">{fmtNum(lang, r.prev!.rci10, 0)} → {fmtNum(lang, r.rci10, 0)}</span>
+              <span class="muted r-meta">{r.g === "F" ? s.women : s.men} · {r.prev!.year} → {r.year}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </div>
+</Base>
+
+<style>
+  .home { display: grid; gap: 40px; padding-top: 36px; }
+  .intro h1 { font-size: clamp(30px, 5.5vw, 48px); font-weight: 800; letter-spacing: -0.025em; max-width: 820px; margin: 10px 0 12px; }
+  .lede { font-size: 16px; max-width: 680px; margin: 0; }
+  .credit { font-size: 13px; margin: 8px 0 0; }
+
+  .formats { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+  .fmt h3 { font-size: 17px; font-weight: 800; }
+  .fmt-sub { font-size: 12px; margin: 2px 0 12px; }
+  .fmt .g-title { margin-top: 10px; }
+
+  .risers { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  .risers li { display: grid; gap: 2px; border-left: 3px solid; }
+  .risers li.f { border-left-color: var(--women); }
+  .risers li.m { border-left-color: var(--men); }
+  .r-delta { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; }
+  .f .r-delta { color: var(--women); }
+  .m .r-delta { color: var(--men); }
+  .r-name { font-weight: 700; text-decoration: none; }
+  .r-name:hover { text-decoration: underline; }
+  .r-meta { font-size: 12.5px; }
+  .r-from { font-size: 13px; color: var(--text-2); }
+</style>

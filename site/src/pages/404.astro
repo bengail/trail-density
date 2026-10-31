@@ -1,0 +1,16 @@
+---
+import Base from "../layouts/Base.astro";
+import { rankingsPath } from "../lib/i18n";
+---
+<Base lang="fr" title="Page introuvable — Trail Density" description="Page introuvable" alternate={{ fr: "/fr/", en: "/en/" }}>
+  <div class="wrap notfound">
+    <h1>404</h1>
+    <p>Cette page n'existe pas (ou plus). <a href="/fr/">Accueil</a> · <a href={rankingsPath("fr")}>Classement</a></p>
+    <p class="muted" lang="en">This page does not exist. <a href="/en/">Home</a> · <a href={rankingsPath("en")}>Rankings</a></p>
+  </div>
+</Base>
+
+<style>
+  .notfound { padding-top: 48px; min-height: 50vh; }
+  h1 { font-size: 64px; font-weight: 800; letter-spacing: -0.03em; }
+</style>

@@ -1,0 +1,20 @@
+name: "Chongli"
+country: CN
+races:
+  chongli-classic:
+    name: "Chongli Classic"
+    distance_km: 21
+    elevation_gain: 1254
+    editions:
+      2025:
+        series: [wmra-world-cup]
+        legacy: [data/courses/CHONGLI_2025_CLASSIC.json]
+        itra: https://itra.run/Races/RaceResults/Chongli.World.Cup..Classic.21km/2025/106530
+  chongli-uphill:
+    name: "Chongli Uphill"
+    discipline: uphill
+    editions:
+      2025:
+        series: [wmra-world-cup]
+        legacy: [data/courses/CHONGLI_2025_UPHILL.json]
+        itra: https://itra.run/Races/RaceResults/Chongli.World.Cup.Uphill.7km/2025/106529

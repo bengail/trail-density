@@ -1,0 +1,9 @@
+name: "Vauban"
+country: FR
+races:
+  vauban-classic:
+    name: "Vauban Classic"
+    editions:
+      2025:
+        series: [wmra-world-cup]
+        legacy: [data/courses/VAUBAN_2025_CLASSIC.json]

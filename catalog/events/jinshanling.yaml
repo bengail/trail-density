@@ -1,0 +1,11 @@
+name: "Jinshanling"
+country: CN
+races:
+  jinshanling:
+    name: "Jinshanling GTWS Elite 24K"
+    distance_km: 24
+    editions:
+      2025:
+        series: [gtws]
+        legacy: [data/courses/JINSHANLING2025.json]
+        itra: https://itra.run/Races/RaceResults/Jinshanling.Great.Wall.Trail.Race..Golden.Trail.World.Series.GTWS.Worlds.s.Elite.24km.Group/2025/104538

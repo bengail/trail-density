@@ -1,0 +1,20 @@
+{
+  "name": "trail-density",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "login": "node scripts/login.mjs",
+    "probe": "node scripts/probe.mjs",
+    "import": "node scripts/import.mjs",
+    "add": "node scripts/add.mjs",
+    "export": "node scripts/export.mjs",
+    "recompute-stats": "node scripts/recompute-stats.mjs",
+    "deploy:next": "cd site && pnpm run build && pnpm dlx wrangler@4 pages deploy dist --project-name trail-density-next --branch main --commit-dirty=true"
+  },
+  "devDependencies": {
+    "node-html-parser": "^9.0.5",
+    "playwright": "^1.64.1",
+    "postgres": "^3.4.9",
+    "yaml": "^2.9.1"
+  }
+}

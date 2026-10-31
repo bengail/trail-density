@@ -1,0 +1,9 @@
+name: "Trofeo Nasego"
+country: IT
+races:
+  trofeo-nasego:
+    name: "Trofeo Nasego"
+    editions:
+      2025:
+        series: [wmra-world-cup]
+        legacy: [data/courses/NASEGO_2025.json]

@@ -1,0 +1,76 @@
+---
+import "../styles/global.css";
+import { t, rankingsPath, comparePath, methodPath, type Lang } from "../lib/i18n";
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  alternate: { fr: string; en: string };   // same page in both languages
+}
+const { lang, title, description, alternate } = Astro.props;
+const s = t(lang);
+const other: Lang = lang === "fr" ? "en" : "fr";
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="alternate" hreflang="fr" href={new URL(alternate.fr, Astro.site)} />
+    <link rel="alternate" hreflang="en" href={new URL(alternate.en, Astro.site)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap bar">
+        <a class="brand" href={`/${lang}/`}>
+          <span class="brand-name">Trail Density</span>
+          <span class="brand-tag">RCI</span>
+        </a>
+        <nav>
+          <a href={rankingsPath(lang)}>{s.nav_rankings}</a>
+          <a href={comparePath(lang)}>{s.nav_compare}</a>
+          <a href={methodPath(lang)}>{s.nav_method}</a>
+          <a class="lang" href={alternate[other]} hreflang={other} lang={other}>{other.toUpperCase()}</a>
+        </nav>
+      </div>
+    </header>
+    <main><slot /></main>
+    <footer class="wrap site-footer muted">{s.footer}</footer>
+  </body>
+</html>
+
+<style>
+  .site-header {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in oklch, var(--surface) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 56px; }
+  .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+  .brand-name { font-weight: 800; font-size: 17px; letter-spacing: -0.01em; }
+  .brand-tag {
+    font: 500 10.5px var(--mono); letter-spacing: 0.04em;
+    color: var(--men); background: var(--men-tint);
+    padding: 2px 7px; border-radius: var(--radius-s);
+  }
+  nav { display: flex; align-items: center; gap: 18px; font-size: 14px; font-weight: 600; }
+  nav a { text-decoration: none; color: var(--text-2); }
+  nav a:hover { color: var(--text); }
+  nav .lang {
+    font: 600 12px var(--mono); padding: 4px 8px;
+    border: 1px solid var(--border); border-radius: var(--radius-s);
+  }
+  @media (max-width: 560px) { nav a:not(.lang) { display: none; } }
+  .site-footer { padding: 40px 16px 48px; font-size: 13px; }
+</style>

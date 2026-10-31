@@ -1,0 +1,9 @@
+name: "Tepec Trail"
+country: MX
+races:
+  tepec:
+    name: "Tepec Trail"
+    editions:
+      2025:
+        series: [gtws]
+        legacy: [data/courses/TEPEC2025.json]
