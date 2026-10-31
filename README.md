@@ -46,4 +46,4 @@ pnpm run dev                  # http://localhost:4321
 ```
 
 Cloudflare Pages construit `site/` à chaque push sur `main` (commande `cd site && pnpm install && pnpm run build`,
-sortie `site/dist`). `pnpm run deploy:next` publie une prévisualisation sur https://trail-density-next.pages.dev.
+sortie `site/dist`). Chaque branche poussée a sa prévisualisation sur `<branche>.trail-density.pages.dev`.
