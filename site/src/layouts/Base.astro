@@ -7,8 +7,9 @@ interface Props {
   title: string;
   description: string;
   alternate: { fr: string; en: string };   // same page in both languages
+  image?: string;                          // link-preview image, defaults to the site-wide one
 }
-const { lang, title, description, alternate } = Astro.props;
+const { lang, title, description, alternate, image = `/og/${lang}/site.png` } = Astro.props;
 const s = t(lang);
 const other: Lang = lang === "fr" ? "en" : "fr";
 ---
@@ -22,6 +23,11 @@ const other: Lang = lang === "fr" ? "en" : "fr";
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="alternate" hreflang="fr" href={new URL(alternate.fr, Astro.site)} />
     <link rel="alternate" hreflang="en" href={new URL(alternate.en, Astro.site)} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
