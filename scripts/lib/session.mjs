@@ -51,7 +51,20 @@ export async function fetchItraResultsHtml(context, url) {
   }
 }
 
+// Pause between two ITRA pages that are not in the cache. 6 s was the cautious value after a captcha;
+// that captcha came with many Chrome launches and logins in a row, which batch / refresh now avoid.
+export const ITRA_DELAY_MS = 1500;
+
 async function fetchItraResultsHtmlOnce(context, url) {
+  // Fast path: a plain request through the logged-in browser context (same cookies, no rendering).
+  // Falls back to a real tab when the anti-bot check answers instead of the page.
+  try {
+    const resp = await context.request.get(url, { timeout: 30000 });
+    const html = await resp.text();
+    if (resp.ok() && (html.includes('id="RunnerRaceResults"') || /type="password"|Account\/Login/i.test(html))) return checkItraHtml(html);
+  } catch (e) {
+    if (e.message === "ITRA_LOGIN_REQUIRED") throw e;
+  }
   const page = await context.newPage();
   try {
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60000 });
@@ -62,15 +75,18 @@ async function fetchItraResultsHtmlOnce(context, url) {
             document.querySelector("footer"),
       null, { timeout: 60000 }
     );
-    const html = await page.content();
-    if (html.includes("Subscribe to an ITRA Subscription") ||
-        (!html.includes('id="RunnerRaceResults"') && /type="password"|Account\/Login/i.test(html))) {
-      throw new Error("ITRA_LOGIN_REQUIRED");
-    }
-    return html;
+    return checkItraHtml(await page.content());
   } finally {
     await page.close();
   }
+}
+
+function checkItraHtml(html) {
+  if (html.includes("Subscribe to an ITRA Subscription") ||
+      (!html.includes('id="RunnerRaceResults"') && /type="password"|Account\/Login/i.test(html))) {
+    throw new Error("ITRA_LOGIN_REQUIRED");
+  }
+  return html;
 }
 
 // Returns the UTMB access_token (JWT). The cookie only lives ~30 min, but the Keycloak session

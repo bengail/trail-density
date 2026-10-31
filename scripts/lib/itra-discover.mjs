@@ -1,6 +1,7 @@
 // ITRA discovery: race search + per-year history of one race (its per-race itraId and slug each year).
 // Ported from functions/api/discover-races.js and itra-race-info.js, but run in the browser session.
 import { fetchItraResults, itraIdFromUrl } from "./itra.mjs";
+import { ITRA_DELAY_MS } from "./session.mjs";
 
 const SEARCH_URL = "https://itra.run/Races/FindRaceResults";
 
@@ -40,10 +41,12 @@ export async function raceHistory(context, resultsUrl) {
   const years = [{ year: info.year, url: resultsUrl, name: info.raceName }];
   const unmatched = [];
 
-  for (const ed of info.editions.filter(e => e.year !== info.year && e.year <= new Date().getFullYear())) {
+  // 2020 is skipped: almost every race was cancelled (Covid), and the few held are already in the catalog.
+  const SKIPPED_YEARS = [2020];
+  for (const ed of info.editions.filter(e => e.year !== info.year && e.year <= new Date().getFullYear() && !SKIPPED_YEARS.includes(e.year))) {
     try {
       const raw = await fetchItraResults(`https://itra.run/Races/RaceResults/${slug}/${ed.year}/${ed.eventItraId}`, getContext);
-      if (!raw.cached) await new Promise(r => setTimeout(r, 6000));   // ITRA shows a captcha when paged faster
+      if (!raw.cached) await new Promise(r => setTimeout(r, ITRA_DELAY_MS));
       if (!raw.body.includes('id="RunnerRaceResults"')) { unmatched.push(ed.year); continue; }
       const sibs = parseSiblingButtons(raw.body).filter(s => s.year === ed.year);
       const current = sibs.find(s => s.isCurrent);
@@ -131,13 +134,15 @@ function parseRaceCards(html) {
 const NOISE = new Set(["hoka", "dacia", "the", "north", "face", "tnf", "by", "utmb", "ultra", "trail", "du", "de", "la",
   "le", "des", "mont", "blanc", "presented", "powered", "salomon", "adidas", "terrex", "race", "km", "k"]);
 
-export function nameTokens(name) {
+export function nameTokens(name, { keepNoise = false } = {}) {
   return new Set(String(name).toLowerCase().normalize("NFD").replace(/[̀-ͯ®™]/g, "")
-    .split(/[^a-z0-9]+/).filter(t => t && !NOISE.has(t)));
+    .split(/[^a-z0-9]+/).filter(t => t && (keepNoise || !NOISE.has(t))));
 }
 
 function similarity(a, b) {
-  const A = nameTokens(a), B = nameTokens(b);
+  let A = nameTokens(a), B = nameTokens(b);
+  // A name made only of noise words ("UTMB®") is compared on those words.
+  if (!A.size || !B.size) { A = nameTokens(a, { keepNoise: true }); B = nameTokens(b, { keepNoise: true }); }
   if (!A.size || !B.size) return 0;
   const inter = [...A].filter(t => B.has(t)).length;
   return inter / new Set([...A, ...B]).size;
