@@ -7,6 +7,9 @@ races:
     elevation_gain: 6156
     series: [utmb-world-series]
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/HOKA.UTMB®.MONT.BLANC.CCC®/2026/123102
+        utmb: 141.hokautmbmont-blancccc.2026
       2025:
         itra: https://itra.run/Races/RaceResults/HOKA.UTMB®.MONT.BLANC.CCC®/2025/107989
         utmb: 141.hokautmbmont-blancccc.2025
@@ -55,12 +58,23 @@ races:
       2010:
         itra: https://itra.run/Races/RaceResults/The.North.Face.Ultra.Trail.Du.Mont.Blanc®.CCC®/2010/1303
         utmb: 141.thenorthfaceultra-traildumont-blanc-r-ccc-r-.2010
+      2009:
+        itra: https://itra.run/Races/RaceResults/The.North.Face.Ultra.Trail.Du.Mont.Blanc®.CCC®/2009/1088
+      2008:
+        itra: https://itra.run/Races/RaceResults/The.North.Face.Ultra.Trail.Du.Mont.Blanc®.CCC®/2008/654
+      2007:
+        itra: https://itra.run/Races/RaceResults/The.North.Face.Ultra.Trail.Du.Mont.Blanc®.CCC®/2007/274
+      2006:
+        itra: https://itra.run/Races/RaceResults/The.North.Face.Ultra.Trail.Du.Mont.Blanc®.CCC®/2006/1309
   occ:
     name: "OCC"
     distance_km: 52.4
     elevation_gain: 3322
     series: [utmb-world-series]
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/HOKA.UTMB®.MONT.BLANC.OCC®/2026/123105
+        utmb: 2280.hokautmbmont-blancocc.2026
       2025:
         itra: https://itra.run/Races/RaceResults/HOKA.UTMB®.MONT.BLANC.OCC®/2025/107991
         utmb: 2280.hokautmbmont-blancocc.2025
@@ -99,34 +113,61 @@ races:
     elevation_gain: 9963
     series: [utmb-world-series]
     editions:
+      2026:
+        utmb: 142.hokautmbmont-blancutmb.2026
+        itra: https://itra.run/Races/RaceResults/HOKA.UTMB®.MONT.BLANC..UTMB®/2026/123101
       2025:
         utmb: 142.hokautmbmont-blancutmb.2025
         legacy: [data/courses/UTMB2025.json]
+        itra: https://itra.run/Races/RaceResults/HOKA.UTMB®.MONT.BLANC..UTMB®/2025/107988
       2024:
         utmb: 142.hokautmbmont-blancutmb.2024
         legacy: [data/courses/UTMB2024.json]
+        itra: https://itra.run/Races/RaceResults/HOKA.UTMB®.MONT.BLANC..UTMB®/2024/96211
       2023:
         utmb: 142.daciautmb-r-montblancutmb.2023
         legacy: [data/courses/UTMB2023.json]
+        itra: https://itra.run/Races/RaceResults/UTMB®..UTMB®/2023/86558
       2022:
         utmb: 142.utmb-r-montblancutmb-r-.2022
+        itra: https://itra.run/Races/RaceResults/UTMB®..UTMB®/2022/78453
       2021:
         utmb: 142.utmb-r-utmb-r-.2021
+        itra: https://itra.run/Races/RaceResults/UTMB®.UTMB®/2021/72496
       2019:
         utmb: 142.utmb-r-utmb-r-.2019
+        itra: https://itra.run/Races/RaceResults/UTMB®.UTMB®/2019/39881
       2018:
         utmb: 142.utmb-r-utmb-r-.2018
+        itra: https://itra.run/Races/RaceResults/UTMB®.UTMB®/2018/25073
       2017:
         utmb: 142.utmb-r-utmb-r-.2017
+        itra: https://itra.run/Races/RaceResults/UTMB®.UTMB®/2017/17383
+      2016:
+        itra: https://itra.run/Races/RaceResults/UTMB®.UTMB®/2016/11263
       2015:
         utmb: 142.ultra-traildumont-blanc-r-utmb-r-.2015
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Du.Mont.Blanc®.UTMB®/2015/8592
       2014:
         utmb: 142.ultra-traildumont-blanc-r-utmb-r-.2014
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.Du.Mont.Blanc®.UTMB®/2014/6558
       2013:
         utmb: 142.thenorthfaceultra-traildumont-blanc-r-utmb-r-.2013
+        itra: https://itra.run/Races/RaceResults/The.North.Face.Ultra.Trail.Du.Mont.Blanc®.UTMB®/2013/3940
       2012:
         utmb: 142.thenorthfaceultra-traildumont-blanc-r-utmb-r-.2012
+        itra: https://itra.run/Races/RaceResults/The.North.Face.Ultra.Trail.Du.Mont.Blanc®.UTMB®/2012/2874
       2011:
         utmb: 142.thenorthfaceultra-traildumont-blanc-r-utmb-r-.2011
+        itra: https://itra.run/Races/RaceResults/The.North.Face.Ultra.Trail.Du.Mont.Blanc®.UTMB®/2011/2257
       2010:
         utmb: 142.thenorthfaceultra-traildumont-blanc-r-utmb-r-.2010
+        itra: https://itra.run/Races/RaceResults/The.North.Face.Ultra.Trail.Du.Mont.Blanc®.UTMB®/2010/1447
+      2009:
+        itra: https://itra.run/Races/RaceResults/The.North.Face.Ultra.Trail.Du.Mont.Blanc®.UTMB®/2009/1019
+      2008:
+        itra: https://itra.run/Races/RaceResults/The.North.Face.Ultra.Trail.Du.Mont.Blanc®.UTMB®/2008/596
+      2007:
+        itra: https://itra.run/Races/RaceResults/The.North.Face.Ultra.Trail.Du.Mont.Blanc®.UTMB®/2007/220
+      2006:
+        itra: https://itra.run/Races/RaceResults/The.North.Face.Ultra.Trail.Du.Mont.Blanc®.UTMB®/2006/1310

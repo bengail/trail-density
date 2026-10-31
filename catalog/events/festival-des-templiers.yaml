@@ -6,6 +6,8 @@ races:
     distance_km: 80
     elevation_gain: 3443
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2026/117072
       2025:
         itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2025/108531
       2024:
@@ -34,3 +36,7 @@ races:
         itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2011/2058
       2010:
         itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.des.Templiers/2010/1302
+      2009:
+        itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.Des.Templiers/2009/751
+      2008:
+        itra: https://itra.run/Races/RaceResults/Festival.Des.Templiers.Grand.Trail.Des.Templiers/2008/519

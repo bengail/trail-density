@@ -7,6 +7,8 @@ races:
     elevation_gain: 5360
     series: [utmb-world-series]
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2026/121225
       2025:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2025/106563
         legacy: [data/courses/WS2025.json]
@@ -58,3 +60,15 @@ races:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2001/3818
       2000:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2000/6335
+      1999:
+        itra: https://itra.run/Races/RaceResults/WESTERN.STATES.ENDURANCE.RUN.Western.States.Endurance.Run/1999/6334
+      1998:
+        itra: https://itra.run/Races/RaceResults/WESTERN.STATES.ENDURANCE.RUN.Western.States.Endurance.Run/1998/6333
+      1997:
+        itra: https://itra.run/Races/RaceResults/WESTERN.STATES.ENDURANCE.RUN.Western.States.Endurance.Run/1997/6332
+      1996:
+        itra: https://itra.run/Races/RaceResults/WESTERN.STATES.ENDURANCE.RUN.Western.States.Endurance.Run/1996/6331
+      1995:
+        itra: https://itra.run/Races/RaceResults/WESTERN.STATES.ENDURANCE.RUN.Western.States.Endurance.Run/1995/6330
+      1994:
+        itra: https://itra.run/Races/RaceResults/WESTERN.STATES.ENDURANCE.RUN.Western.States.Endurance.Run/1994/6329

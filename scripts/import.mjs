@@ -11,7 +11,7 @@
 import { createHash } from "node:crypto";
 import { parseArgs } from "node:util";
 import { loadCatalog, allEditions } from "./lib/catalog.mjs";
-import { openSession, getUtmbToken, saveSessionCookies } from "./lib/session.mjs";
+import { openSession, getUtmbToken, saveSessionCookies, ITRA_DELAY_MS } from "./lib/session.mjs";
 import { fetchItraResults, parseItraResults, itraIdFromUrl } from "./lib/itra.mjs";
 import { fetchUtmbResults, parseUtmbResults } from "./lib/utmb.mjs";
 import { readLegacy, parseLegacy } from "./lib/legacy.mjs";
@@ -28,7 +28,6 @@ const { values: opts, positionals: targets } = parseArgs({
   },
 });
 const dryRun = opts["dry-run"];
-const ITRA_DELAY_MS = 6000;   // ITRA shows a captcha when paged faster
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const catalog = await loadCatalog();

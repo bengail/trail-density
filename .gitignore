@@ -25,3 +25,6 @@ data/raw/
 .env
 site/dist/
 site/.astro/
+
+# MCP worker
+mcp/.wrangler/

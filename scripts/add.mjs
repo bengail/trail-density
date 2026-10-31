@@ -8,6 +8,10 @@
 // per year into catalog/events/<event>.yaml (existing entries are kept; missing itra URLs are filled in).
 // Review the diff, then: pnpm run import <race>.
 //
+//   pnpm run add refresh [race …] [--import]
+//        looks for new editions of races already in the catalog (all of them by default): ITRA from each
+//        race's newest ITRA page, UTMB by trying the next years of its newest UTMB race id.
+//
 //   pnpm run add --batch races.txt [--import]
 //        one race per line: <itra url> <event> <race> [name="LUT 120K"] [km=120] … (# comments allowed).
 //        Everything runs in one Chrome session (one ITRA login); --import then imports the added races.
@@ -35,7 +39,7 @@ if (!cmd && !opts.batch) {
   console.error('Usage: pnpm run add search "<terms>"  |  pnpm run add <itra url> --event <id> --race <id>  |  pnpm run add --batch <file> [--import]');
   process.exit(1);
 }
-const jobs = opts.batch ? await readBatch(opts.batch) : cmd === "search" ? [] : [{ url: cmd, ...opts }];
+const jobs = opts.batch ? await readBatch(opts.batch) : cmd === "refresh" ? await refreshJobs(rest) : cmd === "search" ? [] : [{ url: cmd, ...opts }];
 
 const context = await openSession();
 const added = [];
@@ -44,8 +48,9 @@ try {
   for (const job of jobs) {
     if (jobs.length > 1) console.log(`\n######## ${job.event}/${job.race}`);
     try {
-      await addRace(job);
-      added.push(job.race);
+      let changed = job.url ? await addRace(job) : 0;
+      if (cmd === "refresh") changed += await refreshUtmb(job);
+      if (cmd !== "refresh" || changed) added.push(job.race);
     } catch (e) {
       if (e.message === "ITRA_LOGIN_REQUIRED") throw e;
       console.log(`  ✗ ${e.message.split("\n")[0]}`);
@@ -112,9 +117,16 @@ async function addRace(opts) {
     doc.setIn(raceKey, doc.createNode(race));
   }
 
+  // An ITRA results id already in the catalog belongs to another race (e.g. two distances sharing one page).
+  const catalogText = (await Promise.all((await fs.readdir(CATALOG_DIR)).map(f => fs.readFile(path.join(CATALOG_DIR, f), "utf8")))).join("\n");
   let added = 0, filled = 0, kept = 0;
   for (const y of history.years) {
     const edKey = [...raceKey, "editions", y.year];
+    const id = y.url.match(/\/(\d+)$/)?.[1];
+    if (!doc.hasIn([...edKey, "itra"]) && id && new RegExp(`/${id}\\b`).test(catalogText)) {
+      console.log(`  ${y.year} ignorée : la page ITRA ${id} est déjà utilisée par une autre course`);
+      continue;
+    }
     if (!doc.hasIn(edKey)) { doc.setIn(edKey, doc.createNode({ itra: y.url })); added++; }
     else if (!doc.getIn([...edKey, "itra"])) { doc.setIn([...edKey, "itra"], y.url); filled++; }
     else kept++;
@@ -129,4 +141,50 @@ async function addRace(opts) {
   const { errors } = await loadCatalog();
   if (errors.length) console.log("⚠ Catalogue invalide après ajout :\n  " + errors.join("\n  "));
   else console.log(`Catalogue valide. Prochaine étape : pnpm run import ${opts.race}`);
+  return added + filled;
+}
+
+// One job per catalog race (or the named ones), starting from its newest ITRA page.
+async function refreshJobs(only) {
+  const jobs = [];
+  for (const f of (await fs.readdir(CATALOG_DIR)).filter(f => f.endsWith(".yaml")).sort()) {
+    const ev = YAML.parse(await fs.readFile(path.join(CATALOG_DIR, f), "utf8"));
+    for (const [race, r] of Object.entries(ev.races ?? {})) {
+      if (only.length && !only.includes(race)) continue;
+      const years = Object.keys(r.editions ?? {}).map(Number).sort((a, b) => b - a);
+      const newest = years.find(y => r.editions[y]?.itra);
+      jobs.push({ url: newest ? r.editions[newest].itra : null, event: f.replace(/\.yaml$/, ""), race });
+    }
+  }
+  return jobs;
+}
+
+// api.utmb.world resolves "<race id>.<anything>.<year>", so a race's next editions can be found by
+// trying the following years with the id of its newest UTMB uri. Only editions with results are kept.
+async function refreshUtmb({ event, race }) {
+  const file = path.join(CATALOG_DIR, `${event}.yaml`);
+  const doc = YAML.parseDocument(await fs.readFile(file, "utf8"));
+  const editions = doc.getIn(["races", race, "editions"])?.toJSON() ?? {};
+  const known = Object.entries(editions).filter(([, e]) => e?.utmb).sort((a, b) => b[0] - a[0]);
+  if (!known.length) return 0;
+  const [lastYear, { utmb }] = known[0];
+  const [id, slug] = utmb.split(".");
+  let added = 0;
+  for (let year = Number(lastYear) + 1; year <= new Date().getFullYear(); year++) {
+    const uri = `${id}.${slug}.${year}`;
+    const resp = await fetch(`https://api.utmb.world/races/${uri}?lang=en`, {
+      headers: { accept: "application/json", origin: "https://utmb.world", referer: "https://utmb.world/", "x-tenant-id": "worldseries" },
+    });
+    const data = resp.ok ? await resp.json() : null;
+    if (!data?.results?.nbHits) continue;
+    console.log(`  UTMB ${year}  ${data.name}  (${data.results.nbHits} résultats)  ${uri}`);
+    if (doc.hasIn(["races", race, "editions", year])) doc.setIn(["races", race, "editions", year, "utmb"], uri);
+    else doc.setIn(["races", race, "editions", year], doc.createNode({ utmb: uri }));
+    added++;
+  }
+  if (added) {
+    doc.getIn(["races", race, "editions"]).items.sort((a, b) => Number(b.key.value ?? b.key) - Number(a.key.value ?? a.key));
+    await fs.writeFile(file, doc.toString({ lineWidth: 0, flowCollectionPadding: false }));
+  }
+  return added;
 }

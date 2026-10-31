@@ -1,0 +1,11 @@
+{
+  "name": "trail-density-mcp",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "DATA_URL": "https://trail-density.pages.dev/data",
+    "SITE_URL": "https://trail-density.pages.dev"
+  },
+  "observability": { "enabled": true }
+}

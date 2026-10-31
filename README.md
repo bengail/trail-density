@@ -46,4 +46,18 @@ pnpm run dev                  # http://localhost:4321
 ```
 
 Cloudflare Pages construit `site/` à chaque push sur `main` (commande `cd site && pnpm install && pnpm run build`,
-sortie `site/dist`). `pnpm run deploy:next` publie une prévisualisation sur https://trail-density-next.pages.dev.
+sortie `site/dist`). Chaque branche poussée a sa prévisualisation sur `<branche>.trail-density.pages.dev`.
+
+## Serveur MCP
+
+`mcp/` est un serveur MCP public (Worker Cloudflare, lecture seule) qui répond aux questions sur les données :
+https://trail-density-mcp.benoit-gaillard66.workers.dev/mcp (Streamable HTTP, sans authentification).
+Outils : `find_races`, `rankings`, `race`, `compare`, `methodology`. Il lit les JSON publiés par le site,
+donc il suit chaque mise en prod sans redéploiement.
+
+```bash
+cd mcp && pnpm install
+pnpm run dev                  # http://localhost:8787/mcp
+pnpm run deploy
+claude mcp add --transport http trail-density https://trail-density-mcp.benoit-gaillard66.workers.dev/mcp
+```

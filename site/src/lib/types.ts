@@ -19,6 +19,7 @@ export interface GenderBlock {
   rci5: number | null;
   rci10: number | null;
   rci20: number | null;
+  top_stats: Partial<Record<10 | 20, { mean: number; median: number; sd: number }>>;  // normalized top N
   curve: number[];
   hist: { start: number; step: number; bins: number; counts: number[] };
   depth: Record<string, number>;
@@ -64,7 +65,16 @@ export interface Race extends RaceBase {
 }
 
 export interface RaceSummary extends RaceBase {
-  editions: { year: number; source: string; M: { n: number; rci10: number | null } | null; F: { n: number; rci10: number | null } | null }[];
+  editions: { year: number; source: string; M: EditionSummary | null; F: EditionSummary | null }[];
+}
+
+export interface EditionSummary {
+  n: number;
+  rci3: number | null;
+  rci10: number | null;
+  rci20: number | null;
+  mean10: number | null;     // normalized top 10
+  median10: number | null;
 }
 
 export interface Index {
