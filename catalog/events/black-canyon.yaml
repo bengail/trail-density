@@ -5,14 +5,34 @@ races:
     name: "Black Canyon 100K"
     distance_km: 100
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Black.Canyon.Ultras.100K/2026/110869
       2025:
         legacy: [data/courses/BLACKCANYON_2025_100.json]
+        itra: https://itra.run/Races/RaceResults/Black.Canyon.Ultras.100K/2025/92689
       2024:
         legacy: [data/courses/BLACKCANYON_2024_100.json]
+        itra: https://itra.run/Races/RaceResults/Black.Canyon.Ultras.100K/2024/88252
       2023:
         legacy: [data/courses/BLACKCANYON_2023_100.json]
+        itra: https://itra.run/Races/RaceResults/Black.Canyon.Ultras.100K/2023/80501
       2022:
         legacy: [data/courses/BLACKCANYON_2022_100.json]
+        itra: https://itra.run/Races/RaceResults/Black.Canyon.Ultras.100K/2022/81415
+      2021:
+        itra: https://itra.run/Races/RaceResults/Black.Canyon.Ultras.100K/2021/68296
+      2019:
+        itra: https://itra.run/Races/RaceResults/Black.Canyon.Ultras.100K/2019/37617
+      2018:
+        itra: https://itra.run/Races/RaceResults/Black.Canyon.Ultras.100K/2018/26263
+      2017:
+        itra: https://itra.run/Races/RaceResults/Black.Canyon.Ultras.100K/2017/16713
+      2016:
+        itra: https://itra.run/Races/RaceResults/Black.Canyon.Ultras.100K/2016/11951
+      2015:
+        itra: https://itra.run/Races/RaceResults/Black.Canyon.Ultras.100K/2015/9412
+      2014:
+        itra: https://itra.run/Races/RaceResults/Black.Canyon.Ultras.100K/2014/9028
   black-canyon-50k:
     name: "Black Canyon 50K"
     distance_km: 50

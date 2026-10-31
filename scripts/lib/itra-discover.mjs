@@ -42,8 +42,9 @@ export async function raceHistory(context, resultsUrl) {
   const unmatched = [];
 
   // 2020 is skipped: almost every race was cancelled (Covid), and the few held are already in the catalog.
-  const SKIPPED_YEARS = [2020];
-  for (const ed of info.editions.filter(e => e.year !== info.year && e.year <= new Date().getFullYear() && !SKIPPED_YEARS.includes(e.year))) {
+  // Nothing before 2005: older ITRA results are sparse and scored on few runners.
+  const SKIPPED_YEARS = [2020], FIRST_YEAR = 2005;
+  for (const ed of info.editions.filter(e => e.year !== info.year && e.year >= FIRST_YEAR && e.year <= new Date().getFullYear() && !SKIPPED_YEARS.includes(e.year))) {
     try {
       const raw = await fetchItraResults(`https://itra.run/Races/RaceResults/${slug}/${ed.year}/${ed.eventItraId}`, getContext);
       if (!raw.cached) await new Promise(r => setTimeout(r, ITRA_DELAY_MS));
