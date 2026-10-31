@@ -28,7 +28,8 @@ Site : https://trail-density.pages.dev (FR / EN).
 ```bash
 pnpm install
 cp .env.example .env          # DATABASE_URL, et en option les identifiants ITRA / UTMB
-pnpm run add -- <url ITRA> <event> <race>     # ajoute une course au catalogue (ou --batch fichier)
+pnpm run add search "lavaredo"                                  # trouve la course sur ITRA
+pnpm run add <url ITRA> --event lavaredo --race lut-120k        # l'ajoute au catalogue (ou --batch fichier)
 pnpm run import               # récupère les résultats, valide, écrit dans Supabase
 pnpm run export               # écrit site/public/data/*.json
 git commit                    # les JSON exportés sont versionnés : le build n'a pas besoin de la base
