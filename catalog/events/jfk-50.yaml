@@ -1,0 +1,48 @@
+name: "JFK 50 Mile"
+country: US
+races:
+  jfk-50-mile:
+    name: "JFK 50 Mile"
+    distance_km: 81
+    elevation_gain: 1070
+    editions:
+      2025:
+        utmb: 753.jfk50milejfk50mile.2025
+      2024:
+        utmb: 753.jfk50milejfk50mile.2024
+      2023:
+        utmb: 753.jfk50milejfk50mile.2023
+      2022:
+        utmb: 753.jfk50milejfk50mile.2022
+      2021:
+        utmb: 753.jfk50milejfk50mile.2021
+      2019:
+        utmb: 753.jfk50milejfk50mile.2019
+      2018:
+        utmb: 753.jfk50milejfk50mile.2018
+      2017:
+        utmb: 753.jfk50milejfk50mile.2017
+      2016:
+        utmb: 753.jfk50milejfk50mile.2016
+      2015:
+        utmb: 753.jfk50milejfk50mile.2015
+      2014:
+        utmb: 753.jfk50milejfk50mile.2014
+      2013:
+        utmb: 753.jfk50milejfk50mile.2013
+      2012:
+        utmb: 753.jfk50milejfk50mile.2012
+      2011:
+        utmb: 753.jfk50milejfk50mile.2011
+      2010:
+        utmb: 753.jfk50milejfk50mile.2010
+      2009:
+        utmb: 753.jfk50milejfk50mile.2009
+      2008:
+        utmb: 753.jfk50milejfk50mile.2008
+      2007:
+        utmb: 753.jfk50milejfk50mile.2007
+      2006:
+        utmb: 753.jfk50milejfk50mile.2006
+      2005:
+        utmb: 753.jfk50milejfk50mile.2005
