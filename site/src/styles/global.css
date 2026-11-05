@@ -175,6 +175,16 @@ h1, h2, h3 { margin: 0; line-height: 1.15; }
   .ranking li .spark { display: none; }
 }
 .empty { padding: 16px 0; }
+.ranking.record li { grid-template-columns: 1.8em minmax(0, 1fr) 4.2em; }
+.ranking.record.notes li { grid-template-columns: 1.8em minmax(0, 1fr) 4.2em 3.8em; }
+.ranking.record .label { white-space: normal; }
+
+/* Segmented buttons (filters) */
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--border); border-radius: var(--radius-s); overflow: hidden; }
+.seg button { font: 600 13px var(--font); padding: 7px 13px; border: 0; background: var(--surface); color: var(--text-2); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--border); }
+.seg button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+@media (max-width: 560px) { .seg button { padding: 7px 9px; } }
 
 .g-title { font-size: 13px; font-weight: 700; margin: 0 0 6px; }
 .g-title.f { color: var(--women); }
