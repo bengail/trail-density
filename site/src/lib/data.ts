@@ -2,7 +2,7 @@
 // The same files are served to the browser under /data/.
 import fs from "node:fs";
 import path from "node:path";
-import type { Index, Race, RaceSummary } from "./types";
+import type { Index, PlacementRace, Race, RaceSummary } from "./types";
 
 const DATA_DIR = path.resolve("public/data");
 
@@ -13,6 +13,10 @@ export function loadIndex(): Index {
 
 export function loadRace(id: string): Race {
   return JSON.parse(fs.readFileSync(path.join(DATA_DIR, "races", `${id}.json`), "utf8"));
+}
+
+export function loadPlacement(): PlacementRace[] {
+  return JSON.parse(fs.readFileSync(path.join(DATA_DIR, "placement.json"), "utf8"));
 }
 
 // Latest edition with an RCI10 for this gender.

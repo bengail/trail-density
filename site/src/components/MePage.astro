@@ -1,0 +1,174 @@
+---
+import Base from "../layouts/Base.astro";
+import { loadPlacement } from "../lib/data";
+import { missingNote, placementList, SAMPLE_SCORE } from "../lib/placement";
+import { t, mePath, type Lang } from "../lib/i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const races = loadPlacement();
+const formats = ["vertical", "short", "medium", "long", "ultra"] as const;
+const alternate = { fr: mePath("fr"), en: mePath("en") };
+---
+<Base lang={lang} title={`${s.me_title} — Trail Density`} description={s.me_sub} alternate={alternate}>
+  <div class="wrap me" data-lang={lang}>
+    <section>
+      <h1>{s.me_title}</h1>
+      <p class="muted lede">{s.me_sub}</p>
+    </section>
+
+    <section class="filters">
+      <label class="field">
+        <span class="eyebrow">{s.me_index}</span>
+        <input name="score" class="num" type="number" inputmode="numeric" min="1" max="1000" step="1" value={SAMPLE_SCORE} />
+      </label>
+      <div class="field">
+        <span class="eyebrow">{s.me_scale}</span>
+        <div class="seg" role="group" aria-label={s.me_scale}>
+          <button type="button" data-scale="itra" aria-pressed="true">ITRA</button>
+          <button type="button" data-scale="utmb" aria-pressed="false">UTMB</button>
+        </div>
+      </div>
+      <div class="field">
+        <span class="eyebrow">{s.me_gender}</span>
+        <div class="seg" role="group" aria-label={s.me_gender}>
+          <button type="button" data-gender="both" aria-pressed="true">{s.me_both}</button>
+          <button type="button" data-gender="F" aria-pressed="false">{s.women}</button>
+          <button type="button" data-gender="M" aria-pressed="false">{s.men}</button>
+        </div>
+      </div>
+      <div class="seg" role="group">
+        <button type="button" data-format="all" aria-pressed="true">{s.all_formats}</button>
+        {formats.map(f => <button type="button" data-format={f} aria-pressed="false">{s.format_label[f]}</button>)}
+      </div>
+    </section>
+    <p class="muted where">{s.me_where}</p>
+
+    <section class="pair" data-lists>
+      <div class="card" data-card="F">
+        <h2 class="g-title f">{s.women}</h2>
+        <div data-list="F"><Fragment set:html={placementList(lang, races, SAMPLE_SCORE, "itra", "F")} /></div>
+      </div>
+      <div class="card" data-card="M">
+        <h2 class="g-title m">{s.men}</h2>
+        <div data-list="M"><Fragment set:html={placementList(lang, races, SAMPLE_SCORE, "itra", "M")} /></div>
+      </div>
+    </section>
+
+    <section class="muted notes">
+      <p>{s.me_note}</p>
+      <p data-missing>{missingNote(lang, races, SAMPLE_SCORE, "itra", "M")}</p>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import { missingNote, placementList, SAMPLE_SCORE } from "../lib/placement";
+  import type { Format, Gender, PlacementRace, Scale } from "../lib/types";
+  import type { Lang } from "../lib/i18n";
+
+  // Everything re-renders in the browser from placement.json; the state lives in the URL, so a result can be shared
+  // (?i=720&s=utmb&g=F&format=long). The file only loads once the visitor changes something.
+  const root = document.querySelector<HTMLElement>(".me")!;
+  const lang = root.dataset.lang as Lang;
+  const input = root.querySelector<HTMLInputElement>("input[name=score]")!;
+  const lists = root.querySelector<HTMLElement>("[data-lists]")!;
+  const params = new URLSearchParams(location.search);
+
+  const parsed = Number(params.get("i"));
+  let score = Number.isInteger(parsed) && parsed >= 1 && parsed <= 1000 ? parsed : SAMPLE_SCORE;
+  let scale: Scale = params.get("s") === "utmb" ? "utmb" : "itra";
+  let gender = ["F", "M"].includes(params.get("g") ?? "") ? params.get("g")! : "both";
+  let format = params.get("format") ?? "all";
+  let races: PlacementRace[] | null = null;
+
+  async function render() {
+    races ??= await fetch("/data/placement.json").then(r => r.json());
+    const fmt = format as Format | "all";
+    for (const g of ["F", "M"] as Gender[]) {
+      root.querySelector(`[data-list=${g}]`)!.innerHTML = placementList(lang, races!, score, scale, g, fmt);
+      root.querySelector<HTMLElement>(`[data-card=${g}]`)!.hidden = gender !== "both" && gender !== g;
+    }
+    lists.classList.toggle("solo", gender !== "both");
+    root.querySelector("[data-missing]")!.textContent = missingNote(lang, races!, score, scale, gender === "F" ? "F" : "M", fmt);
+    const press = (attr: string, value: string) => root.querySelectorAll<HTMLButtonElement>(`[data-${attr}]`)
+      .forEach(b => b.setAttribute("aria-pressed", String(b.dataset[attr] === value)));
+    press("scale", scale); press("gender", gender); press("format", format);
+    const q = new URLSearchParams();
+    if (score !== SAMPLE_SCORE) q.set("i", String(score));
+    if (scale !== "itra") q.set("s", scale);
+    if (gender !== "both") q.set("g", gender);
+    if (format !== "all") q.set("format", format);
+    history.replaceState(null, "", q.size ? `?${q}` : location.pathname);
+  }
+
+  input.value = String(score);
+  input.addEventListener("input", () => {
+    const v = input.valueAsNumber;
+    if (!Number.isInteger(v) || v < 1 || v > 1000) return;       // keep the last valid result while typing
+    score = v; render();
+  });
+  root.addEventListener("click", e => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>("button");
+    if (!b) return;
+    scale = (b.dataset.scale as Scale) ?? scale;
+    gender = b.dataset.gender ?? gender;
+    format = b.dataset.format ?? format;
+    render();
+  });
+  if (location.search) render();
+</script>
+
+<style>
+  .me { display: grid; gap: 22px; padding-top: 36px; }
+  h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; letter-spacing: -0.02em; }
+  .lede { margin: 8px 0 0; max-width: 680px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; }
+  .field { display: grid; gap: 6px; }
+  input {
+    width: 6.5em; font-size: 22px; font-weight: 600; color: var(--text); background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius-s); padding: 4px 10px;
+  }
+  input:focus { outline: 2px solid var(--text); outline-offset: -1px; }
+  .seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--border); border-radius: var(--radius-s); overflow: hidden; }
+  .seg button { font: 600 13px var(--font); padding: 7px 13px; border: 0; background: var(--surface); color: var(--text-2); cursor: pointer; }
+  .seg button + button { border-left: 1px solid var(--border); }
+  .seg button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+  .where { margin: -8px 0 0; font-size: 13px; }
+  .notes { font-size: 13px; max-width: 760px; }
+  .notes p { margin: 0 0 4px; }
+  .pair.solo { grid-template-columns: 1fr; }
+  [hidden] { display: none; }
+</style>
+
+<style is:global>
+  /* Markup injected by placementList, hence global (scoped under .me). */
+  .me .verdict { margin: 0 0 8px; padding-left: 10px; border-left: 3px solid; font-weight: 600; }
+  .me .verdict.f { border-color: var(--women); }
+  .me .verdict.m { border-color: var(--men); }
+  .me .placing { list-style: none; margin: 0; padding: 0; }
+  .me .placing li {
+    display: grid; grid-template-columns: minmax(0, 1fr) 84px 5.2em 4.6em; align-items: center; gap: 10px;
+    padding: 8px 0; border-top: 1px solid var(--divider);
+  }
+  .me .placing .name { display: flex; align-items: baseline; gap: 7px; min-width: 0; text-decoration: none; font-weight: 600; line-height: 1.25; }
+  .me .placing .name:hover .label { text-decoration: underline; }
+  .me .placing .label { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .me .placing .meta { display: block; font: 500 11px var(--mono); color: var(--text-3); white-space: normal; }
+  .me .placing .value { text-align: right; font-weight: 600; font-size: 15px; line-height: 1.2; }
+  .me .placing .value small { display: block; font-size: 11px; font-weight: 500; color: var(--text-3); }
+  .me .placing.f .value { color: var(--women); }
+  .me .placing.m .value { color: var(--men); }
+  .me .placing .top { text-align: right; font-size: 12px; color: var(--text-2); }
+  .me .strip { width: 84px; height: 24px; display: block; }
+  .me .strip rect { fill: var(--grid); }
+  .me .strip.f rect.beaten { fill: var(--women); }
+  .me .strip.m rect.beaten { fill: var(--men); }
+  .me .strip line { stroke: var(--text); stroke-width: 1.5; }
+  @media (max-width: 560px) {
+    .me .placing li { grid-template-columns: minmax(0, 1fr) 4.8em 4.4em; }
+    .me .strip { display: none; }
+    .me .placing .label { white-space: normal; }
+  }
+</style>

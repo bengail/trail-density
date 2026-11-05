@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import { loadRace } from "../lib/data";
-import { t, racePath, rankingsPath, fmtNum, SOURCES, FREETRAIL_RCI, ENDURAW_NORM, type Lang } from "../lib/i18n";
+import { t, racePath, rankingsPath, mePath, fmtNum, SOURCES, FREETRAIL_RCI, ENDURAW_NORM, type Lang } from "../lib/i18n";
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -178,6 +178,16 @@ const fr = lang === "fr";
         )}
       </ul>
       <p><a href={rankingsPath(lang)}>{fr ? "Voir le classement →" : "See the rankings →"}</a></p>
+    </section>
+
+    <section>
+      <h2>{fr ? "« Et moi ? »" : "Where do I stand?"}</h2>
+      {fr ? (
+        <p>Le score ITRA ou UTMB d'un finisher vient de son temps et suit donc l'ordre d'arrivée. La place affichée compte simplement les finishers de même genre qui ont fait un meilleur score, à la dernière édition complète de la course. Ce n'est pas une prévision : tes résultats varient d'une course à l'autre autour de ton index, et les abandons ne sont pas comptés. Les index ITRA et UTMB restent séparés, et les courses sans liste complète de finishers sont écartées.</p>
+      ) : (
+        <p>A finisher's ITRA or UTMB score comes from their time, so it follows the finish order. The place shown simply counts finishers of the same gender who scored higher, at the race's latest complete edition. It is not a prediction: your results vary around your index from race to race, and dropouts are not counted. ITRA and UTMB stay separate, and races without a complete list of finishers are left out.</p>
+      )}
+      <p><a href={mePath(lang)}>{fr ? "Où te situes-tu ? →" : "Where do you stand? →"}</a></p>
     </section>
   </article>
 </Base>

@@ -18,6 +18,7 @@ Jamais d'écran vide « commencez par choisir ». Les filtres affinent une répo
 | Classement | Les plus relevées, par format / année / genre |
 | Fiche course | Cette course est-elle relevée, et comment évolue-t-elle ? |
 | Comparer | Laquelle de ces 2 à 4 courses est la plus relevée ? |
+| Et moi ? | Où je me situe : quelle place mon index m'aurait donnée à chaque course ? (page au tutoiement) |
 | Méthode | Comment le RCI est calculé, les sources, les limites |
 
 **Comparer** : ne s'ouvre jamais vide (comparaison suggérée, p. ex. le top 3 d'un format). On ajoute une course

@@ -81,3 +81,14 @@ export interface Index {
   generated_at: string;
   races: RaceSummary[];
 }
+
+// placement.json: scores of the latest complete edition, best first and delta-encoded.
+export interface PlacementRace {
+  id: string;
+  name: string;
+  country: string | null;
+  format: Format;
+  scales: Partial<Record<Scale, { year: number } & Partial<Record<Gender, number[]>>>>;
+}
+
+export type Scale = "itra" | "utmb";
