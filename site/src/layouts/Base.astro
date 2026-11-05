@@ -1,6 +1,6 @@
 ---
 import "../styles/global.css";
-import { t, rankingsPath, comparePath, mePath, methodPath, type Lang } from "../lib/i18n";
+import { t, rankingsPath, comparePath, recordsPath, mePath, methodPath, type Lang } from "../lib/i18n";
 
 interface Props {
   lang: Lang;
@@ -43,10 +43,13 @@ const other: Lang = lang === "fr" ? "en" : "fr";
           <span class="brand-tag">RCI</span>
         </a>
         <nav>
-          <a href={rankingsPath(lang)}>{s.nav_rankings}</a>
-          <a href={comparePath(lang)}>{s.nav_compare}</a>
-          <a href={mePath(lang)}>{s.nav_me}</a>
-          <a href={methodPath(lang)}>{s.nav_method}</a>
+          <div class="links">
+            <a href={rankingsPath(lang)}>{s.nav_rankings}</a>
+            <a href={comparePath(lang)}>{s.nav_compare}</a>
+            <a href={recordsPath(lang)}>{s.nav_records}</a>
+            <a href={mePath(lang)}>{s.nav_me}</a>
+            <a href={methodPath(lang)}>{s.nav_method}</a>
+          </div>
           <a class="lang" href={alternate[other]} hreflang={other} lang={other}>{other.toUpperCase()}</a>
         </nav>
       </div>
@@ -72,12 +75,22 @@ const other: Lang = lang === "fr" ? "en" : "fr";
     padding: 2px 7px; border-radius: var(--radius-s);
   }
   nav { display: flex; align-items: center; gap: 18px; font-size: 14px; font-weight: 600; }
+  .links { display: flex; gap: 18px; }
   nav a { text-decoration: none; color: var(--text-2); }
   nav a:hover { color: var(--text); }
   nav .lang {
     font: 600 12px var(--mono); padding: 4px 8px;
     border: 1px solid var(--border); border-radius: var(--radius-s);
   }
-  @media (max-width: 560px) { nav a:not(.lang) { display: none; } }
+  /* Phones: the links take a row of their own and wrap, so none is ever out of sight. The header stops being
+     sticky so it doesn't eat the screen. */
+  @media (max-width: 700px) {
+    .site-header { position: static; }
+    .bar { flex-wrap: wrap; height: auto; padding-top: 10px; padding-bottom: 10px; row-gap: 8px; }
+    nav { display: contents; }
+    .links {
+      order: 1; flex: 0 0 100%; flex-wrap: wrap; gap: 4px 16px; font-size: 13.5px; white-space: nowrap;
+    }
+  }
   .site-footer { padding: 40px 16px 48px; font-size: 13px; }
 </style>

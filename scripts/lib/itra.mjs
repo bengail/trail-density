@@ -27,7 +27,7 @@ export function parseItraResults(html) {
   if (cScore < 0 || cGender < 0) throw new Error(`Unexpected ITRA columns: ${headers.join(" | ")}`);
 
   const out = [];
-  for (const tr of table.querySelectorAll("tbody tr")) {
+  for (const tr of table.querySelectorAll("tr")) {           // no <tbody> in pages fetched without a tab; header rows have no <td>
     const td = tr.querySelectorAll("td").map(c => c.text.replace(/\s+/g, " ").trim());
     if (td.length < headers.length) continue;               // paywall rowspan rows are shorter
     const rank = parseInt(td[0], 10);

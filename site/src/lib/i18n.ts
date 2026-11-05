@@ -77,6 +77,18 @@ const STRINGS = {
     no_data: "–",
     method_title: "Méthode",
     method_sub: "Comment le RCI est calculé, d'où viennent les données, et ce qu'il ne dit pas.",
+    nav_records: "Records",
+    records_title: "Records",
+    records_sub: "Les plateaux les plus relevés depuis 2005, d'après le RCI10.",
+    records_alltime: "Les plus relevés de l'histoire",
+    records_alltime_sub: "Toutes éditions confondues",
+    records_broken: (season: number) => `Records tombés en ${season}`,
+    records_broken_sub: (min: number) => `Dernière édition au-dessus de toutes les précédentes (au moins ${min} éditions), avec la marge sur l'ancien record`,
+    records_prev: (v: string, year: number) => `ancien record : ${v} (${year})`,
+    records_rises: "Les plus gros bonds",
+    records_rises_sub: "D'une édition à la suivante. Les scores viennent des temps : un bond peut aussi tenir à la météo ou à un changement de parcours.",
+    records_each: "Le record de chaque course",
+    records_each_sub: "Meilleure édition de chaque course. À droite, l'écart de la dernière édition avec ce record.",
     nav_me: "Et moi ?",
     me_title: "Où te situes-tu ?",
     me_sub: "Entre ton index : voici la place qu'il t'aurait donnée à la dernière édition de chaque course.",
@@ -168,6 +180,18 @@ const STRINGS = {
     no_data: "–",
     method_title: "Method",
     method_sub: "How RCI is computed, where the data comes from, and what it does not tell you.",
+    nav_records: "Records",
+    records_title: "Records",
+    records_sub: "The strongest fields since 2005, by RCI10.",
+    records_alltime: "Strongest fields of all time",
+    records_alltime_sub: "Across every edition",
+    records_broken: (season: number) => `Records broken in ${season}`,
+    records_broken_sub: (min: number) => `Latest edition above all earlier ones (at least ${min} editions), with the margin over the old record`,
+    records_prev: (v: string, year: number) => `old record: ${v} (${year})`,
+    records_rises: "Biggest jumps",
+    records_rises_sub: "From one edition to the next. Scores come from times, so a jump can also reflect the weather or a course change.",
+    records_each: "Every race's record",
+    records_each_sub: "Best edition of each race. On the right, how far the latest edition is from that record.",
     nav_me: "Where I stand",
     me_title: "Where do you stand?",
     me_sub: "Enter your index: here is the place it would have earned you at the latest edition of each race.",
@@ -221,6 +245,10 @@ export function comparePath(lang: Lang, ids: string[] = []) {
 
 export function methodPath(lang: Lang) {
   return lang === "fr" ? "/fr/methode/" : "/en/method/";
+}
+
+export function recordsPath(lang: Lang) {
+  return `/${lang}/records/`;
 }
 
 export function mePath(lang: Lang) {

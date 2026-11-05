@@ -1,0 +1,54 @@
+---
+import Base from "../layouts/Base.astro";
+import { loadIndex } from "../lib/data";
+import { recordsView } from "../lib/records";
+import { t, recordsPath, type Lang } from "../lib/i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const formats = ["vertical", "short", "medium", "long", "ultra"] as const;
+---
+<Base lang={lang} title={`${s.records_title} — Trail Density`} description={s.records_sub} alternate={{ fr: recordsPath("fr"), en: recordsPath("en") }}>
+  <div class="wrap records" data-lang={lang}>
+    <section>
+      <h1>{s.records_title}</h1>
+      <p class="muted lede">{s.records_sub}</p>
+    </section>
+    <div class="seg" role="group">
+      <button type="button" data-format="all" aria-pressed="true">{s.all_formats}</button>
+      {formats.map(f => <button type="button" data-format={f} aria-pressed="false">{s.format_label[f]}</button>)}
+    </div>
+    <div class="view" data-view><Fragment set:html={recordsView(lang, loadIndex().races)} /></div>
+  </div>
+</Base>
+
+<script>
+  import { recordsView } from "../lib/records";
+  import type { Format, Index } from "../lib/types";
+  import type { Lang } from "../lib/i18n";
+
+  // The filter re-renders in the browser from index.json; the state lives in the URL (?format=ultra).
+  const root = document.querySelector<HTMLElement>(".records")!;
+  const lang = root.dataset.lang as Lang;
+  const buttons = root.querySelectorAll<HTMLButtonElement>("[data-format]");
+  let format = new URLSearchParams(location.search).get("format") ?? "all";
+  let index: Index | null = null;
+
+  async function render() {
+    index ??= await fetch("/data/index.json").then(r => r.json());
+    root.querySelector("[data-view]")!.innerHTML = recordsView(lang, index!.races, format as Format | "all");
+    buttons.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.format === format)));
+    history.replaceState(null, "", format === "all" ? location.pathname : `?format=${format}`);
+  }
+  buttons.forEach(b => b.addEventListener("click", () => { format = b.dataset.format!; render(); }));
+  if (format !== "all") render();
+</script>
+
+<style>
+  .records { display: grid; gap: 22px; padding-top: 36px; }
+  h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; letter-spacing: -0.02em; }
+  .lede { margin: 8px 0 0; max-width: 680px; }
+  .seg { justify-self: start; }
+  .view { display: grid; gap: 40px; margin-top: 10px; }
+</style>
