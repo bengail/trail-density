@@ -5,6 +5,7 @@
 //   site/public/data/index.json          every race + a per-edition RCI summary (home, rankings, compare, search)
 //   site/public/data/races/<race>.json   one race in full: per edition, source and gender, RCI levels,
 //                                 density curve, index histogram, depth counts and top 10
+//   site/public/data/placement.json      every finisher's score at each race's latest complete edition, for "Et moi ?"
 //
 // Each edition has a primary source (ITRA, else UTMB, else legacy) whose blocks are also copied to edition.M / .F;
 // every available source is under edition.sources. Charts and depth counts use the normalized index
@@ -19,6 +20,7 @@ const SOURCE_PRIORITY = ["itra", "utmb", "legacy"];
 const HIST = { start: 300, step: 20, bins: 33 };          // 300–960; lower scores go to the first bin, higher to the last
 const DEPTH_THRESHOLDS = [800, 750, 700, 650];
 const MIN_FOR_RCI10 = 10;
+const PLACEMENT_SCALES = ["itra", "utmb"];                // legacy lists are cut at 249 rows, so places would be wrong
 
 const sql = connect();
 try {
@@ -41,6 +43,7 @@ try {
   const statsByKey = new Map(stats.map(s => [`${s.edition_id}|${s.source}|${s.gender}`, s]));
 
   const races = new Map();
+  const placement = new Map();
   for (const e of editions) {
     const main = primary.get(e.edition_id);
     if (!main) continue;
@@ -64,6 +67,11 @@ try {
       }
       edition.sources[set.source] = block;
       if (!race.sources.includes(set.source)) race.sources.push(set.source);
+      // Editions come newest first, so the first complete one of each scale is the latest.
+      const scales = placement.get(e.race_id) ?? placement.set(e.race_id, {}).get(e.race_id);
+      if (PLACEMENT_SCALES.includes(set.source) && !scales[set.source] && !isPartial(set)) {
+        scales[set.source] = placementBlock(e.year, field);
+      }
     }
     edition.M = edition.sources[main.source].M;
     edition.F = edition.sources[main.source].F;
@@ -87,9 +95,26 @@ try {
     })),
   };
   bytes += await write("index.json", index);
+  bytes += await write("placement.json", [...races.values()].map(r => ({
+    id: r.id, name: r.name, country: r.country, format: r.format, scales: placement.get(r.id),
+  })));
   console.log(`${races.size} races, ${editions.length} editions → site/public/data (${Math.round(bytes / 1024)} KB)`);
 } finally {
   await sql.end();
+}
+
+function isPartial(set) {
+  return (set.warnings ?? []).some(w => w.includes("partial results"));
+}
+
+// Scores as published, best first and delta-encoded ([best, gap to the next, …]): races keep a few thousand of them.
+function placementBlock(year, field) {
+  const block = { year };
+  for (const g of ["M", "F"]) {
+    const scores = field.filter(r => r.gender === g).map(r => Math.round(r.index)).sort((a, b) => b - a);
+    if (scores.length >= MIN_FOR_RCI10) block[g] = scores.map((v, i) => (i ? scores[i - 1] - v : v));
+  }
+  return block;
 }
 
 function genderBlock(st, field) {

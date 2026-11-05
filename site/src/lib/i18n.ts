@@ -77,6 +77,22 @@ const STRINGS = {
     no_data: "–",
     method_title: "Méthode",
     method_sub: "Comment le RCI est calculé, d'où viennent les données, et ce qu'il ne dit pas.",
+    nav_me: "Et moi ?",
+    me_title: "Où te situes-tu ?",
+    me_sub: "Entre ton index : voici la place qu'il t'aurait donnée à la dernière édition de chaque course.",
+    me_cta: "Et toi, où serais-tu arrivé ?",
+    me_index: "Ton index",
+    me_scale: "Barème",
+    me_gender: "Classement",
+    me_both: "Les deux",
+    me_where: "Ton index est sur ta fiche itra.run ou utmb.world. Chaque barème se lit sur les courses qui ont ses résultats.",
+    me_summary: (n: number, podiums: number, top10: number, half: number) =>
+      `Sur ${n} course${n > 1 ? "s" : ""} : ${podiums} podium${podiums > 1 ? "s" : ""}, ${top10} top 10, ${half} dans la première moitié.`,
+    me_of: "sur",
+    me_top: (pct: number) => `top ${pct} %`,
+    me_gap: (pts: number) => `${pts} pt${pts > 1 ? "s" : ""} du top 10`,
+    me_missing: (n: number, scale: string) => `${n} course${n > 1 ? "s" : ""} sans résultats ${scale} complets ne ${n > 1 ? "sont" : "est"} pas ${n > 1 ? "listées" : "listée"}.`,
+    me_note: "Le score d'une course vient de ton temps, comme l'index : ces places supposent une performance égale à ton index ce jour-là. Seuls les finishers comptent.",
   },
   en: {
     tagline: "The trail running competitiveness index",
@@ -152,6 +168,22 @@ const STRINGS = {
     no_data: "–",
     method_title: "Method",
     method_sub: "How RCI is computed, where the data comes from, and what it does not tell you.",
+    nav_me: "Where I stand",
+    me_title: "Where do you stand?",
+    me_sub: "Enter your index: here is the place it would have earned you at the latest edition of each race.",
+    me_cta: "And you, where would you have finished?",
+    me_index: "Your index",
+    me_scale: "Scale",
+    me_gender: "Ranking",
+    me_both: "Both",
+    me_where: "Your index is on your itra.run or utmb.world profile. Each scale applies to the races that have its results.",
+    me_summary: (n: number, podiums: number, top10: number, half: number) =>
+      `Across ${n} race${n > 1 ? "s" : ""}: ${podiums} podium${podiums > 1 ? "s" : ""}, ${top10} top 10${top10 > 1 ? "s" : ""}, ${half} in the top half.`,
+    me_of: "of",
+    me_top: (pct: number) => `top ${pct}%`,
+    me_gap: (pts: number) => `${pts} pt${pts > 1 ? "s" : ""} off the top 10`,
+    me_missing: (n: number, scale: string) => `${n} race${n > 1 ? "s" : ""} without complete ${scale} results ${n > 1 ? "are" : "is"} not listed.`,
+    me_note: "A race score comes from your time, as the index does: these places assume a performance equal to your index on the day. Only finishers count.",
   },
 };
 
@@ -189,6 +221,10 @@ export function comparePath(lang: Lang, ids: string[] = []) {
 
 export function methodPath(lang: Lang) {
   return lang === "fr" ? "/fr/methode/" : "/en/method/";
+}
+
+export function mePath(lang: Lang) {
+  return lang === "fr" ? "/fr/et-moi/" : "/en/where-i-stand/";
 }
 
 export function countryName(lang: Lang, iso2: string | null) {

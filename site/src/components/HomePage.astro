@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import { loadIndex } from "../lib/data";
 import { rank, rankingList } from "../lib/rankings";
-import { t, racePath, rankingsPath, methodPath, FREETRAIL_RCI, flag, fmtDelta, fmtNum, type Lang } from "../lib/i18n";
+import { t, racePath, rankingsPath, mePath, methodPath, FREETRAIL_RCI, flag, fmtDelta, fmtNum, type Lang } from "../lib/i18n";
 import type { Gender } from "../lib/types";
 
 interface Props { lang: Lang }
@@ -26,6 +26,7 @@ const risers = (["F", "M"] as Gender[])
       <h1>{s.home_title}</h1>
       <p class="lede muted">{s.home_sub} <a href={methodPath(lang)}>{s.method_link} →</a></p>
       <p class="credit muted"><a href={FREETRAIL_RCI} rel="noopener">{s.credit} ↗</a></p>
+      <p class="cta"><a class="more" href={mePath(lang)}>{s.me_cta} →</a></p>
     </section>
 
     <section>
@@ -92,6 +93,7 @@ const risers = (["F", "M"] as Gender[])
   .intro h1 { font-size: clamp(30px, 5.5vw, 48px); font-weight: 800; letter-spacing: -0.025em; max-width: 820px; margin: 10px 0 12px; }
   .lede { font-size: 16px; max-width: 680px; margin: 0; }
   .credit { font-size: 13px; margin: 8px 0 0; }
+  .cta { margin: 14px 0 0; }
 
   .formats { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
   .fmt h3 { font-size: 17px; font-weight: 800; }

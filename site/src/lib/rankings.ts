@@ -3,7 +3,7 @@ import { t, racePath, flag, fmtNum, fmtDelta, type Lang } from "./i18n";
 import type { Format, Gender, RaceSummary } from "./types";
 
 export type Season = "latest" | number;
-const STALE_AFTER = 2;               // "latest" ignores races whose last edition is older than this many seasons
+export const STALE_AFTER = 2;               // "latest" ignores races whose last edition is older than this many seasons
 const MAX_DELTA_GAP = 2;             // no change shown against an edition more than this many seasons back
 
 export interface Row {
@@ -51,7 +51,7 @@ export function sparkline(history: [number, number][], g: Gender, w = 84, h = 24
   return `<svg class="spark ${g.toLowerCase()}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><polyline points="${pts}"/><circle cx="${x(la)}" cy="${y(lb)}" r="2.5"/></svg>`;
 }
 
-function esc(s: string) {
+export function esc(s: string) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 }
 
