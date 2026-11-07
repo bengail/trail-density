@@ -27,7 +27,7 @@ par recherche (jusqu'à 4, en étiquettes retirables), avec des suggestions (mê
 L'entrée principale est le bouton « Comparer avec… » de la fiche course. La sélection est dans l'URL
 (`/fr/comparer/?c=occ,sierre-zinal,zegama-marathon`, en query string pour rester un site statique).
 
-**Crédit** : le RCI (Realized Competition Index) a été proposé par Travis Loncar sur Freetrail (janvier 2026, https://fantasy.freetrail.com/news/2026/01/realized-competition-index). On le crédite sur l'accueil, la page Méthode et le pied de page. La conversion de l'index féminin (formules Enduraw, une pour ITRA, une pour UTMB, publiées par Distances+ : https://distances.plus/communaute/trail-running-classement-teams-trail-composition-2025/) ne fait pas partie de l'indice d'origine. Crédit RCI sur l'accueil et la page Méthode (pas dans le pied de page).
+**Crédit** : le RCI (Realized Competition Index) a été proposé par Travis Loncar sur Freetrail (janvier 2026, https://fantasy.freetrail.com/news/2026/01/realized-competition-index). On le crédite sur l'accueil et la page Méthode, pas dans le pied de page. La conversion de l'index féminin (formules Enduraw, une pour ITRA, une pour UTMB, publiées par Distances+ : https://distances.plus/communaute/trail-running-classement-teams-trail-composition-2025/) ne fait pas partie de l'indice d'origine.
 
 ## Ton
 - Précis et sobre : média de données sportives, pas outil d'analyste. Le chiffre, puis une phrase qui l'interprète.
@@ -36,12 +36,12 @@ L'entrée principale est le bouton « Comparer avec… » de la fiche course. La
 
 ## Identité visuelle
 - Fond papier chaud, texte brun foncé, un seul accent.
-- **Femmes = mousse, hommes = terre cuite, partout et toujours.**
+- **Femmes = bleu, hommes = terre cuite, partout et toujours.**
 - Archivo pour le texte, IBM Plex Mono pour tous les chiffres.
 - Visuel signature : **la courbe de densité** (index par rang). En grand sur les fiches, en miniature dans les classements.
 - Mode sombre en plus du clair.
 
-Tokens (OKLCH, repris de la maquette) :
+Tokens (OKLCH) :
 
 | Rôle | Clair |
 |---|---|
@@ -51,7 +51,7 @@ Tokens (OKLCH, repris de la maquette) :
 | Texte | `oklch(0.24 0.02 55)` |
 | Texte secondaire | `oklch(0.52 0.02 60)` |
 | Terre cuite (hommes, accent) | `oklch(0.6 0.15 45)`, teinte `oklch(0.94 0.03 45)` |
-| Mousse (femmes) | `oklch(0.56 0.09 150)`, teinte `oklch(0.94 0.02 150)` |
+| Bleu (femmes) | `oklch(0.52 0.13 250)`, teinte `oklch(0.94 0.025 250)` |
 
 ## Chiffres
 - **RCI10 = chiffre de référence.** RCI3/5/20 accessibles, en second plan.

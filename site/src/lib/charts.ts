@@ -59,15 +59,25 @@ export function historyChart(editions: Edition[], labels: { M: string; F: string
     const p = altPts[g];
     if (!p.length) continue;
     svg += `<polyline class="line alt ${g.toLowerCase()}" points="${p.map(([a, b]) => `${x(a)},${y(b)}`).join(" ")}"/>`;
-    svg += p.map(([a, b]) => `<circle class="hit" cx="${x(a)}" cy="${y(b)}" r="5"><title>${a} · ${esc(labels[g])} · ${esc(alt!.label)} ${b.toFixed(1)}</title></circle>`).join("");
+    svg += p.map(([a, b]) => `<circle class="hit" data-y="${a}" data-src="${alt!.source}" cx="${x(a)}" cy="${y(b)}" r="14"><title>${a} · ${esc(labels[g])} · ${esc(alt!.label)} ${b.toFixed(1)}</title></circle>`).join("");
   }
   for (const g of ["M", "F"] as const) {
     const p = pts[g];
     if (!p.length) continue;
     svg += `<polyline class="line ${g.toLowerCase()}" points="${p.map(([a, b]) => `${x(a)},${y(b)}`).join(" ")}"/>`;
     for (const [a, b] of p) {
-      svg += `<circle class="dot ${g.toLowerCase()}" cx="${x(a)}" cy="${y(b)}" r="4"><title>${a} · ${esc(labels[g])} ${b.toFixed(1)}</title></circle>`;
+      svg += `<circle class="dot ${g.toLowerCase()}" cx="${x(a)}" cy="${y(b)}" r="4"/>`;
     }
+  }
+  // Drawn last, so the wide click areas sit above every line.
+  for (const g of ["M", "F"] as const) {
+    for (const [a, b] of pts[g]) {
+      svg += `<circle class="hit" data-y="${a}" cx="${x(a)}" cy="${y(b)}" r="14"><title>${a} · ${esc(labels[g])} ${b.toFixed(1)}</title></circle>`;
+    }
+  }
+  for (const g of ["M", "F"] as const) {
+    const p = pts[g];
+    if (!p.length) continue;
     const [la, lb] = p[p.length - 1];
     svg += `<text class="end-label ${g.toLowerCase()}" x="${x(la) + 8}" y="${ends[g] + 4}">${Math.round(lb)}</text>`;
   }

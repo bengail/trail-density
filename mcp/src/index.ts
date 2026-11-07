@@ -22,7 +22,7 @@ const STALE_AFTER = 2, MAX_DELTA_GAP = 2, MIN_FOR_RCI10 = 10;
 
 const INSTRUCTIONS = `Trail Density measures how strong the front of trail and ultra races is, from finisher scores (ITRA Race Score, UTMB Index).
 Main metric: RCI10 (Realized Competition Index, by Travis Loncar / Freetrail) = mean of the top 10 scores minus their population standard deviation, per gender.
-Higher = stronger and more even top 10. Roughly: 900+ is world-class, 850+ elite international, 750–850 strong, below 700 a regional field.
+Higher = stronger and more even top 10. Roughly: 900+ is world-class, 850+ elite international, 750–850 strong, below 750 a regional field.
 Women's scores are converted to the men's scale (Enduraw formulas) so women's and men's RCI can be compared.
 Formats: vertical, short (<30 km), medium (30–60 km), long (60–120 km), ultra (>=120 km).
 The database covers a curated set of elite races (Golden Trail Series, UTMB World Series, WMRA, major US/European races), not every race.
