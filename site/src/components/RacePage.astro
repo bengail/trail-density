@@ -1,10 +1,11 @@
 ---
 import Base from "../layouts/Base.astro";
-import { loadIndex, loadRace, formatRank } from "../lib/data";
+import { loadIndex, loadRace, formatRank, catalogRank } from "../lib/data";
 import { suggest } from "../lib/compare";
 import { t, racePath, rankingsPath, comparePath, methodPath, countryName, flag, fmtNum, fmtDelta, SERIES, SOURCES, type Lang } from "../lib/i18n";
 import { historyChart } from "../lib/charts";
 import { editionView } from "../lib/edition-view";
+import { raceVerdict, trend } from "../lib/verdict";
 import type { Gender } from "../lib/types";
 
 interface Props { lang: Lang; id: string }
@@ -24,9 +25,11 @@ function kpi(g: Gender) {
     value: cur[g]!.rci10!,
     delta: prev ? { d: cur[g]!.rci10! - prev[g]!.rci10!, year: prev.year } : null,
     rank: formatRank(summary, g),
+    catalogRank: catalogRank(summary, g),
   };
 }
 const kpis = { F: kpi("F"), M: kpi("M") };
+const verdict = raceVerdict(lang, kpis);
 
 const km = race.distance_km ?? latest.distance_km;
 const dplus = race.elevation_gain ?? latest.elevation_gain;
@@ -63,8 +66,10 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
                 <>
                   <p class="kpi-value num">{fmtNum(lang, k.value, 1)}</p>
                   <p class="kpi-ctx">
-                    {k.delta && <span class={`delta ${k.delta.d >= 0 ? "up" : "down"} num`}>{s.vs_last(fmtDelta(lang, k.delta.d), k.delta.year)}</span>}
-                    {k.rank && race.format && <span class="muted">{s.rank_in_format(k.rank.rank, k.rank.of, s.formats[race.format])}</span>}
+                    {k.delta && <span class={`delta ${trend(k.delta.d)} num`}>{s.vs_last(fmtDelta(lang, k.delta.d), k.delta.year)}</span>}
+                    {k.rank && race.format
+                      ? <span class="muted">{s.rank_in_format(k.rank.rank, k.rank.of, s.formats[race.format])}</span>
+                      : k.catalogRank && <span class="muted">{s.rank_in_catalog(k.catalogRank.rank, k.catalogRank.of)}</span>}
                   </p>
                 </>
               ) : <p class="muted">{s.not_enough}</p>}
@@ -72,6 +77,7 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
           );
         })}
       </div>
+      {verdict && <p class="race-verdict">{verdict}</p>}
       <p class="help muted">{s.rci_help} <a href={methodPath(lang)}>{s.learn_more}</a></p>
     </section>
 
@@ -132,16 +138,26 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
       race ??= await fetch(`/data/races/${root!.dataset.race}.json`).then(r => r.json());
       const ed = race!.editions.find(e => e.year === year);
       if (!ed) return;
-      root!.querySelector("[data-edition]")!.innerHTML = editionView(lang, ed, source && ed.sources[source] ? source : ed.source);
+      const shown = source && ed.sources[source] ? source : ed.source;
+      root!.querySelector("[data-edition]")!.innerHTML = editionView(lang, ed, shown);
       root!.querySelector("[data-year]")!.textContent = String(year);
       root!.querySelectorAll<HTMLElement>("button.year").forEach(b => b.setAttribute("aria-selected", String(Number(b.dataset.y) === year)));
       root!.querySelectorAll<HTMLButtonElement>("button.src").forEach(b => {
-        b.setAttribute("aria-pressed", String(b.dataset.src === source));
+        b.setAttribute("aria-pressed", String(b.dataset.src === shown));
         b.disabled = !ed.sources[b.dataset.src as Source];
       });
     }
     root.querySelectorAll<HTMLElement>("button.year").forEach(b => b.addEventListener("click", () => { year = Number(b.dataset.y); render(); }));
     root.querySelectorAll<HTMLElement>("button.src").forEach(b => b.addEventListener("click", () => { source = b.dataset.src as Source; render(); }));
+    // A point on the history chart opens that edition, on the source the point belongs to.
+    document.querySelector(".page")?.addEventListener("click", e => {
+      const point = (e.target as Element).closest<SVGElement>(".hit[data-y]");
+      if (!point) return;
+      year = Number(point.dataset.y);
+      source = point.dataset.src as Source | undefined;
+      render();
+      root!.scrollIntoView();
+    });
   }
 </script>
 
@@ -167,8 +183,9 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
   .kpi-ctx { display: flex; flex-direction: column; gap: 2px; font-size: 13px; }
   .delta.up { color: var(--women); }
   .kpi.m .delta.up { color: var(--men); }
-  .delta.down { color: var(--text-2); }
-  .help { font-size: 13px; margin: 14px 0 0; max-width: 680px; }
+  .delta.down, .delta.flat { color: var(--text-2); }
+  .race-verdict { font-size: 17px; font-weight: 600; line-height: 1.4; margin: 16px 0 0; max-width: 680px; text-wrap: pretty; }
+  .help { font-size: 13px; margin: 14px 0 0; max-width: 68ch; }
 
   .card h2 { font-size: 19px; font-weight: 800; }
   .card h3 { font-size: 16px; font-weight: 800; }
@@ -176,7 +193,14 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
   .sub { font-size: 13px; margin: 4px 0 10px; }
   .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
 
-  .edition { display: grid; gap: 16px; }
+  .edition { display: grid; gap: 16px; scroll-margin-top: 68px; }
+  .ed-rci { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 20px; margin: 0; font-size: 14px; font-weight: 600; }
+  .ed-rci-label { font-size: 12px; font-weight: 500; color: var(--text-2); }
+  .ed-rci-item::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 6px; border-radius: 1px; }
+  .ed-rci-item.f::before { background: var(--women); }
+  .ed-rci-item.m::before { background: var(--men); }
+  .ed-rci strong { font-size: 19px; font-weight: 600; margin-left: 2px; }
+  .ed-rci .muted { font-size: 13px; font-weight: 500; }
   .ed-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
   .ed-head h2 { font-size: 22px; font-weight: 800; }
   .sources { display: inline-flex; border: 1px solid var(--border); border-radius: var(--radius-s); overflow: hidden; }
@@ -214,8 +238,10 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
   .top td.num, .top th:not(:nth-child(2)) { text-align: right; }
   .top td:first-child, .top th:first-child { text-align: left; width: 2.2em; color: var(--text-2); }
   .top .who { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0; width: 100%; }
+  @media (max-width: 560px) { .top .who { white-space: normal; overflow-wrap: anywhere; } }
   .top .flag { margin-right: 6px; }
   .top .idx { font-weight: 600; }
+  .top .raw { color: var(--text-2); }
   .top.f .idx { color: var(--women); }
   .top.m .idx { color: var(--men); }
   .source { font-size: 12px; margin: 12px 0 0; }

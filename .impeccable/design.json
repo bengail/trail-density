@@ -195,7 +195,7 @@
       "Do laisser un grand chiffre en mono porter la page lorsqu'il répond à sa question.",
       "Do accompagner chaque chiffre d'un repère et d'une phrase simple qui l'interprète.",
       "Do garder un ton personnel, libre et simple, comme une note prise pour des amis.",
-      "Do tenir les filets et bordures à 1 px et les angles à 2 ou 3 px.",
+      "Do tenir les filets et bordures à 1 px et les angles à 2 ou 3 px. Seul le liseré de genre des cartes RCI monte à 4 px.",
       "Do vérifier chaque écran sur téléphone, en clair et en sombre."
     ],
     "donts": [

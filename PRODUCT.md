@@ -40,6 +40,7 @@ Le seul endroit qui classe les courses de trail a posteriori selon le niveau ré
 - Hommes et femmes côte à côte, jamais l'un « par défaut ». Les scores féminins sont ramenés à l'échelle masculine avec les formules d'Enduraw.
 - Les index ITRA et UTMB ne sont pas comparables entre eux. Aucune conversion n'est faite, et les deux restent visibles sur les fiches course.
 - Comparer ne s'ouvre jamais vide et garde sa sélection dans l'URL.
+- Paliers du RCI10 : 900 et plus = niveau mondial, 850 et plus = élite internationale, 750 et plus = fort, moins de 750 = régional. Sous 15 points d'écart, un RCI est dit stable, car les index ITRA et UTMB sont peu précis.
 - Le site classe a posteriori : pas de RCI prévisionnel à ce jour, par décision du 2026-11-04.
 - Le catalogue couvre une sélection de courses, pas toutes les courses. Certaines éditions ont des résultats partiels.
 

@@ -143,7 +143,7 @@ Une palette de terre et de papier, où les deux seules couleurs vives portent un
 - **Soft Ink** : le texte secondaire.
 - **Faded Ink** : les rangs, axes et métadonnées. À réserver aux éléments non essentiels.
 
-Le mode sombre reprend les mêmes rôles sur un papier de nuit brun (tokens `night-*`). Les couleurs de genre y gagnent en clarté. Le thème suit le système sauf choix explicite.
+Le mode sombre reprend les mêmes rôles sur un papier de nuit brun (tokens `night-*`). Les couleurs de genre y gagnent en clarté. Le thème suit le réglage du système, le site n'a pas de sélecteur.
 
 ### Named Rules
 
@@ -249,7 +249,7 @@ Le cœur du site : rang en Faded Ink, nom sur une ligne avec ellipse, miniature,
 - **Do** laisser un grand chiffre en mono porter la page lorsqu'il répond à sa question.
 - **Do** accompagner chaque chiffre d'un repère et d'une phrase simple qui l'interprète.
 - **Do** garder un ton personnel, libre et simple, comme une note prise pour des amis.
-- **Do** tenir les filets et bordures à 1 px et les angles à 2 ou 3 px.
+- **Do** tenir les filets et bordures à 1 px et les angles à 2 ou 3 px. Seul le liseré de genre des cartes RCI monte à 4 px.
 - **Do** vérifier chaque écran sur téléphone, en clair et en sombre.
 
 ### Don't:

@@ -24,15 +24,22 @@ export function latestRci(race: RaceSummary, g: "M" | "F") {
   return race.editions.find(e => e[g]?.rci10 != null) ?? null;
 }
 
-// Rank of a race among races of the same format, each taken at its latest edition with an RCI10.
-export function formatRank(race: RaceSummary, g: "M" | "F") {
-  if (!race.format) return null;
+// Rank of a race among peers, each taken at its latest edition with an RCI10.
+function rankAmong(race: RaceSummary, g: "M" | "F", isPeer: (r: RaceSummary) => boolean) {
   const own = latestRci(race, g);
   if (!own) return null;
   const peers = loadIndex().races
-    .filter(r => r.format === race.format)
+    .filter(isPeer)
     .map(r => latestRci(r, g)?.[g]?.rci10)
     .filter((v): v is number => v != null)
     .sort((a, b) => b - a);
   return { rank: peers.indexOf(own[g]!.rci10!) + 1, of: peers.length };
+}
+
+export function formatRank(race: RaceSummary, g: "M" | "F") {
+  return race.format ? rankAmong(race, g, r => r.format === race.format) : null;
+}
+
+export function catalogRank(race: RaceSummary, g: "M" | "F") {
+  return rankAmong(race, g, () => true);
 }

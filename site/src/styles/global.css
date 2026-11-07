@@ -121,6 +121,7 @@ h1, h2, h3 { margin: 0; line-height: 1.15; }
 .chart .line.f, .chart .dot.f { stroke: var(--women); }
 .chart .dot { fill: var(--surface); stroke-width: 2.5; }
 .chart .hit { fill: transparent; }
+.chart .hit[data-y] { cursor: pointer; }
 .chart .end-label { font: 600 12px var(--mono); }
 @media (max-width: 600px) {          /* charts shrink to ~half their viewBox: keep text readable */
   .chart .tick { font-size: 20px; }
