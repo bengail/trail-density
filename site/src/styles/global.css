@@ -1,4 +1,4 @@
-/* Tokens from the claude_design handoff (docs/guidelines.md). Women = moss, men = clay, everywhere. */
+/* Design tokens (DESIGN.md, docs/guidelines.md). Women = blue, men = clay, everywhere. */
 :root {
   --bg: oklch(0.975 0.006 75);
   --surface: oklch(0.995 0.003 75);

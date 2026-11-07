@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-07T01:45:53.844098+00:00",
+  "title": "Design System: Trail Density",
+  "extensions": {
+    "colorMeta": {
+      "terracotta": {
+        "role": "primary",
+        "displayName": "Terracotta",
+        "canonical": "oklch(0.6 0.15 45)",
+        "tonalRamp": [
+          "oklch(0.15 0.03 45)",
+          "oklch(0.27 0.066 45)",
+          "oklch(0.39 0.102 45)",
+          "oklch(0.51 0.138 45)",
+          "oklch(0.63 0.126 45)",
+          "oklch(0.75 0.09 45)",
+          "oklch(0.86 0.057 45)",
+          "oklch(0.95 0.03 45)"
+        ]
+      },
+      "lake-blue": {
+        "role": "secondary",
+        "displayName": "Lake Blue",
+        "canonical": "oklch(0.52 0.13 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.026 250)",
+          "oklch(0.27 0.057 250)",
+          "oklch(0.39 0.088 250)",
+          "oklch(0.51 0.12 250)",
+          "oklch(0.63 0.109 250)",
+          "oklch(0.75 0.078 250)",
+          "oklch(0.86 0.049 250)",
+          "oklch(0.95 0.026 250)"
+        ]
+      },
+      "warm-paper": {
+        "role": "neutral",
+        "displayName": "Warm Paper",
+        "canonical": "oklch(0.975 0.006 75)",
+        "tonalRamp": [
+          "oklch(0.15 0.002 75)",
+          "oklch(0.27 0.005 75)",
+          "oklch(0.39 0.008 75)",
+          "oklch(0.51 0.011 75)",
+          "oklch(0.63 0.01 75)",
+          "oklch(0.75 0.007 75)",
+          "oklch(0.86 0.005 75)",
+          "oklch(0.95 0.002 75)"
+        ]
+      },
+      "bark-ink": {
+        "role": "neutral",
+        "displayName": "Bark Ink",
+        "canonical": "oklch(0.24 0.02 55)",
+        "tonalRamp": [
+          "oklch(0.15 0.004 55)",
+          "oklch(0.27 0.009 55)",
+          "oklch(0.39 0.014 55)",
+          "oklch(0.51 0.018 55)",
+          "oklch(0.63 0.017 55)",
+          "oklch(0.75 0.012 55)",
+          "oklch(0.86 0.008 55)",
+          "oklch(0.95 0.004 55)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Titres de page."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "RCI principal d'une fiche course."
+      }
+    },
+    "shadows": [
+      {
+        "name": "floating-menu",
+        "value": "0 6px 20px oklch(0 0 0 / 0.08)",
+        "purpose": "Menu de suggestions de Comparer uniquement."
+      }
+    ],
+    "motion": [],
+    "breakpoints": [
+      {
+        "name": "compact",
+        "value": "560px"
+      },
+      {
+        "name": "nav",
+        "value": "700px"
+      },
+      {
+        "name": "wide-gutter",
+        "value": "720px"
+      },
+      {
+        "name": "pair",
+        "value": "860px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Segmented Button",
+      "kind": "button",
+      "refersTo": "segmented-button",
+      "description": "Filtre à choix unique, sans accent.",
+      "html": "<div class=\"ds-seg\"><button>Tous</button><button aria-pressed=\"true\">Ultra</button></div>",
+      "css": ".ds-seg{display:inline-flex;border:1px solid var(--border);border-radius:var(--radius-s);overflow:hidden}.ds-seg button{font:600 13px var(--font);padding:7px 13px;border:0;background:var(--surface);color:var(--text-2);cursor:pointer}.ds-seg button+button{border-left:1px solid var(--border)}.ds-seg button:hover{color:var(--text)}.ds-seg button:focus-visible{outline:2px solid var(--text);outline-offset:-2px}.ds-seg button[aria-pressed=true]{background:var(--text);color:var(--bg)}"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Étiquette ou lien discret.",
+      "html": "<a class=\"ds-chip\" href=\"#\">Golden Trail</a>",
+      "css": ".ds-chip{display:inline-flex;padding:3px 10px;border:1px solid var(--border);border-radius:var(--radius-s);font-size:12.5px;font-weight:600;color:var(--text-2);background:var(--surface);text-decoration:none}.ds-chip:hover{color:var(--text);border-color:var(--text-3)}.ds-chip:focus-visible{outline:2px solid var(--text)}"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Surface de base, plate, à bordure fine.",
+      "html": "<div class=\"ds-card\">Contenu</div>",
+      "css": ".ds-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px}"
+    },
+    {
+      "name": "Index Input",
+      "kind": "input",
+      "description": "Champ d'index de la page Et moi ?, en mono.",
+      "html": "<input class=\"ds-input\" type=\"number\" value=\"750\">",
+      "css": ".ds-input{width:6.5em;font:600 22px var(--mono);color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-s);padding:6px 10px}.ds-input:focus-visible{outline:2px solid var(--text);outline-offset:-1px}"
+    },
+    {
+      "name": "Site Navigation",
+      "kind": "nav",
+      "description": "Bandeau papier avec marque et liens.",
+      "html": "<nav class=\"ds-nav\"><strong>Trail Density</strong><a href=\"#\">Classement</a><a href=\"#\">Records</a></nav>",
+      "css": ".ds-nav{display:flex;gap:18px;align-items:center;font-size:14px;font-weight:600}.ds-nav a{color:var(--text-2);text-decoration:none}.ds-nav a:hover{color:var(--text)}.ds-nav a:focus-visible{outline:2px solid var(--text)}"
+    },
+    {
+      "name": "Headline Figure",
+      "kind": "custom",
+      "description": "Le grand RCI, moment dossard du site.",
+      "html": "<div class=\"ds-fig\">912</div>",
+      "css": ".ds-fig{font:600 56px/1.05 var(--mono);letter-spacing:-.03em;color:var(--men);font-variant-numeric:tabular-nums}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Le carnet de course",
+    "overview": "Trail Density ressemble au carnet d'un coureur curieux : une page de papier chaud, des colonnes tenues avec soin, des chiffres bien alignés et une phrase écrite pour dire ce qu'ils signifient. Le site est personnel et libre. Il partage une passion, il ne vend ni méthode ni dépassement de soi.\n\nDu dossard, il ne garde qu'une idée : le côté imprimé et le plaisir d'un beau chiffre. Le grand RCI en mono d'une fiche course est l'objet graphique du site. Autour de lui, tout reste calme et simple.\n\nLa référence à rejeter est l'imaginaire de la performance virile : « go muscu », « no pain no gain », publicité pour déodorant. Pas de noir et néon, pas d'italiques agressives, pas de majuscules qui crient, pas de vocabulaire de guerrier.",
+    "keyCharacteristics": [
+      "Papier chaud, encre brune et bordures fines plutôt que surfaces lourdes",
+      "Chiffres en mono, assez beaux pour porter la page seuls",
+      "Densité tranquille : beaucoup d'information, peu d'ornement",
+      "Femmes et hommes à égalité, chacun avec sa couleur",
+      "Angles nets et pages plates, comme une feuille"
+    ],
+    "rules": [
+      {
+        "name": "The Two Runners Rule",
+        "body": "Le bleu veut dire femmes et la terre cuite veut dire hommes. Une couleur de genre n'est jamais décorative, et aucune autre donnée ne les emprunte.",
+        "section": "colors"
+      },
+      {
+        "name": "The Side by Side Rule",
+        "body": "Femmes et hommes s'affichent côte à côte. Aucun des deux n'est présenté par défaut.",
+        "section": "colors"
+      },
+      {
+        "name": "The Mono Numbers Rule",
+        "body": "Tout chiffre comparable est en IBM Plex Mono, avec des chasses tabulaires, pour que les colonnes s'alignent.",
+        "section": "typography"
+      },
+      {
+        "name": "The Quiet Capitals Rule",
+        "body": "Les majuscules restent petites, espacées et en mono. Un grand titre en capitales crierait, et le carnet ne crie pas.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Paper Rule",
+        "body": "Pas d'ombres. Seul un élément qui flotte réellement au-dessus de la page peut en porter une, très légère.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Useful Motion Rule",
+        "body": "L'animation reste rare et discrète : elle n'est permise que si elle aide à comprendre un changement. Elle n'est jamais décorative, et elle respecte `prefers-reduced-motion`. Aucun composant n'a de transition aujourd'hui.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do laisser un grand chiffre en mono porter la page lorsqu'il répond à sa question.",
+      "Do accompagner chaque chiffre d'un repère et d'une phrase simple qui l'interprète.",
+      "Do garder un ton personnel, libre et simple, comme une note prise pour des amis.",
+      "Do tenir les filets et bordures à 1 px et les angles à 2 ou 3 px.",
+      "Do vérifier chaque écran sur téléphone, en clair et en sombre."
+    ],
+    "donts": [
+      "Don't employer l'imaginaire de la performance virile : « go muscu », « no pain no gain », publicité pour déodorant.",
+      "Don't utiliser le bleu ou la terre cuite pour autre chose que le genre, en dehors des touches d'accent existantes.",
+      "Don't ajouter des ombres, sauf pour un élément qui flotte réellement.",
+      "Don't animer pour décorer.",
+      "Don't utiliser des pilules ou de grands arrondis.",
+      "Don't montrer l'un des deux genres par défaut."
+    ]
+  }
+}
