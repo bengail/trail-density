@@ -38,7 +38,7 @@ const alternate = { fr: mePath("fr"), en: mePath("en") };
           <button type="button" data-gender="M" aria-pressed="false">{s.men}</button>
         </div>
       </div>
-      <div class="seg" role="group">
+      <div class="seg" role="group" aria-label={s.format_filter}>
         <button type="button" data-format="all" aria-pressed="true">{s.all_formats}</button>
         {formats.map(f => <button type="button" data-format={f} aria-pressed="false">{s.format_label[f]}</button>)}
       </div>

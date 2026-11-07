@@ -7,7 +7,7 @@
       "terracotta": {
         "role": "primary",
         "displayName": "Terracotta",
-        "canonical": "oklch(0.6 0.15 45)",
+        "canonical": "oklch(0.53 0.15 45)",
         "tonalRamp": [
           "oklch(0.15 0.03 45)",
           "oklch(0.27 0.066 45)",

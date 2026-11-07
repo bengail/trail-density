@@ -28,7 +28,7 @@ const femaleToMale = (x: number) => (-0.000466 * x + 1.532) * x;
 // Strip of the 10 scores with the mean and mean − spread marked.
 const lo = Math.floor((Math.min(...top) - 20) / 10) * 10, hi = Math.ceil((Math.max(...top) + 10) / 10) * 10;
 const W = 640, H = 92, x = (v: number) => 20 + ((v - lo) / (hi - lo)) * (W - 40);
-const strip = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">
+const strip = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${lang === "fr" ? "Les 10 meilleurs scores, avec la moyenne et le RCI" : "The 10 top scores, with the mean and the RCI"}">
   <line class="grid" x1="20" x2="${W - 20}" y1="40" y2="40"/>
   ${top.map(v => `<circle class="dot m" cx="${x(v)}" cy="40" r="6"><title>${v}</title></circle>`).join("")}
   <line class="marker" x1="${x(mean)}" x2="${x(mean)}" y1="14" y2="66"/>
@@ -198,7 +198,7 @@ const fr = lang === "fr";
   h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; letter-spacing: -0.02em; }
   h2 { font-size: 21px; margin-bottom: 10px; }
   .lede { margin: 8px 0 0; }
-  p { margin: 0 0 12px; }
+  p { margin: 0 0 12px; max-width: 70ch; }
   .big { font-size: 19px; font-weight: 600; line-height: 1.45; }
   .formula {
     font-size: 15px; padding: 12px 14px; background: var(--surface-2);

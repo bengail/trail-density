@@ -15,7 +15,7 @@ const formats = ["vertical", "short", "medium", "long", "ultra"] as const;
       <h1>{s.records_title}</h1>
       <p class="muted lede">{s.records_sub}</p>
     </section>
-    <div class="seg" role="group">
+    <div class="seg" role="group" aria-label={s.format_filter}>
       <button type="button" data-format="all" aria-pressed="true">{s.all_formats}</button>
       {formats.map(f => <button type="button" data-format={f} aria-pressed="false">{s.format_label[f]}</button>)}
     </div>
