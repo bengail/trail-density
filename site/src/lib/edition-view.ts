@@ -12,10 +12,19 @@ function esc(s: string) {
 // Women's scores are converted to the men's scale: rci, curve, depth and gap use the converted values.
 const mapped = (b: GenderBlock) => b.normalization !== "none";
 
-function rciLine(lang: Lang, g: Gender, b: GenderBlock | undefined) {
+// The import flags an edition with far fewer finishers than usual. It may be partial, or simply small.
+function partialResults(warnings: string[]) {
+  for (const w of warnings) {
+    const m = w.match(/^(\d+) finishers vs median (\d+) for other editions — partial results\?/);
+    if (m) return { n: Number(m[1]), usual: Number(m[2]) };
+  }
+  return null;
+}
+
+function rciLine(lang: Lang, g: Gender, b: GenderBlock | undefined, partial: boolean) {
   const s = t(lang);
   const value = b?.rci10 == null
-    ? `<span class="muted">${s.no_rci}</span>`
+    ? `<span class="muted">${partial ? s.no_rci_partial : s.no_rci}</span>`
     : `<strong class="num">${fmtNum(lang, b.rci10, 1)}</strong>`;
   return `<span class="ed-rci-item ${g.toLowerCase()}">${g === "F" ? s.women : s.men} ${value}</span>`;
 }
@@ -80,10 +89,12 @@ export function editionView(lang: Lang, e: Edition, source: Source = e.source) {
   const block = e.sources[source];
   if (!block) return `<p class="card muted">${s.no_source(SOURCES[source] ?? source)}</p>`;
   const blocks = { M: block.M, F: block.F };
+  const partial = partialResults(block.warnings ?? []);
   return `
     <div class="ed-summary">
-      <p class="ed-rci"><span class="ed-rci-label num">RCI10 · ${SOURCES[source] ?? source}</span>${rciLine(lang, "F", block.F)}${rciLine(lang, "M", block.M)}</p>
+      <p class="ed-rci"><span class="ed-rci-label num">RCI10 · ${SOURCES[source] ?? source}</span>${rciLine(lang, "F", block.F, !!partial)}${rciLine(lang, "M", block.M, !!partial)}</p>
       ${otherRci(lang, blocks)}
+      ${partial ? `<p class="ed-partial">${s.partial(fmtNum(lang, partial.n), fmtNum(lang, partial.usual))}</p>` : ""}
     </div>
     <div class="ed-grid">
       <section class="card density-card">
@@ -91,8 +102,9 @@ export function editionView(lang: Lang, e: Edition, source: Source = e.source) {
         <p class="sub muted">${s.density_sub}</p>
         <div class="legend"><span class="f">${s.women}</span><span class="m">${s.men}</span></div>
         ${densityChart(blocks, labels, s.density)}
+        <p class="chart-readout num" data-readout aria-live="polite"></p>
       </section>
-      <section class="card field-card">
+      ${partial ? "" : `<section class="card field-card">
         <h3>${s.field}</h3>
         <p class="sub muted">${s.field_sub}</p>
         <div class="legend mirror"><span class="m">${s.men}</span><span class="f">${s.women}</span></div>
@@ -102,7 +114,7 @@ export function editionView(lang: Lang, e: Edition, source: Source = e.source) {
         <h3>${s.depth}</h3>
         ${block.F && mapped(block.F) ? `<p class="sub muted">${s.depth_note}</p>` : ""}
         <div class="depth-grid">${depthBlock(lang, "F", block.F)}${depthBlock(lang, "M", block.M)}</div>
-      </section>
+      </section>`}
     </div>
     <section class="card">
       <h3>${s.top10}</h3>

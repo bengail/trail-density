@@ -123,6 +123,7 @@ p { text-wrap: pretty; }
 .chart .line.m, .chart .dot.m { stroke: var(--men); }
 .chart .line.f, .chart .dot.f { stroke: var(--women); }
 .chart .dot { fill: var(--surface); stroke-width: 2.5; }
+.chart-narrow { display: none; }
 .chart .hit { fill: transparent; }
 .chart .hit[data-y] { cursor: pointer; }
 .chart .end-label { font: 600 12px var(--mono); }
@@ -130,6 +131,15 @@ p { text-wrap: pretty; }
   .chart .tick { font-size: 20px; }
   .chart .end-label { font-size: 22px; }
 }
+/* The phone drawing is 360 units wide, so these sizes land near 11 and 12.5 px on a 390 px screen. */
+@media (max-width: 480px) {
+  .chart-narrow .chart .tick { font-size: 13px; }
+  .chart-narrow .chart .end-label { font-size: 14.5px; }
+  .chart-wide { display: none; }
+  .chart-narrow { display: block; }
+}
+.chart-readout { margin: 6px 0 0; font-size: 13px; color: var(--text-2); }
+.chart-readout:empty { display: none; }
 .chart .end-label.m { fill: var(--men); }
 .chart .end-label.f { fill: var(--women); }
 .chart .bar.m { fill: var(--men); }
