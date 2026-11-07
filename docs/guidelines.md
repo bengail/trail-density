@@ -50,7 +50,7 @@ Tokens (OKLCH) :
 | Bordure | `oklch(0.89 0.012 70)` |
 | Texte | `oklch(0.24 0.02 55)` |
 | Texte secondaire | `oklch(0.52 0.02 60)` |
-| Terre cuite (hommes, accent) | `oklch(0.6 0.15 45)`, teinte `oklch(0.94 0.03 45)` |
+| Terre cuite (hommes, accent) | `oklch(0.53 0.15 45)`, teinte `oklch(0.94 0.03 45)` |
 | Bleu (femmes) | `oklch(0.52 0.13 250)`, teinte `oklch(0.94 0.025 250)` |
 
 ## Chiffres

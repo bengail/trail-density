@@ -1,7 +1,8 @@
 // The per-edition part of a race page, as an HTML string: rendered at build time for the latest edition
 // and re-rendered in the browser when another year is picked.
 import { densityChart, fieldChart } from "./charts";
-import { t, fmtNum, fmtTime, flag, displayName, SOURCES, type Lang } from "./i18n";
+import { t, fmtNum, fmtTime, flag, SOURCES, type Lang } from "./i18n";
+import { displayName } from "./names";
 import type { Edition, GenderBlock, Gender, Source } from "./types";
 
 function esc(s: string) {
@@ -17,6 +18,21 @@ function rciLine(lang: Lang, g: Gender, b: GenderBlock | undefined) {
     ? `<span class="muted">${s.no_rci}</span>`
     : `<strong class="num">${fmtNum(lang, b.rci10, 1)}</strong>`;
   return `<span class="ed-rci-item ${g.toLowerCase()}">${g === "F" ? s.women : s.men} ${value}</span>`;
+}
+
+function otherRci(lang: Lang, blocks: { F?: GenderBlock; M?: GenderBlock }) {
+  const s = t(lang);
+  const levels = ["rci3", "rci5", "rci20"] as const;
+  const rows = (["F", "M"] as const).filter(g => blocks[g]).map(g => `
+    <tr><th scope="row">${g === "F" ? s.women : s.men}</th>${levels.map(k => `<td class="num">${fmtNum(lang, blocks[g]![k], 1)}</td>`).join("")}</tr>`).join("");
+  return `
+    <details class="ed-more">
+      <summary>${s.other_rci}</summary>
+      <table>
+        <thead><tr><td></td><th scope="col">RCI3</th><th scope="col">RCI5</th><th scope="col">RCI20</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </details>`;
 }
 
 function depthBlock(lang: Lang, g: Gender, b: GenderBlock | undefined) {
@@ -65,26 +81,29 @@ export function editionView(lang: Lang, e: Edition, source: Source = e.source) {
   if (!block) return `<p class="card muted">${s.no_source(SOURCES[source] ?? source)}</p>`;
   const blocks = { M: block.M, F: block.F };
   return `
-    <p class="ed-rci"><span class="ed-rci-label num">RCI10 · ${SOURCES[source] ?? source}</span>${rciLine(lang, "F", block.F)}${rciLine(lang, "M", block.M)}</p>
+    <div class="ed-summary">
+      <p class="ed-rci"><span class="ed-rci-label num">RCI10 · ${SOURCES[source] ?? source}</span>${rciLine(lang, "F", block.F)}${rciLine(lang, "M", block.M)}</p>
+      ${otherRci(lang, blocks)}
+    </div>
     <div class="ed-grid">
-      <section class="card">
+      <section class="card density-card">
         <h3>${s.density}</h3>
         <p class="sub muted">${s.density_sub}</p>
         <div class="legend"><span class="f">${s.women}</span><span class="m">${s.men}</span></div>
-        ${densityChart(blocks, labels)}
+        ${densityChart(blocks, labels, s.density)}
       </section>
-      <section class="card">
+      <section class="card field-card">
         <h3>${s.field}</h3>
         <p class="sub muted">${s.field_sub}</p>
         <div class="legend mirror"><span class="m">${s.men}</span><span class="f">${s.women}</span></div>
-        ${fieldChart(blocks)}
+        ${fieldChart(blocks, s.field)}
+      </section>
+      <section class="card">
+        <h3>${s.depth}</h3>
+        ${block.F && mapped(block.F) ? `<p class="sub muted">${s.depth_note}</p>` : ""}
+        <div class="depth-grid">${depthBlock(lang, "F", block.F)}${depthBlock(lang, "M", block.M)}</div>
       </section>
     </div>
-    <section class="card">
-      <h3>${s.depth}</h3>
-      ${block.F && mapped(block.F) ? `<p class="sub muted">${s.depth_note}</p>` : ""}
-      <div class="depth-grid">${depthBlock(lang, "F", block.F)}${depthBlock(lang, "M", block.M)}</div>
-    </section>
     <section class="card">
       <h3>${s.top10}</h3>
       <div class="top-grid">${topTable(lang, "F", block.F)}${topTable(lang, "M", block.M)}</div>

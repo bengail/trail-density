@@ -10,15 +10,15 @@ colors:
   chart-grid: "oklch(0.91 0.01 70)"
   bark-ink: "oklch(0.24 0.02 55)"
   soft-ink: "oklch(0.52 0.02 60)"
-  faded-ink: "oklch(0.62 0.02 60)"
-  terracotta: "oklch(0.6 0.15 45)"
+  faded-ink: "oklch(0.54 0.02 60)"
+  terracotta: "oklch(0.53 0.15 45)"
   terracotta-tint: "oklch(0.94 0.03 45)"
   lake-blue: "oklch(0.52 0.13 250)"
   lake-blue-tint: "oklch(0.94 0.025 250)"
   compare-ink: "oklch(0.3 0.02 55)"
-  compare-green: "oklch(0.58 0.12 165)"
+  compare-green: "oklch(0.5 0.12 165)"
   compare-magenta: "oklch(0.55 0.18 340)"
-  compare-ochre: "oklch(0.7 0.14 85)"
+  compare-ochre: "oklch(0.5 0.11 85)"
   night-paper: "oklch(0.2 0.012 60)"
   night-page: "oklch(0.24 0.012 60)"
   night-shade: "oklch(0.27 0.012 60)"
@@ -206,7 +206,7 @@ Des outils de carnet : plats, précis et sans effet.
 
 - **Shape :** angles de 2 px, groupés dans une rangée segmentée à bordure fine.
 - **Repos :** Page White et Soft Ink, en Archivo 600 de 13 px.
-- **Actif :** inversion complète en Bark Ink et Warm Paper, sans couleur d'accent.
+- **Actif :** inversion complète en Bark Ink et Warm Paper, sans couleur d'accent. Le bouton plein « Comparer avec… » suit le même couple.
 - **Mobile :** le rembourrage se resserre sous 560 px.
 
 ### Chips

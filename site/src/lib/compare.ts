@@ -89,7 +89,7 @@ function historyPair(lang: Lang, races: Race[]) {
     const chart = seriesChart(races.map((r, i) => ({
       label: r.name, cls: cls(i),
       pts: r.editions.filter(e => e[g]?.rci10 != null).map(e => [e.year, e[g]!.rci10!] as [number, number]).reverse(),
-    })));
+    })), { name: `${g === "F" ? s.women : s.men} · ${s.history}`, fmt: v => fmtNum(lang, v, 1) });
     return `<div class="card"><h3 class="g-title ${g.toLowerCase()}">${g === "F" ? s.women : s.men}</h3>${chart || `<p class="muted">${s.not_enough}</p>`}</div>`;
   }).join("");
 }
@@ -100,7 +100,7 @@ function densityPair(lang: Lang, races: Race[]) {
     const chart = seriesChart(races.map((r, i) => ({
       label: `${r.name} ${latest(r, g)?.ed.year ?? ""}`, cls: cls(i),
       pts: (latest(r, g)?.b.curve ?? []).map((v, k) => [k + 1, v] as [number, number]),
-    })), { yStep: 100, xTicks: [1, 10, 20, 30, 40, 50], dots: false });
+    })), { name: `${g === "F" ? s.women : s.men} · ${s.density}`, fmt: v => fmtNum(lang, v, 0), yStep: 100, xTicks: [1, 10, 20, 30, 40, 50], dots: false });
     return `<div class="card"><h3 class="g-title ${g.toLowerCase()}">${g === "F" ? s.women : s.men}</h3>${chart || `<p class="muted">${s.not_enough}</p>`}</div>`;
   }).join("");
 }
@@ -108,13 +108,13 @@ function densityPair(lang: Lang, races: Race[]) {
 // Metrics × races, women then men; the best value of each row is highlighted.
 function details(lang: Lang, races: Race[]) {
   const s = t(lang);
-  const metrics: { label: string; get: (b: GenderBlock) => number | null; digits: number; lowerIsBetter?: boolean }[] = [
+  const metrics: { label: string; labelF?: string; get: (b: GenderBlock) => number | null; digits: number; lowerIsBetter?: boolean }[] = [
     { label: "RCI3", get: b => b.rci3, digits: 1 },
     { label: "RCI10", get: b => b.rci10, digits: 1 },
     { label: "RCI20", get: b => b.rci20, digits: 1 },
     { label: s.mean10, get: b => b.top_stats?.[10]?.mean ?? null, digits: 1 },
     { label: s.median10, get: b => b.top_stats?.[10]?.median ?? null, digits: 1 },
-    ...["750", "700", "650"].map(th => ({ label: s.above(th), get: (b: GenderBlock) => b.depth[th] ?? null, digits: 0 })),
+    ...["750", "700", "650"].map(th => ({ label: s.above(th), labelF: s.above_mapped(th), get: (b: GenderBlock) => b.depth[th] ?? null, digits: 0 })),
     { label: s.gap, get: b => b.gap_1_10, digits: 1, lowerIsBetter: true },
     { label: s.n_index, get: b => b.n, digits: 0 },
   ];
@@ -126,7 +126,7 @@ function details(lang: Lang, races: Race[]) {
       const vals = blocks.map(l => (l ? m.get(l.b) : null));
       const present = vals.filter((v): v is number => v != null);
       const top = present.length > 1 ? (m.lowerIsBetter ? Math.min(...present) : Math.max(...present)) : null;
-      return `<tr><th scope="row">${m.label}</th>${vals.map(v => `<td class="num${v != null && v === top ? ` best ${g.toLowerCase()}` : ""}">${v == null ? s.no_data : fmtNum(lang, v, m.digits)}</td>`).join("")}</tr>`;
+      return `<tr><th scope="row">${g === "F" ? m.labelF ?? m.label : m.label}</th>${vals.map(v => `<td class="num${v != null && v === top ? ` best ${g.toLowerCase()}` : ""}">${v == null ? s.no_data : fmtNum(lang, v, m.digits)}</td>`).join("")}</tr>`;
     }).join("");
   }).join("");
   return `<div class="table-scroll"><table class="details"><thead>${head}</thead><tbody>${body}</tbody></table></div>`;

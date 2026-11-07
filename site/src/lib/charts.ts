@@ -25,7 +25,7 @@ function yAxis(lo: number, hi: number, step: number, y: (v: number) => number, w
 }
 
 // RCI10 per edition, one line per gender (primary source); a second source, if given, as dashed lines.
-export function historyChart(editions: Edition[], labels: { M: string; F: string }, alt?: { source: string; label: string }, height = 260) {
+export function historyChart(editions: Edition[], labels: { M: string; F: string }, { name, fmt, alt, height = 260 }: { name: string; fmt: (v: number) => string; alt?: { source: string; label: string }; height?: number }) {
   const pts = { M: [] as [number, number][], F: [] as [number, number][] };
   const altPts = { M: [] as [number, number][], F: [] as [number, number][] };
   for (const e of [...editions].sort((a, b) => a.year - b.year)) {
@@ -51,15 +51,15 @@ export function historyChart(editions: Edition[], labels: { M: string; F: string
   }
   // End labels: keep them apart when both genders finish at nearly the same value.
   const ends = Object.fromEntries((["M", "F"] as const).filter(g => pts[g].length).map(g => [g, y(pts[g][pts[g].length - 1][1])]));
-  if (ends.M != null && ends.F != null && Math.abs(ends.M - ends.F) < 16) {
+  if (ends.M != null && ends.F != null && Math.abs(ends.M - ends.F) < 26) {
     const midY = (ends.M + ends.F) / 2, upper = ends.M <= ends.F ? "M" : "F";
-    ends[upper] = midY - 8; ends[upper === "M" ? "F" : "M"] = midY + 8;
+    ends[upper] = midY - 13; ends[upper === "M" ? "F" : "M"] = midY + 13;
   }
   for (const g of ["M", "F"] as const) {
     const p = altPts[g];
     if (!p.length) continue;
     svg += `<polyline class="line alt ${g.toLowerCase()}" points="${p.map(([a, b]) => `${x(a)},${y(b)}`).join(" ")}"/>`;
-    svg += p.map(([a, b]) => `<circle class="hit" data-y="${a}" data-src="${alt!.source}" cx="${x(a)}" cy="${y(b)}" r="14"><title>${a} · ${esc(labels[g])} · ${esc(alt!.label)} ${b.toFixed(1)}</title></circle>`).join("");
+    svg += p.map(([a, b]) => `<circle class="hit" data-y="${a}" data-src="${alt!.source}" cx="${x(a)}" cy="${y(b)}" r="14"><title>${a} · ${esc(labels[g])} · ${esc(alt!.label)} ${fmt(b)}</title></circle>`).join("");
   }
   for (const g of ["M", "F"] as const) {
     const p = pts[g];
@@ -72,7 +72,7 @@ export function historyChart(editions: Edition[], labels: { M: string; F: string
   // Drawn last, so the wide click areas sit above every line.
   for (const g of ["M", "F"] as const) {
     for (const [a, b] of pts[g]) {
-      svg += `<circle class="hit" data-y="${a}" cx="${x(a)}" cy="${y(b)}" r="14"><title>${a} · ${esc(labels[g])} ${b.toFixed(1)}</title></circle>`;
+      svg += `<circle class="hit" data-y="${a}" cx="${x(a)}" cy="${y(b)}" r="14"><title>${a} · ${esc(labels[g])} ${fmt(b)}</title></circle>`;
     }
   }
   for (const g of ["M", "F"] as const) {
@@ -81,11 +81,11 @@ export function historyChart(editions: Edition[], labels: { M: string; F: string
     const [la, lb] = p[p.length - 1];
     svg += `<text class="end-label ${g.toLowerCase()}" x="${x(la) + 8}" y="${ends[g] + 4}">${Math.round(lb)}</text>`;
   }
-  return `<svg class="chart" viewBox="0 0 ${W} ${height}" role="img">${svg}</svg>`;
+  return `<svg class="chart" viewBox="0 0 ${W} ${height}" role="img" aria-label="${esc(name)}">${svg}</svg>`;
 }
 
 // Index of the top 50, rank by rank.
-export function densityChart(blocks: { M?: GenderBlock; F?: GenderBlock }, labels: { M: string; F: string }, height = 260) {
+export function densityChart(blocks: { M?: GenderBlock; F?: GenderBlock }, labels: { M: string; F: string }, name: string, height = 260) {
   const curves = (["M", "F"] as const).filter(g => blocks[g]?.curve.length);
   if (!curves.length) return "";
   const n = Math.max(...curves.map(g => blocks[g]!.curve.length));
@@ -104,11 +104,11 @@ export function densityChart(blocks: { M?: GenderBlock; F?: GenderBlock }, label
     svg += `<polyline class="line ${cls}" points="${c.map((v, i) => `${x(i + 1)},${y(v)}`).join(" ")}"/>`;
     svg += c.map((v, i) => `<circle class="hit" cx="${x(i + 1)}" cy="${y(v)}" r="5"><title>${esc(labels[g])} · ${i + 1} · ${v}</title></circle>`).join("");
   }
-  return `<svg class="chart" viewBox="0 0 ${W} ${height}" role="img">${svg}</svg>`;
+  return `<svg class="chart" viewBox="0 0 ${W} ${height}" role="img" aria-label="${esc(name)}">${svg}</svg>`;
 }
 
 // Mirrored histogram of the whole field: men to the left, women to the right, in % of each field.
-export function fieldChart(blocks: { M?: GenderBlock; F?: GenderBlock }, height = 300) {
+export function fieldChart(blocks: { M?: GenderBlock; F?: GenderBlock }, name: string, height = 300) {
   const gs = (["M", "F"] as const).filter(g => blocks[g]?.n);
   if (!gs.length) return "";
   const h = blocks[gs[0]]!.hist;
@@ -137,7 +137,7 @@ export function fieldChart(blocks: { M?: GenderBlock; F?: GenderBlock }, height 
       svg += `<rect class="bar ${g.toLowerCase()}" x="${xx}" y="${yy + 1}" width="${len}" height="${Math.max(1, rowH - 2)}" rx="2"><title>${from}–${from + h.step - 1} · ${(v * 100).toFixed(1)} %</title></rect>`;
     }
   }
-  return `<svg class="chart" viewBox="0 0 ${W} ${height}" role="img">${svg}</svg>`;
+  return `<svg class="chart" viewBox="0 0 ${W} ${height}" role="img" aria-label="${esc(name)}">${svg}</svg>`;
 }
 
 // Several races on one chart (Compare page). Each series gets a colour class (.c1 … .c4).
@@ -155,7 +155,7 @@ function spread(ys: number[], gap: number) {
 }
 
 // x = a number (year or rank), y = a score; lines with dots when there are few points.
-export function seriesChart(series: Series[], { xStep = 1, yStep = 50, xTicks, height = 260, dots = true }: { xStep?: number; yStep?: number; xTicks?: number[]; height?: number; dots?: boolean } = {}) {
+export function seriesChart(series: Series[], { name, fmt, xStep = 1, yStep = 50, xTicks, height = 260, dots = true }: { name: string; fmt: (v: number) => string; xStep?: number; yStep?: number; xTicks?: number[]; height?: number; dots?: boolean }) {
   const used = series.filter(s => s.pts.length);
   const all = used.flatMap(s => s.pts);
   if (all.length < 2) return "";
@@ -174,11 +174,11 @@ export function seriesChart(series: Series[], { xStep = 1, yStep = 50, xTicks, h
     svg += `<polyline class="line ${s.cls}" points="${s.pts.map(([a, b]) => `${x(a)},${y(b)}`).join(" ")}"/>`;
     for (const [a, b] of s.pts) {
       svg += dots
-        ? `<circle class="dot ${s.cls}" cx="${x(a)}" cy="${y(b)}" r="3.5"><title>${esc(s.label)} · ${a} · ${b.toFixed(1)}</title></circle>`
-        : `<circle class="hit" cx="${x(a)}" cy="${y(b)}" r="5"><title>${esc(s.label)} · ${a} · ${b.toFixed(1)}</title></circle>`;
+        ? `<circle class="dot ${s.cls}" cx="${x(a)}" cy="${y(b)}" r="3.5"><title>${esc(s.label)} · ${a} · ${fmt(b)}</title></circle>`
+        : `<circle class="hit" cx="${x(a)}" cy="${y(b)}" r="5"><title>${esc(s.label)} · ${a} · ${fmt(b)}</title></circle>`;
     }
     const [la, lb] = s.pts[s.pts.length - 1];
     svg += `<text class="end-label ${s.cls}" x="${x(la) + 8}" y="${ends[k] + 4}">${Math.round(lb)}</text>`;
   });
-  return `<svg class="chart" viewBox="0 0 ${W} ${height}" role="img">${svg}</svg>`;
+  return `<svg class="chart" viewBox="0 0 ${W} ${height}" role="img" aria-label="${esc(name)}">${svg}</svg>`;
 }

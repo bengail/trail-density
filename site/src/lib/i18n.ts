@@ -14,7 +14,11 @@ const STRINGS = {
     learn_more: "En savoir plus",
     rank_in_format: (rank: number, of: number, format: string) => `${ordinal("fr", rank)} sur ${of} courses ${format}`,
     rank_in_catalog: (rank: number, of: number) => `${ordinal("fr", rank)} sur ${of} courses du catalogue`,
-    vs_last: (d: string, year: number) => `${d} vs ${year}`,
+    vs_last: (d: string, year: number) => `${d} par rapport à ${year}`,
+    skip: "Aller au contenu",
+    years_label: "Année de l'édition",
+    format_filter: "Filtrer par format",
+    load_error: "Impossible de charger cette édition. Vérifiez votre connexion, puis réessayez.",
     history: "Évolution du niveau",
     history_sub: "RCI10 de chaque édition",
     edition: "Édition",
@@ -37,6 +41,7 @@ const STRINGS = {
     published: "Publié",
     mapped: "Ramené",
     no_rci: "pas de RCI10 (moins de 10 finishers)",
+    other_rci: "Voir RCI3, 5 et 20",
     compare_with: "Comparer avec…",
     source: (s: string) => `Source : ${s}`,
     not_enough: "Moins de 10 finishers avec un index : pas de RCI10.",
@@ -135,6 +140,10 @@ const STRINGS = {
     depth: "Depth",
     above: (t: string) => `index ≥ ${t}`,
     above_mapped: (t: string) => `mapped ≥ ${t}`,
+    skip: "Skip to content",
+    years_label: "Edition year",
+    format_filter: "Filter by format",
+    load_error: "This edition couldn't be loaded. Check your connection and try again.",
     gap: "Gap 1st – 10th",
     gap_women: "Gap 1st – 10th",
     depth_note: "For women, these figures use the index mapped onto the men's scale.",
@@ -150,6 +159,7 @@ const STRINGS = {
     published: "Published",
     mapped: "Mapped",
     no_rci: "no RCI10 (fewer than 10 finishers)",
+    other_rci: "Show RCI3, 5 and 20",
     points: "pts",
     formats: { vertical: "vertical", short: "short (< 30 km)", medium: "mid-distance (30–60 km)", long: "long (60–120 km)", ultra: "ultra (≥ 120 km)" },
     format_label: { vertical: "Vertical", short: "Short", medium: "Mid", long: "Long", ultra: "Ultra" },
@@ -300,13 +310,3 @@ export function ordinal(lang: Lang, n: number) {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
-// "MOIRAULT Jean-Pierre" (ITRA) or "Jean-Pierre MOIRAULT" (UTMB) → "Jean-Pierre Moirault".
-// Family names are the all-capital words; a name entirely in capitals is just title-cased.
-export function displayName(raw: string) {
-  const cap = (w: string) => w.toLowerCase().replace(/(^|[-'\s])(\p{L})/gu, (_, a, b) => a + b.toUpperCase());
-  const parts = raw.trim().split(/\s+/);
-  const isFamily = (p: string) => p === p.toUpperCase() && /\p{L}{2}/u.test(p);
-  const family = parts.filter(isFamily), given = parts.filter(p => !isFamily(p));
-  if (!family.length || !given.length) return parts.map(cap).join(" ");
-  return `${given.join(" ")} ${family.map(cap).join(" ")}`;
-}

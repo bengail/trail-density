@@ -7,17 +7,17 @@
   --divider: oklch(0.93 0.008 70);
   --text: oklch(0.24 0.02 55);
   --text-2: oklch(0.52 0.02 60);
-  --text-3: oklch(0.62 0.02 60);
-  --men: oklch(0.6 0.15 45);
+  --text-3: oklch(0.54 0.02 60);
+  --men: oklch(0.53 0.15 45);
   --men-tint: oklch(0.94 0.03 45);
   --women: oklch(0.52 0.13 250);
   --women-tint: oklch(0.94 0.025 250);
   --grid: oklch(0.91 0.01 70);
   /* Compare page: one colour per race, kept apart from the women / men hues */
   --c1: oklch(0.3 0.02 55);
-  --c2: oklch(0.58 0.12 165);
+  --c2: oklch(0.5 0.12 165);
   --c3: oklch(0.55 0.18 340);
-  --c4: oklch(0.7 0.14 85);
+  --c4: oklch(0.5 0.11 85);
   --font: "Archivo", system-ui, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
   --radius: 3px;
@@ -34,7 +34,7 @@
     --divider: oklch(0.3 0.012 60);
     --text: oklch(0.94 0.01 75);
     --text-2: oklch(0.72 0.015 70);
-    --text-3: oklch(0.6 0.015 70);
+    --text-3: oklch(0.68 0.015 70);
     --men: oklch(0.7 0.14 45);
     --men-tint: oklch(0.32 0.05 45);
     --women: oklch(0.72 0.12 250);
@@ -56,7 +56,7 @@
   --divider: oklch(0.3 0.012 60);
   --text: oklch(0.94 0.01 75);
   --text-2: oklch(0.72 0.015 70);
-  --text-3: oklch(0.6 0.015 70);
+  --text-3: oklch(0.68 0.015 70);
   --men: oklch(0.7 0.14 45);
   --men-tint: oklch(0.32 0.05 45);
   --women: oklch(0.72 0.12 250);
@@ -78,7 +78,10 @@ body {
   font: 15px/1.5 var(--font);
 }
 a { color: inherit; }
-h1, h2, h3 { margin: 0; line-height: 1.15; }
+h1, h2, h3 { margin: 0; line-height: 1.15; text-wrap: balance; }
+p { text-wrap: pretty; }
+::selection { background: var(--text); color: var(--bg); }
+:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
 .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
 @media (min-width: 720px) { .wrap { padding: 0 32px; } }
@@ -183,6 +186,7 @@ h1, h2, h3 { margin: 0; line-height: 1.15; }
 /* Segmented buttons (filters) */
 .seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--border); border-radius: var(--radius-s); overflow: hidden; }
 .seg button { font: 600 13px var(--font); padding: 7px 13px; border: 0; background: var(--surface); color: var(--text-2); cursor: pointer; }
+.seg button:focus-visible { outline-offset: -2px; }
 .seg button + button { border-left: 1px solid var(--border); }
 .seg button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
 @media (max-width: 560px) { .seg button { padding: 7px 9px; } }

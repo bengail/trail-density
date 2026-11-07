@@ -93,14 +93,14 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
             {alt && <span class="dashed">{s.alt_legend(alt.label)}</span>}
           </div>
         </div>
-        <Fragment set:html={historyChart(race.editions, { M: s.men, F: s.women }, alt)} />
+        <Fragment set:html={historyChart(race.editions, { M: s.men, F: s.women }, { name: s.history, fmt: v => fmtNum(lang, v, 1), alt })} />
         {alt && <p class="note muted">{s.scales_differ}</p>}
       </section>
     )}
 
     <section class="edition" data-race={id} data-lang={lang}>
       <div class="ed-head">
-        <h2>{s.edition} <span class="num" data-year>{latest.year}</span></h2>
+        <h2 aria-live="polite">{s.edition} <span class="num" data-year>{latest.year}</span></h2>
         {race.sources.filter(x => x !== "legacy").length > 1 && (
           <div class="sources" role="group" aria-label={s.source_label}>
             {race.sources.filter(x => x !== "legacy").map(src => (
@@ -109,9 +109,10 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
           </div>
         )}
       </div>
-      <div class="years" role="tablist">
-        {years.map((y, i) => <button type="button" class="year num" role="tab" aria-selected={i === 0 ? "true" : "false"} data-y={y}>{y}</button>)}
+      <div class="years" role="group" aria-label={s.years_label}>
+        {years.map((y, i) => <button type="button" class="year num" aria-pressed={i === 0 ? "true" : "false"} data-y={y}>{y}</button>)}
       </div>
+      <p class="load-error" data-error role="alert" hidden></p>
       <div data-edition>
         <Fragment set:html={editionView(lang, latest)} />
       </div>
@@ -123,32 +124,61 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
 
 <script>
   import { editionView } from "../lib/edition-view";
+  import { t } from "../lib/i18n";
   import type { Race, Source } from "../lib/types";
   import type { Lang } from "../lib/i18n";
 
   // Switch edition / source without reloading: the race JSON is fetched once, on first use.
+  // The choice lives in the URL (?edition=2019&source=utmb), so a shared link opens the same view.
   const root = document.querySelector<HTMLElement>(".edition");
   if (root) {
     const lang = root.dataset.lang as Lang;
+    const yearButtons = [...root.querySelectorAll<HTMLButtonElement>("button.year")];
+    const sourceButtons = [...root.querySelectorAll<HTMLButtonElement>("button.src")];
+    const latestYear = Number(yearButtons[0].dataset.y);
+    const params = new URLSearchParams(location.search);
     let race: Race | null = null;
-    let year = Number(root.querySelector<HTMLElement>("button.year[aria-selected=true]")?.dataset.y);
+    let year = latestYear;
     let source = root.querySelector<HTMLElement>("button.src[aria-pressed=true]")?.dataset.src as Source | undefined;
 
+    const error = root.querySelector<HTMLElement>("[data-error]")!;
     async function render() {
-      race ??= await fetch(`/data/races/${root!.dataset.race}.json`).then(r => r.json());
+      try {
+        if (!race) {
+          const res = await fetch(`/data/races/${root!.dataset.race}.json`);
+          if (!res.ok) throw new Error(String(res.status));
+          race = await res.json();
+        }
+      } catch {
+        error.textContent = t(lang).load_error;
+        error.hidden = false;
+        return;
+      }
+      error.hidden = true;
       const ed = race!.editions.find(e => e.year === year);
       if (!ed) return;
       const shown = source && ed.sources[source] ? source : ed.source;
+      const moreOpen = root!.querySelector<HTMLDetailsElement>(".ed-more")?.open ?? false;
       root!.querySelector("[data-edition]")!.innerHTML = editionView(lang, ed, shown);
+      const more = root!.querySelector<HTMLDetailsElement>(".ed-more");
+      if (more) more.open = moreOpen;
       root!.querySelector("[data-year]")!.textContent = String(year);
-      root!.querySelectorAll<HTMLElement>("button.year").forEach(b => b.setAttribute("aria-selected", String(Number(b.dataset.y) === year)));
-      root!.querySelectorAll<HTMLButtonElement>("button.src").forEach(b => {
+      yearButtons.forEach(b => {
+        const active = Number(b.dataset.y) === year;
+        b.setAttribute("aria-pressed", String(active));
+        if (active) b.scrollIntoView({ block: "nearest", inline: "nearest" });
+      });
+      sourceButtons.forEach(b => {
         b.setAttribute("aria-pressed", String(b.dataset.src === shown));
         b.disabled = !ed.sources[b.dataset.src as Source];
       });
+      const url = new URL(location.href);
+      if (year === latestYear) url.searchParams.delete("edition"); else url.searchParams.set("edition", String(year));
+      if (shown === ed.source) url.searchParams.delete("source"); else url.searchParams.set("source", shown);
+      history.replaceState(null, "", url);
     }
-    root.querySelectorAll<HTMLElement>("button.year").forEach(b => b.addEventListener("click", () => { year = Number(b.dataset.y); render(); }));
-    root.querySelectorAll<HTMLElement>("button.src").forEach(b => b.addEventListener("click", () => { source = b.dataset.src as Source; render(); }));
+    yearButtons.forEach(b => b.addEventListener("click", () => { year = Number(b.dataset.y); render(); }));
+    sourceButtons.forEach(b => b.addEventListener("click", () => { source = b.dataset.src as Source; render(); }));
     // A point on the history chart opens that edition, on the source the point belongs to.
     document.querySelector(".page")?.addEventListener("click", e => {
       const point = (e.target as Element).closest<SVGElement>(".hit[data-y]");
@@ -158,20 +188,25 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
       render();
       root!.scrollIntoView();
     });
+
+    const askedYear = Number(params.get("edition"));
+    const askedSource = params.get("source") as Source | null;
+    if (yearButtons.some(b => Number(b.dataset.y) === askedYear)) year = askedYear;
+    if (askedSource && sourceButtons.some(b => b.dataset.src === askedSource)) source = askedSource;
+    if (year !== latestYear || askedSource) render();
   }
 </script>
 
 <style is:global>
   .page { display: grid; gap: 20px; padding-top: 28px; }
   .page > *, .edition > *, [data-edition] > *, .ed-grid > * { min-width: 0; }   /* the year strip must scroll, not widen the grid */
-  .hero .back { text-decoration: none; }
+  .hero .back { display: inline-block; padding: 6px 0; text-decoration: none; }
   .hero .back:hover { color: var(--text); }
   .hero h1 { font-size: clamp(30px, 6vw, 46px); font-weight: 800; letter-spacing: -0.02em; margin: 8px 0 6px; }
   .hero .meta { margin: 0; font-size: 14px; }
   .hero .series { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; }
 
   .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
-  @media (max-width: 520px) { .kpis { grid-template-columns: 1fr; } }
   .kpi { border-radius: var(--radius); padding: 16px 18px; border: 1px solid var(--border); background: var(--surface); }
   .kpi.f { border-top: 4px solid var(--women); }
   .kpi.m { border-top: 4px solid var(--men); }
@@ -180,6 +215,11 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
   .kpi.f .kpi-label { color: var(--women); }
   .kpi.m .kpi-label { color: var(--men); }
   .kpi-value { font-size: clamp(40px, 8vw, 56px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.05; margin: 6px 0 8px !important; }
+  @media (max-width: 520px) {
+    .kpis { gap: 8px; }
+    .kpi { padding: 12px; }
+    .kpi-value { font-size: 32px; }
+  }
   .kpi-ctx { display: flex; flex-direction: column; gap: 2px; font-size: 13px; }
   .delta.up { color: var(--women); }
   .kpi.m .delta.up { color: var(--men); }
@@ -194,6 +234,13 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
   .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
 
   .edition { display: grid; gap: 16px; scroll-margin-top: 68px; }
+  .ed-summary { display: grid; gap: 4px; }
+  .ed-more summary { width: fit-content; padding: 4px 0; font-size: 13px; color: var(--text-2); cursor: pointer; }
+  .ed-more summary:hover { color: var(--text); }
+  .ed-more table { margin-top: 4px; border-collapse: collapse; font-size: 13.5px; }
+  .ed-more th { font-weight: 600; text-align: left; padding: 3px 16px 3px 0; color: var(--text-2); }
+  .ed-more thead th { font: 500 12px var(--mono); text-align: right; padding-right: 0; padding-left: 16px; }
+  .ed-more td { text-align: right; padding: 3px 0 3px 16px; }
   .ed-rci { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 20px; margin: 0; font-size: 14px; font-weight: 600; }
   .ed-rci-label { font-size: 12px; font-weight: 500; color: var(--text-2); }
   .ed-rci-item::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 6px; border-radius: 1px; }
@@ -204,22 +251,30 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
   .ed-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
   .ed-head h2 { font-size: 22px; font-weight: 800; }
   .sources { display: inline-flex; border: 1px solid var(--border); border-radius: var(--radius-s); overflow: hidden; }
-  .src { font: 600 12.5px var(--font); padding: 6px 12px; border: 0; background: var(--surface); color: var(--text-2); cursor: pointer; }
+  .src { font: 600 12.5px var(--font); padding: 7px 12px; border: 0; background: var(--surface); color: var(--text-2); cursor: pointer; }
+  .src:focus-visible { outline-offset: -2px; }
   .src + .src { border-left: 1px solid var(--border); }
   .src[aria-pressed="true"] { background: var(--text); color: var(--bg); }
   .src:disabled { opacity: 0.4; cursor: default; }
   .note { font-size: 12.5px; margin: 8px 0 0; }
   .legend .dashed::before { background: none; border-top: 2px dashed var(--text-2); height: 0; width: 14px; vertical-align: 3px; }
+  .load-error { margin: 0; font-size: 14px; color: var(--text); }
   .years { display: flex; gap: 6px; overflow-x: auto; max-width: 100%; padding-bottom: 4px; scrollbar-width: thin; }
   .year {
-    font-size: 12.5px; font-weight: 500; padding: 5px 10px; border-radius: var(--radius-s); cursor: pointer;
+    font-size: 12.5px; font-weight: 500; padding: 7px 12px; border-radius: var(--radius-s); cursor: pointer;
     border: 1px solid var(--border); background: var(--surface); color: var(--text-2);
   }
-  .year[aria-selected="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .year:focus-visible { outline-offset: -2px; }
+  .year[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
 
   [data-edition] { display: grid; gap: 16px; }
   .ed-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-  @media (min-width: 900px) { .ed-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 900px) {
+    .ed-grid { grid-template-columns: 1fr 1fr; }
+    .density-card { grid-column: 1 / -1; }
+    .field-card .chart .tick { font-size: 18px; }
+    .ed-grid .depth-grid { grid-template-columns: 1fr; }
+  }
   .legend { margin-bottom: 6px; }
   .legend.mirror { justify-content: space-between; padding: 0 22%; }
 
@@ -249,6 +304,7 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
   .actions { margin: 4px 0 0; }
   .btn {
     display: inline-block; padding: 9px 16px; border-radius: var(--radius-s); font-weight: 700; font-size: 14px;
-    background: var(--men); color: white; text-decoration: none;
+    background: var(--text); color: var(--bg); text-decoration: none;
   }
+  .btn:hover { background: var(--text-2); }
 </style>
