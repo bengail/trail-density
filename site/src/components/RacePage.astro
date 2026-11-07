@@ -133,6 +133,7 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
   const root = document.querySelector<HTMLElement>(".edition");
   if (root) {
     const lang = root.dataset.lang as Lang;
+    const strip = root.querySelector<HTMLElement>(".years")!;
     const yearButtons = [...root.querySelectorAll<HTMLButtonElement>("button.year")];
     const sourceButtons = [...root.querySelectorAll<HTMLButtonElement>("button.src")];
     const latestYear = Number(yearButtons[0].dataset.y);
@@ -166,7 +167,7 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
       yearButtons.forEach(b => {
         const active = Number(b.dataset.y) === year;
         b.setAttribute("aria-pressed", String(active));
-        if (active) b.scrollIntoView({ block: "nearest", inline: "nearest" });
+        if (active) strip.scrollLeft = b.offsetLeft - strip.offsetLeft - (strip.clientWidth - b.offsetWidth) / 2;
       });
       sourceButtons.forEach(b => {
         b.setAttribute("aria-pressed", String(b.dataset.src === shown));
@@ -177,10 +178,21 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
       if (shown === ed.source) url.searchParams.delete("source"); else url.searchParams.set("source", shown);
       history.replaceState(null, "", url);
     }
+    // Tooltips don't exist on touch screens: a tap anywhere on the curve writes the nearest value under it.
+    function readValue(svg: SVGSVGElement, e: MouseEvent) {
+      const box = svg.getBoundingClientRect(), scale = box.width / svg.viewBox.baseVal.width;
+      const distance = (c: SVGCircleElement) => Math.hypot(
+        box.left + c.cx.baseVal.value * scale - e.clientX, box.top + c.cy.baseVal.value * scale - e.clientY);
+      const nearest = [...svg.querySelectorAll<SVGCircleElement>(".hit[data-label]")]
+        .reduce((a, b) => (distance(b) < distance(a) ? b : a));
+      root!.querySelector("[data-readout]")!.textContent = nearest.dataset.label!;
+    }
     yearButtons.forEach(b => b.addEventListener("click", () => { year = Number(b.dataset.y); render(); }));
     sourceButtons.forEach(b => b.addEventListener("click", () => { source = b.dataset.src as Source; render(); }));
     // A point on the history chart opens that edition, on the source the point belongs to.
     document.querySelector(".page")?.addEventListener("click", e => {
+      const density = (e.target as Element).closest<SVGSVGElement>(".density-card svg");
+      if (density) return readValue(density, e as MouseEvent);
       const point = (e.target as Element).closest<SVGElement>(".hit[data-y]");
       if (!point) return;
       year = Number(point.dataset.y);
@@ -193,7 +205,7 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
     const askedSource = params.get("source") as Source | null;
     if (yearButtons.some(b => Number(b.dataset.y) === askedYear)) year = askedYear;
     if (askedSource && sourceButtons.some(b => b.dataset.src === askedSource)) source = askedSource;
-    if (year !== latestYear || askedSource) render();
+    if (year !== latestYear || askedSource) render().then(() => root!.scrollIntoView());
   }
 </script>
 
@@ -235,6 +247,7 @@ const alt = altSource ? { source: altSource, label: SOURCES[altSource] } : undef
 
   .edition { display: grid; gap: 16px; scroll-margin-top: 68px; }
   .ed-summary { display: grid; gap: 4px; }
+  .ed-partial { margin: 4px 0 0; max-width: 68ch; font-size: 13.5px; }
   .ed-more summary { width: fit-content; padding: 4px 0; font-size: 13px; color: var(--text-2); cursor: pointer; }
   .ed-more summary:hover { color: var(--text); }
   .ed-more table { margin-top: 4px; border-collapse: collapse; font-size: 13.5px; }

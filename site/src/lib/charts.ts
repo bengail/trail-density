@@ -2,8 +2,14 @@
 // Colours come from CSS classes (.m / .f), so light and dark themes need nothing here.
 import type { Edition, GenderBlock } from "./types";
 
-const W = 720;
+const WIDE = 720, NARROW = 360, NARROW_HEIGHT = 240;
 const PAD = { top: 16, right: 44, bottom: 28, left: 40 };
+
+// Phones get their own geometry: scaling the wide chart down makes it far too small to read or touch.
+function both(draw: (W: number, height: number) => string, height: number) {
+  const wide = draw(WIDE, height);
+  return wide && `<div class="chart-wide">${wide}</div><div class="chart-narrow">${draw(NARROW, NARROW_HEIGHT)}</div>`;
+}
 
 function niceRange(values: number[], step: number, pad = 0) {
   const lo = Math.floor((Math.min(...values) - pad) / step) * step;
@@ -25,7 +31,13 @@ function yAxis(lo: number, hi: number, step: number, y: (v: number) => number, w
 }
 
 // RCI10 per edition, one line per gender (primary source); a second source, if given, as dashed lines.
-export function historyChart(editions: Edition[], labels: { M: string; F: string }, { name, fmt, alt, height = 260 }: { name: string; fmt: (v: number) => string; alt?: { source: string; label: string }; height?: number }) {
+export interface HistoryOptions { name: string; fmt: (v: number) => string; alt?: { source: string; label: string } }
+
+export function historyChart(editions: Edition[], labels: { M: string; F: string }, options: HistoryOptions) {
+  return both((W, height) => drawHistory(W, height, editions, labels, options), 260);
+}
+
+function drawHistory(W: number, height: number, editions: Edition[], labels: { M: string; F: string }, { name, fmt, alt }: HistoryOptions) {
   const pts = { M: [] as [number, number][], F: [] as [number, number][] };
   const altPts = { M: [] as [number, number][], F: [] as [number, number][] };
   for (const e of [...editions].sort((a, b) => a.year - b.year)) {
@@ -44,9 +56,10 @@ export function historyChart(editions: Edition[], labels: { M: string; F: string
   const y = (v: number) => PAD.top + (1 - (v - lo) / (hi - lo)) * (height - PAD.top - PAD.bottom);
 
   let svg = yAxis(lo, hi, 50, y, W);
-  const span = x1 - x0, every = span > 16 ? 5 : span > 8 ? 2 : 1;
+  const span = x1 - x0, narrow = W === NARROW;
+  const every = narrow ? (span > 16 ? 8 : span > 8 ? 4 : span > 4 ? 2 : 1) : span > 16 ? 5 : span > 8 ? 2 : 1;
   for (let yr = x0; yr <= x1; yr++) {
-    if ((yr - x0) % every && yr !== x1) continue;
+    if (yr !== x1 && ((yr - x0) % every || x1 - yr < every / 2)) continue;   // the last year always shows
     svg += `<text class="tick" x="${x(yr)}" y="${height - 8}" text-anchor="middle">${yr}</text>`;
   }
   // End labels: keep them apart when both genders finish at nearly the same value.
@@ -59,7 +72,7 @@ export function historyChart(editions: Edition[], labels: { M: string; F: string
     const p = altPts[g];
     if (!p.length) continue;
     svg += `<polyline class="line alt ${g.toLowerCase()}" points="${p.map(([a, b]) => `${x(a)},${y(b)}`).join(" ")}"/>`;
-    svg += p.map(([a, b]) => `<circle class="hit" data-y="${a}" data-src="${alt!.source}" cx="${x(a)}" cy="${y(b)}" r="14"><title>${a} · ${esc(labels[g])} · ${esc(alt!.label)} ${fmt(b)}</title></circle>`).join("");
+    svg += p.map(([a, b]) => `<circle class="hit" data-y="${a}" data-src="${alt!.source}" cx="${x(a)}" cy="${y(b)}" r="${narrow ? 20 : 14}"><title>${a} · ${esc(labels[g])} · ${esc(alt!.label)} ${fmt(b)}</title></circle>`).join("");
   }
   for (const g of ["M", "F"] as const) {
     const p = pts[g];
@@ -72,7 +85,7 @@ export function historyChart(editions: Edition[], labels: { M: string; F: string
   // Drawn last, so the wide click areas sit above every line.
   for (const g of ["M", "F"] as const) {
     for (const [a, b] of pts[g]) {
-      svg += `<circle class="hit" data-y="${a}" cx="${x(a)}" cy="${y(b)}" r="14"><title>${a} · ${esc(labels[g])} ${fmt(b)}</title></circle>`;
+      svg += `<circle class="hit" data-y="${a}" cx="${x(a)}" cy="${y(b)}" r="${narrow ? 20 : 14}"><title>${a} · ${esc(labels[g])} ${fmt(b)}</title></circle>`;
     }
   }
   for (const g of ["M", "F"] as const) {
@@ -85,7 +98,11 @@ export function historyChart(editions: Edition[], labels: { M: string; F: string
 }
 
 // Index of the top 50, rank by rank.
-export function densityChart(blocks: { M?: GenderBlock; F?: GenderBlock }, labels: { M: string; F: string }, name: string, height = 260) {
+export function densityChart(blocks: { M?: GenderBlock; F?: GenderBlock }, labels: { M: string; F: string }, name: string) {
+  return both((W, height) => drawDensity(W, height, blocks, labels, name), 260);
+}
+
+function drawDensity(W: number, height: number, blocks: { M?: GenderBlock; F?: GenderBlock }, labels: { M: string; F: string }, name: string) {
   const curves = (["M", "F"] as const).filter(g => blocks[g]?.curve.length);
   if (!curves.length) return "";
   const n = Math.max(...curves.map(g => blocks[g]!.curve.length));
@@ -102,13 +119,17 @@ export function densityChart(blocks: { M?: GenderBlock; F?: GenderBlock }, label
     const c = blocks[g]!.curve;
     const cls = g.toLowerCase();
     svg += `<polyline class="line ${cls}" points="${c.map((v, i) => `${x(i + 1)},${y(v)}`).join(" ")}"/>`;
-    svg += c.map((v, i) => `<circle class="hit" cx="${x(i + 1)}" cy="${y(v)}" r="5"><title>${esc(labels[g])} · ${i + 1} · ${v}</title></circle>`).join("");
+    svg += c.map((v, i) => `<circle class="hit" data-label="${esc(labels[g])} · ${i + 1} · ${v}" cx="${x(i + 1)}" cy="${y(v)}" r="5"><title>${esc(labels[g])} · ${i + 1} · ${v}</title></circle>`).join("");
   }
   return `<svg class="chart" viewBox="0 0 ${W} ${height}" role="img" aria-label="${esc(name)}">${svg}</svg>`;
 }
 
 // Mirrored histogram of the whole field: men to the left, women to the right, in % of each field.
-export function fieldChart(blocks: { M?: GenderBlock; F?: GenderBlock }, name: string, height = 300) {
+export function fieldChart(blocks: { M?: GenderBlock; F?: GenderBlock }, name: string) {
+  return both((W, height) => drawField(W, height, blocks, name), 300);
+}
+
+function drawField(W: number, height: number, blocks: { M?: GenderBlock; F?: GenderBlock }, name: string) {
   const gs = (["M", "F"] as const).filter(g => blocks[g]?.n);
   if (!gs.length) return "";
   const h = blocks[gs[0]]!.hist;
@@ -156,6 +177,7 @@ function spread(ys: number[], gap: number) {
 
 // x = a number (year or rank), y = a score; lines with dots when there are few points.
 export function seriesChart(series: Series[], { name, fmt, xStep = 1, yStep = 50, xTicks, height = 260, dots = true }: { name: string; fmt: (v: number) => string; xStep?: number; yStep?: number; xTicks?: number[]; height?: number; dots?: boolean }) {
+  const W = WIDE;
   const used = series.filter(s => s.pts.length);
   const all = used.flatMap(s => s.pts);
   if (all.length < 2) return "";

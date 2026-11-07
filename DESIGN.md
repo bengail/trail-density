@@ -162,7 +162,7 @@ Le mode sombre reprend les mêmes rôles sur un papier de nuit brun (tokens `nig
 ### Hierarchy
 
 - **Display** (800, clamp de 30 à 48 px, interligne 1,15) : le titre de page, écrit comme une question ou une réponse.
-- **Figure** (mono 600, clamp de 40 à 56 px, interligne 1,05) : le RCI principal d'une fiche course. C'est le moment dossard du site, à réserver au chiffre qui répond à la question de la page.
+- **Figure** (mono 600, clamp de 40 à 56 px, 32 px sous 520 px pour garder femmes et hommes côte à côte, interligne 1,05) : le RCI principal d'une fiche course. C'est le moment dossard du site, à réserver au chiffre qui répond à la question de la page.
 - **Headline** (800, 21 à 22 px) : les titres de section.
 - **Title** (700, 17 px) : les noms de blocs et les verdicts.
 - **Body** (500, 15 px, interligne 1,5) : le texte courant. Les paragraphes de la page Méthode restent courts.
