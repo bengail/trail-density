@@ -12,6 +12,22 @@ races:
         utmb: 4141.fatdogtrailracefatdog120mile.2024
       2023:
         utmb: 4141.fatdogtrailracefatdog120mile.2023
+      2022:
+        itra: https://itra.run/Races/RaceResults/Fatdog.120..Fatdog.120/2022/77959
+      2019:
+        itra: https://itra.run/Races/RaceResults/Fat.Dog.Trail.Race.120.Mile/2019/43211
+      2017:
+        itra: https://itra.run/Races/RaceResults/Fat.Dog.Trail.Race.120.Mile/2017/19715
+      2016:
+        itra: https://itra.run/Races/RaceResults/Fat.Dog.Trail.Race.120.Mile/2016/10933
+      2015:
+        itra: https://itra.run/Races/RaceResults/Fat.Dog.Trail.Race.120.Mile/2015/10237
+      2014:
+        itra: https://itra.run/Races/RaceResults/Fat.Dog.Trail.Race.120.Mile/2014/8290
+      2013:
+        itra: https://itra.run/Races/RaceResults/Fat.Dog.Trail.Race.120.Mile/2013/4948
+      2012:
+        itra: https://itra.run/Races/RaceResults/Fat.Dog.Trail.Race.120.Mile/2012/2709
   fat-dog-100k:
     name: "Fat Dog 100K"
     distance_km: 104
@@ -23,3 +39,5 @@ races:
         utmb: 4142.fatdogtrailracefatdog100k.2024
       2023:
         utmb: 4142.fatdogtrailracefatdog100k.2023
+      2022:
+        itra: https://itra.run/Races/RaceResults/Fatdog.120..Fatdog.70/2022/79890
