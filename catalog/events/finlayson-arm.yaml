@@ -1,0 +1,10 @@
+name: "Finlayson Arm"
+country: CA
+races:
+  finlayson-arm-28k:
+    name: "Finlayson Arm 28K"
+    distance_km: 28
+    elevation_gain: 1350
+    editions:
+      2022:
+        utmb: 10815.finlaysonarm28k.2022

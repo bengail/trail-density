@@ -1,0 +1,31 @@
+name: "Slay the Dragon"
+country: CA
+races:
+  slay-the-dragon-50k:
+    name: "Slay the Dragon 50K"
+    distance_km: 51
+    elevation_gain: 1751
+    editions:
+      2026:
+        utmb: 30482.slaythedragonslaythedragon-50k.2026
+      2025:
+        utmb: 30482.slaythedragonslaythedragon-50k.2025
+      2024:
+        utmb: 30482.slaythedragonslaythedragon-50k.2024
+      2023:
+        utmb: 30482.slaythedragonslaythedragon-50k.2023
+      2022:
+        utmb: 30482.slaythedragonslaythedragon-50k.2022
+  slay-the-dragon-25k:
+    name: "Slay the Dragon 25K"
+    distance_km: 26
+    elevation_gain: 561
+    editions:
+      2026:
+        utmb: 30483.slaythedragonslaythedragon-25k.2026
+      2024:
+        utmb: 30483.slaythedragonslaythedragon-25k.2024
+      2023:
+        utmb: 30483.slaythedragonslaythedragon-25k.2023
+      2022:
+        utmb: 30483.slaythedragonslaythedragon-25k.2022

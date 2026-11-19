@@ -1,0 +1,46 @@
+name: "Trail du Grand-Duc"
+country: CA
+races:
+  grand-duc-42k:
+    name: "Grand-Duc 42K"
+    distance_km: 42
+    elevation_gain: 1450
+    editions:
+      2026:
+        utmb: 32424.traildugrand-duc42km.2026
+      2025:
+        utmb: 32424.traildugrand-duc42km.2025
+      2023:
+        utmb: 32424.traildugrand-duc50km.2023
+      2022:
+        utmb: 32424.traildugrand-duc50km.2022
+      2021:
+        utmb: 32424.traildugrand-duc50km.2021
+  grand-duc-32k:
+    name: "Grand-Duc 32K"
+    distance_km: 32
+    elevation_gain: 1200
+    editions:
+      2026:
+        utmb: 32426.traildugrand-duc32km.2026
+      2025:
+        utmb: 32426.traildugrand-duc32km.2025
+      2023:
+        utmb: 32426.traildugrand-duc35km.2023
+      2022:
+        utmb: 32426.traildugrand-duc35km.2022
+      2021:
+        utmb: 32426.traildugrand-duc33km.2021
+  grand-duc-18k:
+    name: "Grand-Duc 18K"
+    distance_km: 18
+    elevation_gain: 635
+    editions:
+      2026:
+        utmb: 37096.traildugrand-duc18km.2026
+      2025:
+        utmb: 37096.traildugrand-duc18km.2025
+      2023:
+        utmb: 37096.traildugrand-duc18kmborealedimanche.2023
+      2022:
+        utmb: 37096.traildugrand-duc18kmborealedimanche.2022

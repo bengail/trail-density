@@ -82,7 +82,8 @@ async function fetchItraResultsHtmlOnce(context, url) {
 }
 
 function checkItraHtml(html) {
-  if (html.includes("Subscribe to an ITRA Subscription") ||
+  // The paywall follows the site language: English "Subscribe…", French "Adhérez à l'ITRA…" (HTML-encoded).
+  if (html.includes("Subscribe to an ITRA Subscription") || html.includes("Adh&#xE9;rez &#xE0; l&#x27;ITRA") ||
       (!html.includes('id="RunnerRaceResults"') && /type="password"|Account\/Login/i.test(html))) {
     throw new Error("ITRA_LOGIN_REQUIRED");
   }

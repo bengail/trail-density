@@ -1,0 +1,12 @@
+name: "Buckin' Hell"
+country: CA
+races:
+  buckin-hell-50k:
+    name: "Buckin' Hell 50K"
+    distance_km: 51
+    elevation_gain: 2560
+    editions:
+      2023:
+        utmb: 4237.buckin-hell50km.2023
+      2022:
+        utmb: 4237.buckin-hell50km.2022

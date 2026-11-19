@@ -1,0 +1,51 @@
+name: "Trail du Coureur des Bois (Duchesnay)"
+country: CA
+races:
+  coureur-des-bois-48k:
+    name: "TCB 48K"
+    distance_km: 48
+    elevation_gain: 1702
+    editions:
+      2026:
+        utmb: 43038.trailcoureurdesbois2026-duchesnaytcb48.2026
+      2025:
+        utmb: 43038.trailcoureurdesbois-duchesnaytcb48.2025
+      2024:
+        utmb: 43038.trailcoureurdesbois-duchesnaytcb48.2024
+  coureur-des-bois-34k:
+    name: "TCB 34K"
+    distance_km: 34
+    elevation_gain: 1260
+    editions:
+      2026:
+        utmb: 18921.trailcoureurdesbois2026-duchesnaytcb34.2026
+      2025:
+        utmb: 18921.trailcoureurdesbois-duchesnaytcb34.2025
+      2024:
+        utmb: 18921.trailcoureurdesbois-duchesnaytcb34.2024
+      2023:
+        utmb: 18921.trailcoureurdesbois-duchesnaytcb34.2023
+      2022:
+        utmb: 18921.trailcoureurdesbois-duchesnay34km.2022
+  coureur-des-bois-25k:
+    name: "TCB 25K"
+    distance_km: 25
+    elevation_gain: 1045
+    editions:
+      2026:
+        utmb: 51250.trailcoureurdesbois2026-duchesnaytcb25.2026
+      2025:
+        utmb: 51250.trailcoureurdesbois-duchesnaytcb25.2025
+  coureur-des-bois-18k:
+    name: "TCB 18K"
+    distance_km: 18
+    elevation_gain: 770
+    editions:
+      2026:
+        utmb: 42924.trailcoureurdesbois2026-duchesnaytcb18.2026
+      2025:
+        utmb: 42924.trailcoureurdesbois-duchesnaytcb18.2025
+      2024:
+        utmb: 42924.trailcoureurdesbois-duchesnaytcb18.2024
+      2023:
+        utmb: 42924.trailcoureurdesbois-duchesnaytcb18.2023

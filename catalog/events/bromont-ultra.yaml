@@ -1,0 +1,12 @@
+name: "Bromont Ultra"
+country: CA
+races:
+  bromont-ultra-55k:
+    name: "Bromont 55K"
+    distance_km: 55
+    elevation_gain: 2360
+    editions:
+      2022:
+        utmb: 15551.bromontultra55km.2022
+      2021:
+        utmb: 15551.bromontultra55km.2021
