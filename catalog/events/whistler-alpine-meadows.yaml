@@ -1,0 +1,33 @@
+name: "Whistler Alpine Meadows"
+country: CA
+races:
+  whistler-alpine-meadows-100m:
+    name: "WAM 100 Mile"
+    distance_km: 161
+    elevation_gain: 7775
+    editions:
+      2022:
+        utmb: 31934.whistleralpinemeadows100mile.2022
+  whistler-alpine-meadows-100k:
+    name: "WAM 100K"
+    distance_km: 100
+    elevation_gain: 5500
+    editions:
+      2022:
+        utmb: 31932.whistleralpinemeadows100km.2022
+  whistler-alpine-meadows-50k:
+    name: "WAM 50K"
+    distance_km: 50
+    elevation_gain: 3474
+    editions:
+      2022:
+        utmb: 6601.whistleralpinemeadows50km.2022
+      2021:
+        utmb: 6601.whistleralpinemeadows60k.2021
+  whistler-alpine-meadows-25k:
+    name: "WAM 25K"
+    distance_km: 25
+    elevation_gain: 1750
+    editions:
+      2022:
+        utmb: 6603.whistleralpinemeadows25km.2022

@@ -1,0 +1,29 @@
+name: "Survival of the Fittest"
+country: CA
+races:
+  survival-of-the-fittest-35k:
+    name: "Survival of the Fittest 35K"
+    distance_km: 35
+    elevation_gain: 1650
+    editions:
+      2025:
+        utmb: 54028.survivalofthefittest35km.2025
+      2024:
+        utmb: 54028.survivalofthefittest35km.2024
+      2023:
+        utmb: 54028.survivalofthefittest35km.2023
+      2022:
+        utmb: 54028.survivalofthefittest35km.2022
+  survival-of-the-fittest-18k:
+    name: "Survival of the Fittest 18K"
+    distance_km: 18
+    elevation_gain: 1050
+    editions:
+      2025:
+        utmb: 54030.survivalofthefittest18km.2025
+      2024:
+        utmb: 54030.survivalofthefittest18km.2024
+      2023:
+        utmb: 54030.survivalofthefittest18km.2023
+      2022:
+        utmb: 54030.survivalofthefittest18km.2022

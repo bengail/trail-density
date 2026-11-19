@@ -1,0 +1,12 @@
+name: "Run Ridge Run"
+country: CA
+races:
+  run-ridge-run-25k:
+    name: "Run Ridge Run 25K"
+    distance_km: 25
+    elevation_gain: 1000
+    editions:
+      2023:
+        utmb: 31946.runridgerun25km.2023
+      2022:
+        utmb: 31946.runridgerun25km.2022

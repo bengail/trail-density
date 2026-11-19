@@ -1,0 +1,25 @@
+name: "Fat Dog Trail Race"
+country: CA
+races:
+  fat-dog-120m:
+    name: "Fat Dog 120 Mile"
+    distance_km: 199
+    elevation_gain: 8670
+    editions:
+      2025:
+        utmb: 4141.fatdogtrailracefatdog120mile.2025
+      2024:
+        utmb: 4141.fatdogtrailracefatdog120mile.2024
+      2023:
+        utmb: 4141.fatdogtrailracefatdog120mile.2023
+  fat-dog-100k:
+    name: "Fat Dog 100K"
+    distance_km: 104
+    elevation_gain: 4502
+    editions:
+      2025:
+        utmb: 4142.fatdogtrailracefatdog100k.2025
+      2024:
+        utmb: 4142.fatdogtrailracefatdog100k.2024
+      2023:
+        utmb: 4142.fatdogtrailracefatdog100k.2023

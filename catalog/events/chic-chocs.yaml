@@ -1,0 +1,52 @@
+name: "Ultra Trail Chic-Chocs"
+country: CA
+races:
+  chic-chocs-45k:
+    name: "Chic-Chocs 45K"
+    distance_km: 45
+    elevation_gain: 2070
+    editions:
+      2026:
+        utmb: 17141.ultratrailchic-chocslemarathondumont-albert.2026
+      2025:
+        utmb: 17141.ultratrailchic-chocslemarathondumont-albert.2025
+      2024:
+        utmb: 17141.ultratrailchic-chocslemarathondumont-albert.2024
+      2023:
+        utmb: 17141.ultratrailchic-chocslemarathondumont-albert.2023
+      2022:
+        utmb: 17141.ultratrailchic-chocslemarathondumont-albert.2022
+      2021:
+        utmb: 17141.ultratrailchic-chocslemarathondumont-albert.2021
+  chic-chocs-26k:
+    name: "Chic-Chocs 26K"
+    distance_km: 26
+    elevation_gain: 1290
+    editions:
+      2026:
+        utmb: 35030.ultratrailchic-chocsmontxalibu26k.2026
+      2025:
+        utmb: 35030.ultratrailchic-chocsmontxalibu26k.2025
+      2024:
+        utmb: 35030.ultratrailchic-chocsmontxalibu26k.2024
+      2023:
+        utmb: 35030.ultratrailchic-chocsmontxalibu26k.2023
+      2022:
+        utmb: 35030.ultratrailchic-chocsmontxalibu26k.2022
+  chic-chocs-23k:
+    name: "Chic-Chocs 23K"
+    distance_km: 23
+    elevation_gain: 1220
+    editions:
+      2026:
+        utmb: 17139.ultratrailchic-chocsledemimarathondesaltitudes.2026
+      2025:
+        utmb: 17139.ultratrailchic-chocsledemimarathondesaltitudes.2025
+      2024:
+        utmb: 17139.ultratrailchic-chocsledemimarathondesaltitudes.2024
+      2023:
+        utmb: 17139.ultratrailchic-chocsledemimarathondesaltitudes.2023
+      2022:
+        utmb: 17139.ultratrailchic-chocsledemimarathondesaltitudes.2022
+      2021:
+        utmb: 17139.ultratrailchic-chocsledemimarathondesaltitudes.2021

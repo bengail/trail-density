@@ -1,0 +1,14 @@
+name: "Diez Vista"
+country: CA
+races:
+  diez-vista-50k:
+    name: "Diez Vista 50K"
+    distance_km: 50
+    elevation_gain: 1800
+    editions:
+      2023:
+        utmb: 1943.diezvista50km.2023
+      2022:
+        utmb: 1943.diezvista50km.2022
+      2021:
+        utmb: 1943.diezvista50km.2021

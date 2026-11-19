@@ -1,0 +1,27 @@
+name: "Ultra-Trail du Fjord du Saguenay"
+country: CA
+races:
+  fjord-du-saguenay-55k:
+    name: "UTFS 55K"
+    distance_km: 56
+    elevation_gain: 2211
+    editions:
+      2026:
+        utmb: 38620.ultra-traildufjorddusagneuayutfs55km.2026
+      2025:
+        utmb: 38620.ultra-traildufjorddusagneuayutfs50km.2025
+      2024:
+        utmb: 38620.ultra-traildufjorddusagneuayutfs50km.2024
+      2023:
+        utmb: 38620.ultra-traildufjorddusagneuayutfs50km.2023
+  fjord-du-saguenay-20k:
+    name: "UTFS 20K"
+    distance_km: 20
+    elevation_gain: 960
+    editions:
+      2026:
+        utmb: 43494.ultra-traildufjorddusagneuayutfs20km.2026
+      2025:
+        utmb: 43494.ultra-traildufjorddusagneuayutfs20km.2025
+      2024:
+        utmb: 43494.ultra-traildufjorddusagneuayutfs20km.2024
