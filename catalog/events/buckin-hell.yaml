@@ -6,7 +6,21 @@ races:
     distance_km: 51
     elevation_gain: 2560
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Buckin..Hell.50K/2026/111218
+      2025:
+        itra: https://itra.run/Races/RaceResults/Buckin..Hell.50K/2025/102180
       2023:
         utmb: 4237.buckin-hell50km.2023
       2022:
         utmb: 4237.buckin-hell50km.2022
+      2019:
+        itra: https://itra.run/Races/RaceResults/Buckin..Hell.50K/2019/38023
+      2018:
+        itra: https://itra.run/Races/RaceResults/Buckin..Hell.50K/2018/27675
+      2017:
+        itra: https://itra.run/Races/RaceResults/Buckin..Hell.50K/2017/16553
+      2016:
+        itra: https://itra.run/Races/RaceResults/Buckin..Hell.50K/2016/11759
+      2015:
+        itra: https://itra.run/Races/RaceResults/Buckin..Hell.50K/2015/11171
