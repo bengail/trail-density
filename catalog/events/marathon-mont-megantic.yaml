@@ -1,0 +1,14 @@
+name: "Marathon du Mont-Mégantic"
+country: CA
+races:
+  marathon-mont-megantic-43k:
+    name: "Marathon du Mont-Mégantic"
+    distance_km: 43
+    elevation_gain: 1744
+    editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Marathon.Mont.Megantic.Marathon.Mont.Megantic/2026/108363
+      2025:
+        itra: https://itra.run/Races/RaceResults/Marathon.Mont.Megantic.Marathon.Mont.Megantic/2025/98416
+      2024:
+        itra: https://itra.run/Races/RaceResults/Marathon.Mont.Megantic.42.2km/2024/98211

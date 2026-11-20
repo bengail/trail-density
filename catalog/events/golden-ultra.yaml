@@ -1,0 +1,16 @@
+name: "Golden Ultra"
+country: CA
+races:
+  golden-ultra-55k:
+    name: "Golden Ultra The Sweat 55K"
+    distance_km: 57
+    elevation_gain: 2420
+    editions:
+      2019:
+        itra: https://itra.run/Races/RaceResults/Golden.Ultra.Golden.Ultra.55.km..The.Sweat./2019/45403
+      2018:
+        itra: https://itra.run/Races/RaceResults/Golden.Ultra.The.Sweat/2018/28089
+      2017:
+        itra: https://itra.run/Races/RaceResults/Golden.Ultra.The.Sweat/2017/16429
+      2016:
+        itra: https://itra.run/Races/RaceResults/Golden.Ultra.The.Sweat/2016/13003
