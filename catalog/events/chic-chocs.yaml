@@ -18,6 +18,8 @@ races:
         utmb: 17141.ultratrailchic-chocslemarathondumont-albert.2022
       2021:
         utmb: 17141.ultratrailchic-chocslemarathondumont-albert.2021
+      2019:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.chic.chocs.Le.marathon.du.Mont.Albert/2019/41153
   chic-chocs-26k:
     name: "Chic-Chocs 26K"
     distance_km: 26
@@ -50,3 +52,5 @@ races:
         utmb: 17139.ultratrailchic-chocsledemimarathondesaltitudes.2022
       2021:
         utmb: 17139.ultratrailchic-chocsledemimarathondesaltitudes.2021
+      2019:
+        itra: https://itra.run/Races/RaceResults/Ultra.Trail.chic.chocs.Le.demi.marathon.des.altitudes/2019/41151

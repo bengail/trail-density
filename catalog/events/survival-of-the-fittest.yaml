@@ -6,6 +6,8 @@ races:
     distance_km: 35
     elevation_gain: 1650
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Survival.of.the.Fittest.35K/2026/111224
       2025:
         utmb: 54028.survivalofthefittest35km.2025
       2024:

@@ -6,9 +6,29 @@ races:
     distance_km: 50
     elevation_gain: 1800
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Diez.Vista.50K/2026/111210
+      2025:
+        itra: https://itra.run/Races/RaceResults/DIEZ.VISTA.TRAIL.RUN.50K/2025/102178
       2023:
         utmb: 1943.diezvista50km.2023
       2022:
         utmb: 1943.diezvista50km.2022
       2021:
         utmb: 1943.diezvista50km.2021
+      2019:
+        itra: https://itra.run/Races/RaceResults/Diez.Vista.50K/2019/34141
+      2018:
+        itra: https://itra.run/Races/RaceResults/Diez.Vista.50K/2018/23057
+      2017:
+        itra: https://itra.run/Races/RaceResults/DIEZ.VISTA.TRAIL.RUN.50K/2017/17717
+      2015:
+        itra: https://itra.run/Races/RaceResults/DIEZ.VISTA.TRAIL.RUN.50K/2015/10216
+      2014:
+        itra: https://itra.run/Races/RaceResults/DIEZ.VISTA.TRAIL.RUN.50K/2014/8247
+      2013:
+        itra: https://itra.run/Races/RaceResults/DIEZ.VISTA.TRAIL.RUN.50K/2013/5343
+      2011:
+        itra: https://itra.run/Races/RaceResults/DIEZ.VISTA.TRAIL.RUN.50K/2011/5345
+      2010:
+        itra: https://itra.run/Races/RaceResults/DIEZ.VISTA.TRAIL.RUN.50K/2010/5346

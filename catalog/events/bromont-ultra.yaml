@@ -6,7 +6,44 @@ races:
     distance_km: 55
     elevation_gain: 2360
     editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Bromont.Ultra.50.km/2026/124411
+      2025:
+        itra: https://itra.run/Races/RaceResults/Bromont.Ultra.50.km/2025/109617
+      2024:
+        itra: https://itra.run/Races/RaceResults/Bromont.Ultra.50.km/2024/97986
+      2023:
+        itra: https://itra.run/Races/RaceResults/Bromont.Ultra.Bromont.Ultra.55.km/2023/87328
       2022:
         utmb: 15551.bromontultra55km.2022
       2021:
         utmb: 15551.bromontultra55km.2021
+      2019:
+        itra: https://itra.run/Races/RaceResults/Bromont.Ultra.55km/2019/46621
+      2018:
+        itra: https://itra.run/Races/RaceResults/Bromont.Ultra.55km/2018/36703
+  bromont-ultra-80k:
+    name: "Bromont 80K"
+    distance_km: 80
+    elevation_gain: 3160
+    editions:
+      2026:
+        itra: https://itra.run/Races/RaceResults/Bromont.Ultra.80.km/2026/124409
+      2025:
+        itra: https://itra.run/Races/RaceResults/Bromont.Ultra.80.km/2025/109615
+      2024:
+        itra: https://itra.run/Races/RaceResults/Bromont.Ultra.80.km/2024/97390
+      2023:
+        itra: https://itra.run/Races/RaceResults/Bromont.Ultra.80.km/2023/87327
+      2022:
+        utmb: 5318.bromontultra80km.2022
+      2021:
+        utmb: 5318.bromontultra80km.2021
+      2019:
+        itra: https://itra.run/Races/RaceResults/Bromont.Ultra.80km/2019/46619
+      2018:
+        itra: https://itra.run/Races/RaceResults/Bromont.Ultra.80km/2018/30365
+      2017:
+        itra: https://itra.run/Races/RaceResults/Bromont.Ultra.80km/2017/22079
+      2016:
+        itra: https://itra.run/Races/RaceResults/Bromont.Ultra.80km/2016/13509
