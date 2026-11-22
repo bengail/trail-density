@@ -118,7 +118,7 @@ function details(lang: Lang, races: Race[]) {
     { label: s.gap, get: b => b.gap_1_10, digits: 1, lowerIsBetter: true },
     { label: s.n_index, get: b => b.n, digits: 0 },
   ];
-  const head = `<tr><th></th>${races.map((r, i) => `<th class="num"><span class="swatch ${cls(i)}"></span>${esc(r.name)}</th>`).join("")}</tr>`;
+  const head = `<tr><th></th>${races.map((r, i) => `<th class="num"><a href="${racePath(lang, r.id)}"><span class="swatch ${cls(i)}"></span>${esc(r.name)}</a></th>`).join("")}</tr>`;
   const body = GENDERS.map(g => {
     const blocks = races.map(r => latest(r, g));
     const years = `<tr class="group ${g.toLowerCase()}"><th>${g === "F" ? s.women : s.men}</th>${blocks.map(l => `<td class="num muted">${l?.ed.year ?? ""}</td>`).join("")}</tr>`;

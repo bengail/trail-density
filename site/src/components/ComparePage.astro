@@ -21,9 +21,9 @@ const defaults = rank(races, "M", "latest", "medium").slice(0, 3).map(r => r.rac
 
     <section class="picker">
       <ul class="picked"></ul>
-      <div class="search">
+      <div class="search race-search">
         <input type="search" placeholder={s.compare_search} aria-label={s.compare_search} autocomplete="off" />
-        <ul class="matches" role="listbox" hidden></ul>
+        <ul class="matches search-matches" role="listbox" hidden></ul>
       </div>
       <p class="suggest"><span class="eyebrow">{s.compare_suggest}</span> <span class="chips"></span></p>
     </section>
@@ -36,7 +36,8 @@ const defaults = rank(races, "M", "latest", "medium").slice(0, 3).map(r => r.rac
 
 <script>
   import { compareView, suggest, MAX_COMPARE } from "../lib/compare";
-  import { t, flag, comparePath, type Lang } from "../lib/i18n";
+  import { attachRaceSearch } from "../lib/race-search";
+  import { t, flag, comparePath, racePath, type Lang } from "../lib/i18n";
   import type { Index, Race } from "../lib/types";
 
   // Selection lives in the URL (?c=occ,sierre-zinal); race files are fetched once and kept.
@@ -51,7 +52,6 @@ const defaults = rank(races, "M", "latest", "medium").slice(0, 3).map(r => r.rac
     return cache.get(id)!;
   };
   const esc = (x: string) => x.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
-  const fold = (x: string) => x.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
 
   // index.json is needed for search and suggestions before anything else.
   (async () => {
@@ -62,7 +62,7 @@ const defaults = rank(races, "M", "latest", "medium").slice(0, 3).map(r => r.rac
 
     async function render(fromDefault = false) {
       root.querySelector(".picked")!.innerHTML = selected.map((id, i) => `
-        <li class="chip-race"><span class="swatch c${i + 1}"></span>${flag(byId.get(id)!.country)} ${esc(byId.get(id)!.name)}
+        <li class="chip-race"><a href="${racePath(lang, id)}"><span class="swatch c${i + 1}"></span>${flag(byId.get(id)!.country)} ${esc(byId.get(id)!.name)}</a>
           <button type="button" data-remove="${id}" aria-label="${esc(s.compare_remove(byId.get(id)!.name))}">×</button></li>`).join("");
       const full = selected.length >= MAX_COMPARE;
       input.disabled = full;
@@ -81,36 +81,10 @@ const defaults = rank(races, "M", "latest", "medium").slice(0, 3).map(r => r.rac
     function add(id: string) {
       if (selected.includes(id) || selected.length >= MAX_COMPARE) return;
       selected = [...selected, id];
-      input.value = "";
-      matches.hidden = true;
       render();
     }
 
-    function showMatches() {
-      const q = fold(input.value.trim());
-      const found = q ? index.races.filter(r => !selected.includes(r.id) && fold(`${r.name} ${r.event.name}`).includes(q)).slice(0, 8) : [];
-      matches.innerHTML = found.map((r, i) =>
-        `<li role="option" data-add="${r.id}"${i === 0 ? ' aria-selected="true"' : ""}>${flag(r.country)} ${esc(r.name)}${r.format ? ` <small class="meta">${s.format_label[r.format]}</small>` : ""}</li>`).join("");
-      matches.hidden = !found.length;
-    }
-
-    input.addEventListener("input", showMatches);
-    input.addEventListener("keydown", e => {
-      const items = [...matches.querySelectorAll<HTMLElement>("li")];
-      const cur = items.findIndex(li => li.getAttribute("aria-selected") === "true");
-      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-        e.preventDefault();
-        if (!items.length) return;
-        const next = (cur + (e.key === "ArrowDown" ? 1 : items.length - 1)) % items.length;
-        items.forEach((li, i) => li.setAttribute("aria-selected", String(i === next)));
-      } else if (e.key === "Enter" && cur >= 0) {
-        e.preventDefault();
-        add(items[cur].dataset.add!);
-      } else if (e.key === "Escape") {
-        matches.hidden = true;
-      }
-    });
-    input.addEventListener("blur", () => setTimeout(() => (matches.hidden = true), 150));
+    attachRaceSearch({ lang, input, list: matches, races: () => index.races, exclude: () => selected, onPick: add });
     root.addEventListener("click", e => {
       const el = (e.target as HTMLElement).closest<HTMLElement>("[data-add], [data-remove]");
       if (!el) return;
@@ -127,12 +101,6 @@ const defaults = rank(races, "M", "latest", "medium").slice(0, 3).map(r => r.rac
   h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; letter-spacing: -0.02em; }
   .lede { margin: 8px 0 0; }
   .picker { display: grid; gap: 12px; }
-  .search { position: relative; max-width: 420px; }
-  input {
-    width: 100%; font: 500 15px var(--font); color: var(--text); background: var(--surface);
-    border: 1px solid var(--border); border-radius: var(--radius-s); padding: 9px 12px;
-  }
-  input:focus { outline: 2px solid var(--text); outline-offset: -1px; }
   .suggest { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
   .suggest[hidden] { display: none; }
   .suggest .chips { display: contents; }
@@ -153,13 +121,8 @@ const defaults = rank(races, "M", "latest", "medium").slice(0, 3).map(r => r.rac
   .compare .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 1px; background: currentColor; flex: none; margin-right: 6px; }
   .compare .chip.add { cursor: pointer; font: 600 12.5px var(--font); }
   .compare .chip.add:hover { color: var(--text); border-color: var(--text-3); }
-  .compare .matches {
-    position: absolute; z-index: 5; left: 0; right: 0; top: calc(100% + 4px); margin: 0; padding: 4px 0; list-style: none;
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-s); box-shadow: 0 6px 20px oklch(0 0 0 / 0.08);
-  }
-  .compare .matches li { padding: 7px 12px; cursor: pointer; font-size: 14px; }
-  .compare .matches li[aria-selected="true"], .compare .matches li:hover { background: var(--surface-2); }
-  .compare .matches .meta { color: var(--text-3); font: 500 11px var(--mono); margin-left: 6px; }
+  .compare .chip-race a { text-decoration: none; color: inherit; }
+  .compare .chip-race a:hover { text-decoration: underline; }
 
   .compare [data-view] { display: grid; gap: 28px; }
   .compare .verdicts { display: grid; gap: 6px; }
@@ -178,8 +141,8 @@ const defaults = rank(races, "M", "latest", "medium").slice(0, 3).map(r => r.rac
   .compare thead th.f { color: var(--women); }
   .compare thead th.m { color: var(--men); }
   .compare tbody th { font-weight: 600; }
-  .compare tbody th a { text-decoration: none; }
-  .compare tbody th a:hover { text-decoration: underline; }
+  .compare tbody th a, .compare .details thead a { text-decoration: underline; text-decoration-color: var(--border); text-underline-offset: 3px; color: inherit; }
+  .compare tbody th a:hover, .compare .details thead a:hover { text-decoration-color: currentColor; }
   .compare .meta { display: block; font: 500 11px var(--mono); color: var(--text-3); margin-left: 16px; }
 
   .compare .faceoff th[scope="row"] { width: 34%; }
