@@ -30,6 +30,6 @@ site/.astro/
 mcp/.wrangler/
 
 # Local tooling and design drafts
-.impeccable/
+.impeccable/critique/
 claude_design/
 .mcp.json
