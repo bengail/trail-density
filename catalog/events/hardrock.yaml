@@ -6,41 +6,62 @@ races:
     distance_km: 162
     elevation_gain: 10360
     editions:
+      2026:
+        utmb: 329.hardrock100endurancerun100miacw.2026
       2025:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2025/106248
+        utmb: 329.hardrock100endurancerun100miacw.2025
       2024:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2024/95243
+        utmb: 329.hardrock100endurancerun100miacw.2024
       2023:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2023/81959
+        utmb: 329.hardrock100endurancerun100miacw.2023
       2022:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2022/77916
+        utmb: 329.hardrock100endurancerun100miacw.2022
       2021:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2021/107133
+        utmb: 329.hardrock100endurancerun100miacw.2021
       2018:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2018/35383
+        utmb: 329.hardrock100endurancerun100miacw.2018
       2017:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2017/23697
+        utmb: 329.hardrock100endurancerun100miacw.2017
       2016:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2016/14723
+        utmb: 329.hardrock100endurancerun100miacw.2016
       2015:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2015/10491
+        utmb: 329.hardrock100endurancerun100miacw.2015
       2014:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2014/7133
+        utmb: 329.hardrock100endurancerun100miacw.2014
       2013:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2013/4284
+        utmb: 329.hardrock100endurancerun100miacw.2013
       2012:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2012/2916
+        utmb: 329.hardrock100endurancerun100miacw.2012
       2011:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2011/2299
+        utmb: 329.hardrock100endurancerun100miacw.2011
       2010:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2010/1544
+        utmb: 329.hardrock100endurancerun100miacw.2010
       2009:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.100Mi.CC/2009/810
+        utmb: 329.hardrock100endurancerun100miacw.2009
       2008:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2008/463
+        utmb: 329.hardrock100endurancerun100miacw.2008
       2007:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.100Mi.CC/2007/102
+        utmb: 329.hardrock100endurancerun100miacw.2007
       2006:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.HARDROCK.100/2006/3805
+        utmb: 329.hardrock100endurancerun100miacw.2006
       2005:
         itra: https://itra.run/Races/RaceResults/HARDROCK.100.ENDURANCE.RUN.100Mi.CC/2005/3806
+        utmb: 329.hardrock100endurancerun100miacw.2005

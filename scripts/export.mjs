@@ -91,6 +91,10 @@ try {
         year: ed.year, source: ed.source,
         M: ed.M ? summary(ed.M) : null,
         F: ed.F ? summary(ed.F) : null,
+        // Rankings on one scale: ITRA (the archive is ITRA scores too) or UTMB.
+        scales: Object.fromEntries(Object.entries({ itra: ed.sources.itra ?? ed.sources.legacy, utmb: ed.sources.utmb })
+          .filter(([, b]) => b && (b.M || b.F))
+          .map(([k, b]) => [k, { M: b.M ? summary(b.M) : null, F: b.F ? summary(b.F) : null }])),
       })),
     })),
   };

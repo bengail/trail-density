@@ -7,12 +7,30 @@ races:
     elevation_gain: 1370
     discipline: skyrace
     editions:
+      2026:
+        utmb: 5707.thebrokenarrowskyrace23k.2026
       2025:
         series: [gtws]
         legacy: [data/courses/BROKENARROW2025.json]
         itra: https://itra.run/Races/RaceResults/The.Broken.Arrow.Skyrace.23K/2025/107170
+        utmb: 5707.thebrokenarrowskyrace23k.2025
+      2024:
+        utmb: 5707.thebrokenarrowskyrace23k.2024
       2023:
         itra: https://itra.run/Races/RaceResults/The.Broken.Arrow.Skyrace.23K/2023/85200
+        utmb: 5707.thebrokenarrowskyrace23k.2023
+      2022:
+        utmb: 5707.thebrokenarrowskyrace23k.2022
+      2021:
+        utmb: 5707.thebrokenarrowskyrace23k.2021
+      2019:
+        utmb: 5707.thebrokenarrowskyrace23k.2019
+      2018:
+        utmb: 5707.thebrokenarrowskyrace23k.2018
+      2017:
+        utmb: 5707.thebrokenarrowskyrace23k.2017
+      2016:
+        utmb: 5707.thebrokenarrowskyrace23k.2016
   broken-arrow-ascent:
     name: "Broken Arrow Ascent"
     discipline: uphill

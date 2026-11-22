@@ -8,14 +8,19 @@ races:
     editions:
       2026:
         utmb: 30482.slaythedragonslaythedragon-50k.2026
+        itra: https://itra.run/Races/RaceResults/Slay.the.Dragon.50km/2026/113192
       2025:
         utmb: 30482.slaythedragonslaythedragon-50k.2025
+        itra: https://itra.run/Races/RaceResults/Slay.the.Dragon.50km/2025/119278
       2024:
         utmb: 30482.slaythedragonslaythedragon-50k.2024
+        itra: https://itra.run/Races/RaceResults/Slay.the.Dragon.50km/2024/85722
       2023:
         utmb: 30482.slaythedragonslaythedragon-50k.2023
+        itra: https://itra.run/Races/RaceResults/Slay.the.Dragon.50km/2023/78163
       2022:
         utmb: 30482.slaythedragonslaythedragon-50k.2022
+        itra: https://itra.run/Races/RaceResults/Slay.the.Dragon.Slay.the.Dragon.50km/2022/73079
   slay-the-dragon-25k:
     name: "Slay the Dragon 25K"
     distance_km: 26
@@ -23,9 +28,15 @@ races:
     editions:
       2026:
         utmb: 30483.slaythedragonslaythedragon-25k.2026
+        itra: https://itra.run/Races/RaceResults/Slay.the.Dragon.25km/2026/113191
+      2025:
+        itra: https://itra.run/Races/RaceResults/Slay.the.Dragon.25km/2025/119277
       2024:
         utmb: 30483.slaythedragonslaythedragon-25k.2024
+        itra: https://itra.run/Races/RaceResults/Slay.the.Dragon.25km/2024/85721
       2023:
         utmb: 30483.slaythedragonslaythedragon-25k.2023
+        itra: https://itra.run/Races/RaceResults/Slay.the.Dragon.25km/2023/78162
       2022:
         utmb: 30483.slaythedragonslaythedragon-25k.2022
+        itra: https://itra.run/Races/RaceResults/Slay.the.Dragon.25km/2022/73063

@@ -1,6 +1,6 @@
 // Rankings from index.json, shared by the build (home, rankings page) and the browser (filters).
 import { t, racePath, flag, fmtNum, fmtDelta, type Lang } from "./i18n";
-import type { Format, Gender, RaceSummary } from "./types";
+import type { Format, Gender, RaceSummary, Scale } from "./types";
 
 export type Season = "latest" | number;
 export const STALE_AFTER = 2;               // "latest" ignores races whose last edition is older than this many seasons
@@ -20,21 +20,39 @@ export function seasons(races: RaceSummary[]) {
   return [...new Set(races.flatMap(r => r.editions.map(e => e.year)))].sort((a, b) => b - a);
 }
 
-export function rank(races: RaceSummary[], g: Gender, season: Season = "latest", format: Format | "all" = "all"): Row[] {
+// One edition's figures on a scale. Older index.json files have no `scales`: fall back to the primary source.
+type Ed = RaceSummary["editions"][number];
+export function onScale(e: Ed, scale: Scale, g: Gender) {
+  if (e.scales) return e.scales[scale]?.[g] ?? null;
+  const src = e.source === "legacy" ? "itra" : e.source;
+  return src === scale ? e[g] : null;
+}
+
+// Default season: the newest one with enough races on that scale, so a new season does not open on an almost empty list.
+export const MIN_SEASON_RACES = 15;
+export function defaultSeason(races: RaceSummary[], scale: Scale = "itra"): number {
+  const count = new Map<number, number>();
+  for (const r of races) for (const e of r.editions) if (onScale(e, scale, "M")?.rci10 != null || onScale(e, scale, "F")?.rci10 != null) count.set(e.year, (count.get(e.year) ?? 0) + 1);
+  const years = [...count.keys()].sort((a, b) => b - a);
+  return years.find(y => count.get(y)! >= MIN_SEASON_RACES) ?? years[0];
+}
+
+export function rank(races: RaceSummary[], g: Gender, season: Season = "latest", format: Format | "all" = "all", scale: Scale = "itra"): Row[] {
   const newest = seasons(races)[0];
   const rows: Row[] = [];
   for (const race of races) {
     if (format !== "all" && race.format !== format) continue;
-    const eds = race.editions.filter(e => e[g]?.rci10 != null);           // newest first
+    const eds = race.editions.map(e => ({ year: e.year, b: onScale(e, scale, g) }))
+      .filter((e): e is { year: number; b: NonNullable<ReturnType<typeof onScale>> } => e.b?.rci10 != null);   // newest first
     const i = season === "latest" ? 0 : eds.findIndex(e => e.year === season);
     const ed = eds[i];
     if (!ed || (season === "latest" && ed.year < newest - STALE_AFTER)) continue;
     const prev = eds[i + 1];
     rows.push({
-      race, year: ed.year, rci10: ed[g]!.rci10!, n: ed[g]!.n,
-      delta: prev && ed.year - prev.year <= MAX_DELTA_GAP ? ed[g]!.rci10! - prev[g]!.rci10! : null,
-      prev: prev ? { year: prev.year, rci10: prev[g]!.rci10! } : null,
-      history: eds.map(e => [e.year, e[g]!.rci10!] as [number, number]).reverse(),
+      race, year: ed.year, rci10: ed.b.rci10!, n: ed.b.n,
+      delta: prev && ed.year - prev.year <= MAX_DELTA_GAP ? ed.b.rci10! - prev.b.rci10! : null,
+      prev: prev ? { year: prev.year, rci10: prev.b.rci10! } : null,
+      history: eds.map(e => [e.year, e.b.rci10!] as [number, number]).reverse(),
     });
   }
   return rows.sort((a, b) => b.rci10 - a.rci10);
@@ -68,7 +86,7 @@ export function rankingList(lang: Lang, rows: Row[], g: Gender, { limit = Infini
       <span class="pos num">${i + 1}</span>
       <a class="name" href="${racePath(lang, r.race.id)}">
         <span class="flag">${flag(r.race.country)}</span>
-        <span class="label">${esc(r.race.name)}${compact ? "" : meta(r)}</span>
+        <span class="label">${esc(r.race.name)}${compact ? (showYear ? `<small class="meta">${r.year}</small>` : "") : meta(r)}</span>
       </a>
       ${compact ? "" : sparkline(r.history, g)}
       <span class="value num">${fmtNum(lang, r.rci10, 1)}</span>

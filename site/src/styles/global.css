@@ -172,7 +172,7 @@ p { text-wrap: pretty; }
 .ranking .name { display: flex; align-items: baseline; gap: 7px; min-width: 0; text-decoration: none; font-weight: 600; line-height: 1.25; }
 .ranking .name:hover .label { text-decoration: underline; }
 .ranking .label { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ranking .meta { display: block; font: 500 11px var(--mono); color: var(--text-3); text-decoration: none; }
+.ranking .meta { display: block; font: 500 11.5px var(--mono); color: var(--text-2); text-decoration: none; }
 .tag { font: 500 10.5px var(--mono); color: var(--text-2); border: 1px solid var(--border); border-radius: var(--radius-s); padding: 0 4px; }
 .ranking .value { text-align: right; font-weight: 600; font-size: 15px; }
 .ranking.f .value { color: var(--women); }

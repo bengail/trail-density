@@ -25,41 +25,62 @@ races:
     editions:
       2026:
         itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.26.km.TRAIL/2026/111398
+        utmb: 13109.defidescouleursdefidescouleurs-26kmtrail.2026
       2025:
         legacy: [data/courses/DDC_2025_26.json]
         itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.26.km.TRAIL/2025/103701
+        utmb: 13109.defidescouleursdefidescouleurs-26kmtrail.2025
       2024:
         itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.26.km.TRAIL/2024/95605
+        utmb: 13109.defidescouleursdefidescouleurs-26kmtrail.2024
+      2023:
+        utmb: 13109.defidescouleursdefidescouleurs-26kmtrail.2023
       2022:
         itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.26.km/2022/76257
+        utmb: 13109.defidescouleursdefidescouleurs-26kmtrail.2022
+      2019:
+        utmb: 13109.defidescouleursdefidescouleurs-26kmtrail.2019
+      2018:
+        utmb: 13109.defidescouleursdefidescouleurs-26kmtrail.2018
   defi-des-couleurs-32k:
     name: "Défi des Couleurs 32K"
     distance_km: 32
     editions:
       2026:
         itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.32.km.TRAIL/2026/111400
+        utmb: 47460.defidescouleursdefidescouleurs-32kmtrail.2026
       2025:
         legacy: [data/courses/DDC_2025_32.json]
         itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.32.km.TRAIL/2025/103702
+        utmb: 47460.defidescouleursdefidescouleurs-32kmtrail.2025
       2024:
         itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.32.km.TRAIL/2024/95604
+        utmb: 47460.defidescouleursdefidescouleurs-32kmtrail.2024
   defi-des-couleurs-42k:
     name: "Défi des Couleurs 42K"
     distance_km: 42
     editions:
       2026:
         itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.42.km.TRAIL/2026/111397
+        utmb: 12945.defidescouleursdefidescouleurs-42kmtrail.2026
       2025:
         legacy: [data/courses/DDC_2025_42.json]
         itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.42.km.TRAIL/2025/103700
+        utmb: 12945.defidescouleursdefidescouleurs-42kmtrail.2025
       2024:
         itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.42.km.TRAIL/2024/95603
+        utmb: 12945.defidescouleursdefidescouleurs-42kmtrail.2024
+      2023:
+        utmb: 12945.defidescouleursdefidescouleurs-42kmtrail.2023
       2022:
         itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.42.km/2022/76256
+        utmb: 12945.defidescouleursdefidescouleurs-42kmtrail.2022
       2019:
         itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.42.km/2019/54393
+        utmb: 12945.defidescouleursdefidescouleurs-42kmtrail.2019
       2018:
         itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.42.km/2018/31173
+        utmb: 12945.defidescouleursdefidescouleurs-42kmtrail.2018
   defi-des-couleurs-up-down:
     name: "Défi des Couleurs Up & Down"
     distance_km: 11
@@ -70,5 +91,7 @@ races:
         series: [wmra-world-cup]
         legacy: [data/courses/DDC_2025_UPDOWN.json]
         itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.MSA.Classic.Up.Down/2025/103708
+        utmb: 47516.defidescouleursdefidescouleurs-msaclassicup-down.2025
       2024:
         itra: https://itra.run/Races/RaceResults/Défi.des.Couleurs.Simard.MSA.Classic.Up.Down/2024/95652
+        utmb: 47516.defidescouleursdefidescouleurs-msaclassicup-down.2024

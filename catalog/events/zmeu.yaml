@@ -10,3 +10,4 @@ races:
         series: [wmra-world-cup]
         legacy: [data/courses/ZMEUCLASSIC2025.json]
         itra: https://itra.run/Races/RaceResults/Zmeu.X.Fest.Classic.Mountain/2025/100888
+        utmb: 50350.zmeux-festclassicmountain.2025
