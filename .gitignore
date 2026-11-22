@@ -28,3 +28,8 @@ site/.astro/
 
 # MCP worker
 mcp/.wrangler/
+
+# Local tooling and design drafts
+.impeccable/critique/
+claude_design/
+.mcp.json
