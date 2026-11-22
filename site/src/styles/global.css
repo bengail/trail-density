@@ -211,3 +211,19 @@ p { text-wrap: pretty; }
 .section-head p { margin: 2px 0 0; font-size: 13px; }
 .more { font-size: 14px; font-weight: 700; text-decoration: none; color: var(--men); }
 .more:hover { text-decoration: underline; }
+
+/* Race search box (lib/race-search.ts): home page and compare page. */
+.race-search { position: relative; max-width: 420px; }
+.race-search input {
+  width: 100%; font: 500 15px var(--font); color: var(--text); background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius-s); padding: 9px 12px;
+}
+.race-search input:focus { outline: 2px solid var(--text); outline-offset: -1px; }
+.search-matches {
+  position: absolute; z-index: 5; left: 0; right: 0; top: calc(100% + 4px); margin: 0; padding: 4px 0; list-style: none;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-s); box-shadow: 0 6px 20px oklch(0 0 0 / 0.08);
+}
+.search-matches li { padding: 7px 12px; cursor: pointer; font-size: 14px; }
+.search-matches li[aria-selected="true"], .search-matches li[data-pick]:hover { background: var(--surface-2); }
+.search-matches li.none { cursor: default; color: var(--text-3); }
+.search-matches .meta { color: var(--text-3); font: 500 11px var(--mono); margin-left: 6px; }
