@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import { loadIndex } from "../lib/data";
-import { rank, rankingList } from "../lib/rankings";
+import { rank, rankingList, defaultSeason } from "../lib/rankings";
 import { t, racePath, rankingsPath, recordsPath, mePath, methodPath, FREETRAIL_RCI, flag, fmtDelta, fmtNum, type Lang } from "../lib/i18n";
 import type { Gender } from "../lib/types";
 
@@ -10,7 +10,9 @@ const { lang } = Astro.props;
 const s = t(lang);
 const races = loadIndex().races;
 
-const latest = { F: rank(races, "F"), M: rank(races, "M") };
+// One season on one scale (ITRA), so the lists compare like with like; the rankings page has the other views.
+const season = defaultSeason(races);
+const latest = { F: rank(races, "F", season), M: rank(races, "M", season) };
 const formats = ["vertical", "short", "medium", "long", "ultra"] as const;
 
 // Biggest rises at the latest edition, both genders together.
@@ -36,34 +38,34 @@ const risers = (["F", "M"] as Gender[])
     <section>
       <div class="section-head">
         <div>
-          <h2>{s.latest_title}</h2>
-          <p class="muted">{s.latest_sub}</p>
+          <h2>{s.latest_title(season)}</h2>
+          <p class="muted">{s.latest_sub(season)} <a href={`${rankingsPath(lang)}?season=latest`}>{s.latest_each} →</a></p>
         </div>
         <a class="more" href={rankingsPath(lang)}>{s.see_all} →</a>
       </div>
       <div class="pair">
         <div class="card">
           <h3 class="g-title f">{s.women}</h3>
-          <Fragment set:html={rankingList(lang, latest.F, "F", { limit: 10 })} />
+          <Fragment set:html={rankingList(lang, latest.F, "F", { limit: 10, showYear: false })} />
         </div>
         <div class="card">
           <h3 class="g-title m">{s.men}</h3>
-          <Fragment set:html={rankingList(lang, latest.M, "M", { limit: 10 })} />
+          <Fragment set:html={rankingList(lang, latest.M, "M", { limit: 10, showYear: false })} />
         </div>
       </div>
     </section>
 
     <section>
-      <div class="section-head"><h2>{s.by_format}</h2></div>
+      <div class="section-head"><h2>{s.by_format} · {season}</h2></div>
       <div class="formats">
         {formats.map(f => (
           <div class="card fmt">
             <h3>{s.format_label[f]}</h3>
             <p class="fmt-sub muted">{s.formats[f]}</p>
             <h4 class="g-title f">{s.women}</h4>
-            <Fragment set:html={rankingList(lang, rank(races, "F", "latest", f), "F", { limit: 3, compact: true })} />
+            <Fragment set:html={rankingList(lang, rank(races, "F", season, f), "F", { limit: 3, compact: true, showYear: false })} />
             <h4 class="g-title m">{s.men}</h4>
-            <Fragment set:html={rankingList(lang, rank(races, "M", "latest", f), "M", { limit: 3, compact: true })} />
+            <Fragment set:html={rankingList(lang, rank(races, "M", season, f), "M", { limit: 3, compact: true, showYear: false })} />
           </div>
         ))}
       </div>
@@ -74,7 +76,7 @@ const risers = (["F", "M"] as Gender[])
         <div class="section-head">
           <div>
             <h2>{s.risers}</h2>
-            <p class="muted">{s.risers_sub}</p>
+            <p class="muted">{s.risers_sub(season)}</p>
           </div>
           <a class="more" href={recordsPath(lang)}>{s.records_title} →</a>
         </div>

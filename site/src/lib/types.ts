@@ -65,7 +65,10 @@ export interface Race extends RaceBase {
 }
 
 export interface RaceSummary extends RaceBase {
-  editions: { year: number; source: string; M: EditionSummary | null; F: EditionSummary | null }[];
+  editions: {
+    year: number; source: string; M: EditionSummary | null; F: EditionSummary | null;
+    scales?: Partial<Record<Scale, { M: EditionSummary | null; F: EditionSummary | null }>>;
+  }[];
 }
 
 export interface EditionSummary {

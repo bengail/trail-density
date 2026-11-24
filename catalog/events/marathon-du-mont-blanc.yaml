@@ -1,0 +1,59 @@
+name: "Marathon du Mont-Blanc"
+country: FR
+races:
+  marathon-du-mont-blanc:
+    name: "Marathon du Mont-Blanc"
+    distance_km: 42
+    elevation_gain: 2540
+    editions:
+      2026:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2026
+        itra: https://itra.run/Races/RaceResults/Marathon.du.Mont.Blanc.42km.du.Mont.Blanc/2026/120003
+      2025:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2025
+        itra: https://itra.run/Races/RaceResults/Marathon.du.Mont.Blanc.42km.du.Mont.Blanc/2025/103278
+      2024:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2024
+        itra: https://itra.run/Races/RaceResults/Marathon.du.Mont.Blanc.42km.du.Mont.Blanc/2024/94849
+      2023:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2023
+        itra: https://itra.run/Races/RaceResults/Marathon.du.Mont.Blanc.42km.du.Mont.Blanc/2023/85288
+      2022:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2022
+        itra: https://itra.run/Races/RaceResults/Marathon.du.Mont.Blanc.42km.du.Mont.Blanc/2022/72988
+      2021:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2021
+        itra: https://itra.run/Races/RaceResults/Marathon.du.Mont.Blanc.42.Km.du.Mont.Blanc/2021/65305
+      2019:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2019
+        itra: https://itra.run/Races/RaceResults/Marathon.du.Mont.Blanc.42.Km/2019/37893
+      2018:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2018
+        itra: https://itra.run/Races/RaceResults/Marathon.du.Mont.Blanc.42.Km/2018/25193
+      2017:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2017
+        itra: https://itra.run/Races/RaceResults/Marathon.du.Mont.Blanc.42.Km.Du.Mont.Blanc/2017/18719
+      2016:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2016
+        itra: https://itra.run/Races/RaceResults/Marathon.du.Mont.Blanc.42.Km.Du.Mont.Blanc/2016/11976
+      2015:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2015
+        itra: https://itra.run/Races/RaceResults/Marathon.du.Mont.Blanc.42.Km.Du.Mont.Blanc/2015/8687
+      2014:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2014
+      2013:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2013
+      2012:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2012
+      2011:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2011
+      2010:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2010
+      2009:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2009
+      2008:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2008
+      2007:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2007
+      2006:
+        utmb: 432.marathondumont-blanc42kmdumont-blanc.2006

@@ -9,44 +9,64 @@ races:
     editions:
       2026:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2026/121225
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2026
       2025:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2025/106563
         legacy: [data/courses/WS2025.json]
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2025
       2024:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2024/94886
         legacy: [data/courses/WS2024.json]
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2024
       2023:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2023/85327
         legacy: [data/courses/WS2023.json]
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2023
       2022:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2022/77616
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2022
       2021:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2021/68416
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2021
       2019:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2019/44845
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2019
       2018:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2018/30461
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2018
       2017:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2017/18229
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2017
       2016:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2016/11981
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2016
       2015:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2015/9084
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2015
       2014:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2014/5627
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2014
       2013:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2013/4297
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2013
       2012:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2012/2915
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2012
       2011:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2011/2276
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2011
       2010:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2010/1534
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2010
       2009:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2009/813
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2009
       2007:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2007/99
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2007
       2006:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2006/3813
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2006
       2005:
         itra: https://itra.run/Races/RaceResults/Western.States.Endurance.Run.Western.States.Endurance.Run/2005/3814
+        utmb: 327.westernstates-r-100-mileendurancerunwesternstates100-mileendurancerun.2005

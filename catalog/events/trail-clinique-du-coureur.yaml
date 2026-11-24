@@ -7,9 +7,18 @@ races:
     editions:
       2026:
         itra: https://itra.run/Races/RaceResults/Trail.La.Clinique.Du.Coureur.50.km.Trail.La.Clinique.Du.Coureur/2026/106299
+        utmb: 13305.traillacliniqueducoureur50kmtraillcdc.2026
       2025:
         legacy: [data/courses/TDLC2025_50.json]
         itra: https://itra.run/Races/RaceResults/Trail.La.Clinique.Du.Coureur.50.km.Trail.La.Clinique.Du.Coureur/2025/105445
+        utmb: 13305.traillacliniqueducoureur50kmtraillcdc.2025
       2024:
         legacy: [data/courses/TDLC_2024_50.json]
         itra: https://itra.run/Races/RaceResults/Trail.La.Clinique.Du.Coureur.Trail.LCDC.50.km/2024/94050
+        utmb: 13305.traillacliniqueducoureur50kmtraillcdc.2024
+      2023:
+        utmb: 13305.traillacliniqueducoureur50kmtraillcdc.2023
+      2019:
+        utmb: 13305.traillacliniqueducoureur50kmtraillcdc.2019
+      2018:
+        utmb: 13305.traillacliniqueducoureur50kmtraillcdc.2018

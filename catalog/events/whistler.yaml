@@ -7,39 +7,48 @@ races:
     editions:
       2026:
         itra: https://itra.run/Races/RaceResults/Ultra.Trail.Whistler.by.UTMB.25K/2026/123027
+        utmb: 42476.ultratrailwhistlerbyutmb25k.2026
       2025:
         series: [utmb-world-series]
         legacy: [data/courses/WHISTLER_2025_25.json]
         itra: https://itra.run/Races/RaceResults/Ultra.Trail.Whistler.by.UTMB.25K/2025/111632
+        utmb: 42476.ultratrailwhistlerbyutmb25k.2025
       2024:
         legacy: [data/courses/WHISTLER_2024_25.json]
         itra: https://itra.run/Races/RaceResults/Ultra.Trail.Whistler.by.UTMB.25K/2024/97348
+        utmb: 42476.ultratrailwhistlerbyutmb25k.2024
   whistler-50k:
     name: "Whistler 50K"
     distance_km: 50
     editions:
       2026:
         itra: https://itra.run/Races/RaceResults/Ultra.Trail.Whistler.by.UTMB.50K/2026/123028
+        utmb: 42474.ultratrailwhistlerbyutmb50k.2026
       2025:
         series: [utmb-world-series]
         legacy: [data/courses/WHISTLER_2025_50.json]
         itra: https://itra.run/Races/RaceResults/Ultra.Trail.Whistler.by.UTMB.50K/2025/111633
+        utmb: 42474.ultratrailwhistlerbyutmb50k.2025
       2024:
         legacy: [data/courses/WHISTLER_2024_50.json]
         itra: https://itra.run/Races/RaceResults/Ultra.Trail.Whistler.by.UTMB.50K/2024/97349
+        utmb: 42474.ultratrailwhistlerbyutmb50k.2024
   whistler-70k:
     name: "Whistler 70K"
     distance_km: 70
     editions:
       2024:
         legacy: [data/courses/WHISTLER_2024_70.json]
+        utmb: 42472.ultratrailwhistlerbyutmb70k.2024
   whistler-100k:
     name: "Whistler 100K"
     distance_km: 100
     editions:
       2026:
         itra: https://itra.run/Races/RaceResults/Ultra.Trail.Whistler.by.UTMB.100K/2026/123029
+        utmb: 51810.ultratrailwhistlerbyutmb100k.2026
       2025:
         series: [utmb-world-series]
         legacy: [data/courses/WHISTLER_2025_100.json]
         itra: https://itra.run/Races/RaceResults/Ultra.Trail.Whistler.by.UTMB.100K/2025/111634
+        utmb: 51810.ultratrailwhistlerbyutmb100k.2025

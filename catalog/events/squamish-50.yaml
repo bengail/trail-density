@@ -16,24 +16,34 @@ races:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish.50.50.KM/2024/94798
       2023:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50.km/2023/96828
+        utmb: 1767.nestersmarketsquamish5050km.2023
       2022:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish.50.50.KM/2022/84017
+        utmb: 1767.nestersmarketsquamish5050km.2022
       2021:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish.50.50.KM/2021/72818
+        utmb: 1767.nestersmarketsquamish5050km.2021
       2019:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50K/2019/38321
+        utmb: 1767.nestersmarketsquamish5050km.2019
       2018:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50K/2018/27671
+        utmb: 1767.nestersmarketsquamish5050km.2018
       2017:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50K/2017/16549
+        utmb: 1767.nestersmarketsquamish5050km.2017
       2016:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50K/2016/11558
+        utmb: 1767.nestersmarketsquamish5050km.2016
       2015:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50K/2015/11070
+        utmb: 1767.nestersmarketsquamish5050km.2015
       2014:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50K/2014/8294
+        utmb: 1767.nestersmarketsquamish5050km.2014
       2013:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50K/2013/4678
+        utmb: 1767.nestersmarketsquamish5050km.2013
   squamish-50m:
     name: "Squamish 50 Mile"
     distance_km: 80
@@ -49,23 +59,34 @@ races:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish.50.50.Mile/2024/94797
       2023:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50.Mile/2023/95896
+        utmb: 1312.nestersmarketsquamish5050mile.2023
       2022:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish.50.50.Mile/2022/84016
+        utmb: 1312.nestersmarketsquamish5050mile.2022
       2021:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish.50.50.Mile/2021/72817
+        utmb: 1312.nestersmarketsquamish5050mile.2021
       2019:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50M/2019/38319
+        utmb: 1312.nestersmarketsquamish5050mile.2019
       2018:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50M/2018/27669
+        utmb: 1312.nestersmarketsquamish5050mile.2018
       2017:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50M/2017/16547
+        utmb: 1312.nestersmarketsquamish5050mile.2017
       2016:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50M/2016/11559
+        utmb: 1312.nestersmarketsquamish5050mile.2016
       2015:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50M/2015/10249
+        utmb: 1312.nestersmarketsquamish5050mile.2015
       2014:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50M/2014/8072
+        utmb: 1312.nestersmarketsquamish5050mile.2014
       2013:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50M/2013/4758
+        utmb: 1312.nestersmarketsquamish5050mile.2013
       2012:
         itra: https://itra.run/Races/RaceResults/Nesters.Market.Squamish50.50M/2012/3307
+        utmb: 1312.nestersmarketsquamish5050mile.2012
